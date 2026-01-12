@@ -7,14 +7,14 @@ abstract class DefaultProvider {
         this.inited = false;
     }
 
-    protected abstract initProivider(): Promise<void>;
+    protected abstract initProvider(): Promise<void>;
 
     public async init(): Promise<void> {
         if (this.inited) {
             return;
         }
 
-        await this.initProivider();
+        await this.initProvider();
         this.inited = true;
     }
 }
@@ -30,7 +30,7 @@ class AniWorldProvider extends DefaultProvider {
         super();
     }
 
-    protected async initProivider(): Promise<void> {
+    protected async initProvider(): Promise<void> {
 
     }
 }
@@ -46,7 +46,7 @@ class StoProvider extends DefaultProvider {
         super();
     }
 
-    protected async initProivider(): Promise<void> {
+    protected async initProvider(): Promise<void> {
 
     }
 }
@@ -71,7 +71,7 @@ export class ProviderService {
             return this.provider!;
         }
 
-        throw "No provider setted and no provider was registered in the cache";
+        throw "No provider set and no provider was registered in the cache";
     }
 
     public async setProvider(provider: DefaultProvider): Promise<void> {

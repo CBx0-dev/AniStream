@@ -65,7 +65,7 @@ will be subject to the exclusive jurisdiction of its courts.
 
 8. Reporting Issues
 For bug reports, feature requests, or other issues, please use the GitHub 
-repository: https://github.com/[YourRepo]/issues
+repository: https://github.com/Christoph-Koschel/AniStream/issues
 
 By using AniStream, you acknowledge that you have read and agree to these Terms of Service.
 ```

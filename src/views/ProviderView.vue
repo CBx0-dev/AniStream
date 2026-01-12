@@ -7,6 +7,11 @@ const vm: ProviderViewModel = useViewModel(ProviderViewModel);
 
 <template>
     <div class="container m-auto">
+        <div class="fixed top-5 right-5">
+            <button class="btn btn-primary btn-soft btn-square">
+                X
+            </button>
+        </div>
         <h1 class="text-3xl text-center">Select provider</h1>
         <div class="flex justify-center pt-4">
             <div class="join">
