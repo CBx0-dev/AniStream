@@ -1,0 +1,30 @@
+{
+    "name": "anistream",
+    "private": true,
+    "version": "0.1.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vue-tsc --noEmit && vite build",
+        "preview": "vite preview",
+        "tauri": "tauri"
+    },
+    "dependencies": {
+        "@tauri-apps/api": "^2",
+        "@tauri-apps/plugin-opener": "^2",
+        "vue": "^3.5.13",
+        "vue-mvvm": "^0.2.3",
+        "vue-router": "^4.6.4"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "^4.1.18",
+        "@tauri-apps/cli": "^2",
+        "@types/node": "^25.0.6",
+        "@vitejs/plugin-vue": "^5.2.1",
+        "daisyui": "^5.5.14",
+        "tailwindcss": "^4.1.18",
+        "typescript": "~5.6.2",
+        "vite": "^6.0.3",
+        "vue-tsc": "^2.1.10"
+    }
+}
