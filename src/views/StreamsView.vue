@@ -5,6 +5,7 @@ import LucideSearch from "@icons/LucideSearch.vue";
 import LucideArrowLeft from "@/icons/LucideArrowLeft.vue";
 import LucideListVideo from "@/icons/LucideListVideo.vue";
 import LucideCloudSync from "@/icons/LucideCloudSync.vue";
+import LucideX from "@/icons/LucideX.vue";
 
 const vm: StreamsViewModel = useViewModel(StreamsViewModel);
 </script>
@@ -33,6 +34,15 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
                     <LucideSearch />
                     <input type="text" class="grow" placeholder="Search" />
                 </label>
+                <div>
+                    <form class="join">
+                        <button class="join-item btn btn-square border border-base-300" type="reset">
+                            <LucideX />
+                        </button>
+                        <input class="join-item btn border border-base-300" type="checkbox" name="frameworks" aria-label="Thriller" />
+                        <input class="join-item btn border border-base-300" type="checkbox" name="frameworks" aria-label="Thriller" />
+                    </form>
+                </div>
             </div>
         </div>
         <div class="grid grid-cols-[repeat(auto-fill,250px)] justify-center gap-3 py-6">
