@@ -1,7 +1,71 @@
-# Tauri + Vue + TypeScript
+# AniStream
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+AniStream is App for streaming content from aniworld.to and sto.to
 
-## Recommended IDE Setup
+## Legal Disclaimer
 
-- [VS Code](https://code.visualstudio.com/) + [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+```text
+Legal Disclaimer
+
+AniStream is a streaming software that allows users to access online video content 
+from third-party sources. The software does not host, store, or distribute copyrighted 
+material and only provides a tool for streaming content that is publicly accessible online.
+
+The developer does not control the content available through AniStream and does not guarantee
+its legality, accuracy, availability, or safety. Users are solely responsible for ensuring 
+that they access and stream content in compliance with all applicable laws and the terms 
+of service of any websites or platforms used.
+
+By using AniStream, you acknowledge that the developer is not liable for any damages, 
+losses, or legal issues that may arise from your use of the software or the content 
+accessed through it.
+
+If you believe content accessed via AniStream infringes your rights, please contact 
+the respective website owner, administrator, or hosting provider directly.
+```
+
+## Terms of Service
+
+```text
+AniStream – Terms of Service
+Last updated: January 12, 2026
+
+1. Acceptance of Terms
+By downloading, installing, or using AniStream, you agree to comply with these Terms 
+of Service. If you do not agree, do not use this software.
+
+2. Permitted Use
+AniStream is intended for personal, lawful use only. You may use the software to 
+stream content that you are legally allowed to access, such as public domain or 
+openly licensed content.
+
+3. Prohibited Use
+You may not use AniStream to:
+    - Access or stream copyrighted material without authorization.
+    - Bypass access restrictions, security measures, or encryption on any website.
+    - Engage in illegal activities or distribute malicious software.
+
+4. No Warranty
+AniStream is provided "as-is" without any warranties of any kind, either express or 
+implied. The developer does not guarantee uninterrupted access or that content 
+streamed through the software is legal, accurate, or safe.
+
+5. Limitation of Liability
+In no event shall the developer be liable for any direct, indirect, incidental, or 
+consequential damages arising from your use of AniStream or the content accessed 
+through it.
+
+6. Termination
+Your right to use AniStream terminates immediately if you violate these Terms. 
+Upon termination, you must stop using the software and delete all copies.
+
+7. Governing Law
+These Terms are governed by the laws of [Your Country/State], and any disputes 
+will be subject to the exclusive jurisdiction of its courts.
+
+8. Reporting Issues
+For bug reports, feature requests, or other issues, please use the GitHub 
+repository: https://github.com/[YourRepo]/issues
+
+By using AniStream, you acknowledge that you have read and agree to these Terms of Service.
+```
