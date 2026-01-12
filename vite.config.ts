@@ -15,7 +15,8 @@ export default defineConfig(async () => ({
             "@services": path.join(__dirname, "src", "services"),
             "@views": path.join(__dirname, "src", "views"),
             "@models": path.join(__dirname, "src", "models"),
-            "@icons": path.join(__dirname, "src", "icons")
+            "@icons": path.join(__dirname, "src", "icons"),
+            "@controls": path.join(__dirname, "src", "controls")
         }
     },
 
