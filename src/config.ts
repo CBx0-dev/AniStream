@@ -6,7 +6,8 @@ import { StreamsViewModel } from "@views/StreamsView.model";
 import { SyncViewModel } from "@views/SyncView.model";
 
 import { ProviderService } from "@services/provider.service";
-import { SeriesSerivce } from "@services/series.service";
+import { SeriesService } from "@services/series.service";
+import {DbService} from "@services/db.service";
 
 export class AppConfig implements AppShell {
     router: { history?: "memory" | "web" | "web-hash"; views: RoutableViewModel[]; } = {
@@ -18,7 +19,8 @@ export class AppConfig implements AppShell {
     }
 
     configureServices(ctx: WritableGlobalContext): void {
-        ctx.registerService(ProviderService, () => new ProviderService());
-        ctx.registerService(SeriesSerivce, ctx => new SeriesSerivce(ctx));
+        ctx.registerService(ProviderService, ctx => new ProviderService(ctx));
+        ctx.registerService(SeriesService, ctx => new SeriesService(ctx));
+        ctx.registerService(DbService, () => new DbService());
     }
 }

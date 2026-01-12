@@ -22,12 +22,12 @@ export class ProviderViewModel extends ViewModel {
     }
 
     public async onAniworldBtn(): Promise<void> {
-        await this.providerService.setProvider(ProviderService.ANIWORLD);
+        await this.providerService.setProvider(this.providerService.ANIWORLD);
         await this.routerService.navigateTo(StreamsViewModel)
     }
 
     public async onStoBtn(): Promise<void> {
-        await this.providerService.setProvider(ProviderService.STO);
+        await this.providerService.setProvider(this.providerService.STO);
         await this.routerService.navigateTo(StreamsViewModel)
     }
 }

@@ -11,7 +11,10 @@
     },
     "dependencies": {
         "@tauri-apps/api": "^2",
+        "@tauri-apps/plugin-fs": "^2.4.5",
+        "@tauri-apps/plugin-http": "^2.5.5",
         "@tauri-apps/plugin-opener": "^2",
+        "@tauri-apps/plugin-sql": "^2.3.1",
         "vue": "^3.5.13",
         "vue-mvvm": "^0.2.3",
         "vue-router": "^4.6.4"

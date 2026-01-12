@@ -45,10 +45,10 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
                 </div>
             </div>
         </div>
-        <div class="grid grid-cols-[repeat(auto-fill,250px)] justify-center gap-3 py-6">
+        <div class="grid grid-cols-[repeat(auto-fill,150px)] justify-center gap-3 py-6">
             <div v-for="i of 10"
                 :key="i"
-                class="w-[250px] h-[350px] bg-base-100 border border-base-300 rounded-sm hover:scale-110 hover:shadow-sm duration-300"
+                class="w-[150px] h-[225px] bg-base-100 border border-base-300 rounded-sm hover:scale-110 hover:shadow-sm duration-300"
                 @click="vm.onCardClick">
             </div>
         </div>

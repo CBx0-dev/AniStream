@@ -18,7 +18,7 @@ const vm: DetailControlModel = useDialogControl(DetailControlModel);
                 </button>
             </form>
             <div class="flex gap-3">
-                <div class="shrink-0 w-[250px] h-[350px] bg-base-100 border border-base-300 rounded-sm">
+                <div class="shrink-0 w-[300px] h-[450px] bg-base-100 border border-base-300 rounded-sm">
 
                 </div>
                 <div class="grow flex flex-col gap-2">

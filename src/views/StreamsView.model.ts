@@ -8,6 +8,7 @@ import StreamsView from "./StreamsView.vue";
 import { SyncViewModel } from "./SyncView.model";
 import { ProviderService } from "@services/provider.service";
 import { DetailControlModel } from "@/controls/DetailControl.model";
+import {SeriesService} from "@services/series.service";
 
 export class StreamsViewModel extends ViewModel {
     public static readonly component: Component = StreamsView;
@@ -17,13 +18,19 @@ export class StreamsViewModel extends ViewModel {
 
     private readonly routerService: RouterService;
     private readonly dialogService: DialogService;
-    private readonly providerService: ProviderService;
+    private readonly seriesService: SeriesService;
 
     public constructor() {
         super();
         this.routerService = this.ctx.getService(RouterService);
         this.dialogService = this.ctx.getService(DialogService);
-        this.providerService = this.ctx.getService(ProviderService);
+        this.seriesService = this.ctx.getService(SeriesService);
+    }
+
+    public async mounted(): Promise<void> {
+        if (await this.seriesService.requiresSync()) {
+            await this.routerService.navigateTo(SyncViewModel);
+        }
     }
 
     public onBackBtn(): void {

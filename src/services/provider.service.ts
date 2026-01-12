@@ -1,67 +1,96 @@
+import {path} from "@tauri-apps/api"
+import * as fs from "@tauri-apps/plugin-fs";
+import {DbService, DbSession} from "@services/db.service";
+import {ReadableGlobalContext} from "vue-mvvm";
+
 abstract class DefaultProvider {
     public abstract get uniqueKey(): string;
-    
-    private inited: boolean;
 
-    protected constructor() {
-        this.inited = false;
+    private readonly service: DbService;
+    private session: DbSession | null;
+
+    protected constructor(service: DbService) {
+        this.service = service;
+        this.session = null;
     }
 
-    protected abstract initProvider(): Promise<void>;
-
-    public async init(): Promise<void> {
-        if (this.inited) {
-            return;
+    public async getDatabase(): Promise<DbSession> {
+        if (this.session) {
+            return this.session;
         }
 
-        await this.initProvider();
-        this.inited = true;
+        const dataDir: string = await this.getStorageLocation();
+        const dbFile: string = await path.join(dataDir, "metadata.db");
+
+        this.session = await this.service.openDB(dbFile, this.uniqueKey);
+        return this.session;
     }
+
+    public abstract getStorageLocation(): Promise<string>;
 }
 
-class AniWorldProvider extends DefaultProvider {
+export class AniWorldProvider extends DefaultProvider {
     public static readonly UNIQUE_KEY: string = "aniworld";
 
     public get uniqueKey(): string {
         return AniWorldProvider.UNIQUE_KEY;
     }
 
-    public constructor() {
-        super();
+    public constructor(service: DbService) {
+        super(service);
     }
 
-    protected async initProvider(): Promise<void> {
+    public async getStorageLocation(): Promise<string> {
+        const appDir: string = await path.appDataDir();
+        const dataDir: string = await path.join(appDir, "aniworld");
 
+        await fs.mkdir(dataDir, {
+            recursive: true
+        });
+
+        return dataDir;
     }
 }
 
-class StoProvider extends DefaultProvider {
+export class StoProvider extends DefaultProvider {
     public static readonly UNIQUE_KEY: string = "sto";
 
     public get uniqueKey(): string {
         return StoProvider.UNIQUE_KEY;
     }
 
-    public constructor() {
-        super();
+    public constructor(service: DbService) {
+        super(service);
     }
 
-    protected async initProvider(): Promise<void> {
+    public async getStorageLocation(): Promise<string> {
+        const appDir: string = await path.appDataDir();
+        const dataDir: string = await path.join(appDir, "sto");
 
+        await fs.mkdir(dataDir, {
+            recursive: true
+        });
+
+        return dataDir;
     }
 }
 
 export class ProviderService {
-    public static readonly ANIWORLD: AniWorldProvider = new AniWorldProvider();
-    public static readonly STO: StoProvider = new StoProvider();
+    public readonly ANIWORLD: AniWorldProvider;
+    public readonly STO: StoProvider;
     private static readonly SESSION_KEY: string = "active-provider";
 
     private provider: DefaultProvider | null = null;
 
-    public constructor() {
+    public constructor(ctx: ReadableGlobalContext) {
+        let dbService: DbService = ctx.getService(DbService);
+
+        this.ANIWORLD = new AniWorldProvider(dbService);
+        this.STO = new StoProvider(dbService);
+
         this.provider = null;
     }
-    
+
     public async getProvider(): Promise<DefaultProvider> {
         if (this.provider) {
             return this.provider;
@@ -74,19 +103,23 @@ export class ProviderService {
         throw "No provider set and no provider was registered in the cache";
     }
 
+    public async getDatabase(): Promise<DbSession> {
+        const provider: DefaultProvider = await this.getProvider();
+        return await provider.getDatabase();
+    }
+
     public async setProvider(provider: DefaultProvider): Promise<void> {
         this.provider = provider;
-        await this.provider.init();
-        
+
         sessionStorage.setItem(ProviderService.SESSION_KEY, provider.uniqueKey);
     }
 
     private getProviderFromUniqueKey(key: string): DefaultProvider | null {
         switch (key) {
             case AniWorldProvider.UNIQUE_KEY:
-                return ProviderService.ANIWORLD;
+                return this.ANIWORLD;
             case StoProvider.UNIQUE_KEY:
-                return ProviderService.STO;
+                return this.STO;
         }
 
         return null;
@@ -99,12 +132,9 @@ export class ProviderService {
         }
 
         this.provider = this.getProviderFromUniqueKey(value);
-        
-        if (this.provider) {
-            await this.provider.init();
-            return true;
-        }
 
-        return false;
+        return !!this.provider;
+
+
     }
 }
