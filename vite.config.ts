@@ -13,7 +13,9 @@ export default defineConfig(async () => ({
         alias: {
             "@": path.join(__dirname, "src"),
             "@services": path.join(__dirname, "src", "services"),
-            "@views": path.join(__dirname, "src", "views")
+            "@views": path.join(__dirname, "src", "views"),
+            "@models": path.join(__dirname, "src", "models"),
+            "@icons": path.join(__dirname, "src", "icons")
         }
     },
 

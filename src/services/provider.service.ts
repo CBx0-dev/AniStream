@@ -77,6 +77,8 @@ export class ProviderService {
     public async setProvider(provider: DefaultProvider): Promise<void> {
         this.provider = provider;
         await this.provider.init();
+        
+        sessionStorage.setItem(ProviderService.SESSION_KEY, provider.uniqueKey);
     }
 
     private getProviderFromUniqueKey(key: string): DefaultProvider | null {

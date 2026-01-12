@@ -24,7 +24,9 @@
         "paths": {
             "@/*": ["./src/*"],
             "@services/*": ["./src/services/*"],
-            "@views/*": ["./src/views/*"]
+            "@views/*": ["./src/views/*"],
+            "@models/*": ["./src/models/*"],
+            "@icons/*": ["./src/icons/*"]
         }
     },
     "include": [

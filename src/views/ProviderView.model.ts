@@ -1,9 +1,10 @@
 import { Component } from "vue";
-
 import { ViewModel } from "vue-mvvm";
 import { RouteAdapter, RouterService } from "vue-mvvm/router";
 
 import ProviderView from "./ProviderView.vue";
+import { StreamsViewModel } from "./StreamsView.model";
+import { ProviderService } from "@services/provider.service";
 
 export class ProviderViewModel extends ViewModel {
     public static readonly component: Component = ProviderView;
@@ -12,10 +13,21 @@ export class ProviderViewModel extends ViewModel {
     }
 
     private readonly routerService: RouterService;
-    
+    private readonly providerService: ProviderService;
 
     public constructor() {
         super();
         this.routerService = this.ctx.getService(RouterService);
+        this.providerService = this.ctx.getService(ProviderService);
+    }
+
+    public async onAniworldBtn(): Promise<void> {
+        await this.providerService.setProvider(ProviderService.ANIWORLD);
+        await this.routerService.navigateTo(StreamsViewModel)
+    }
+
+    public async onStoBtn(): Promise<void> {
+        await this.providerService.setProvider(ProviderService.STO);
+        await this.routerService.navigateTo(StreamsViewModel)
     }
 }
