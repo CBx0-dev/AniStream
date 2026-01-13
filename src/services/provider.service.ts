@@ -3,8 +3,11 @@ import * as fs from "@tauri-apps/plugin-fs";
 import {DbService, DbSession} from "@services/db.service";
 import {ReadableGlobalContext} from "vue-mvvm";
 
-abstract class DefaultProvider {
+export abstract class DefaultProvider {
+    public abstract get baseURL(): string;
     public abstract get uniqueKey(): string;
+    public abstract get catalogURL(): string;
+    protected abstract get streamURLBase(): string;
 
     private readonly service: DbService;
     private session: DbSession | null;
@@ -26,14 +29,28 @@ abstract class DefaultProvider {
         return this.session;
     }
 
+    public streamURL(guid: string): string {
+        return `${this.streamURLBase}/${guid}`;
+    }
+
     public abstract getStorageLocation(): Promise<string>;
+
 }
 
 export class AniWorldProvider extends DefaultProvider {
     public static readonly UNIQUE_KEY: string = "aniworld";
+    public readonly baseURL: string = "https://aniworld.to";
 
     public get uniqueKey(): string {
         return AniWorldProvider.UNIQUE_KEY;
+    }
+
+    public get streamURLBase(): string {
+        return `${this.baseURL}/anime/stream`;
+    }
+
+    public get catalogURL(): string {
+        return `${this.baseURL}/animes`;
     }
 
     public constructor(service: DbService) {
@@ -54,9 +71,19 @@ export class AniWorldProvider extends DefaultProvider {
 
 export class StoProvider extends DefaultProvider {
     public static readonly UNIQUE_KEY: string = "sto";
+    public readonly baseURL: string = "http://186.2.175.5";
 
     public get uniqueKey(): string {
         return StoProvider.UNIQUE_KEY;
+
+    }
+
+    public get catalogURL(): string {
+        return `${this.baseURL}/serien`;
+    }
+
+    public get streamURLBase(): string {
+        return `${this.baseURL}/serie/stream`;
     }
 
     public constructor(service: DbService) {

@@ -6,7 +6,6 @@ import { RouteAdapter, RouterService } from "vue-mvvm/router";
 import StreamsView from "./StreamsView.vue";
 
 import { SyncViewModel } from "./SyncView.model";
-import { ProviderService } from "@services/provider.service";
 import { DetailControlModel } from "@/controls/DetailControl.model";
 import {SeriesService} from "@services/series.service";
 

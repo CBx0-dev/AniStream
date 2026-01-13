@@ -1,13 +1,15 @@
-import { AppShell, WritableGlobalContext } from "vue-mvvm";
-import { RoutableViewModel } from "vue-mvvm/router";
+import {AppShell, WritableGlobalContext} from "vue-mvvm";
+import {RoutableViewModel} from "vue-mvvm/router";
 
-import { ProviderViewModel } from "@views/ProviderView.model";
-import { StreamsViewModel } from "@views/StreamsView.model";
-import { SyncViewModel } from "@views/SyncView.model";
+import {ProviderViewModel} from "@views/ProviderView.model";
+import {StreamsViewModel} from "@views/StreamsView.model";
+import {SyncViewModel} from "@views/SyncView.model";
 
-import { ProviderService } from "@services/provider.service";
-import { SeriesService } from "@services/series.service";
+import {ProviderService} from "@services/provider.service";
+import {SeriesService} from "@services/series.service";
 import {DbService} from "@services/db.service";
+import {FetchService} from "@services/fetch.service";
+import {GenreService} from "@services/genre.service";
 
 export class AppConfig implements AppShell {
     router: { history?: "memory" | "web" | "web-hash"; views: RoutableViewModel[]; } = {
@@ -21,6 +23,8 @@ export class AppConfig implements AppShell {
     configureServices(ctx: WritableGlobalContext): void {
         ctx.registerService(ProviderService, ctx => new ProviderService(ctx));
         ctx.registerService(SeriesService, ctx => new SeriesService(ctx));
+        ctx.registerService(GenreService, ctx => new GenreService(ctx));
         ctx.registerService(DbService, () => new DbService());
+        ctx.registerService(FetchService, ctx => new FetchService(ctx));
     }
 }

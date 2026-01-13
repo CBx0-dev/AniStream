@@ -15,6 +15,7 @@
         "@tauri-apps/plugin-http": "^2.5.5",
         "@tauri-apps/plugin-opener": "^2",
         "@tauri-apps/plugin-sql": "^2.3.1",
+        "random-useragent": "^0.5.0",
         "vue": "^3.5.13",
         "vue-mvvm": "^0.2.3",
         "vue-router": "^4.6.4"
@@ -23,6 +24,7 @@
         "@tailwindcss/vite": "^4.1.18",
         "@tauri-apps/cli": "^2",
         "@types/node": "^25.0.6",
+        "@types/random-useragent": "^0.3.3",
         "@vitejs/plugin-vue": "^5.2.1",
         "daisyui": "^5.5.14",
         "tailwindcss": "^4.1.18",

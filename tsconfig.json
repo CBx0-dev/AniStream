@@ -27,7 +27,8 @@
             "@views/*": ["./src/views/*"],
             "@models/*": ["./src/models/*"],
             "@icons/*": ["./src/icons/*"],
-            "@controls/*": ["./src/controls/*"]
+            "@controls/*": ["./src/controls/*"],
+            "@utils/*": ["./src/utils/*"]
         }
     },
     "include": [

@@ -1,5 +1,6 @@
 import Database, {QueryResult} from "@tauri-apps/plugin-sql";
-import {AniWorldProvider} from "@services/provider.service";
+import {ProviderService} from "@services/provider.service";
+import {ReadableGlobalContext} from "vue-mvvm";
 
 export class DbService {
 
@@ -7,7 +8,7 @@ export class DbService {
     }
 
     public async openDB(file: string, provider: string): Promise<DbSession> {
-        const handler: Database= await Database.load(`sqlite:${file}`);
+        const handler: Database = await Database.load(`sqlite:${file}`);
         const session: DbSession = new DbSession(handler);
 
         await this.beginMigration(session, provider);
@@ -16,7 +17,9 @@ export class DbService {
     }
 
     private async beginMigration(session: DbSession, provider: string): Promise<void> {
-        const [{user_version: currentVersion}] = await session.query<Array<{ user_version: number }>>("PRAGMA user_version");
+        const [{user_version: currentVersion}] = await session.query<Array<{
+            user_version: number
+        }>>("PRAGMA user_version");
 
         let latest: DbVersion = new LATEST_VERSION();
 
@@ -44,6 +47,14 @@ export class DbService {
             }
             await session.execute(`PRAGMA user_version = ${latest.version}`);
         });
+    }
+}
+
+export class DbServiceBase {
+    protected readonly provider: ProviderService;
+
+    protected constructor(ctx: ReadableGlobalContext) {
+        this.provider = ctx.getService(ProviderService);
     }
 }
 
@@ -112,7 +123,7 @@ class DbVersion1 implements DbVersion {
     public constructor() {
     }
 
-    public async migrate(session: DbSession, provider: string): Promise<void> {
+    public async migrate(session: DbSession, _provider: string): Promise<void> {
         await session.execute(`
 PRAGMA user_version = 1;
 
@@ -148,9 +159,8 @@ CREATE TABLE episode
 
 CREATE TABLE genre
 (
-    genre_id    INTEGER PRIMARY KEY AUTOINCREMENT,
-    key         TEXT UNIQUE NOT NULL,
-    german_name TEXT        NOT NULL
+    genre_id     INTEGER PRIMARY KEY AUTOINCREMENT,
+    key          TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE genre_to_series
@@ -158,16 +168,11 @@ CREATE TABLE genre_to_series
     genre_to_series_id INTEGER PRIMARY KEY AUTOINCREMENT,
     genre_id           INTEGER NOT NULL,
     series_id          INTEGER NOT NULL,
+    main_genre         BOOLEAN NOT NULL,
     FOREIGN KEY (genre_id) REFERENCES genre (genre_id) ON DELETE RESTRICT,
     FOREIGN KEY (series_id) REFERENCES series (series_id) ON DELETE RESTRICT
 );
         `);
-
-        if (provider == AniWorldProvider.UNIQUE_KEY) {
-            await session.execute(`
-
-            `);
-        }
     }
 }
 
