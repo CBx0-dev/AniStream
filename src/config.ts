@@ -10,6 +10,7 @@ import {SeriesService} from "@services/series.service";
 import {DbService} from "@services/db.service";
 import {FetchService} from "@services/fetch.service";
 import {GenreService} from "@services/genre.service";
+import {I18nService} from "@services/i18n.service";
 
 export class AppConfig implements AppShell {
     router: { history?: "memory" | "web" | "web-hash"; views: RoutableViewModel[]; } = {
@@ -21,6 +22,7 @@ export class AppConfig implements AppShell {
     }
 
     configureServices(ctx: WritableGlobalContext): void {
+        ctx.registerService(I18nService, () => new I18nService());
         ctx.registerService(ProviderService, ctx => new ProviderService(ctx));
         ctx.registerService(SeriesService, ctx => new SeriesService(ctx));
         ctx.registerService(GenreService, ctx => new GenreService(ctx));

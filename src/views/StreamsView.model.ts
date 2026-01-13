@@ -8,6 +8,7 @@ import StreamsView from "./StreamsView.vue";
 import { SyncViewModel } from "./SyncView.model";
 import { DetailControlModel } from "@/controls/DetailControl.model";
 import {SeriesService} from "@services/series.service";
+import {I18nService} from "@services/i18n.service";
 
 export class StreamsViewModel extends ViewModel {
     public static readonly component: Component = StreamsView;
@@ -17,12 +18,14 @@ export class StreamsViewModel extends ViewModel {
 
     private readonly routerService: RouterService;
     private readonly dialogService: DialogService;
+    private readonly i18nService: I18nService;
     private readonly seriesService: SeriesService;
 
     public constructor() {
         super();
         this.routerService = this.ctx.getService(RouterService);
         this.dialogService = this.ctx.getService(DialogService);
+        this.i18nService = this.ctx.getService(I18nService);
         this.seriesService = this.ctx.getService(SeriesService);
     }
 
@@ -43,5 +46,9 @@ export class StreamsViewModel extends ViewModel {
     public async onCardClick(): Promise<void> {
         const dialog: DetailControlModel = this.dialogService.initDialog(DetailControlModel);
         await dialog.openDialog();
+    }
+
+    public i18n(key: readonly [string, readonly string[]]): string {
+        return this.i18nService.get(key);
     }
 }

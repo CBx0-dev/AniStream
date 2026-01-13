@@ -17,7 +17,8 @@ export default defineConfig(async () => ({
             "@models": path.join(__dirname, "src", "models"),
             "@icons": path.join(__dirname, "src", "icons"),
             "@controls": path.join(__dirname, "src", "controls"),
-            "@utils": path.join(__dirname, "src", "utils")
+            "@utils": path.join(__dirname, "src", "utils"),
+            "@langs": path.join(__dirname, "src", "langs")
         }
     },
 
@@ -39,7 +40,7 @@ export default defineConfig(async () => ({
             : undefined,
         watch: {
             // 3. tell Vite to ignore watching `src-tauri`
-            ignored: ["**/src-tauri/**"],
+            ignored: ["**/src-tauri/**", "**/src/langs/**"],
         },
     },
 }));

@@ -1,0 +1,13 @@
+{
+    "$lang": "en",
+    "$group": "StreamsView",
+    "navbar": {
+        "back": "Back to providers",
+        "sync": "Sync streams",
+        "watchlist": "Watchlist",
+        "searchPlaceholder": "Search"
+    },
+    "content": {
+        "eol": "Nothing more to show"
+    }
+}

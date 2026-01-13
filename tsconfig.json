@@ -28,7 +28,8 @@
             "@models/*": ["./src/models/*"],
             "@icons/*": ["./src/icons/*"],
             "@controls/*": ["./src/controls/*"],
-            "@utils/*": ["./src/utils/*"]
+            "@utils/*": ["./src/utils/*"],
+            "@langs/*": ["./src/langs/*"]
         }
     },
     "include": [

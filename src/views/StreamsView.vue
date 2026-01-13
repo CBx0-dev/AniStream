@@ -6,6 +6,7 @@ import LucideArrowLeft from "@/icons/LucideArrowLeft.vue";
 import LucideListVideo from "@/icons/LucideListVideo.vue";
 import LucideCloudSync from "@/icons/LucideCloudSync.vue";
 import LucideX from "@/icons/LucideX.vue";
+import I18n from "@utils/i18n";
 
 const vm: StreamsViewModel = useViewModel(StreamsViewModel);
 </script>
@@ -17,22 +18,22 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
                 <div class="flex justify-between w-full">
                     <button class="btn btn-link btn-neutral hover:text-primary cursor-default" @click="vm.onBackBtn">
                         <LucideArrowLeft />
-                        Back to providers
+                        {{ vm.i18n(I18n.StreamsView.navbar.back) }}
                     </button>
                     <div class="join">
                         <button class="join-item btn btn-neutral btn-soft" @click="vm.onSyncBtn">
                             <LucideCloudSync />
-                            Sync streams
+                            {{ vm.i18n(I18n.StreamsView.navbar.sync) }}
                         </button>
                         <button class="join-item btn btn-neutral btn-soft">
                             <LucideListVideo />
-                            Watchlist
+                            {{ vm.i18n(I18n.StreamsView.navbar.watchlist) }}
                         </button>
                     </div>
                 </div>
                 <label class="input w-full">
                     <LucideSearch />
-                    <input type="text" class="grow" placeholder="Search" />
+                    <input type="text" class="grow" :placeholder="vm.i18n(I18n.StreamsView.navbar.searchPlaceholder)" />
                 </label>
                 <div>
                     <form class="join">
@@ -53,7 +54,7 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
             </div>
         </div>
         <div class="text-center text-gray-400" id="line">
-            Nothing to show
+            {{ vm.i18n(I18n.StreamsView.content.eol) }}
         </div>
     </div>
 </template>
