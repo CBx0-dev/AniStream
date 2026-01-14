@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useViewModel } from "vue-mvvm";
+import {useViewModel} from "vue-mvvm";
 
-import { StreamsViewModel } from "@views/StreamsView.model";
+import {StreamsViewModel} from "@views/StreamsView.model";
 
 import LucideSearch from "@icons/LucideSearch.vue";
 import LucideArrowLeft from "@icons/LucideArrowLeft.vue";
@@ -23,32 +23,51 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
             <div class="card-body">
                 <div class="flex justify-between w-full">
                     <button class="btn btn-link btn-neutral hover:text-primary cursor-default" @click="vm.onBackBtn">
-                        <LucideArrowLeft />
-                        <Text :target="I18n.StreamsView.navbar.back" />
+                        <LucideArrowLeft/>
+                        <Text :target="I18n.StreamsView.navbar.back"/>
                     </button>
                     <div class="join">
                         <button class="join-item btn btn-neutral btn-soft" @click="vm.onSyncBtn">
-                            <LucideCloudSync />
-                            <Text :target="I18n.StreamsView.navbar.sync" />
+                            <LucideCloudSync/>
+                            <Text :target="I18n.StreamsView.navbar.sync"/>
                         </button>
                         <button class="join-item btn btn-neutral btn-soft" @click="vm.onWatchlistBtn">
-                            <LucideListVideo />
-                            <Text :target="I18n.StreamsView.navbar.watchlist" />
+                            <LucideListVideo/>
+                            <Text :target="I18n.StreamsView.navbar.watchlist"/>
                         </button>
                     </div>
                 </div>
                 <label class="input w-full">
-                    <LucideSearch />
-                    <input type="text" class="grow" :placeholder="vm.i18n(I18n.StreamsView.navbar.searchPlaceholder)" />
+                    <LucideSearch/>
+                    <input type="text" class="grow" :placeholder="vm.i18n(I18n.StreamsView.navbar.searchPlaceholder)"/>
                 </label>
                 <div>
-                    <form class="join">
-                        <button class="join-item btn btn-square border border-base-300" type="reset">
-                            <LucideX />
+                    <div class="join flex-wrap">
+                        <select class="select select-sm w-fit" v-model="vm.genreFilter"
+                                @input="vm.onGenreFilter(parseInt(($event.target! as HTMLSelectElement).value))">
+                            <option disabled selected value="default">
+                                <Text :target="I18n.StreamsView.navbar.selectGenre" />
+                            </option>
+                            <option
+                                v-for="genre of vm.availableGenres"
+                                :key="genre.genre_id"
+                                :value="genre.genre_id">
+                                {{ vm.i18nDynamic(I18n.Genres, genre.key) }}
+                            </option>
+                        </select>
+                        <div
+                            v-for="genre of vm.filteredGenres"
+                            :key="genre.genre_id"
+                            class="btn btn-sm border border-base-300"
+                            @click="vm.onGenreFilterRemoveBtn(genre.genre_id)">
+                            {{ vm.i18nDynamic(I18n.Genres, genre.key) }}
+                        </div>
+                        <button
+                            class="shrink-0 join-item btn btn-sm btn-square border border-base-300"
+                            @click="vm.onGenreFilterClearBtn">
+                            <LucideX/>
                         </button>
-                        <input class="join-item btn border border-base-300" type="checkbox" name="frameworks" aria-label="Thriller" />
-                        <input class="join-item btn border border-base-300" type="checkbox" name="frameworks" aria-label="Thriller" />
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

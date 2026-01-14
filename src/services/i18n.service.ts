@@ -1,6 +1,6 @@
 import {readonly, ref, Ref} from "vue";
 
-const modules: Record<string, I18nUnit> = import.meta.glob('@langs/**/*.json', {eager: true})
+const modules: Record<string, {"default": I18nUnit}> = import.meta.glob('@langs/**/*.json', {eager: true})
 
 type SupportedLocals = "de" | "en";
 
@@ -21,7 +21,8 @@ export class I18nService {
     public constructor() {
         this.groups = new Map<string, Map<SupportedLocals, I18nUnit>>();
 
-        for (const unit of Object.values(modules)) {
+        for (const unitModule of Object.values(modules)) {
+            const unit: I18nUnit = unitModule.default;
             const group: string = unit.$group;
             const lang: SupportedLocals = unit.$lang;
 

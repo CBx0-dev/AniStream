@@ -43,6 +43,13 @@ export class GenreService extends DbServiceBase {
         await session.execute("INSERT INTO genre_to_series (genre_id, series_id, main_genre) VALUES (?, ?, ?)", genre.genre_id, series.series_id, main_genre);
     }
 
+    public async getGenres(): Promise<GenreModel[]> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        const rows: GenreDbModel[] = await session.query<GenreDbModel[]>("SELECT * FROM genre ORDER BY key");
+        return rows.map(row => GenreModel(row.genre_id, row.key));
+    }
+
     public async getMainGenreOfSeries(seriesId: number): Promise<GenreModel | null> {
         const session: DbSession = await this.provider.getDatabase();
 

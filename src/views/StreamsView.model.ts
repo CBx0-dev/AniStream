@@ -12,6 +12,8 @@ import {SeriesService} from "@services/series.service";
 import {I18nService} from "@services/i18n.service";
 import {SeriesModel} from "@models/series.model";
 import {DefaultProvider, ProviderService} from "@services/provider.service";
+import {GenreService} from "@services/genre.service";
+import {GenreModel} from "@models/genre.model";
 
 export class StreamsViewModel extends ViewModel {
     public static readonly component: Component = StreamsView;
@@ -24,12 +26,18 @@ export class StreamsViewModel extends ViewModel {
     private readonly providerService: ProviderService;
     private readonly i18nService: I18nService;
     private readonly seriesService: SeriesService;
+    private readonly genresService: GenreService;
 
     private readonly observer: IntersectionObserver;
 
     public chunkSize: number = 50;
     public series: SeriesModel[] = this.ref([]);
     public providerFolder: string | null = this.ref(null);
+    public genres: GenreModel[] = this.ref([]);
+    public selectedGenres: number[] = this.ref([]);
+    public genreFilter: string = this.ref("default");
+    public filteredGenres: GenreModel[] = this.computed(() => this.genres.filter(genre => this.selectedGenres.includes(genre.genre_id)));
+    public availableGenres: GenreModel[] = this.computed(() => this.genres.filter(genre => !this.selectedGenres.includes(genre.genre_id)));
 
     public constructor() {
         super();
@@ -38,6 +46,7 @@ export class StreamsViewModel extends ViewModel {
         this.providerService = this.ctx.getService(ProviderService);
         this.i18nService = this.ctx.getService(I18nService);
         this.seriesService = this.ctx.getService(SeriesService);
+        this.genresService = this.ctx.getService(GenreService);
 
         this.observer = new IntersectionObserver(async entries => {
             if (entries.length == 0) {
@@ -63,6 +72,8 @@ export class StreamsViewModel extends ViewModel {
         if (intersectionLine) {
             this.observer.observe(intersectionLine);
         }
+
+        this.genres.push(...await this.genresService.getGenres());
     }
 
     public unmounted(): void {
@@ -84,6 +95,19 @@ export class StreamsViewModel extends ViewModel {
         await this.routerService.navigateTo(WatchlistViewModel);
     }
 
+    public onGenreFilter(genreId: number): void {
+        this.selectedGenres.push(genreId);
+        this.genreFilter = "default";
+    }
+
+    public onGenreFilterRemoveBtn(genreId: number): void {
+        this.selectedGenres = this.selectedGenres.filter(id => id != genreId);
+    }
+
+    public onGenreFilterClearBtn(): void {
+        this.selectedGenres.clear();
+    }
+
     public async onCardClick(series: SeriesModel): Promise<void> {
         if (!this.providerFolder) {
             return;
@@ -94,6 +118,10 @@ export class StreamsViewModel extends ViewModel {
 
     public i18n(key: readonly [string, readonly string[]]): string {
         return this.i18nService.get(key);
+    }
+
+    public i18nDynamic(target: any, name: string): string {
+        return this.i18nService.getDynamic(target, name);
     }
 
     private async loadNextChunk(): Promise<void> {

@@ -5,7 +5,8 @@
         "back": "Back to providers",
         "sync": "Sync streams",
         "watchlist": "Watchlist",
-        "searchPlaceholder": "Search"
+        "searchPlaceholder": "Search",
+        "selectGenre": "Select genre"
     },
     "content": {
         "eol": "Nothing more to show"
