@@ -40,6 +40,14 @@ export class I18nService {
         this._currentLocal.value = local;
     }
 
+    public getDynamic(target: any, name: string): string {
+        if (name in target && Array.isArray(target[name])) {
+            return this.get(target[name] as unknown as readonly [string, readonly string[]]);
+        }
+
+        return "?";
+    }
+
     public get(target: readonly [string, readonly string[]]): string {
         const [group, path] = target;
 
@@ -84,6 +92,10 @@ export class I18nService {
             }
         }
 
-        return current as string;
+        return this.applyFormat(current as string);
+    }
+
+    private applyFormat(value: string): string {    
+        return value.replace(/\*\*((?:\*(?!\*)|[^*])+)\*\*/g, "<strong>$1</strong>"); 
     }
 }

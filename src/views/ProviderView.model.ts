@@ -13,14 +13,12 @@ export class ProviderViewModel extends ViewModel {
         path: "/"
     }
 
-    private readonly i18nService: I18nService;
     private readonly routerService: RouterService;
     private readonly providerService: ProviderService;
 
     public constructor() {
         super();
 
-        this.i18nService = this.ctx.getService(I18nService);
         this.routerService = this.ctx.getService(RouterService);
         this.providerService = this.ctx.getService(ProviderService);
     }
@@ -33,9 +31,5 @@ export class ProviderViewModel extends ViewModel {
     public async onStoBtn(): Promise<void> {
         await this.providerService.setProvider(this.providerService.STO);
         await this.routerService.navigateTo(StreamsViewModel)
-    }
-
-    public i18n(key: readonly [string, readonly string[]]): string {
-        return this.i18nService.get(key);
     }
 }

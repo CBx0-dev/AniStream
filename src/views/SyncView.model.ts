@@ -9,6 +9,7 @@ import {FetchService} from "@services/fetch.service";
 import {GenreModel} from "@models/genre.model";
 import {GenreService} from "@services/genre.service";
 import {SeriesModel} from "@models/series.model";
+import { I18nService } from "@/services/i18n.service";
 
 enum SyncViewModelPanel {
     PREPARE,

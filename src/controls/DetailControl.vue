@@ -4,6 +4,8 @@ import {DetailControlModel} from './DetailControl.model';
 import LucideX from '@/icons/LucideX.vue';
 import LucidePlay from '@/icons/LucidePlay.vue';
 import LucideTimerReset from '@/icons/LucideTimerReset.vue';
+import I18n from '@/utils/i18n';
+import Text from './Text.vue';
 
 
 const vm: DetailControlModel = useDialogControl(DetailControlModel);
@@ -25,6 +27,16 @@ const vm: DetailControlModel = useDialogControl(DetailControlModel);
                     <div class="shrink-0">
                         <h1 class="text-2xl font-semibold">The Title</h1>
                     </div>
+                    <div class="shrink-0">
+                        <div class="flex gap-1">
+                            <div class="badge badge-sm badge-soft badge-primary">
+                                Main Genre
+                            </div>
+                            <div class="badge badge-sm badge-soft badge-neutral"> 
+                                Sub Genre
+                            </div>
+                        </div>
+                    </div>
                     <div class="grow overflow-y-auto">
                         <p>
                             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, error distinctio?
@@ -35,11 +47,11 @@ const vm: DetailControlModel = useDialogControl(DetailControlModel);
                     <div class="shrink-0 join justify-end">
                         <button class="join-item btn btn-neutral btn-soft">
                             <LucideTimerReset/>
-                            Reset progression
+                            <Text :target="I18n.DetailControl.reset" />
                         </button>
                         <button class="join-item btn btn-primary btn-soft">
                             <LucidePlay/>
-                            Watch
+                            <Text :target="I18n.DetailControl.watch" />
                         </button>
                     </div>
                 </div>

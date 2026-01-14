@@ -7,6 +7,7 @@ import LucideListVideo from "@/icons/LucideListVideo.vue";
 import LucideCloudSync from "@/icons/LucideCloudSync.vue";
 import LucideX from "@/icons/LucideX.vue";
 import I18n from "@utils/i18n";
+import Text from "@/controls/Text.vue";
 
 const vm: StreamsViewModel = useViewModel(StreamsViewModel);
 </script>
@@ -18,16 +19,16 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
                 <div class="flex justify-between w-full">
                     <button class="btn btn-link btn-neutral hover:text-primary cursor-default" @click="vm.onBackBtn">
                         <LucideArrowLeft />
-                        {{ vm.i18n(I18n.StreamsView.navbar.back) }}
+                        <Text :target="I18n.StreamsView.navbar.back" />
                     </button>
                     <div class="join">
                         <button class="join-item btn btn-neutral btn-soft" @click="vm.onSyncBtn">
                             <LucideCloudSync />
-                            {{ vm.i18n(I18n.StreamsView.navbar.sync) }}
+                            <Text :target="I18n.StreamsView.navbar.sync" />
                         </button>
                         <button class="join-item btn btn-neutral btn-soft">
                             <LucideListVideo />
-                            {{ vm.i18n(I18n.StreamsView.navbar.watchlist) }}
+                            <Text :target="I18n.StreamsView.navbar.watchlist" />
                         </button>
                     </div>
                 </div>

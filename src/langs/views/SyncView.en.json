@@ -1,0 +1,11 @@
+{
+    "$lang": "en",
+    "$group": "SyncView",
+    "title": "Sync required",
+    "prepare": {
+        "reason": "A sync is required before starting to watch your favorite anime or series.",
+        "note": "The first sync will take some time and will approximately take **1GB** of storage.",
+        "start": "Start syncing",
+        "back": "Back"
+    }
+}
