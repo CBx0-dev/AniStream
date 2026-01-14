@@ -1,6 +1,6 @@
 import {ReadableGlobalContext} from "vue-mvvm";
 import {DbServiceBase, DbSession} from "@services/db.service";
-import {SeriesModel} from "@models/series.model";
+import {SeriesDbModel, SeriesModel} from "@models/series.model";
 import {QueryResult} from "@tauri-apps/plugin-sql";
 
 export class SeriesService extends DbServiceBase {
@@ -39,5 +39,13 @@ export class SeriesService extends DbServiceBase {
         let result: QueryResult = await session.execute("INSERT INTO series (guid, title, description, preview_image) VALUES (?, ?, ?, ?)", guid, title, description, preview_image);
 
         return SeriesModel(result.lastInsertId!, guid, title, description, preview_image);
+    }
+
+    public async getSeriesChunk(offset: number, limit: number): Promise<SeriesModel[]> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        let rows: SeriesDbModel[] = await session.query<SeriesDbModel[]>("SELECT * FROM series ORDER BY title LIMIT ? OFFSET ? ;", limit, offset);
+
+        return rows.map(row => SeriesModel(row.series_id, row.guid, row.title, row.description, row.preview_image));
     }
 }

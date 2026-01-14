@@ -1,6 +1,7 @@
 import { Component, ComponentInternalInstance, getCurrentInstance } from "vue";
 import { DialogControl } from "vue-mvvm/dialog";
 import DetailControl from "@controls/DetailControl.vue";
+import {SeriesModel} from "@models/series.model";
 
 export class DetailControlModel extends DialogControl {
     public static readonly component: Component = DetailControl;
@@ -17,7 +18,7 @@ export class DetailControlModel extends DialogControl {
     public popoverId: string = this.computed(() => `popover-${this.uid}`);
     public anchorId: string = this.computed(() => `--anchor-${this.uid}`);
 
-    public constructor() {
+    public constructor(_series: SeriesModel) {
         super();
     }
 

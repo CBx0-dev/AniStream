@@ -1,6 +1,8 @@
 declare global {
     interface Array<T> {
         at(index: number): T;
+
+        clear(): void;
     }
 }
 
@@ -14,6 +16,10 @@ Array.prototype.at = function<T>(index: number): T {
     }
 
     return this[index];
+}
+
+Array.prototype.clear=  function () {
+    this.length = 0;
 }
 
 export {}

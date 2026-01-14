@@ -61,9 +61,12 @@ export class AniWorldProvider extends DefaultProvider {
         const appDir: string = await path.appDataDir();
         const dataDir: string = await path.join(appDir, "aniworld");
 
-        await fs.mkdir(dataDir, {
-            recursive: true
-        });
+        if (!await fs.exists(dataDir)) {
+            await fs.mkdir(dataDir, {
+                recursive: true
+            });
+        }
+
 
         return dataDir;
     }
@@ -94,9 +97,11 @@ export class StoProvider extends DefaultProvider {
         const appDir: string = await path.appDataDir();
         const dataDir: string = await path.join(appDir, "sto");
 
-        await fs.mkdir(dataDir, {
-            recursive: true
-        });
+        if (!await fs.exists(dataDir)) {
+            await fs.mkdir(dataDir, {
+                recursive: true
+            });
+        }
 
         return dataDir;
     }

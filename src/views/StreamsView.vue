@@ -8,6 +8,7 @@ import LucideCloudSync from "@/icons/LucideCloudSync.vue";
 import LucideX from "@/icons/LucideX.vue";
 import I18n from "@utils/i18n";
 import Text from "@/controls/Text.vue";
+import ImageHash from "@controls/ImageHash.vue";
 
 const vm: StreamsViewModel = useViewModel(StreamsViewModel);
 </script>
@@ -48,13 +49,17 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
             </div>
         </div>
         <div class="grid grid-cols-[repeat(auto-fill,150px)] justify-center gap-3 py-6">
-            <div v-for="i of 10"
-                :key="i"
-                class="w-[150px] h-[225px] bg-base-100 border border-base-300 rounded-sm hover:scale-110 hover:shadow-sm duration-300"
-                @click="vm.onCardClick">
-            </div>
+            <ImageHash
+                v-for="series of vm.series"
+                :key="series.series_id"
+                class="bg-base-100 border border-base-300 rounded-box hover:scale-110 hover:shadow-sm duration-300"
+                :provider-folder="vm.providerFolder"
+                :hash="series.preview_image"
+                :width="150"
+                :height="225"
+                @click="vm.onCardClick(series)"/>
         </div>
-        <div class="text-center text-gray-400" id="line">
+        <div class="text-center text-gray-400" id="intersectionLine">
             {{ vm.i18n(I18n.StreamsView.content.eol) }}
         </div>
     </div>
