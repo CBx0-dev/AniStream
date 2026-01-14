@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { useViewModel } from "vue-mvvm";
-import { StreamsViewModel } from './StreamsView.model';
+
+import { StreamsViewModel } from "@views/StreamsView.model";
+
 import LucideSearch from "@icons/LucideSearch.vue";
-import LucideArrowLeft from "@/icons/LucideArrowLeft.vue";
-import LucideListVideo from "@/icons/LucideListVideo.vue";
-import LucideCloudSync from "@/icons/LucideCloudSync.vue";
-import LucideX from "@/icons/LucideX.vue";
+import LucideArrowLeft from "@icons/LucideArrowLeft.vue";
+import LucideListVideo from "@icons/LucideListVideo.vue";
+import LucideCloudSync from "@icons/LucideCloudSync.vue";
+import LucideX from "@icons/LucideX.vue";
+
 import I18n from "@utils/i18n";
+
 import Text from "@/controls/Text.vue";
 import ImageHash from "@controls/ImageHash.vue";
 
