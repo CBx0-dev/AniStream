@@ -26,7 +26,7 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
                             <LucideCloudSync />
                             <Text :target="I18n.StreamsView.navbar.sync" />
                         </button>
-                        <button class="join-item btn btn-neutral btn-soft">
+                        <button class="join-item btn btn-neutral btn-soft" @click="vm.onWatchlistBtn">
                             <LucideListVideo />
                             <Text :target="I18n.StreamsView.navbar.watchlist" />
                         </button>

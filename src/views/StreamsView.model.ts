@@ -9,6 +9,7 @@ import { SyncViewModel } from "./SyncView.model";
 import { DetailControlModel } from "@/controls/DetailControl.model";
 import {SeriesService} from "@services/series.service";
 import {I18nService} from "@services/i18n.service";
+import { WatchlistViewModel } from "./WatchlistView.model";
 
 export class StreamsViewModel extends ViewModel {
     public static readonly component: Component = StreamsView;
@@ -41,6 +42,10 @@ export class StreamsViewModel extends ViewModel {
 
     public async onSyncBtn(): Promise<void> {
         await this.routerService.navigateTo(SyncViewModel);
+    }
+
+    public async onWatchlistBtn(): Promise<void> {
+        await this.routerService.navigateTo(WatchlistViewModel);
     }
 
     public async onCardClick(): Promise<void> {

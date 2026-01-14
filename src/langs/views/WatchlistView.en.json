@@ -1,0 +1,19 @@
+{
+    "$lang": "en",
+    "$group": "WatchlistView",
+    "navbar": {
+        "back": "Back"
+    },
+    "leftOff": {
+        "title": "Where you left off"
+    },
+    "watchlist": {
+        "title": "Watchlist"
+    },
+    "personal": {
+        "title": "Your personal lists"
+    },
+    "tracklist": {
+        "title": "Series you track"
+    }
+}

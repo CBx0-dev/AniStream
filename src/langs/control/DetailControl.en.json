@@ -2,5 +2,7 @@
     "$lang": "en",
     "$group": "DetailControl",
     "reset": "Reset progression",
-    "watch": "Watch"
+    "watch": "Watch",
+    "addWatchlist": "Add to Watchlist",
+    "addList": "Add to List"
 }

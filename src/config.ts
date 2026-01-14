@@ -4,6 +4,7 @@ import {RoutableViewModel} from "vue-mvvm/router";
 import {ProviderViewModel} from "@views/ProviderView.model";
 import {StreamsViewModel} from "@views/StreamsView.model";
 import {SyncViewModel} from "@views/SyncView.model";
+import {WatchlistViewModel} from "@views/WatchlistView.model";
 
 import {ProviderService} from "@services/provider.service";
 import {SeriesService} from "@services/series.service";
@@ -18,6 +19,7 @@ export class AppConfig implements AppShell {
             ProviderViewModel,
             StreamsViewModel,
             SyncViewModel,
+            WatchlistViewModel
         ]
     }
 
