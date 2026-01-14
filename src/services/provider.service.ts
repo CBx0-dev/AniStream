@@ -45,12 +45,12 @@ export class AniWorldProvider extends DefaultProvider {
         return AniWorldProvider.UNIQUE_KEY;
     }
 
-    public get streamURLBase(): string {
-        return `${this.baseURL}/anime/stream`;
+    public get catalogURL(): string {
+        return `${this.baseURL}/animes-alphabet`;
     }
 
-    public get catalogURL(): string {
-        return `${this.baseURL}/animes`;
+    public get streamURLBase(): string {
+        return `${this.baseURL}/anime/stream`;
     }
 
     public constructor(service: DbService) {
@@ -82,7 +82,7 @@ export class StoProvider extends DefaultProvider {
     }
 
     public get catalogURL(): string {
-        return `${this.baseURL}/serien`;
+        return `${this.baseURL}/serien-alphabet`;
     }
 
     public get streamURLBase(): string {
