@@ -5,7 +5,6 @@ import {RouteAdapter, RouterService} from "vue-mvvm/router";
 import ProviderView from "./ProviderView.vue";
 import {StreamsViewModel} from "./StreamsView.model";
 import {ProviderService} from "@services/provider.service";
-import {I18nService} from "@services/i18n.service";
 
 export class ProviderViewModel extends ViewModel {
     public static readonly component: Component = ProviderView;
@@ -30,6 +29,6 @@ export class ProviderViewModel extends ViewModel {
 
     public async onStoBtn(): Promise<void> {
         await this.providerService.setProvider(this.providerService.STO);
-        await this.routerService.navigateTo(StreamsViewModel)
+        await this.routerService.navigateTo(StreamsViewModel);
     }
 }
