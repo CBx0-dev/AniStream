@@ -42,4 +42,22 @@ export class GenreService extends DbServiceBase {
 
         await session.execute("INSERT INTO genre_to_series (genre_id, series_id, main_genre) VALUES (?, ?, ?)", genre.genre_id, series.series_id, main_genre);
     }
+
+    public async getMainGenreOfSeries(seriesId: number): Promise<GenreModel | null> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        const rows: GenreDbModel[] = await session.query<GenreDbModel[]>("SELECT g.* FROM genre_to_series AS gs LEFT JOIN genre AS g ON gs.genre_id = g.genre_id WHERE gs.series_id = ? AND gs.main_genre = 'true' LIMIT 1;", seriesId);
+        if (rows.length == 0) {
+            return null;
+        }
+
+        return GenreModel(rows[0].genre_id, rows[0].key);
+    }
+
+    public async getNonMainGenresOfSeries(seriesId: number): Promise<GenreModel[]> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        const rows: GenreDbModel[] = await session.query<GenreDbModel[]>("SELECT g.* FROM genre_to_series AS gs LEFT JOIN genre AS g ON gs.genre_id = g.genre_id WHERE gs.series_id = ? AND gs.main_genre = 'false';", seriesId);
+        return rows.map(row => GenreModel(row.genre_id, row.key));
+    }
 }

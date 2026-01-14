@@ -52,7 +52,7 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
             <ImageHash
                 v-for="series of vm.series"
                 :key="series.series_id"
-                class="bg-base-100 border border-base-300 rounded-box hover:scale-110 hover:shadow-sm duration-300"
+                class="border border-base-300 rounded-box hover:scale-110 hover:shadow-sm duration-300"
                 :provider-folder="vm.providerFolder"
                 :hash="series.preview_image"
                 :width="150"

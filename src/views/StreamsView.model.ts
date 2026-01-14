@@ -47,7 +47,7 @@ export class StreamsViewModel extends ViewModel {
             if (entries[0].isIntersecting) {
                 await this.loadNextChunk();
             }
-        }, {rootMargin: '0px 0px 50px 0px'});
+        }, {rootMargin: '0px 0px 250px 0px'});
     }
 
     public async mounted(): Promise<void> {
@@ -85,7 +85,10 @@ export class StreamsViewModel extends ViewModel {
     }
 
     public async onCardClick(series: SeriesModel): Promise<void> {
-        const dialog: DetailControlModel = this.dialogService.initDialog(DetailControlModel, series);
+        if (!this.providerFolder) {
+            return;
+        }
+        const dialog: DetailControlModel = this.dialogService.initDialog(DetailControlModel, this.providerFolder, series);
         await dialog.openDialog();
     }
 

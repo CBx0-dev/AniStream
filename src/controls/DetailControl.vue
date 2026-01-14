@@ -8,6 +8,7 @@ import I18n from '@/utils/i18n';
 import Text from './Text.vue';
 import LucideEllipsisVertical from '@/icons/LucideEllipsisVertical.vue';
 import LucidePlus from '@/icons/LucidePlus.vue';
+import ImageHash from "@controls/ImageHash.vue";
 
 const vm: DetailControlModel = useDialogControl(DetailControlModel);
 </script>
@@ -20,29 +21,34 @@ const vm: DetailControlModel = useDialogControl(DetailControlModel);
                     <LucideX />
                 </button>
             </form>
-            <div class="flex gap-3">
-                <div class="shrink-0 w-[300px] h-[450px] bg-base-100 border border-base-300 rounded-sm">
-
-                </div>
+            <div class="flex gap-3 max-h-[450px]">
+                <ImageHash
+                    class="shrink-0 border border-base-300 rounded-sm"
+                    :provider-folder="vm.providerFolder"
+                    :hash="vm.previewImage"
+                    :width="300"
+                    :height="450" />
                 <div class="grow flex flex-col gap-2">
                     <div class="shrink-0">
-                        <h1 class="text-2xl font-semibold">The Title</h1>
+                        <h1 class="text-2xl font-semibold">{{ vm.title }}</h1>
                     </div>
                     <div class="shrink-0">
                         <div class="flex gap-1">
-                            <div class="badge badge-sm badge-soft badge-primary">
-                                Main Genre
+                            <div v-if="vm.mainGenre" class="badge badge-sm badge-soft badge-primary">
+                                {{ vm.getGenreName(vm.mainGenre!.key) }}
                             </div>
-                            <div class="badge badge-sm badge-soft badge-neutral">
-                                Sub Genre
+                            <div v-for="genre in vm.genreChunk" class="badge badge-sm badge-soft badge-neutral text-nowrap">
+                                {{ vm.getGenreName(genre.key) }}
                             </div>
+                            <div v-if="vm.genreOverflow > 0" class="badge badge-sm badge-soft badge-neutral text-nowrap">
+                                +{{ vm.genreOverflow }}
+                            </div>
+
                         </div>
                     </div>
                     <div class="grow overflow-y-auto">
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem, error distinctio?
-                            Et, voluptate! Facere, doloribus tenetur commodi doloremque, dolorem eligendi inventore
-                            obcaecati illo ipsum enim cum saepe, at odio aspernatur.
+                            {{ vm.description }}
                         </p>
                     </div>
                     <div class="shrink-0 flex justify-end items-center gap-5">

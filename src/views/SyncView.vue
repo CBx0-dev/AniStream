@@ -17,9 +17,9 @@ const vm: SyncViewModel = useViewModel(SyncViewModel);
         <div class="flex justify-center pt-4">
             <div class="card bg-base-100 card-border border-base-300 w-105">
                 <figure>
-                    <img src="/sync.svg" alt="Sync" class="h-[350px]"/>
+                    <img src="/sync.svg" alt="Sync" class="h-[300px]"/>
                 </figure>
-                <div class="card-body" v-if="vm.isPreparing">
+                <div v-if="vm.isPreparing" class="card-body px-3 pt-0 pb-3">
                     <p>
                         <Text :target="I18n.SyncView.prepare.reason" />
                     </p>
@@ -27,7 +27,7 @@ const vm: SyncViewModel = useViewModel(SyncViewModel);
                         <Text :target="I18n.SyncView.prepare.note" />
                     </p>
 
-                    <div class="join justify-end mt-10">
+                    <div class="join justify-end mt-8">
                         <button class="join-item btn btn-neutral btn-soft" @click="vm.onBackBtn">
                             <LucideArrowLeft/>
                             <Text :target="I18n.SyncView.prepare.back" />
@@ -38,7 +38,7 @@ const vm: SyncViewModel = useViewModel(SyncViewModel);
                         </button>
                     </div>
                 </div>
-                <div class="card-body" v-if="vm.isSyncing">
+                <div v-if="vm.isSyncing" class="card-body px-3 pt-0 pb-3">
                     <progress class="progress progress-neutral w-full max-w-[150px] mx-auto" :value="vm.processed"
                               :max="vm.totalToProceed"/>
                     <div class="mx-auto">
@@ -47,12 +47,12 @@ const vm: SyncViewModel = useViewModel(SyncViewModel);
                         <span>{{ vm.totalToProceed }}</span>
                     </div>
                 </div>
-                <div class="card-body" v-if="vm.isContinue">
+                <div v-if="vm.isContinue" class="card-body px-3 pt-0 pb-3">
                     <div class="mx-auto">
                         The sync process is completed.
                     </div>
 
-                    <button class="join-item btn btn-primary btn-soft mt-10" @click="vm.onStartWatchingBtn">
+                    <button class="join-item btn btn-primary btn-soft mt-8" @click="vm.onStartWatchingBtn">
                         <LucideCloudSync/>
                         Start watching
                     </button>
