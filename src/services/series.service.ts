@@ -48,4 +48,31 @@ export class SeriesService extends DbServiceBase {
 
         return rows.map(row => SeriesModel(row.series_id, row.guid, row.title, row.description, row.preview_image));
     }
+
+    public async getTotalWatchProgression(seriesId: number): Promise<number> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        const [{total_episodes, finished_episodes}] = await session.query<[{
+            total_episodes: number,
+            finished_episodes: number
+        }]>(`
+SELECT COUNT(e.episode_id) AS total_episodes,
+       COALESCE(
+               SUM(CASE WHEN e.percentage_watched > 80 THEN 1 ELSE 0 END),
+               0
+       )                   AS finished_episodes
+FROM series AS s
+         LEFT JOIN season AS se ON s.series_id = se.series_id
+         LEFT JOIN episode AS e ON se.season_id = e.season_id
+WHERE s.series_id = ?
+  AND se.season_number > 0;
+        `, seriesId);
+
+        // Not synced
+        if (total_episodes == 0) {
+            return 0;
+        }
+
+        return finished_episodes / total_episodes;
+    }
 }

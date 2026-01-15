@@ -9,10 +9,12 @@ import {GenreModel} from "@models/genre.model";
 import {GenreService} from "@services/genre.service";
 import {I18nService} from "@services/i18n.service";
 import I18n from "@utils/i18n";
+import {SeriesService} from "@services/series.service";
 
 export class DetailControlModel extends DialogControl {
     public static readonly component: Component = DetailControl;
 
+    private readonly seriesService: SeriesService;
     private readonly genreService: GenreService;
     private readonly i18nService: I18nService;
 
@@ -36,10 +38,12 @@ export class DetailControlModel extends DialogControl {
     public mainGenre: GenreModel | null = this.ref(null);
     public genreChunk: GenreModel[] = this.computed(() => this.genres.slice(0, 3));
     public genreOverflow: number = this.computed(() => this.genres.length - 3);
+    public watchProgression: number = this.ref(0);
 
     public constructor(providerFolder: string, series: SeriesModel) {
         super();
 
+        this.seriesService = this.ctx.getService(SeriesService);
         this.genreService = this.ctx.getService(GenreService);
         this.i18nService = this.ctx.getService(I18nService);
 
@@ -55,7 +59,7 @@ export class DetailControlModel extends DialogControl {
 
         this.mainGenre = await this.genreService.getMainGenreOfSeries(this.seriesId);
         this.genres.push(...await this.genreService.getNonMainGenresOfSeries(this.seriesId));
-        console.log(this.genres, this.mainGenre)
+        this.watchProgression = await this.seriesService.getTotalWatchProgression(this.seriesId);
     }
 
     protected onClose(): void {
