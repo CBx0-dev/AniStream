@@ -11,7 +11,7 @@ const vm: ProviderViewModel = useViewModel(ProviderViewModel);
 <template>
     <div class="relative container flex justify-center items-center h-2/3 m-auto">
         <div class="absolute bottom-5 right-5">
-            <button class="btn btn-lg btn-neutral btn-soft btn-square" @click="vm.onSettingsBtn">
+            <button class="btn btn-lg btn-soft btn-square" @click="vm.onSettingsBtn">
                 <LucideSettings/>
             </button>
         </div>

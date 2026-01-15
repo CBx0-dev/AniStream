@@ -62,7 +62,7 @@
     --color-error: oklch(63% 0.237 25.331);
     --color-error-content: oklch(97% 0.013 17.38);
     --radius-selector: 0.5rem;
-    --radius-field: 0.5rem;
+    --radius-field: 0.25rem;
     --radius-box: 0.25rem;
     --size-selector: 0.25rem;
     --size-field: 0.25rem;
@@ -97,7 +97,7 @@
     --color-error: oklch(68% 0.237 25.331);
     --color-error-content: oklch(16% 0.02 25.331);
     --radius-selector: 0.5rem;
-    --radius-field: 0.5rem;
+    --radius-field: 0.25rem;
     --radius-box: 0.25rem;
     --size-selector: 0.25rem;
     --size-field: 0.25rem;
@@ -132,7 +132,7 @@
     --color-error: oklch(62% 0.22 25);
     --color-error-content: oklch(97% 0.02 25);
     --radius-selector: 0.5rem;
-    --radius-field: 0.5rem;
+    --radius-field: 0.25rem;
     --radius-box: 0.25rem;
     --size-selector: 0.25rem;
     --size-field: 0.25rem;
@@ -167,7 +167,7 @@
     --color-error: oklch(66% 0.22 25);
     --color-error-content: oklch(16% 0.02 25);
     --radius-selector: 0.5rem;
-    --radius-field: 0.5rem;
+    --radius-field: 0.25rem;
     --radius-box: 0.25rem;
     --size-selector: 0.25rem;
     --size-field: 0.25rem;

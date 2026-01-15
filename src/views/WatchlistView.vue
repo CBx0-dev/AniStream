@@ -13,7 +13,7 @@ const vm: WatchlistViewModel = useViewModel(WatchlistViewModel);
         <div class="card bg-base-100 card-border border-base-300">
             <div class="card-body">
                 <div class="flex justify-between w-full">
-                    <button class="btn btn-link btn-neutral hover:text-primary" @click="vm.onBackBtn">
+                    <button class="btn btn-link hover:text-primary" @click="vm.onBackBtn">
                         <LucideArrowLeft />
                         <Text :target="I18n.WatchlistView.navbar.back" />
                     </button>

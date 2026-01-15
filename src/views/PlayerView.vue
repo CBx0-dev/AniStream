@@ -17,10 +17,10 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
                 </div>
             </div>
             <div class="flex justify-between">
-                <button class="btn btn-neutral btn-soft">
+                <button class="btn btn-soft">
                     WASD
                 </button>
-                <button class="btn btn-neutral btn-soft">
+                <button class="btn btn-soft">
                     WASD
                 </button>
             </div>

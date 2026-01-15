@@ -28,7 +28,7 @@ const vm: SyncViewModel = useViewModel(SyncViewModel);
                     </p>
 
                     <div class="join justify-end mt-8">
-                        <button class="join-item btn btn-neutral btn-soft" @click="vm.onBackBtn">
+                        <button class="join-item btn btn-soft" @click="vm.onBackBtn">
                             <LucideArrowLeft/>
                             <Text :target="I18n.SyncView.prepare.back" />
                         </button>

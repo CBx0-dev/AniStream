@@ -37,10 +37,10 @@ const vm: DetailControlModel = useDialogControl(DetailControlModel);
                             <div v-if="vm.mainGenre" class="badge badge-sm badge-soft badge-primary">
                                 {{ vm.getGenreName(vm.mainGenre!.key) }}
                             </div>
-                            <div v-for="genre in vm.genreChunk" class="badge badge-sm badge-soft badge-neutral text-nowrap">
+                            <div v-for="genre in vm.genreChunk" class="badge badge-sm badge-soft text-nowrap">
                                 {{ vm.getGenreName(genre.key) }}
                             </div>
-                            <div v-if="vm.genreOverflow > 0" class="badge badge-sm badge-soft badge-neutral text-nowrap">
+                            <div v-if="vm.genreOverflow > 0" class="badge badge-sm badge-soft text-nowrap">
                                 +{{ vm.genreOverflow }}
                             </div>
 
@@ -60,7 +60,7 @@ const vm: DetailControlModel = useDialogControl(DetailControlModel);
                                 <LucidePlay />
                                 <Text :target="I18n.DetailControl.watch" />
                             </button>
-                            <button class="join-item btn btn-neutral btn-soft" :popovertarget="vm.popoverId"
+                            <button class="join-item btn btn-soft" :popovertarget="vm.popoverId"
                                 :style="`anchor-name:${vm.anchorId}`">
                                 <LucideEllipsisVertical />
                                 <Teleport to="#app">

@@ -22,16 +22,16 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
         <div class="card bg-base-100 card-border border-base-300">
             <div class="card-body">
                 <div class="flex justify-between w-full">
-                    <button class="btn btn-link btn-neutral hover:text-primary cursor-default" @click="vm.onBackBtn">
+                    <button class="btn btn-link hover:text-primary cursor-default" @click="vm.onBackBtn">
                         <LucideArrowLeft/>
                         <Text :target="I18n.StreamsView.navbar.back"/>
                     </button>
                     <div class="join">
-                        <button class="join-item btn btn-neutral btn-soft" @click="vm.onSyncBtn">
+                        <button class="join-item btn btn-soft" @click="vm.onSyncBtn">
                             <LucideCloudSync/>
                             <Text :target="I18n.StreamsView.navbar.sync"/>
                         </button>
-                        <button class="join-item btn btn-neutral btn-soft" @click="vm.onWatchlistBtn">
+                        <button class="join-item btn btn-soft" @click="vm.onWatchlistBtn">
                             <LucideListVideo/>
                             <Text :target="I18n.StreamsView.navbar.watchlist"/>
                         </button>
@@ -47,7 +47,7 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
                 </label>
                 <div>
                     <div class="join flex-wrap">
-                        <select class="select select-sm w-fit rounded-l-lg" v-model="vm.genreFilter"
+                        <select class="select select-sm w-fit rounded-l-lg bg-base-200 border-base-300" v-model="vm.genreFilter"
                                 @input="vm.onGenreFilter(parseInt(($event.target! as HTMLSelectElement).value))">
                             <option disabled selected value="default">
                                 <Text :target="I18n.StreamsView.navbar.selectGenre"/>
