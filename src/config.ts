@@ -2,6 +2,7 @@ import {AppShell, WritableGlobalContext} from "vue-mvvm";
 import {RoutableViewModel} from "vue-mvvm/router";
 
 import {ProviderViewModel} from "@views/ProviderView.model";
+import {SettingsViewModel} from "@views/SettingsView.model";
 import {StreamsViewModel} from "@views/StreamsView.model";
 import {SyncViewModel} from "@views/SyncView.model";
 import {WatchlistViewModel} from "@views/WatchlistView.model";
@@ -13,11 +14,13 @@ import {DbService} from "@services/db.service";
 import {FetchService} from "@services/fetch.service";
 import {GenreService} from "@services/genre.service";
 import {I18nService} from "@services/i18n.service";
+import {SettingsService} from "@services/settings.service";
 
 export class AppConfig implements AppShell {
     router: { history?: "memory" | "web" | "web-hash"; views: RoutableViewModel[]; } = {
         views: [
             ProviderViewModel,
+            SettingsViewModel,
             StreamsViewModel,
             SyncViewModel,
             WatchlistViewModel,
@@ -32,5 +35,9 @@ export class AppConfig implements AppShell {
         ctx.registerService(GenreService, ctx => new GenreService(ctx));
         ctx.registerService(DbService, () => new DbService());
         ctx.registerService(FetchService, ctx => new FetchService(ctx));
+        ctx.registerService(SettingsService, () => new SettingsService());
+
+        // For initializing theming etc...
+        ctx.getService(SettingsService);
     }
 }

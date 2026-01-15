@@ -9,9 +9,9 @@ const vm: ProviderViewModel = useViewModel(ProviderViewModel);
 </script>
 
 <template>
-    <div class="relative container flex justify-center items-center h-1/2 m-auto">
+    <div class="relative container flex justify-center items-center h-2/3 m-auto">
         <div class="absolute bottom-5 right-5">
-            <button class="btn btn-lg btn-neutral btn-soft btn-square">
+            <button class="btn btn-lg btn-neutral btn-soft btn-square" @click="vm.onSettingsBtn">
                 <LucideSettings/>
             </button>
         </div>
@@ -24,13 +24,13 @@ const vm: ProviderViewModel = useViewModel(ProviderViewModel);
                     <div class="join-item card bg-base-100 card-border border-base-300 hover:bg-primary/50"
                          @click="vm.onAniworldBtn">
                         <div class="card-body">
-                            <img src="/aniworld-dark.svg" alt="Aniworld" class="w-[250px]"/>
+                            <img src="/aniworld-dark.svg" alt="Aniworld" class="w-[250px] select-none"/>
                         </div>
                     </div>
                     <div class="join-item card bg-base-100 card-border border-base-300 hover:bg-primary/50"
                          @click="vm.onStoBtn">
                         <div class="card-body">
-                            <img src="/sto.svg" alt="Sto" class="w-[250px]"/>
+                            <img src="/sto.svg" alt="Sto" class="w-[250px] select-none"/>
                         </div>
                     </div>
                 </div>
