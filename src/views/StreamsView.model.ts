@@ -1,4 +1,4 @@
-import {Component} from "vue";
+import {Component, watch, WatchHandle} from "vue";
 import {ViewModel} from "vue-mvvm";
 import {DialogService} from "vue-mvvm/dialog";
 import {RouteAdapter, RouterService} from "vue-mvvm/router";
@@ -28,6 +28,8 @@ export class StreamsViewModel extends ViewModel {
     private readonly seriesService: SeriesService;
     private readonly genresService: GenreService;
 
+    private searchStringWatcher: WatchHandle;
+    private ignoreObserverOnce: boolean;
     private readonly observer: IntersectionObserver;
 
     public chunkSize: number = 50;
@@ -38,6 +40,7 @@ export class StreamsViewModel extends ViewModel {
     public genreFilter: string = this.ref("default");
     public filteredGenres: GenreModel[] = this.computed(() => this.genres.filter(genre => this.selectedGenres.includes(genre.genre_id)));
     public availableGenres: GenreModel[] = this.computed(() => this.genres.filter(genre => !this.selectedGenres.includes(genre.genre_id)));
+    public searchText: string = this.ref("");
 
     public constructor() {
         super();
@@ -48,14 +51,25 @@ export class StreamsViewModel extends ViewModel {
         this.seriesService = this.ctx.getService(SeriesService);
         this.genresService = this.ctx.getService(GenreService);
 
+        this.searchStringWatcher = watch(() => this.searchText, async () => {
+            await this.onFilterUpdate();
+        });
+        this.ignoreObserverOnce = false;
         this.observer = new IntersectionObserver(async entries => {
             if (entries.length == 0) {
                 return;
             }
 
-            if (entries[0].isIntersecting) {
-                await this.loadNextChunk();
+            if (!entries[0].isIntersecting) {
+                return;
             }
+
+            if (this.ignoreObserverOnce) {
+                this.ignoreObserverOnce = false;
+                return;
+            }
+
+            await this.loadNextChunk();
         }, {rootMargin: '0px 0px 250px 0px'});
     }
 
@@ -81,6 +95,7 @@ export class StreamsViewModel extends ViewModel {
         if (intersectionLine) {
             this.observer.unobserve(intersectionLine);
         }
+        this.searchStringWatcher.stop();
     }
 
     public onBackBtn(): void {
@@ -95,17 +110,23 @@ export class StreamsViewModel extends ViewModel {
         await this.routerService.navigateTo(WatchlistViewModel);
     }
 
-    public onGenreFilter(genreId: number): void {
+    public async onGenreFilter(genreId: number): Promise<void> {
         this.selectedGenres.push(genreId);
         this.genreFilter = "default";
+
+        await this.onFilterUpdate();
     }
 
-    public onGenreFilterRemoveBtn(genreId: number): void {
+    public async onGenreFilterRemoveBtn(genreId: number): Promise<void> {
         this.selectedGenres = this.selectedGenres.filter(id => id != genreId);
+
+        await this.onFilterUpdate();
     }
 
-    public onGenreFilterClearBtn(): void {
+    public async onGenreFilterClearBtn(): Promise<void> {
         this.selectedGenres.clear();
+
+        await this.onFilterUpdate();
     }
 
     public async onCardClick(series: SeriesModel): Promise<void> {
@@ -125,7 +146,15 @@ export class StreamsViewModel extends ViewModel {
     }
 
     private async loadNextChunk(): Promise<void> {
-        const chunk: SeriesModel[] = await this.seriesService.getSeriesChunk(this.series.length, this.chunkSize);
+        const chunk: SeriesModel[] = this.selectedGenres.length == 0 && this.searchText.length == 0
+            ? await this.seriesService.getSeriesChunk(this.series.length, this.chunkSize)
+            : await this.seriesService.getFilteredSeriesChunk(this.series.length, this.chunkSize, this.searchText, this.selectedGenres);
         this.series.push(...chunk);
+    }
+
+    private async onFilterUpdate(): Promise<void> {
+        this.series.clear();
+        this.ignoreObserverOnce = true;
+        await this.loadNextChunk();
     }
 }

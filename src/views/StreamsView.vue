@@ -39,14 +39,18 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
                 </div>
                 <label class="input w-full">
                     <LucideSearch/>
-                    <input type="text" class="grow" :placeholder="vm.i18n(I18n.StreamsView.navbar.searchPlaceholder)"/>
+                    <input
+                        type="text"
+                        class="grow"
+                        v-model="vm.searchText"
+                        :placeholder="vm.i18n(I18n.StreamsView.navbar.searchPlaceholder)"/>
                 </label>
                 <div>
                     <div class="join flex-wrap">
-                        <select class="select select-sm w-fit" v-model="vm.genreFilter"
+                        <select class="select select-sm w-fit rounded-l-lg" v-model="vm.genreFilter"
                                 @input="vm.onGenreFilter(parseInt(($event.target! as HTMLSelectElement).value))">
                             <option disabled selected value="default">
-                                <Text :target="I18n.StreamsView.navbar.selectGenre" />
+                                <Text :target="I18n.StreamsView.navbar.selectGenre"/>
                             </option>
                             <option
                                 v-for="genre of vm.availableGenres"

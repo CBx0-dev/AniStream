@@ -49,6 +49,33 @@ export class SeriesService extends DbServiceBase {
         return rows.map(row => SeriesModel(row.series_id, row.guid, row.title, row.description, row.preview_image));
     }
 
+    public async getFilteredSeriesChunk(offset: number, limit: number, searchText: string, genresIds: number[]): Promise<SeriesModel[]> {
+        const filters: string[] = [];
+        const params: any[] = [];
+
+        if (searchText.length > 0) {
+            searchText = `%${searchText.replace(/([%\\])/g, '\\$1')}%`;
+            filters.push("lower(s.title) LIKE ? ESCAPE '\\'");
+            params.push(searchText);
+        }
+
+        if (genresIds.length > 0) {
+            const genreFilter: string[] = [];
+
+            for (const genre of genresIds) {
+                genreFilter.push(`gs.genre_id = ?`);
+                params.push(genre);
+            }
+
+            filters.push(`(${genreFilter.join(" OR ")})`);
+        }
+
+        const session: DbSession = await this.provider.getDatabase();
+
+        const rows: SeriesDbModel[] = await session.query<SeriesDbModel[]>(`SELECT DISTINCT s.* FROM series AS s INNER JOIN genre_to_series AS gs ON s.series_id = gs.series_id WHERE true AND ${filters.join(" AND ")} ORDER BY s.title LIMIT ? OFFSET ?`, ...params, limit, offset);
+        return rows.map(row => SeriesModel(row.series_id, row.guid, row.title, row.description, row.preview_image));
+    }
+
     public async getTotalWatchProgression(seriesId: number): Promise<number> {
         const session: DbSession = await this.provider.getDatabase();
 
