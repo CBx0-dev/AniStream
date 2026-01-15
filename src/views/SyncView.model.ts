@@ -3,7 +3,6 @@ import {ViewModel} from "vue-mvvm";
 import {RouteAdapter, RouterService} from "vue-mvvm/router";
 
 import SyncView from "@views/SyncView.vue";
-import {ProviderViewModel} from "@views/ProviderView.model";
 import {SeriesService} from "@services/series.service";
 import {FetchService} from "@services/fetch.service";
 import {GenreModel} from "@models/genre.model";
@@ -42,8 +41,8 @@ export class SyncViewModel extends ViewModel {
         this.genreService = this.ctx.getService(GenreService);
     }
 
-    public async onBackBtn(): Promise<void> {
-        await this.routerService.navigateTo(ProviderViewModel);
+    public onBackBtn(): void {
+        this.routerService.navigateBack();
     }
 
     public async onStartSyncingBtn(): Promise<void> {

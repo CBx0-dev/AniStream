@@ -74,10 +74,6 @@ export class StreamsViewModel extends ViewModel {
     }
 
     public async mounted(): Promise<void> {
-        if (await this.seriesService.requiresSync()) {
-            await this.routerService.navigateTo(SyncViewModel);
-        }
-
         const provider: DefaultProvider = await this.providerService.getProvider();
         this.providerFolder = await provider.getStorageLocation();
 
