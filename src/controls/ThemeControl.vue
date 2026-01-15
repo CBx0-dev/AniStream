@@ -16,7 +16,7 @@ const vm: ThemeControlModel = useUserControl(ThemeControlModel);
             @click="vm.onAniworldLightThemeBtn"
             data-theme="aniworld-light"
             :data-selected="vm.activeTheme == 'aniworld-light'"
-            class="group relative w-64 rounded-box border border-base-300 bg-base-100 p-4 text-left shadow-sm transition hover:border-primary hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
+            class="group relative w-64 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
             <h3 class="text-lg font-semibold">
                 <Text :target="I18n.ThemeControl.aniworldLight.title" />
             </h3>
@@ -37,7 +37,7 @@ const vm: ThemeControlModel = useUserControl(ThemeControlModel);
             @click="vm.onAniworldDarkThemeBtn"
             data-theme="aniworld-dark"
             :data-selected="vm.activeTheme == 'aniworld-dark'"
-            class="group relative w-64 rounded-box border border-base-300 bg-base-100 p-4 text-left shadow-sm transition hover:border-primary hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
+            class="group relative w-64 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
             <h3 class="text-lg font-semibold">
                 <Text :target="I18n.ThemeControl.aniworldDark.title" />
             </h3>
@@ -58,7 +58,7 @@ const vm: ThemeControlModel = useUserControl(ThemeControlModel);
             @click="vm.onStoLightThemeBtn"
             data-theme="sto-light"
             :data-selected="vm.activeTheme == 'sto-light'"
-            class="group relative w-64 rounded-box border border-base-300 bg-base-100 p-4 text-left shadow-sm transition hover:border-primary hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
+            class="group relative w-64 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
             <h3 class="text-lg font-semibold">
                 <Text :target="I18n.ThemeControl.stoLight.title" />
             </h3>
@@ -79,7 +79,7 @@ const vm: ThemeControlModel = useUserControl(ThemeControlModel);
             @click="vm.onStoDarkThemeBtn"
             data-theme="sto-dark"
             :data-selected="vm.activeTheme == 'sto-dark'"
-            class="group relative w-64 rounded-box border border-base-300 bg-base-100 p-4 text-left shadow-sm transition hover:border-primary hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
+            class="group relative w-64 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
             <h3 class="text-lg font-semibold">
                 <Text :target="I18n.ThemeControl.stoDark.title" />
             </h3>
