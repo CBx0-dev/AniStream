@@ -87,7 +87,7 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
                 @click="vm.onCardClick(series)"/>
         </div>
         <div class="text-center text-gray-400" id="intersectionLine">
-            {{ vm.i18n(I18n.StreamsView.content.eol) }}
+            <Text :target="I18n.StreamsView.content.eol" />
         </div>
     </div>
 </template>

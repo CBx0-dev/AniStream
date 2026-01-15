@@ -2,12 +2,15 @@
 import {useUserControl} from "vue-mvvm";
 
 import {ThemeControlModel} from "@controls/ThemeControl.model";
+import I18n from "@utils/i18n";
+
+import Text from "@/controls/Text.vue";
 
 const vm: ThemeControlModel = useUserControl(ThemeControlModel);
 </script>
 
 <template>
-    <h1 class="text-2xl font-semibold">Preferences</h1>
+    <h1 class="text-2xl font-semibold"><Text :target="I18n.ThemeControl.title" /></h1>
     <div class="flex flex-wrap py-5 gap-5">
         <button
             @click="vm.onAniworldLightThemeBtn"
@@ -15,11 +18,11 @@ const vm: ThemeControlModel = useUserControl(ThemeControlModel);
             :data-selected="vm.activeTheme == 'aniworld-light'"
             class="group relative w-64 rounded-box border border-base-300 bg-base-100 p-4 text-left shadow-sm transition hover:border-primary hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
             <h3 class="text-lg font-semibold">
-                AniWorld.to Light
+                <Text :target="I18n.ThemeControl.aniworldLight.title" />
             </h3>
 
             <p class="mt-1 text-sm text-gray-500">
-                Bright anime-inspired colors with vibrant purples and playful accents. Clean, lively, and easy on the eyes.
+                <Text :target="I18n.ThemeControl.aniworldLight.description" />
             </p>
 
             <div class="mt-4 flex gap-2">
@@ -36,11 +39,11 @@ const vm: ThemeControlModel = useUserControl(ThemeControlModel);
             :data-selected="vm.activeTheme == 'aniworld-dark'"
             class="group relative w-64 rounded-box border border-base-300 bg-base-100 p-4 text-left shadow-sm transition hover:border-primary hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
             <h3 class="text-lg font-semibold">
-                AniWorld.to Dark
+                <Text :target="I18n.ThemeControl.aniworldDark.title" />
             </h3>
 
             <p class="mt-1 text-sm text-gray-500">
-                Deep dark surfaces with glowing violet highlights. Perfect for nighttime viewing with a bold anime aesthetic.
+                <Text :target="I18n.ThemeControl.aniworldDark.description" />
             </p>
 
             <div class="mt-4 flex gap-2">
@@ -57,11 +60,11 @@ const vm: ThemeControlModel = useUserControl(ThemeControlModel);
             :data-selected="vm.activeTheme == 'sto-light'"
             class="group relative w-64 rounded-box border border-base-300 bg-base-100 p-4 text-left shadow-sm transition hover:border-primary hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
             <h3 class="text-lg font-semibold">
-                S.TO Light
+                <Text :target="I18n.ThemeControl.stoLight.title" />
             </h3>
 
             <p class="mt-1 text-sm text-gray-500">
-                Minimal and cinematic with cool blues and soft contrasts. A clean, modern look for daytime browsing.
+                <Text :target="I18n.ThemeControl.stoLight.description" />
             </p>
 
             <div class="mt-4 flex gap-2">
@@ -78,11 +81,11 @@ const vm: ThemeControlModel = useUserControl(ThemeControlModel);
             :data-selected="vm.activeTheme == 'sto-dark'"
             class="group relative w-64 rounded-box border border-base-300 bg-base-100 p-4 text-left shadow-sm transition hover:border-primary hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
             <h3 class="text-lg font-semibold">
-                S.TO Dark
+                <Text :target="I18n.ThemeControl.stoDark.title" />
             </h3>
 
             <p class="mt-1 text-sm text-gray-500">
-                Dark, immersive streaming style with cool blue tones. Focused, elegant, and ideal for long watch sessions.
+                <Text :target="I18n.ThemeControl.stoDark.description" />
             </p>
 
             <div class="mt-4 flex gap-2">
@@ -93,6 +96,4 @@ const vm: ThemeControlModel = useUserControl(ThemeControlModel);
             </div>
         </button>
     </div>
-
-
 </template>

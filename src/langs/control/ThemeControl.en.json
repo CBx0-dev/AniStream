@@ -1,0 +1,21 @@
+{
+    "$lang": "en",
+    "$group": "ThemeControl",
+    "title": "Preferences",
+    "aniworldLight": {
+        "title": "AniWorld.to Light",
+        "description": "Bright anime-inspired colors with vibrant purples and playful accents. Clean, lively, and easy on the eyes."
+    },
+    "aniworldDark": {
+        "title": "AniWorld.to Dark",
+        "description": "Deep dark surfaces with glowing violet highlights. Perfect for nighttime viewing with a bold anime aesthetic."
+    },
+    "stoLight": {
+        "title": "S.TO Light",
+        "description": "Minimal and cinematic with cool blues and soft contrasts. A clean, modern look for daytime browsing."
+    },
+    "stoDark": {
+        "title": "S.TO Dark",
+        "description": "Dark, immersive streaming style with cool blue tones. Focused, elegant, and ideal for long watch sessions."
+    }
+}
