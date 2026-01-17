@@ -27,5 +27,9 @@
             "post": "Lucide via Iconify"
         }
     },
+    "legal": {
+        "legalTitle": "Legal Disclaimer",
+        "tosTitle": "Terms of Service"
+    },
     "copyright": "All rights reserved."
 }

@@ -1,0 +1,41 @@
+AniStream – Terms of Service
+Last updated: January 12, 2026
+
+1. Acceptance of Terms
+By downloading, installing, or using AniStream, you agree to comply with these Terms
+of Service. If you do not agree, do not use this software.
+
+2. Permitted Use
+AniStream is intended for personal, lawful use only. You may use the software to
+stream content that you are legally allowed to access, such as public domain or
+openly licensed content.
+
+3. Prohibited Use
+You may not use AniStream to:
+  - Access or stream copyrighted material without authorization.
+  - Bypass access restrictions, security measures, or encryption on any website.
+  - Engage in illegal activities or distribute malicious software.
+
+4. No Warranty
+AniStream is provided "as-is" without any warranties of any kind, either express or
+implied. The developer does not guarantee uninterrupted access or that content
+streamed through the software is legal, accurate, or safe.
+
+5. Limitation of Liability
+In no event shall the developer be liable for any direct, indirect, incidental, or
+consequential damages arising from your use of AniStream or the content accessed
+through it.
+
+6. Termination
+Your right to use AniStream terminates immediately if you violate these Terms.
+Upon termination, you must stop using the software and delete all copies.
+
+7. Governing Law
+These Terms are governed by the laws of [Your Country/State], and any disputes
+will be subject to the exclusive jurisdiction of its courts.
+
+8. Reporting Issues
+For bug reports, feature requests, or other issues, please use the GitHub
+repository: https://github.com/Christoph-Koschel/AniStream/issues
+
+By using AniStream, you acknowledge that you have read and agree to these Terms of Service.
