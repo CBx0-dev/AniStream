@@ -1,0 +1,30 @@
+{
+    "$lang": "de",
+    "$group": "PrefControl",
+    "title": "Einstellungen",
+    "sections": {
+        "theme": "Design",
+        "language": "Sprache"
+    },
+    "aniworldLight": {
+        "title": "AniWorld.to Hell",
+        "description": "Helle, von Anime inspirierte Farben mit lebhaftem Violett und verspielten Akzenten. Sauber, lebendig und augenschonend."
+    },
+    "aniworldDark": {
+        "title": "AniWorld.to Dunkel",
+        "description": "Tiefdunkle Oberflächen mit leuchtenden violetten Highlights. Perfekt für das Anschauen in der Nacht mit einer kühnen Anime-Ästhetik."
+    },
+    "stoLight": {
+        "title": "S.TO Hell",
+        "description": "Minimalistisch und cineastisch mit kühlen Blau-Tönen und weichen Kontrasten. Ein sauberer, moderner Look für das Surfen am Tag."
+    },
+    "stoDark": {
+        "title": "S.TO Dunkel",
+        "description": "Dunkler, immersiver Streaming-Stil mit kühlen Blautönen. Fokussiert, elegant und ideal für lange Watch-Sessions."
+    },
+    "languages": {
+        "interfaceLanguage": "UI Sprache",
+        "en": "Englisch",
+        "de": "Deutsch"
+    }
+}

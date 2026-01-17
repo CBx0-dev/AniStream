@@ -37,8 +37,8 @@ export class I18nService {
         }
     }
 
-    public setLocal(local: SupportedLocals): void {
-        this._currentLocal.value = local;
+    public setLocal(local: string): void {
+        this._currentLocal.value = local as SupportedLocals;
     }
 
     public getDynamic(target: any, name: string): string {

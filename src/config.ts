@@ -35,7 +35,7 @@ export class AppConfig implements AppShell {
         ctx.registerService(GenreService, ctx => new GenreService(ctx));
         ctx.registerService(DbService, () => new DbService());
         ctx.registerService(FetchService, ctx => new FetchService(ctx));
-        ctx.registerService(SettingsService, () => new SettingsService());
+        ctx.registerService(SettingsService, ctx => new SettingsService(ctx));
 
         // For initializing theming etc...
         ctx.getService(SettingsService);

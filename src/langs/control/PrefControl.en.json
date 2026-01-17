@@ -1,7 +1,11 @@
 {
     "$lang": "en",
-    "$group": "ThemeControl",
+    "$group": "PrefControl",
     "title": "Preferences",
+    "sections": {
+        "theme": "Theme",
+        "language": "Language"
+    },
     "aniworldLight": {
         "title": "AniWorld.to Light",
         "description": "Bright anime-inspired colors with vibrant purples and playful accents. Clean, lively, and easy on the eyes."
@@ -17,5 +21,10 @@
     "stoDark": {
         "title": "S.TO Dark",
         "description": "Dark, immersive streaming style with cool blue tones. Focused, elegant, and ideal for long watch sessions."
+    },
+    "languages": {
+        "interfaceLanguage": "Interface language",
+        "en": "English",
+        "de": "German"
     }
 }

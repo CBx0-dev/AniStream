@@ -1,0 +1,31 @@
+{
+    "$lang": "en",
+    "$group": "InfoControl",
+    "description": "Desktop stream host for AniWorld.to and S.TO",
+    "application": {
+        "title": "Application",
+        "version": "Version",
+        "platform": "Platform"
+    },
+    "storage": {
+        "title": "Used storage",
+        "aniworld": "AniWorld",
+        "sto": "S.TO",
+        "assets": "Assets",
+        "metadata": "Metadata",
+        "total": "Total Usage"
+    },
+    "credits": {
+        "title": "Credits",
+        "description": "This application uses the following third-party resources:",
+        "storyset": {
+            "pre": "Illustrations from",
+            "post": "Storyset"
+        },
+        "lucide": {
+            "pre": "Icons from",
+            "post": "Lucide via Iconify"
+        }
+    },
+    "copyright": "All rights reserved."
+}

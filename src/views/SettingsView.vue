@@ -7,7 +7,8 @@ import LucideInfo from "@icons/LucideInfo.vue";
 import LucideNewspaper from "@icons/LucideNewspaper.vue";
 
 import Text from "@controls/Text.vue";
-import ThemeControl from "@controls/ThemeControl.vue";
+import PrefControl from "@controls/PrefControl.vue";
+import InfoControl from "@controls/InfoControl.vue";
 
 import i18n from "@utils/i18n";
 
@@ -28,7 +29,7 @@ const vm: SettingsViewModel = useViewModel(SettingsViewModel);
                         </span>
                         </label>
                         <div class="tab-content bg-base-100 border-base-300 p-6">
-                            <ThemeControl/>
+                            <PrefControl/>
                         </div>
 
                         <label class="tab">
@@ -50,7 +51,7 @@ const vm: SettingsViewModel = useViewModel(SettingsViewModel);
                         </span>
                         </label>
                         <div class="tab-content bg-base-100 border-base-300 p-6">
-                            Tab 3 Content
+                            <InfoControl/>
                         </div>
                     </div>
                 </div>
