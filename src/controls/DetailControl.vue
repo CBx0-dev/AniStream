@@ -56,7 +56,7 @@ const vm: DetailControlModel = useDialogControl(DetailControlModel);
                             <progress class="progress progress-primary max-w-[150px]" :value="vm.watchProgression" max="100" />
                         </div>
                         <div class="join">
-                            <button class="join-item btn btn-primary btn-soft">
+                            <button class="join-item btn btn-primary btn-soft" @click="vm.onWatchBtn">
                                 <LucidePlay />
                                 <Text :target="I18n.DetailControl.watch" />
                             </button>

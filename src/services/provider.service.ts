@@ -7,6 +7,7 @@ export abstract class DefaultProvider {
     public abstract get baseURL(): string;
     public abstract get uniqueKey(): string;
     public abstract get catalogURL(): string;
+
     protected abstract get streamURLBase(): string;
 
     private readonly service: DbService;
@@ -31,6 +32,22 @@ export abstract class DefaultProvider {
 
     public streamURL(guid: string): string {
         return `${this.streamURLBase}/${guid}`;
+    }
+
+    public seasonURL(guid: string, seasonNumber: number): string {
+        if (seasonNumber == 0) {
+            return `${this.streamURLBase}/${guid}/filme`;
+        }
+
+        return `${this.streamURLBase}/${guid}/staffel-${seasonNumber}`;
+    }
+
+    public episodeURL(guid: string, seasonNumber: number, episodeNumber: number): string {
+        if (seasonNumber == 0) {
+            return `${this.seasonURL(guid,  seasonNumber)}/film-${episodeNumber}`;
+        }
+
+        return `${this.seasonURL(guid,  seasonNumber)}/episode-${episodeNumber}`;
     }
 
     public abstract getStorageLocation(): Promise<string>;

@@ -1,4 +1,5 @@
 import { Component, ComponentInternalInstance, getCurrentInstance } from "vue";
+import {RouterService} from "vue-mvvm/router";
 import { DialogControl } from "vue-mvvm/dialog";
 
 import DetailControl from "@controls/DetailControl.vue";
@@ -8,13 +9,18 @@ import {GenreModel} from "@models/genre.model";
 
 import {GenreService} from "@services/genre.service";
 import {I18nService} from "@services/i18n.service";
-import I18n from "@utils/i18n";
 import {SeriesService} from "@services/series.service";
+import {SeasonService} from "@services/season.service";
+
+import I18n from "@utils/i18n";
+import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
 
 export class DetailControlModel extends DialogControl {
     public static readonly component: Component = DetailControl;
 
+    private readonly routerService: RouterService;
     private readonly seriesService: SeriesService;
+    private readonly seasonService: SeasonService;
     private readonly genreService: GenreService;
     private readonly i18nService: I18nService;
 
@@ -43,7 +49,9 @@ export class DetailControlModel extends DialogControl {
     public constructor(providerFolder: string, series: SeriesModel) {
         super();
 
+        this.routerService = this.ctx.getService(RouterService);
         this.seriesService = this.ctx.getService(SeriesService);
+        this.seasonService = this.ctx.getService(SeasonService);
         this.genreService = this.ctx.getService(GenreService);
         this.i18nService = this.ctx.getService(I18nService);
 
@@ -67,6 +75,18 @@ export class DetailControlModel extends DialogControl {
         this.destroy();
     }
 
+    public async onWatchBtn(): Promise<void> {
+        await this.closeDialog();
+        if (await this.seasonService.requiresSync(this.seriesId)) {
+            await this.routerService.navigateTo(SeriesSyncViewModel, {
+                series_id: this.seriesId
+            });
+            return;
+        }
+
+        // TODO navigate to series overview
+    }
+
     public onResetProgressionBtn(): void {
 
     }
@@ -76,7 +96,7 @@ export class DetailControlModel extends DialogControl {
     }
 
     public onAddListBtn(): void {
-        
+
     }
 
     public getGenreName(key: string): string {

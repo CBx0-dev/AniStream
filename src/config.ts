@@ -10,11 +10,14 @@ import {PlayerViewModel} from "@views/PlayerView.model";
 
 import {ProviderService} from "@services/provider.service";
 import {SeriesService} from "@services/series.service";
+import {SeasonService} from "@services/season.service";
+import {EpisodeService} from "@services/episode.service";
 import {DbService} from "@services/db.service";
 import {FetchService} from "@services/fetch.service";
 import {GenreService} from "@services/genre.service";
 import {I18nService} from "@services/i18n.service";
 import {SettingsService} from "@services/settings.service";
+import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
 
 export class AppConfig implements AppShell {
     router: { history?: "memory" | "web" | "web-hash"; views: RoutableViewModel[]; } = {
@@ -24,6 +27,7 @@ export class AppConfig implements AppShell {
             StreamsViewModel,
             SyncViewModel,
             WatchlistViewModel,
+            SeriesSyncViewModel,
             PlayerViewModel
         ]
     }
@@ -32,6 +36,8 @@ export class AppConfig implements AppShell {
         ctx.registerService(I18nService, () => new I18nService());
         ctx.registerService(ProviderService, ctx => new ProviderService(ctx));
         ctx.registerService(SeriesService, ctx => new SeriesService(ctx));
+        ctx.registerService(SeasonService, ctx => new SeasonService(ctx));
+        ctx.registerService(EpisodeService, ctx => new EpisodeService(ctx));
         ctx.registerService(GenreService, ctx => new GenreService(ctx));
         ctx.registerService(DbService, () => new DbService());
         ctx.registerService(FetchService, ctx => new FetchService(ctx));

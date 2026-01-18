@@ -6,6 +6,8 @@ import * as http from "@utils/http";
 import {DefaultProvider, ProviderService} from "@services/provider.service";
 import {SeriesFetchModel, SeriesModel} from "@models/series.model";
 import {GenreFetchModel} from "@models/genre.model";
+import {SeasonFetchModel} from "@models/season.model";
+import {EpisodeFetchModel} from "@models/episode.model";
 
 const FNV_OFFSET_BASIS: bigint = 0xcbf29ce484222325n;
 const FNV_PRIME: bigint = 0x100000001b3n;
@@ -94,6 +96,91 @@ export class FetchService {
 
         const model: SeriesModel = SeriesModel(guid, title, description, previewImage);
         return [model, genres]
+    }
+
+    public async getSeasons(series: SeriesModel): Promise<SeasonFetchModel[]> {
+        const provider: DefaultProvider = await this.providerService.getProvider();
+        const html: string = await http.get(provider.streamURL(series.guid));
+        const document: Document = this.parser.parseFromString(html, "text/html");
+        const streamPanel: HTMLElement | null = document.querySelector("#stream");
+        if (!streamPanel) {
+            throw "Failed to extract meta information: Failed to find stream panel";
+        }
+
+        const lists: HTMLUListElement[] = Array.from(streamPanel.querySelectorAll("ul"));
+        if (lists.length != 2) {
+            throw "Failed to parse meta information: Failed to find list items";
+        }
+
+        const seasons: SeasonFetchModel[] = [];
+
+        for (let i: number = 1; i < lists[0].children.length; i++) {
+            const li: HTMLLIElement = lists[0].children[i] as HTMLLIElement;
+            if (li.children.length != 1 || li.children[0].tagName != "A") {
+                continue;
+            }
+
+            const a: HTMLAnchorElement = li.children[0] as HTMLAnchorElement;
+            const seasonNumber: number = a.innerText == "Filme"
+                ? 0
+                : parseInt(a.innerText);
+
+            seasons.push({
+                series_id: series.series_id,
+                season_number: seasonNumber
+            });
+        }
+
+        return seasons;
+    }
+
+    public async getEpisodes(guid: string, seasonNumber: number): Promise<EpisodeFetchModel[]> {
+        const provider: DefaultProvider = await this.providerService.getProvider();
+        const html: string = await http.get(provider.seasonURL(guid, seasonNumber));
+        const document: Document = this.parser.parseFromString(html, "text/html");
+        const tableBody: HTMLTableSectionElement | null = document.querySelector(`#season${seasonNumber}`);
+
+        if (!tableBody) {
+            throw "Failed to extract meta information: Failed to find episode table";
+        }
+
+        const episodes: EpisodeFetchModel[] = [];
+        for (const row of tableBody.rows) {
+            if (!row.hasAttribute("data-episode-season-id")) {
+                continue;
+            }
+
+            const episodeNumber: number = parseInt(row.getAttribute("data-episode-season-id")!);
+
+            const germanTitleElement: HTMLElement | null = row.querySelector(".seasonEpisodeTitle > a > strong");
+            const germanTitle: string = germanTitleElement ? germanTitleElement.textContent ?? "N/A" : "N/A";
+
+            const englishTitleElement: HTMLElement | null = row.querySelector(".seasonEpisodeTitle > a > span");
+            const englishTitle: string = englishTitleElement ? englishTitleElement.textContent ?? "N/A" : "N/A";
+
+            const description: string = await this.fetchDescription(guid, seasonNumber, episodeNumber);
+
+            episodes.push({
+                episode_number: episodeNumber,
+                german_title: germanTitle.trim(),
+                english_title: englishTitle.trim(),
+                description: description.trim(),
+            });
+        }
+
+        return episodes;
+    }
+
+    private async fetchDescription(guid: string, seasonNumber: number, episodeNumber: number): Promise<string> {
+        const provider: DefaultProvider = await this.providerService.getProvider();
+        const html: string = await http.get(provider.episodeURL(guid, seasonNumber, episodeNumber));
+        const document: Document = this.parser.parseFromString(html, "text/html");
+        const descriptionPanel: HTMLElement | null = document.querySelector("#wrapper div.hosterSiteTitle p.descriptionSpoiler");
+        if (!descriptionPanel) {
+            return "";
+        }
+
+        return descriptionPanel.textContent ?? "";
     }
 
     private fnv1aHash(input: string): string {

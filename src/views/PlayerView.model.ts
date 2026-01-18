@@ -1,7 +1,8 @@
 import { Component } from "vue";
 import { ViewModel } from "vue-mvvm";
-import PlayerView from "@views/PlayerView.vue";
 import { RouteAdapter, RouterService } from "vue-mvvm/router";
+
+import PlayerView from "@views/PlayerView.vue";
 
 export class PlayerViewModel extends ViewModel {
     public static readonly component: Component = PlayerView;

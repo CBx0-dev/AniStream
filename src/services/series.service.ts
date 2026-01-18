@@ -102,4 +102,16 @@ WHERE s.series_id = ?
 
         return finished_episodes / total_episodes;
     }
+
+    public async getSeries(seriesId: number): Promise<SeriesModel | null> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        const rows: SeriesDbModel[] = await session.query<SeriesDbModel[]>(`SELECT * FROM series WHERE series_id = ? LIMIT 1`, seriesId);
+
+        if (rows.length === 0) {
+            return null;
+        }
+
+        return SeriesModel(rows[0].series_id, rows[0].guid, rows[0].title, rows[0].description, rows[0].preview_image);
+    }
 }
