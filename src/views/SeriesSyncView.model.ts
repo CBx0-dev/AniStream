@@ -3,6 +3,7 @@ import {ViewModel} from "vue-mvvm";
 import {RouteAdapter, RouterService} from "vue-mvvm/router";
 
 import SeriesSyncView from "@views/SeriesSyncView.vue";
+import {StreamViewModel} from "@views/StreamView.model";
 
 import {SeriesService} from "@services/series.service";
 import {SeasonService} from "@services/season.service";
@@ -73,7 +74,7 @@ export class SeriesSyncViewModel extends ViewModel {
 
         await Promise.allSettled([
             this.fetchService.getSeasons(this.series).then(seasons => this.availableSeasons.push(...seasons)),
-            this.seasonService.getSeasons(this.series).then(seasons => this.existingSeasons.push(...seasons))
+            this.seasonService.getSeasons(this.series.series_id).then(seasons => this.existingSeasons.push(...seasons))
         ]);
 
         this.isPreLoading = false;
@@ -181,8 +182,9 @@ export class SeriesSyncViewModel extends ViewModel {
             this.syncProgress = (completed / this.selectedSeasons.length) * 100;
         }
 
-        // TODO Navigate to overview
-        // this.routerService.navigateTo();
+        await this.routerService.navigateTo(StreamViewModel, {
+            series_id: this.series.series_id
+        });
     }
 
     private async syncExistingSeason(season: SeasonModel, episodes: EpisodeFetchModel[]): Promise<void> {

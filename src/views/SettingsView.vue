@@ -11,7 +11,7 @@ import Text from "@controls/Text.vue";
 import PrefControl from "@controls/PrefControl.vue";
 import InfoControl from "@controls/InfoControl.vue";
 
-import i18n from "@utils/i18n";
+import I18n from "@utils/i18n";
 
 const vm: SettingsViewModel = useViewModel(SettingsViewModel);
 </script>
@@ -26,14 +26,14 @@ const vm: SettingsViewModel = useViewModel(SettingsViewModel);
                             <input type="radio" name="settings-tabs"/>
                             <span class="inline-flex items-center gap-1">
                                 <LucideArrowLeft />
-                                <Text :target="i18n.SettingsView.back"/>
+                                <Text :target="I18n.SettingsView.back"/>
                             </span>
                         </label>
                         <label class="tab">
                             <input type="radio" name="settings-tabs" checked/>
                             <span class="inline-flex items-center gap-1">
                                 <LucidePalette/>
-                                <Text :target="i18n.SettingsView.pref"/>
+                                <Text :target="I18n.SettingsView.pref"/>
                             </span>
                         </label>
                         <div class="tab-content bg-base-100 border-base-300 p-6">
@@ -44,7 +44,7 @@ const vm: SettingsViewModel = useViewModel(SettingsViewModel);
                             <input type="radio" name="settings-tabs"/>
                             <span class="inline-flex items-center gap-1">
                                 <LucideNewspaper/>
-                                <Text :target="i18n.SettingsView.changelog"/>
+                                <Text :target="I18n.SettingsView.changelog"/>
                             </span>
                         </label>
                         <div class="tab-content bg-base-100 border-base-300 p-6">
@@ -55,7 +55,7 @@ const vm: SettingsViewModel = useViewModel(SettingsViewModel);
                             <input type="radio" name="settings-tabs"/>
                             <span class="inline-flex items-center gap-1">
                                 <LucideInfo/>
-                                <Text :target="i18n.SettingsView.info"/>
+                                <Text :target="I18n.SettingsView.info"/>
                             </span>
                         </label>
                         <div class="tab-content bg-base-100 border-base-300 p-6">

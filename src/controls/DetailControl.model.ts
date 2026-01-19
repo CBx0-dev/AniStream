@@ -4,6 +4,9 @@ import { DialogControl } from "vue-mvvm/dialog";
 
 import DetailControl from "@controls/DetailControl.vue";
 
+import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
+import {StreamViewModel} from "@views/StreamView.model";
+
 import {SeriesModel} from "@models/series.model";
 import {GenreModel} from "@models/genre.model";
 
@@ -13,7 +16,6 @@ import {SeriesService} from "@services/series.service";
 import {SeasonService} from "@services/season.service";
 
 import I18n from "@utils/i18n";
-import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
 
 export class DetailControlModel extends DialogControl {
     public static readonly component: Component = DetailControl;
@@ -84,7 +86,10 @@ export class DetailControlModel extends DialogControl {
             return;
         }
 
-        // TODO navigate to series overview
+    
+        await this.routerService.navigateTo(StreamViewModel, {
+            series_id: this.seriesId
+        });
     }
 
     public onResetProgressionBtn(): void {

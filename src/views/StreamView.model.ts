@@ -1,0 +1,100 @@
+import {Component} from "vue";
+import {ViewModel} from "vue-mvvm";
+import {RouteAdapter, RouterService} from "vue-mvvm/router";
+
+import StreamView from "@views/StreamView.vue";
+import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
+
+import {SeriesModel} from "@models/series.model";
+import {SeasonModel} from "@models/season.model";
+import {GenreModel} from "@models/genre.model";
+
+import {ProviderService} from "@services/provider.service";
+import {I18nService} from "@/services/i18n.service";
+import {GenreService} from "@services/genre.service";
+import {SeriesService} from "@services/series.service";
+import {SeasonService} from "@services/season.service";
+import {EpisodeService} from "@services/episode.service";
+
+import I18n from "@utils/i18n";
+
+export class StreamViewModel extends ViewModel {
+    public static readonly component: Component = StreamView;
+    public static readonly route = {
+        path: "/streams/:series_id",
+        params: {
+            series_id: "integer"
+        }
+    } satisfies RouteAdapter;
+
+    private readonly routerSerivce: RouterService;
+    private readonly providerService: ProviderService;
+    private readonly i18nService: I18nService;
+    private readonly genreService: GenreService;
+    private readonly seriesService: SeriesService;
+    private readonly seasonService: SeasonService;
+    private readonly episodeSerivce: EpisodeService;
+
+    public providerFolder: string | null = this.ref(null);
+    public series: SeriesModel | null = this.ref(null);
+    public mainGenre: GenreModel | null = this.ref(null);
+    public genres: GenreModel[] = this.ref([]);
+    public seasons: SeasonModel[] = this.ref([]);
+
+    public previewImage: string | null = this.computed(() => this.series?.preview_image ?? null);
+    public description: string = this.computed(() => this.series?.description ?? "");
+
+    public constructor() {
+        super();
+
+        this.routerSerivce = this.ctx.getService(RouterService);
+        this.providerService = this.ctx.getService(ProviderService);
+        this.i18nService = this.ctx.getService(I18nService);
+        this.genreService = this.ctx.getService(GenreService);
+        this.seriesService = this.ctx.getService(SeriesService);
+        this.seasonService = this.ctx.getService(SeasonService);
+        this.episodeSerivce = this.ctx.getService(EpisodeService);
+    }
+
+    public async mounted(): Promise<void> {
+        this.genres.clear();
+        this.mainGenre = null;
+
+        try {
+            let seriesId: number = this.routerSerivce.params.getInteger("series_id");
+            this.series = await this.seriesService.getSeries(seriesId);
+            if (!this.series) {
+                this.routerSerivce.navigateBack();
+                return;
+            }
+        } catch {
+            this.routerSerivce.navigateBack();
+            return;
+        }
+
+        this.providerFolder = await (await this.providerService.getProvider()).getStorageLocation();
+        
+        this.genres.push(...await this.genreService.getNonMainGenresOfSeries(this.series.series_id));
+        this.mainGenre = await this.genreService.getMainGenreOfSeries(this.series.series_id);
+
+        this.seasons = await this.seasonService.getSeasons(this.series.series_id);
+    }
+
+    public onBackBtn(): void {
+        this.routerSerivce.navigateBack();
+    }
+
+    public async onSyncBtn(): Promise<void> {
+        if (!this.series) {
+            return;
+        }
+        
+        await this.routerSerivce.navigateTo(SeriesSyncViewModel, {
+            series_id: this.series.series_id
+        });
+    }
+
+    public getGenreName(key: string): string {
+        return this.i18nService.getDynamic(I18n.Genres, key);
+    }
+}

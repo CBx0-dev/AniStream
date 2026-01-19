@@ -6,6 +6,8 @@ import {SettingsViewModel} from "@views/SettingsView.model";
 import {StreamsViewModel} from "@views/StreamsView.model";
 import {SyncViewModel} from "@views/SyncView.model";
 import {WatchlistViewModel} from "@views/WatchlistView.model";
+import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
+import {StreamViewModel} from "@views/StreamView.model";
 import {PlayerViewModel} from "@views/PlayerView.model";
 
 import {ProviderService} from "@services/provider.service";
@@ -17,7 +19,6 @@ import {FetchService} from "@services/fetch.service";
 import {GenreService} from "@services/genre.service";
 import {I18nService} from "@services/i18n.service";
 import {SettingsService} from "@services/settings.service";
-import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
 
 export class AppConfig implements AppShell {
     router: { history?: "memory" | "web" | "web-hash"; views: RoutableViewModel[]; } = {
@@ -28,6 +29,7 @@ export class AppConfig implements AppShell {
             SyncViewModel,
             WatchlistViewModel,
             SeriesSyncViewModel,
+            StreamViewModel,
             PlayerViewModel
         ]
     }

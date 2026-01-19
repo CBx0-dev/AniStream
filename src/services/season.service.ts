@@ -21,10 +21,10 @@ export class SeasonService extends DbServiceBase {
         return count == 0;
     }
 
-    public async getSeasons(series: SeriesModel): Promise<SeasonModel[]> {
+    public async getSeasons(seriesId: number): Promise<SeasonModel[]> {
         const session: DbSession = await this.provider.getDatabase();
 
-        const seasons: SeasonDbModel[] = await session.query<SeasonDbModel[]>("SELECT * FROM season WHERE series_id = ? ORDER BY season_number;", series.series_id);
+        const seasons: SeasonDbModel[] = await session.query<SeasonDbModel[]>("SELECT * FROM season WHERE series_id = ? ORDER BY season_number;", seriesId);
 
         return seasons.map(season => SeasonModel(season.season_id, season.series_id, season.season_number));
     }
