@@ -7,6 +7,7 @@ import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
 
 import {SeriesModel} from "@models/series.model";
 import {SeasonModel} from "@models/season.model";
+import {EpisodeModel} from "@models/episode.model";
 import {GenreModel} from "@models/genre.model";
 
 import {ProviderService} from "@services/provider.service";
@@ -35,6 +36,8 @@ export class StreamViewModel extends ViewModel {
     private readonly seasonService: SeasonService;
     private readonly episodeSerivce: EpisodeService;
 
+    private episodes: Map<number, EpisodeModel[]> = this.ref(new Map<number, EpisodeModel[]>());
+
     public providerFolder: string | null = this.ref(null);
     public series: SeriesModel | null = this.ref(null);
     public mainGenre: GenreModel | null = this.ref(null);
@@ -60,6 +63,9 @@ export class StreamViewModel extends ViewModel {
         this.genres.clear();
         this.mainGenre = null;
 
+        this.seasons.clear();
+        this.episodes.clear();
+
         try {
             let seriesId: number = this.routerSerivce.params.getInteger("series_id");
             this.series = await this.seriesService.getSeries(seriesId);
@@ -78,6 +84,10 @@ export class StreamViewModel extends ViewModel {
         this.mainGenre = await this.genreService.getMainGenreOfSeries(this.series.series_id);
 
         this.seasons = await this.seasonService.getSeasons(this.series.series_id);
+
+        await Promise.allSettled(this.seasons.map(async season => {
+            this.episodes.set(season.season_id, await this.episodeSerivce.getEpisodes(season.season_id));
+        }));
     }
 
     public onBackBtn(): void {
@@ -96,5 +106,14 @@ export class StreamViewModel extends ViewModel {
 
     public getGenreName(key: string): string {
         return this.i18nService.getDynamic(I18n.Genres, key);
+    }
+
+    public getEpisodes(seasonId: number): EpisodeModel[] {
+        const episodes: EpisodeModel[] | undefined = this.episodes.get(seasonId)
+        if (!episodes) {
+            return [];
+        }
+
+        return episodes;
     }
 }

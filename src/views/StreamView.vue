@@ -90,6 +90,7 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                                 <ul class="list bg-base-100 rounded-box">
                                     <li class="list-row">
                                         <div>
+                                            {{ vm.getEpisodes(season.season_id) }}
                                         </div>
                                     </li>
                                 </ul>
