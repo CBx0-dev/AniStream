@@ -2,7 +2,6 @@ import {QueryResult} from "@tauri-apps/plugin-sql";
 import {ReadableGlobalContext} from "vue-mvvm";
 
 import {DbServiceBase, DbSession} from "@services/db.service";
-import {SeriesModel} from "@models/series.model";
 import {SeasonDbModel, SeasonModel} from "@models/season.model";
 
 export class SeasonService extends DbServiceBase {
@@ -19,6 +18,17 @@ export class SeasonService extends DbServiceBase {
         }]>("SELECT count(season_id) AS count FROM season WHERE series_id = ?;", seriesId);
 
         return count == 0;
+    }
+
+    public async getSeason(seasonId: number): Promise<SeasonModel | null> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        const rows: SeasonDbModel[] = await session.query<SeasonDbModel[]>("SELECT * FROM season WHERE season_id = ?;", seasonId);
+        if (rows.length == 0) {
+            return null;
+        }
+        
+        return SeasonModel(rows[0].season_id, rows[0].series_id, rows[0].season_number);
     }
 
     public async getSeasons(seriesId: number): Promise<SeasonModel[]> {

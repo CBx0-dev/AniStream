@@ -47,7 +47,8 @@ const vm: SeriesSyncViewModel = useViewModel(SeriesSyncViewModel);
                     </li>
                 </template>
                 <template v-else>
-                    <li class="list-row items-center p-4 pb-2"
+                    <li v-if="vm.nonExistingSeasons.length > 0"
+                        class="list-row items-center p-4 pb-2"
                         :class="{'opacity-50 pointer-events-none': vm.isSyncing}"
                         @click="vm.onAllAvailableRowClick">
                         <div class="list-col-grow cursor-default text-xs opacity-60">

@@ -9,6 +9,28 @@ export class EpisodeService extends DbServiceBase {
         super(ctx);
     }
 
+    public async getEpisode(episodeId: number): Promise<EpisodeModel | null> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        const rows: EpisodeDbModel[] = await session.query<EpisodeDbModel[]>("SELECT * FROM episode WHERE episode_id = ?;", episodeId);
+
+        if (rows.length == 0) {
+            return null;
+        }
+
+        return EpisodeModel(
+            rows[0].episode_id,
+            rows[0].season_id,
+            rows[0].episode_number,
+            rows[0].german_title,
+            rows[0].english_title,
+            rows[0].description,
+            rows[0].percentage_watched,
+            rows[0].stopped_time
+        );
+    }
+
+
     public async getEpisodes(seasonId: number): Promise<EpisodeModel[]> {
         const session: DbSession = await this.provider.getDatabase();
 
@@ -62,6 +84,17 @@ export class EpisodeService extends DbServiceBase {
             english_title,
             description,
             episode_id
+        );
+    }
+
+    public async updateEpisodeProgression(episodeId: number, percentageWatched: number, stoppedTime: number): Promise<void> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        await session.execute(
+            "UPDATE episode SET percentage_watched = ?, stopped_time = ? WHERE episode_id = ?;",
+            percentageWatched,
+            stoppedTime,
+            episodeId
         );
     }
 }

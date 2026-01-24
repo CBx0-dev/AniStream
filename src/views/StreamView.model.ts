@@ -1,4 +1,4 @@
-import {Component} from "vue";
+import {Component, ComponentInternalInstance, getCurrentInstance} from "vue";
 import {ViewModel} from "vue-mvvm";
 import {RouteAdapter, RouterService} from "vue-mvvm/router";
 
@@ -18,6 +18,7 @@ import {SeasonService} from "@services/season.service";
 import {EpisodeService} from "@services/episode.service";
 
 import I18n from "@utils/i18n";
+import {PlayerViewModel} from "@views/PlayerView.model";
 
 export class StreamViewModel extends ViewModel {
     public static readonly component: Component = StreamView;
@@ -43,6 +44,15 @@ export class StreamViewModel extends ViewModel {
     public mainGenre: GenreModel | null = this.ref(null);
     public genres: GenreModel[] = this.ref([]);
     public seasons: SeasonModel[] = this.ref([]);
+
+    private uid: number = this.computed(() => {
+        const instance: ComponentInternalInstance | null = getCurrentInstance();
+        if (!instance) {
+            return Math.round(Math.random() * 1000);
+        }
+
+        return instance.uid;
+    });
 
     public previewImage: string | null = this.computed(() => this.series?.preview_image ?? null);
     public description: string = this.computed(() => this.series?.description ?? "");
@@ -79,7 +89,7 @@ export class StreamViewModel extends ViewModel {
         }
 
         this.providerFolder = await (await this.providerService.getProvider()).getStorageLocation();
-        
+
         this.genres.push(...await this.genreService.getNonMainGenresOfSeries(this.series.series_id));
         this.mainGenre = await this.genreService.getMainGenreOfSeries(this.series.series_id);
 
@@ -98,7 +108,7 @@ export class StreamViewModel extends ViewModel {
         if (!this.series) {
             return;
         }
-        
+
         await this.routerSerivce.navigateTo(SeriesSyncViewModel, {
             series_id: this.series.series_id
         });
@@ -115,5 +125,38 @@ export class StreamViewModel extends ViewModel {
         }
 
         return episodes;
+    }
+
+    public async onEpisodeRowClick(season: SeasonModel, episode: EpisodeModel): Promise<void> {
+        if (!this.series) {
+            return;
+        }
+
+        await this.routerSerivce.navigateTo(PlayerViewModel, {
+            series_id: this.series.series_id,
+            season_id: season.season_id,
+            episode_id: episode.episode_id
+        });
+    }
+
+    public onPopOverClicked(ev: PointerEvent): void {
+        const popover: HTMLElement | null = (<HTMLElement>ev.target).closest("[popover]") as HTMLElement | null
+        if (!popover) {
+            return;
+        }
+        popover.hidePopover();
+    }
+
+    public async onMarkWatchedBtn(episode: EpisodeModel): Promise<void> {
+        await this.episodeSerivce.updateEpisodeProgression(episode.episode_id, 100, episode.stopped_time);
+        episode.percentage_watched = 100;
+    }
+
+    public getPopoverId(episodeId: number): string {
+        return `popover-${this.uid}-${episodeId}`;
+    }
+
+    public getAnchorId(episodeId: number): string {
+        return `--anchor-${this.uid}-${episodeId}`;
     }
 }

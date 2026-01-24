@@ -60,21 +60,29 @@ const vm: DetailControlModel = useDialogControl(DetailControlModel);
                                 <LucidePlay />
                                 <Text :target="I18n.DetailControl.watch" />
                             </button>
-                            <button class="join-item btn btn-soft" :popovertarget="vm.popoverId"
+                            <button
+                                class="join-item btn btn-soft"
+                                :popovertarget="vm.popoverId"
                                 :style="`anchor-name:${vm.anchorId}`">
                                 <LucideEllipsisVertical />
                                 <Teleport to="#app">
-                                    <ul class="dropdown menu w-fit rounded-box bg-base-100 shadow-sm" popover
-                                        :id="vm.popoverId" :style="`position-anchor:${vm.anchorId}`">
+                                    <ul class="dropdown menu w-fit rounded-box bg-base-100 shadow-sm"
+                                        popover
+                                        :id="vm.popoverId"
+                                        :style="`position-anchor:${vm.anchorId}`">
                                         <li>
                                             <a @click="vm.onResetProgressionBtn">
                                                 <LucideTimerReset />
                                                 <Text :target="I18n.DetailControl.reset" />
                                             </a>
+                                        </li>
+                                        <li>
                                             <a @click="vm.onAddWatchlistBtn">
                                                 <LucidePlus />
                                                 <Text :target="I18n.DetailControl.addWatchlist" />
                                             </a>
+                                        </li>
+                                        <li>
                                             <a @click="vm.onAddListBtn">
                                                 <LucidePlus />
                                                 <Text :target="I18n.DetailControl.addList" />
