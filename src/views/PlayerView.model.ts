@@ -35,6 +35,17 @@ export class PlayerViewModel extends ViewModel {
     public seriesTitle: string = this.computed(() => this.series?.title ?? "N/A");
     public seasonNumber: string = this.computed(() => this.season?.season_number.toString() ?? "N/A");
     public episodeNumber: string = this.computed(() => this.episode?.episode_number.toString() ?? "N/A");
+    public episodeTitleEnglish: string = this.computed(() => this.episode?.english_title ?? "");
+    public episodeTitleHasGerman: boolean = this.computed(() => {
+        if (!this.episode) {
+            return false;
+        }
+
+        return this.episode.german_title != "";
+    });
+    public episodeTitleGerman: string = this.computed(() => this.episode?.german_title ?? "");
+    public episodeDescription: string = this.computed(() => this.episode?.description ?? "");
+    public episodes: EpisodeModel[] = this.ref([]);
 
     public constructor() {
         super();
@@ -72,6 +83,8 @@ export class PlayerViewModel extends ViewModel {
             this.routerService.navigateBack();
             return;
         }
+
+        this.episodes.push(...await this.episodeService.getEpisodes(this.season.season_id));
     }
 
     public onBackBtn(): void {

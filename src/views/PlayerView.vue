@@ -4,6 +4,7 @@ import {useViewModel} from "vue-mvvm";
 import {PlayerViewModel} from "@views/PlayerView.model";
 
 import LucideArrowLeft from "@icons/LucideArrowLeft.vue";
+import LucideArrowRight from "@icons/LucideArrowRight.vue";
 
 const vm: PlayerViewModel = useViewModel(PlayerViewModel);
 </script>
@@ -30,7 +31,6 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
             <template v-else>
                 Episode {{ vm.episodeNumber }}
             </template>
-
         </div>
     </div>
     <div class="px-5 pb-5 grow flex gap-3">
@@ -42,19 +42,33 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
             </div>
             <div class="flex justify-between">
                 <button class="btn btn-soft">
-                    WASD
+                    <LucideArrowLeft/>
+                    Previous Episode
                 </button>
                 <button class="btn btn-soft">
-                    WASD
+                    Next Episode
+                    <LucideArrowRight/>
                 </button>
             </div>
             <div class="grow card bg-base-100 card-border border-base-300">
                 <div class="card-body">
-                    Description
+                    <h1 v-if="vm.episodeTitleHasGerman" class="text-xl">
+                        {{ vm.episodeTitleGerman }}
+                        &#x2022;
+                        <span class="opacity-70">
+                            {{ vm.episodeTitleEnglish }}
+                        </span>
+                    </h1>
+                    <h1 v-else class="text-xl">
+                        {{ vm.episodeTitleEnglish }}
+                    </h1>
+                    <p class="opacity-70">
+                        {{ vm.episodeDescription }}
+                    </p>
                 </div>
             </div>
         </div>
-        <div class="shrink-0 flex flex-col gap-3">
+        <div class="shrink-0 flex flex-col gap-3 w-[350px] h-screen">
             <div class="shrink-0 card bg-base-100 card-border border-base-300">
                 <div class="card-body">
                     Providers
@@ -62,7 +76,30 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
             </div>
             <div class="grow card bg-base-100 card-border border-base-300">
                 <div class="card-body overflow-y-auto">
-                    Episodes
+                    <h1 class="text-xl pb-4">
+                        Episoden
+                    </h1>
+                    <div class="overflow-y-auto">
+                        <ul class="menu menu-md w-full p-0">
+                            <li v-for="episode of vm.episodes"
+                                :key="episode.episode_id"
+                                :data-active="episode.episode_number.toString() == vm.episodeNumber"
+                                class="data-[active=true]:bg-base-200 data-[active=true]:text-primary">
+                                <span v-if="episode.german_title">
+                                    <span>
+                                        <span class="text-sm font-semibold">
+                                            {{ episode.episode_number }}:
+                                            {{ episode.german_title }}
+                                        </span>
+                                        <br>
+                                        <span class="text-xs opacity-70">
+                                            {{ episode.english_title }}
+                                        </span>
+                                    </span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
