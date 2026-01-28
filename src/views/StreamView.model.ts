@@ -1,6 +1,7 @@
 import {Component, ComponentInternalInstance, getCurrentInstance} from "vue";
 import {ViewModel} from "vue-mvvm";
 import {RouteAdapter, RouterService} from "vue-mvvm/router";
+import {AlertService} from "vue-mvvm/alert";
 
 import StreamView from "@views/StreamView.vue";
 import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
@@ -29,13 +30,14 @@ export class StreamViewModel extends ViewModel {
         }
     } satisfies RouteAdapter;
 
-    private readonly routerSerivce: RouterService;
+    private readonly routerService: RouterService;
+    private readonly alertService: AlertService;
     private readonly providerService: ProviderService;
     private readonly i18nService: I18nService;
     private readonly genreService: GenreService;
     private readonly seriesService: SeriesService;
     private readonly seasonService: SeasonService;
-    private readonly episodeSerivce: EpisodeService;
+    private readonly episodeService: EpisodeService;
 
     private episodes: Map<number, EpisodeModel[]> = this.ref(new Map<number, EpisodeModel[]>());
 
@@ -60,13 +62,14 @@ export class StreamViewModel extends ViewModel {
     public constructor() {
         super();
 
-        this.routerSerivce = this.ctx.getService(RouterService);
+        this.routerService = this.ctx.getService(RouterService);
+        this.alertService = this.ctx.getService(AlertService);
         this.providerService = this.ctx.getService(ProviderService);
         this.i18nService = this.ctx.getService(I18nService);
         this.genreService = this.ctx.getService(GenreService);
         this.seriesService = this.ctx.getService(SeriesService);
         this.seasonService = this.ctx.getService(SeasonService);
-        this.episodeSerivce = this.ctx.getService(EpisodeService);
+        this.episodeService = this.ctx.getService(EpisodeService);
     }
 
     public async mounted(): Promise<void> {
@@ -77,14 +80,14 @@ export class StreamViewModel extends ViewModel {
         this.episodes.clear();
 
         try {
-            let seriesId: number = this.routerSerivce.params.getInteger("series_id");
+            let seriesId: number = this.routerService.params.getInteger("series_id");
             this.series = await this.seriesService.getSeries(seriesId);
             if (!this.series) {
-                this.routerSerivce.navigateBack();
+                this.routerService.navigateBack();
                 return;
             }
         } catch {
-            this.routerSerivce.navigateBack();
+            this.routerService.navigateBack();
             return;
         }
 
@@ -96,12 +99,12 @@ export class StreamViewModel extends ViewModel {
         this.seasons = await this.seasonService.getSeasons(this.series.series_id);
 
         await Promise.allSettled(this.seasons.map(async season => {
-            this.episodes.set(season.season_id, await this.episodeSerivce.getEpisodes(season.season_id));
+            this.episodes.set(season.season_id, await this.episodeService.getEpisodes(season.season_id));
         }));
     }
 
     public onBackBtn(): void {
-        this.routerSerivce.navigateBack();
+        this.routerService.navigateBack();
     }
 
     public async onSyncBtn(): Promise<void> {
@@ -109,9 +112,28 @@ export class StreamViewModel extends ViewModel {
             return;
         }
 
-        await this.routerSerivce.navigateTo(SeriesSyncViewModel, {
+        await this.routerService.navigateTo(SeriesSyncViewModel, {
             series_id: this.series.series_id
         });
+    }
+
+    public async onResetBtn(): Promise<void> {
+        if (!this.series) {
+            return;
+        }
+
+        const confirmResult: boolean = await this.alertService.showConfirm({
+            title: "Reset progression",
+            description: "Do you really want to reset your progression"
+        });
+        if (!confirmResult) {
+            return;
+        }
+
+        await this.seriesService.resetProgression(this.series.series_id);
+        for (const episode of Array.from(this.episodes.values()).flat()) {
+            episode.percentage_watched = 0;
+        }
     }
 
     public getGenreName(key: string): string {
@@ -132,7 +154,7 @@ export class StreamViewModel extends ViewModel {
             return;
         }
 
-        await this.routerSerivce.navigateTo(PlayerViewModel, {
+        await this.routerService.navigateTo(PlayerViewModel, {
             series_id: this.series.series_id,
             season_id: season.season_id,
             episode_id: episode.episode_id
@@ -148,7 +170,7 @@ export class StreamViewModel extends ViewModel {
     }
 
     public async onMarkWatchedBtn(episode: EpisodeModel): Promise<void> {
-        await this.episodeSerivce.updateEpisodeProgression(episode.episode_id, 100, episode.stopped_time);
+        await this.episodeService.updateEpisodeProgression(episode.episode_id, 100, episode.stopped_time);
         episode.percentage_watched = 100;
     }
 

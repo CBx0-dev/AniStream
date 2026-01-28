@@ -1,5 +1,4 @@
 import {AppShell, WritableGlobalContext} from "vue-mvvm";
-import {RoutableViewModel} from "vue-mvvm/router";
 
 import {ProviderViewModel} from "@views/ProviderView.model";
 import {SettingsViewModel} from "@views/SettingsView.model";
@@ -10,6 +9,8 @@ import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
 import {StreamViewModel} from "@views/StreamView.model";
 import {PlayerViewModel} from "@views/PlayerView.model";
 
+import {ConfirmControlModel} from "@controls/ConfirmControl.model";
+
 import {ProviderService} from "@services/provider.service";
 import {SeriesService} from "@services/series.service";
 import {SeasonService} from "@services/season.service";
@@ -17,11 +18,12 @@ import {EpisodeService} from "@services/episode.service";
 import {DbService} from "@services/db.service";
 import {FetchService} from "@services/fetch.service";
 import {GenreService} from "@services/genre.service";
+import {WatchlistService} from "@services/watchlist.service";
 import {I18nService} from "@services/i18n.service";
 import {SettingsService} from "@services/settings.service";
 
 export class AppConfig implements AppShell {
-    router: { history?: "memory" | "web" | "web-hash"; views: RoutableViewModel[]; } = {
+    router: AppShell.RouterConfig = {
         views: [
             ProviderViewModel,
             SettingsViewModel,
@@ -34,6 +36,10 @@ export class AppConfig implements AppShell {
         ]
     }
 
+    alert: AppShell.AlertConfig = {
+        confirm: ConfirmControlModel
+    }
+
     configureServices(ctx: WritableGlobalContext): void {
         ctx.registerService(I18nService, () => new I18nService());
         ctx.registerService(ProviderService, ctx => new ProviderService(ctx));
@@ -41,6 +47,7 @@ export class AppConfig implements AppShell {
         ctx.registerService(SeasonService, ctx => new SeasonService(ctx));
         ctx.registerService(EpisodeService, ctx => new EpisodeService(ctx));
         ctx.registerService(GenreService, ctx => new GenreService(ctx));
+        ctx.registerService(WatchlistService, ctx => new WatchlistService(ctx));
         ctx.registerService(DbService, () => new DbService());
         ctx.registerService(FetchService, ctx => new FetchService(ctx));
         ctx.registerService(SettingsService, ctx => new SettingsService(ctx));

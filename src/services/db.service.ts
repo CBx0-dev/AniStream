@@ -176,8 +176,25 @@ CREATE TABLE genre_to_series
     }
 }
 
+class DbVersion2 implements DbVersion {
+    public previousVersion: DbVersionConstructor | null = DbVersion1;
+
+    public version: number = 2;
+
+    public async migrate(session: DbSession, _provider: string): Promise<void> {
+        await session.execute(`
+CREATE TABLE watchlist
+(
+    watchlist_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    series_id    INTEGER UNIQUE NOT NULL,
+    FOREIGN KEY (series_id) REFERENCES series (series_id) ON DELETE RESTRICT
+);
+        `);
+    }
+}
+
 // ================================================================================================================== //
 //                                                   END MIGRATION                                                    //
 // ================================================================================================================== //
 
-const LATEST_VERSION: DbVersionConstructor = DbVersion1;
+const LATEST_VERSION: DbVersionConstructor = DbVersion2;

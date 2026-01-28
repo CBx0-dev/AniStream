@@ -46,6 +46,30 @@ export class PlayerViewModel extends ViewModel {
     public episodeTitleGerman: string = this.computed(() => this.episode?.german_title ?? "");
     public episodeDescription: string = this.computed(() => this.episode?.description ?? "");
     public episodes: EpisodeModel[] = this.ref([]);
+    public previousEpisode: EpisodeModel | null = this.computed(() => {
+        if (!this.episode || this.episode.episode_number == 1) {
+            return null;
+        }
+
+        const previousEpisode: EpisodeModel | undefined = this.episodes.find(ep => ep.episode_number == this.episode!.episode_number - 1);
+        if (!previousEpisode) {
+            return null;
+        }
+
+        return previousEpisode;
+    });
+    public nextEpisode: EpisodeModel | null = this.computed(() => {
+        if (!this.episode) {
+            return null;
+        }
+
+        const previousEpisode: EpisodeModel | undefined = this.episodes.find(ep => ep.episode_number == this.episode!.episode_number + 1);
+        if (!previousEpisode) {
+            return null;
+        }
+
+        return previousEpisode;
+    });
 
     public constructor() {
         super();
@@ -89,5 +113,41 @@ export class PlayerViewModel extends ViewModel {
 
     public onBackBtn(): void {
         this.routerService.navigateBack();
+    }
+
+    public async onPreviousBtn(): Promise<void> {
+        if (!this.series || !this.season || !this.previousEpisode) {
+            return;
+        }
+
+        await this.routerService.navigateTo(PlayerViewModel, {
+            series_id: this.series.series_id,
+            season_id: this.season.season_id,
+            episode_id: this.previousEpisode.episode_id
+        });
+    }
+
+    public async onNextBtn(): Promise<void> {
+        if (!this.series || !this.season || !this.nextEpisode) {
+            return;
+        }
+
+        await this.routerService.navigateTo(PlayerViewModel, {
+            series_id: this.series.series_id,
+            season_id: this.season.season_id,
+            episode_id: this.nextEpisode.episode_id
+        });
+    }
+
+    public async onEpisodeItem(episode: EpisodeModel): Promise<void> {
+        if (!this.series || !this.season) {
+            return;
+        }
+
+        await this.routerService.navigateTo(PlayerViewModel, {
+            series_id: this.series.series_id,
+            season_id: this.season.season_id,
+            episode_id: episode.episode_id
+        });
     }
 }

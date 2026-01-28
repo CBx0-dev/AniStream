@@ -14,6 +14,7 @@ import {SeriesModel} from "@models/series.model";
 import {DefaultProvider, ProviderService} from "@services/provider.service";
 import {GenreService} from "@services/genre.service";
 import {GenreModel} from "@models/genre.model";
+import {throttle} from "@utils/throttle";
 
 export class StreamsViewModel extends ViewModel {
     public static readonly component: Component = StreamsView;
@@ -51,9 +52,9 @@ export class StreamsViewModel extends ViewModel {
         this.seriesService = this.ctx.getService(SeriesService);
         this.genresService = this.ctx.getService(GenreService);
 
-        this.searchStringWatcher = watch(() => this.searchText, async () => {
+        this.searchStringWatcher = watch(() => this.searchText, throttle(async () => {
             await this.onFilterUpdate();
-        });
+        }, 300));
         this.ignoreObserverOnce = false;
         this.observer = new IntersectionObserver(async entries => {
             if (entries.length == 0) {

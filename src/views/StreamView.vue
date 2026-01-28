@@ -9,10 +9,10 @@ import LucideInfo from "@icons/LucideInfo.vue";
 import LucidePopcorn from "@icons/LucidePopcorn.vue";
 import LucideFolder from "@icons/LucideFolder.vue";
 import LucideTimerReset from "@icons/LucideTimerReset.vue";
-
-import ImageHash from "@controls/ImageHash.vue";
 import LucideEllipsisVertical from "@icons/LucideEllipsisVertical.vue";
 import LucideCheck from "@icons/LucideCheck.vue";
+
+import ImageHash from "@controls/ImageHash.vue";
 
 const vm: StreamViewModel = useViewModel(StreamViewModel);
 </script>
@@ -31,7 +31,7 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                             <LucideCloudSync/>
                             Sync series
                         </button>
-                        <button class="join-item btn btn-soft">
+                        <button class="join-item btn btn-soft" @click="vm.onResetBtn">
                             <LucideTimerReset/>
                             Reset progress
                         </button>
@@ -112,7 +112,7 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                                                     :popovertarget="vm.getPopoverId(episode.episode_id)"
                                                     :style="`anchor-name:${vm.getAnchorId(episode.episode_id)}`"
                                                     @click.stop>
-                                                <LucideEllipsisVertical />
+                                                <LucideEllipsisVertical/>
                                             </button>
                                             <Teleport to="#app">
                                                 <ul class="dropdown menu w-fit rounded-box bg-base-100 shadow-sm"
@@ -122,8 +122,8 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                                                     @click="vm.onPopOverClicked($event)">
                                                     <li>
                                                         <a class="items-center"
-                                                            @click="vm.onMarkWatchedBtn(episode)">
-                                                            <LucideCheck />
+                                                           @click="vm.onMarkWatchedBtn(episode)">
+                                                            <LucideCheck/>
                                                             Mark as watched
                                                         </a>
                                                     </li>

@@ -182,7 +182,7 @@ export class SeriesSyncViewModel extends ViewModel {
             this.syncProgress = (completed / this.selectedSeasons.length) * 100;
         }
 
-        await this.routerService.navigateTo(StreamViewModel, {
+        await this.routerService.replaceTo(StreamViewModel, {
             series_id: this.series.series_id
         });
     }

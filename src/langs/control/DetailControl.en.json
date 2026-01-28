@@ -4,5 +4,6 @@
     "reset": "Reset progression",
     "watch": "Watch",
     "addWatchlist": "Add to Watchlist",
+    "removeWatchlist": "Remove from Watchlist",
     "addList": "Add to List"
 }

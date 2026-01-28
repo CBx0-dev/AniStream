@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { useDialogControl } from 'vue-mvvm/dialog';
-import { DetailControlModel } from '@controls/DetailControl.model';
-import LucideX from '@/icons/LucideX.vue';
-import LucidePlay from '@/icons/LucidePlay.vue';
-import LucideTimerReset from '@/icons/LucideTimerReset.vue';
-import I18n from '@/utils/i18n';
-import Text from './Text.vue';
-import LucideEllipsisVertical from '@/icons/LucideEllipsisVertical.vue';
-import LucidePlus from '@/icons/LucidePlus.vue';
+import {useDialogControl} from "vue-mvvm/dialog";
+
+import {DetailControlModel} from "@controls/DetailControl.model";
+import Text from "@controls/Text.vue";
 import ImageHash from "@controls/ImageHash.vue";
+
+import LucideX from "@icons/LucideX.vue";
+import LucidePlay from "@icons/LucidePlay.vue";
+import LucideTimerReset from "@icons/LucideTimerReset.vue";
+import LucideEllipsisVertical from "@icons/LucideEllipsisVertical.vue";
+import LucideEyeOff from "@icons/LucideEyeOff.vue";
+import LucideEye from "@icons/LucideEye.vue";
+
+import I18n from "@utils/i18n";
+
 
 const vm: DetailControlModel = useDialogControl(DetailControlModel);
 </script>
@@ -18,7 +23,7 @@ const vm: DetailControlModel = useDialogControl(DetailControlModel);
         <div class="modal-box max-w-4xl">
             <form method="dialog" class="flex justify-end" @submit.prevent="vm.closeDialog">
                 <button class="btn btn-ghost btn-square">
-                    <LucideX />
+                    <LucideX/>
                 </button>
             </form>
             <div class="flex gap-3 max-h-[450px]">
@@ -27,7 +32,7 @@ const vm: DetailControlModel = useDialogControl(DetailControlModel);
                     :provider-folder="vm.providerFolder"
                     :hash="vm.previewImage"
                     :width="300"
-                    :height="450" />
+                    :height="450"/>
                 <div class="grow flex flex-col gap-2">
                     <div class="shrink-0">
                         <h1 class="text-2xl font-semibold">{{ vm.title }}</h1>
@@ -53,41 +58,49 @@ const vm: DetailControlModel = useDialogControl(DetailControlModel);
                     </div>
                     <div class="shrink-0 flex justify-end items-center gap-5">
                         <div class="tooltip w-full max-w-[150px] h-fit" data-tip="Watch progression">
-                            <progress class="progress progress-primary max-w-[150px]" :value="vm.watchProgression" max="100" />
+                            <progress class="progress progress-primary max-w-[150px]" :value="vm.watchProgression"
+                                      max="1"/>
                         </div>
                         <div class="join">
                             <button class="join-item btn btn-primary btn-soft" @click="vm.onWatchBtn">
-                                <LucidePlay />
-                                <Text :target="I18n.DetailControl.watch" />
+                                <LucidePlay/>
+                                <Text :target="I18n.DetailControl.watch"/>
                             </button>
                             <button
                                 class="join-item btn btn-soft"
                                 :popovertarget="vm.popoverId"
                                 :style="`anchor-name:${vm.anchorId}`">
-                                <LucideEllipsisVertical />
+                                <LucideEllipsisVertical/>
                                 <Teleport to="#app">
                                     <ul class="dropdown menu w-fit rounded-box bg-base-100 shadow-sm"
                                         popover
                                         :id="vm.popoverId"
-                                        :style="`position-anchor:${vm.anchorId}`">
+                                        :style="`position-anchor:${vm.anchorId}`"
+                                        @click="vm.onPopOverClicked($event)">
                                         <li>
-                                            <a @click="vm.onResetProgressionBtn">
-                                                <LucideTimerReset />
-                                                <Text :target="I18n.DetailControl.reset" />
+                                            <a @click="vm.onResetBtn">
+                                                <LucideTimerReset/>
+                                                <Text :target="I18n.DetailControl.reset"/>
                                             </a>
                                         </li>
                                         <li>
-                                            <a @click="vm.onAddWatchlistBtn">
-                                                <LucidePlus />
-                                                <Text :target="I18n.DetailControl.addWatchlist" />
+                                            <a v-if="vm.onWatchlist"
+                                               @click="vm.onRemoveWatchlistBtn">
+                                                <LucideEyeOff/>
+                                                <Text :target="I18n.DetailControl.removeWatchlist"/>
+                                            </a>
+                                            <a v-else
+                                               @click="vm.onAddWatchlistBtn">
+                                                <LucideEye/>
+                                                <Text :target="I18n.DetailControl.addWatchlist"/>
                                             </a>
                                         </li>
-                                        <li>
-                                            <a @click="vm.onAddListBtn">
-                                                <LucidePlus />
-                                                <Text :target="I18n.DetailControl.addList" />
-                                            </a>
-                                        </li>
+                                        <!--                                        <li>-->
+                                        <!--                                            <a @click="vm.onAddListBtn">-->
+                                        <!--                                                <LucidePlus />-->
+                                        <!--                                                <Text :target="I18n.DetailControl.addList" />-->
+                                        <!--                                            </a>-->
+                                        <!--                                        </li>-->
                                     </ul>
                                 </Teleport>
                             </button>

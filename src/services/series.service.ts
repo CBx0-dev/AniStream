@@ -115,6 +115,12 @@ WHERE s.series_id = ?
         return SeriesModel(rows[0].series_id, rows[0].guid, rows[0].title, rows[0].description, rows[0].preview_image);
     }
 
+    public async resetProgression(seriesId: number): Promise<void> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        await session.execute("UPDATE episode SET percentage_watched = 0 WHERE season_id IN (SELECT season_id FROM season WHERE series_id = ?)", seriesId);
+    }
+
     public async getStartedSeries(): Promise<SeriesModel[]> {
         return [];
     }
