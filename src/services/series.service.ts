@@ -114,4 +114,8 @@ WHERE s.series_id = ?
 
         return SeriesModel(rows[0].series_id, rows[0].guid, rows[0].title, rows[0].description, rows[0].preview_image);
     }
+
+    public async getStartedSeries(): Promise<SeriesModel[]> {
+        return [];
+    }
 }

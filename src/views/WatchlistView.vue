@@ -20,16 +20,18 @@ const vm: WatchlistViewModel = useViewModel(WatchlistViewModel);
                 </div>
             </div>
         </div>
-        <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">
-            <Text :target="I18n.WatchlistView.leftOff.title" class="shrink-0" />
-            <div class="bg-primary w-full h-1" />
-        </h1>
-        <div class="grid grid-cols-[repeat(auto-fill,150px)] justify-center gap-3 py-6">
-            <div v-for="i of 10" :key="i"
-                class="w-[150px] h-[225px] bg-base-100 border border-base-300 rounded-sm hover:scale-110 hover:shadow-sm duration-300"
-                @click="vm.onCardClick">
+        <template v-if="vm.startedSeries.length > 0">
+            <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">
+                <Text :target="I18n.WatchlistView.leftOff.title" class="shrink-0" />
+                <div class="bg-primary w-full h-1" />
+            </h1>
+            <div class="grid grid-cols-[repeat(auto-fill,150px)] justify-center gap-3 py-6">
+                <div v-for="series of vm.startedSeries" :key="series.series_id"
+                    class="w-[150px] h-[225px] bg-base-100 border border-base-300 rounded-sm hover:scale-110 hover:shadow-sm duration-300"
+                    @click="vm.onCardClick">
+                </div>
             </div>
-        </div>
+        </template>
         <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">
             <Text :target="I18n.WatchlistView.watchlist.title" class="shrink-0" />
             <div class="bg-primary w-full h-1" />
