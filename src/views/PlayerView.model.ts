@@ -120,7 +120,7 @@ export class PlayerViewModel extends ViewModel {
             return;
         }
 
-        await this.routerService.navigateTo(PlayerViewModel, {
+        await this.routerService.replaceTo(PlayerViewModel, {
             series_id: this.series.series_id,
             season_id: this.season.season_id,
             episode_id: this.previousEpisode.episode_id
@@ -132,7 +132,7 @@ export class PlayerViewModel extends ViewModel {
             return;
         }
 
-        await this.routerService.navigateTo(PlayerViewModel, {
+        await this.routerService.replaceTo(PlayerViewModel, {
             series_id: this.series.series_id,
             season_id: this.season.season_id,
             episode_id: this.nextEpisode.episode_id
@@ -144,7 +144,7 @@ export class PlayerViewModel extends ViewModel {
             return;
         }
 
-        await this.routerService.navigateTo(PlayerViewModel, {
+        await this.routerService.replaceTo(PlayerViewModel, {
             series_id: this.series.series_id,
             season_id: this.season.season_id,
             episode_id: episode.episode_id
