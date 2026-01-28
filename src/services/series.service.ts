@@ -122,6 +122,28 @@ WHERE s.series_id = ?
     }
 
     public async getStartedSeries(): Promise<SeriesModel[]> {
-        return [];
+        const session: DbSession = await this.provider.getDatabase();
+
+        const rows: SeriesDbModel[] = await session.query<SeriesDbModel[]>(`
+SELECT DISTINCT s.*
+FROM series AS s
+         LEFT JOIN season AS se ON se.series_id = s.series_id
+         LEFT JOIN episode AS e ON se.season_id = e.season_id
+WHERE season_number != 0
+  AND percentage_watched > 80
+        `);
+
+        return rows.map(row => SeriesModel(row.series_id, row.guid, row.title, row.description, row.preview_image));
+    }
+
+    public async getSeriesByIds(seriesIds: number[]): Promise<SeriesModel[]> {
+        if (seriesIds.length == 0) {
+            return [];
+        }
+
+        const session: DbSession = await this.provider.getDatabase();
+
+        const rows: SeriesDbModel[] = await session.query<SeriesDbModel[]>("SELECT * FROM series WHERE series_id = ?" + (" OR series_id = ?".repeat(seriesIds.length - 1)), ...seriesIds);
+        return rows.map(row => SeriesModel(row.series_id, row.guid, row.title, row.description, row.preview_image));
     }
 }

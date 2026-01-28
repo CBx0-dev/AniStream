@@ -1,16 +1,17 @@
-import { Component } from "vue";
-import { ViewModel } from "vue-mvvm";
-import { RouteAdapter, RouterService } from "vue-mvvm/router";
-import { DialogService } from "vue-mvvm/dialog";
+import {Component} from "vue";
+import {ViewModel} from "vue-mvvm";
+import {RouteAdapter, RouterService} from "vue-mvvm/router";
+import {DialogService} from "vue-mvvm/dialog";
 
 import WatchlistView from "@views/WatchlistView.vue";
 
-import { DetailControlModel } from "@controls/DetailControl.model";
+import {DetailControlModel} from "@controls/DetailControl.model";
 
-import { SeriesService } from "@services/series.service";
+import {DefaultProvider, ProviderService} from "@services/provider.service";
+import {SeriesService} from "@services/series.service";
+import {WatchlistService} from "@services/watchlist.service";
 
-import { SeriesModel } from "@/models/series.model";
-import { DefaultProvider, ProviderService } from "@/services/provider.service";
+import {SeriesModel} from "@models/series.model";
 
 export class WatchlistViewModel extends ViewModel {
     public static readonly component: Component = WatchlistView;
@@ -22,9 +23,12 @@ export class WatchlistViewModel extends ViewModel {
     private readonly dialogService: DialogService;
     private readonly providerService: ProviderService;
     private readonly seriesService: SeriesService;
+    private readonly watchlistService: WatchlistService;
 
     public providerFolder: string | null = this.ref(null);
     public startedSeries: SeriesModel[] = this.ref([]);
+    public watchlistSeries: SeriesModel[] = this.ref([]);
+    public everythingEmpty: boolean = this.computed(() => this.startedSeries.length == 0 && this.watchlistSeries.length == 0)
 
     public constructor() {
         super();
@@ -33,15 +37,19 @@ export class WatchlistViewModel extends ViewModel {
         this.dialogService = this.ctx.getService(DialogService);
         this.providerService = this.ctx.getService(ProviderService);
         this.seriesService = this.ctx.getService(SeriesService);
+        this.watchlistService = this.ctx.getService(WatchlistService);
     }
 
     public async mounted(): Promise<void> {
         this.startedSeries.clear();
-    
+        this.watchlistSeries.clear();
+
         const provider: DefaultProvider = await this.providerService.getProvider();
         this.providerFolder = await provider.getStorageLocation();
 
         this.startedSeries.push(...await this.seriesService.getStartedSeries());
+        const seriesIdsOnWatchlist: number[] = await this.watchlistService.getSeriesIds();
+        this.watchlistSeries.push(...await this.seriesService.getSeriesByIds(seriesIdsOnWatchlist));
     }
 
     public onBackBtn(): void {
