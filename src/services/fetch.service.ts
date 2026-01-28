@@ -3,7 +3,7 @@ import * as fs from "@tauri-apps/plugin-fs";
 import {ReadableGlobalContext} from "vue-mvvm";
 
 import * as http from "@utils/http";
-import {DefaultProvider, ProviderService} from "@services/provider.service";
+import {DefaultProvider, EpisodeLanguage, ProviderService} from "@services/provider.service";
 import {SeriesFetchModel, SeriesModel} from "@models/series.model";
 import {GenreFetchModel} from "@models/genre.model";
 import {SeasonFetchModel} from "@models/season.model";
@@ -11,6 +11,12 @@ import {EpisodeFetchModel} from "@models/episode.model";
 
 const FNV_OFFSET_BASIS: bigint = 0xcbf29ce484222325n;
 const FNV_PRIME: bigint = 0x100000001b3n;
+
+export interface Provider {
+    name: string;
+    language: EpisodeLanguage;
+    embeddedURL: string;
+}
 
 export class FetchService {
     private readonly providerService: ProviderService;
@@ -202,5 +208,50 @@ export class FetchService {
             .replace(/\+/g, "-")
             .replace(/\//g, '-')
             .replace(/=+$/, "");
+    }
+
+    public async fetchProviders(guid: string, seasonNumber: number, episodeNumber: number): Promise<Provider[]> {
+        const provider: DefaultProvider = await this.providerService.getProvider();
+        const html: string = await http.get(provider.episodeURL(guid, seasonNumber, episodeNumber));
+        const document: Document = this.parser.parseFromString(html, "text/html");
+
+        const row: HTMLUListElement | null = document.querySelector(".hosterSiteVideo ul.row");
+        if (!row) {
+            throw "Failed to extract meta information: Failed to find provider row";
+        }
+
+        const providers: Provider[] = [];
+        for (const child of row.children) {
+            if (!child.hasAttribute("data-link-target") || !child.hasAttribute("data-lang-key")) {
+                continue;
+            }
+
+            const languageId: number = parseInt(child.getAttribute("data-lang-key")!);
+            const language: EpisodeLanguage = provider.encodeLanguageNumber(languageId);
+            if (language == EpisodeLanguage.UNKNOWN) {
+                continue;
+            }
+            const embeddedPath: string = child.getAttribute("data-link-target")!;
+            const embeddedURL: string = provider.baseURL + "/" + embeddedPath.substring(1);
+
+            const providerNameElement: HTMLHeadingElement | null = child.querySelector("h4");
+            if (providerNameElement == null) {
+                continue;
+            }
+
+            try {
+                const name: string = providerNameElement.textContent!;
+
+                providers.push({
+                    name,
+                    language,
+                    embeddedURL
+                });
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+
+        return providers;
     }
 }

@@ -11,6 +11,11 @@ import {SeasonModel} from "@models/season.model";
 import {SeriesService} from "@services/series.service";
 import {SeasonService} from "@services/season.service";
 import {EpisodeService} from "@services/episode.service";
+import {FetchService, Provider} from "@services/fetch.service";
+import {I18nService} from "@services/i18n.service";
+
+import I18n from "@utils/i18n";
+import {EpisodeLanguage} from "@services/provider.service";
 
 export class PlayerViewModel extends ViewModel {
     public static readonly component: Component = PlayerView;
@@ -27,11 +32,16 @@ export class PlayerViewModel extends ViewModel {
     private readonly seriesService: SeriesService;
     private readonly seasonService: SeasonService;
     private readonly episodeService: EpisodeService;
+    private readonly fetchService: FetchService;
+    private readonly i18nService: I18nService;
+
 
     private series: SeriesModel | null = this.ref(null);
     private season: SeasonModel | null = this.ref(null);
     private episode: EpisodeModel | null = this.ref(null);
 
+    public providers: Provider[][] = this.ref([]);
+    public providerLoading: boolean = this.ref(true);
     public seriesTitle: string = this.computed(() => this.series?.title ?? "N/A");
     public seasonNumber: string = this.computed(() => this.season?.season_number.toString() ?? "N/A");
     public episodeNumber: string = this.computed(() => this.episode?.episode_number.toString() ?? "N/A");
@@ -78,9 +88,12 @@ export class PlayerViewModel extends ViewModel {
         this.seriesService = this.ctx.getService(SeriesService);
         this.seasonService = this.ctx.getService(SeasonService);
         this.episodeService = this.ctx.getService(EpisodeService);
+        this.fetchService = this.ctx.getService(FetchService);
+        this.i18nService = this.ctx .getService(I18nService);
     }
 
     public async mounted(): Promise<void> {
+        this.providerLoading = true;
         try {
             let seriesId: number = this.routerService.params.getInteger("series_id");
             let seasonId: number = this.routerService.params.getInteger("season_id");
@@ -109,6 +122,7 @@ export class PlayerViewModel extends ViewModel {
         }
 
         this.episodes.push(...await this.episodeService.getEpisodes(this.season.season_id));
+        this.loadProvider();
     }
 
     public onBackBtn(): void {
@@ -149,5 +163,23 @@ export class PlayerViewModel extends ViewModel {
             season_id: this.season.season_id,
             episode_id: episode.episode_id
         });
+    }
+
+    public getProviderLanguageText(language: EpisodeLanguage): string {
+        return this.i18nService.getDynamic(I18n.EpisodeLanguage, language.toString());
+    }
+
+    private async loadProvider(): Promise<void> {
+        if (!this.series || !this.season || !this.episode) {
+            return;
+        }
+
+        this.providerLoading = true;
+        this.providers.clear();
+
+        const providers: Provider[] = await this.fetchService.fetchProviders(this.series.guid, this.season.season_number, this.episode.episode_number);
+        this.providers.push(...providers.groupTo2D(provider => provider.language));
+
+        this.providerLoading = false;
     }
 }

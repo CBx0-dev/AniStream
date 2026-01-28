@@ -1,7 +1,17 @@
 import {path} from "@tauri-apps/api"
 import * as fs from "@tauri-apps/plugin-fs";
-import {DbService, DbSession} from "@services/db.service";
+
 import {ReadableGlobalContext} from "vue-mvvm";
+
+import {DbService, DbSession} from "@services/db.service";
+
+export enum EpisodeLanguage {
+    DE_DUB,
+    DE_SUP,
+    EN_DUB,
+    EN_SUP,
+    UNKNOWN
+}
 
 export abstract class DefaultProvider {
     public abstract get baseURL(): string;
@@ -30,6 +40,14 @@ export abstract class DefaultProvider {
         return this.session;
     }
 
+    public async closeDatabase(): Promise<void> {
+        if (!this.session) {
+            return;
+        }
+
+        await this.session.close();
+    }
+
     public streamURL(guid: string): string {
         return `${this.streamURLBase}/${guid}`;
     }
@@ -51,6 +69,8 @@ export abstract class DefaultProvider {
     }
 
     public abstract getStorageLocation(): Promise<string>;
+
+    public abstract encodeLanguageNumber(id: number): EpisodeLanguage;
 
 }
 
@@ -87,6 +107,19 @@ export class AniWorldProvider extends DefaultProvider {
 
         return dataDir;
     }
+
+    public encodeLanguageNumber(id: number): EpisodeLanguage {
+        switch (id) {
+            case 1:
+                return EpisodeLanguage.DE_DUB;
+            case 2:
+                return EpisodeLanguage.EN_SUP
+            case 3:
+                return EpisodeLanguage.DE_SUP;
+            default:
+                return EpisodeLanguage.UNKNOWN;
+        }
+    }
 }
 
 export class StoProvider extends DefaultProvider {
@@ -121,6 +154,17 @@ export class StoProvider extends DefaultProvider {
         }
 
         return dataDir;
+    }
+
+    public encodeLanguageNumber(id: number): EpisodeLanguage {
+        switch (id) {
+            case 1:
+                return EpisodeLanguage.DE_DUB;
+            case 2:
+                return EpisodeLanguage.EN_DUB
+            default:
+                return EpisodeLanguage.UNKNOWN;
+        }
     }
 }
 
@@ -158,6 +202,9 @@ export class ProviderService {
     }
 
     public async setProvider(provider: DefaultProvider): Promise<void> {
+        if (this.provider) {
+            await this.provider.closeDatabase();
+        }
         this.provider = provider;
 
         sessionStorage.setItem(ProviderService.SESSION_KEY, provider.uniqueKey);
@@ -183,7 +230,5 @@ export class ProviderService {
         this.provider = this.getProviderFromUniqueKey(value);
 
         return !!this.provider;
-
-
     }
 }

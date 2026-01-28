@@ -48,6 +48,22 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
                         <h1 class="text-xl pb-4">
                             Providers
                         </h1>
+                        <div v-if="vm.providerLoading" class="skeleton w-full h-[350px]"/>
+                        <div v-else>
+                            <ul v-for="providers of vm.providers"
+                                :key="providers[0].language"
+                                class="menu w-full">
+                                <li class="py-1 text-xs text-gray-400">
+                                    {{ vm.getProviderLanguageText(providers[0].language) }}
+                                </li>
+                                <li v-for="provider of providers"
+                                    :key="provider.name">
+                                    <a class="data-[active=true]:bg-primary data-[active=true]:text-primary-content">
+                                        {{ provider.name }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="grow card bg-base-100 card-border border-base-300 overflow-y-auto">
