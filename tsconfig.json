@@ -29,7 +29,8 @@
             "@icons/*": ["./src/icons/*"],
             "@controls/*": ["./src/controls/*"],
             "@utils/*": ["./src/utils/*"],
-            "@langs/*": ["./src/langs/*"]
+            "@langs/*": ["./src/langs/*"],
+            "@providers/*": ["./src/providers/*"]
         }
     },
     "include": [
