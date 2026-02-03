@@ -20,6 +20,7 @@ import {FetchService} from "@services/fetch.service";
 import {GenreService} from "@services/genre.service";
 import {WatchlistService} from "@services/watchlist.service";
 import {I18nService} from "@services/i18n.service";
+import {ChangelogService} from "@services/changelog.service";
 import {SettingsService} from "@services/settings.service";
 
 export class AppConfig implements AppShell {
@@ -50,6 +51,7 @@ export class AppConfig implements AppShell {
         ctx.registerService(WatchlistService, ctx => new WatchlistService(ctx));
         ctx.registerService(DbService, () => new DbService());
         ctx.registerService(FetchService, ctx => new FetchService(ctx));
+        ctx.registerService(ChangelogService, () => new ChangelogService());
         ctx.registerService(SettingsService, ctx => new SettingsService(ctx));
 
         // For initializing theming etc...
