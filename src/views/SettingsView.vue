@@ -13,6 +13,7 @@ import PrefControl from "@controls/PrefControl.vue";
 import InfoControl from "@controls/InfoControl.vue";
 
 import I18n from "@utils/i18n";
+import ChangelogControl from "@controls/ChangelogControl.vue";
 
 const vm: SettingsViewModel = useViewModel(SettingsViewModel);
 </script>
@@ -49,7 +50,7 @@ const vm: SettingsViewModel = useViewModel(SettingsViewModel);
                             </span>
                         </label>
                         <div class="tab-content bg-base-100 border-base-300 p-6">
-                            <Text :target="I18n.SettingsView.changelogContent" />
+                            <ChangelogControl/>
                         </div>
 
                         <label class="tab">
