@@ -1,6 +1,6 @@
 import {UserControl} from "vue-mvvm";
 
-import Hls from "hls.js";
+import type Hls from "hls.js";
 import {HLSTauriLoader} from "@utils/hls-tauri-bridge";
 
 import {Provider} from "@services/fetch.service";
@@ -9,7 +9,11 @@ import {SettingsService} from "@services/settings.service";
 
 import {getSource, IStreamSource} from "@sources";
 
+type HlsModule = typeof Hls
+type HlsImport = typeof import("hls.js");
+
 export class HLSPlayerModel extends UserControl {
+    private hlsLoadingPromise: Promise<HlsImport> | null = null;
     private video: HTMLVideoElement | null = null;
     private hls: Hls | null = null;
     private interval: NodeJS.Timeout | null = null;
@@ -32,6 +36,9 @@ export class HLSPlayerModel extends UserControl {
 
     public mounted(): void {
         this.video = document.getElementById("video-player") as HTMLVideoElement | null;
+
+        // Trigger loading here to prevent long waiting times
+        this.loadHls()
     }
 
     public beforeUnmount(): void {
@@ -64,8 +71,28 @@ export class HLSPlayerModel extends UserControl {
         if (streamURL.endsWith(".mp4")) {
             this.video.src = streamURL;
         } else {
-            this.initPlayer(this.video, streamURL);
+            await this.initPlayer(this.video, streamURL);
         }
+    }
+
+    public onLoadedMetadata(): void {
+        this.loaded = true;
+
+        if (this.interval) {
+            clearInterval(this.interval);
+        }
+        this.interval = setInterval(() => this.onProgression, 10_000)
+    }
+
+    public async onSeeked(): Promise<void> {
+        if (!this.video || this.episodeId == 0) {
+            return;
+        }
+
+        const currentTime: number = this.video.currentTime;
+        const percentage: number = Math.round(currentTime / this.video.duration * 100);
+
+        await this.episodeService.updateEpisodeProgression(this.episodeId, percentage, currentTime);
     }
 
     private async fetchSource(provider: Provider): Promise<string | null> {
@@ -83,7 +110,8 @@ export class HLSPlayerModel extends UserControl {
         }
     }
 
-    private initPlayer(video: HTMLVideoElement, streamURL: string): void {
+    private async initPlayer(video: HTMLVideoElement, streamURL: string): Promise<void> {
+        const Hls: HlsModule = await this.loadHls();
         if (!Hls.isSupported()) {
             console.error("Cannot play video");
             this.error = "HTTP Streaming is not supported on your device";
@@ -110,26 +138,6 @@ export class HLSPlayerModel extends UserControl {
         }
     }
 
-    public onLoadedMetadata(): void {
-        this.loaded = true;
-
-        if (this.interval) {
-            clearInterval(this.interval);
-        }
-        this.interval = setInterval(() => this.onProgression, 10_000)
-    }
-
-    public async onSeeked(): Promise<void> {
-        if (!this.video || this.episodeId == 0) {
-            return;
-        }
-
-        const currentTime: number = this.video.currentTime;
-        const percentage: number = Math.round(currentTime / this.video.duration * 100);
-
-        await this.episodeService.updateEpisodeProgression(this.episodeId, percentage, currentTime);
-    }
-
     private async onProgression(): Promise<void> {
         if (!this.video || this.episodeId == 0) {
             return;
@@ -139,5 +147,13 @@ export class HLSPlayerModel extends UserControl {
         const percentage: number = Math.round(currentTime / this.video.duration * 100);
 
         await this.episodeService.updateEpisodeProgression(this.episodeId, percentage, currentTime);
+    }
+
+    private async loadHls(): Promise<HlsModule> {
+        if (!this.hlsLoadingPromise) {
+            this.hlsLoadingPromise = import("hls.js");
+        }
+
+        return (await this.hlsLoadingPromise).default;
     }
 }

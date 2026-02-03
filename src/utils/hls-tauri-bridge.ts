@@ -1,6 +1,6 @@
 import {fetch} from "@tauri-apps/plugin-http";
 
-import * as Hls from "hls.js";
+import type * as Hls from "hls.js";
 import {IStreamSource} from "@sources"
 
 export class HLSTauriLoader implements Hls.Loader<Hls.LoaderContext> {
