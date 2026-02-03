@@ -50,6 +50,10 @@ export class SettingsService {
         this.tosAccepted = this.loadFromStorage(SettingsService.TOS_KEY, "false") == "true";
     }
 
+    public getImageVariant(name: string, extension: string): string {
+        return `/${name}/${this.theme.value}.${extension}`
+    }
+
     private loadFromStorage(key: string, defaultValue: string): string {
         return localStorage.getItem(key) ?? defaultValue;
     }

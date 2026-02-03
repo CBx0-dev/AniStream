@@ -7,11 +7,13 @@ import WatchlistView from "@views/WatchlistView.vue";
 
 import {DetailControlModel} from "@controls/DetailControl.model";
 
-import {DefaultProvider, ProviderService} from "@services/provider.service";
+import {ProviderService} from "@services/provider.service";
 import {SeriesService} from "@services/series.service";
 import {WatchlistService} from "@services/watchlist.service";
 
 import {SeriesModel} from "@models/series.model";
+
+import {DefaultProvider} from "@providers/default";
 
 export class WatchlistViewModel extends ViewModel {
     public static readonly component: Component = WatchlistView;

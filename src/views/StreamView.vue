@@ -18,7 +18,7 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
 </script>
 
 <template>
-    <div class="container mx-auto py-10 grid grid-cols-[fit-content_1fr] grid-rows-[min-content_1fr] gap-5 h-screen">
+    <div class="container mx-auto py-10 grid grid-cols-[min-content_1fr] grid-rows-[min-content_1fr] gap-5 h-screen">
         <div class="col-span-2 card bg-base-100 card-border border-base-300">
             <div class="card-body">
                 <div class="flex justify-between w-full">
@@ -40,7 +40,7 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
             </div>
         </div>
         <div class="row-start-2 card bg-base-100 card-border border-base-300 h-min">
-            <div class="card-body">
+            <div class="card-body box-content w-[300px]">
                 <ImageHash
                     :provider-folder="vm.providerFolder"
                     :hash="vm.previewImage"
@@ -48,7 +48,7 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                     :height="450"/>
             </div>
         </div>
-        <div class="row-start-2 card bg-base-100 card-border border-base-300 overflow-y-auto">
+        <div class="row-start-2 card bg-base-100 card-border border-base-300 overflow-y-auto w-full">
             <div class="card-body h-full">
                 <div class="tabs tabs-lift w-full h-full">
                     <label class="tab">

@@ -64,6 +64,7 @@ export abstract class DefaultProvider {
         }
 
         await this.session.close();
+        this.session = null;
     }
 
     public streamURL(guid: string): string {

@@ -14,8 +14,11 @@ import {EpisodeService} from "@services/episode.service";
 import {FetchService, Provider} from "@services/fetch.service";
 import {I18nService} from "@services/i18n.service";
 
+import {EpisodeLanguage} from "@providers/default";
+
+import {HLSPlayerModel} from "@controls/HLSPlayer.model";
+
 import I18n from "@utils/i18n";
-import {EpisodeLanguage} from "@services/provider.service";
 
 export class PlayerViewModel extends ViewModel {
     public static readonly component: Component = PlayerView;
@@ -39,6 +42,7 @@ export class PlayerViewModel extends ViewModel {
     private series: SeriesModel | null = this.ref(null);
     private season: SeasonModel | null = this.ref(null);
     private episode: EpisodeModel | null = this.ref(null);
+    private readonly player: HLSPlayerModel | null;
 
     public providers: Provider[][] = this.ref([]);
     public providerLoading: boolean = this.ref(true);
@@ -80,6 +84,7 @@ export class PlayerViewModel extends ViewModel {
 
         return previousEpisode;
     });
+    public activeProvider: Provider | null = this.ref(null);
 
     public constructor() {
         super();
@@ -89,7 +94,9 @@ export class PlayerViewModel extends ViewModel {
         this.seasonService = this.ctx.getService(SeasonService);
         this.episodeService = this.ctx.getService(EpisodeService);
         this.fetchService = this.ctx.getService(FetchService);
-        this.i18nService = this.ctx .getService(I18nService);
+        this.i18nService = this.ctx.getService(I18nService);
+
+        this.player = this.getUserControl<HLSPlayerModel>("player");
     }
 
     public async mounted(): Promise<void> {
@@ -163,6 +170,14 @@ export class PlayerViewModel extends ViewModel {
             season_id: this.season.season_id,
             episode_id: episode.episode_id
         });
+    }
+
+    public async onProviderItem(provider: Provider): Promise<void> {
+        if (!this.player || !this.episode) {
+            return;
+        }
+        this.activeProvider = provider;
+        await this.player.playStream(this.episode.episode_id, provider);
     }
 
     public getProviderLanguageText(language: EpisodeLanguage): string {

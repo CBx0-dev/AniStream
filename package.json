@@ -16,7 +16,6 @@
         "@tauri-apps/plugin-opener": "^2",
         "@tauri-apps/plugin-os": "^2.3.2",
         "@tauri-apps/plugin-sql": "^2.3.1",
-        "random-useragent": "^0.5.0",
         "vue": "^3.5.13",
         "vue-mvvm": "^0.3.0",
         "vue-router": "^4.6.4"

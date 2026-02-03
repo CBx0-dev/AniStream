@@ -5,6 +5,7 @@ import {PlayerViewModel} from "@views/PlayerView.model";
 
 import LucideArrowLeft from "@icons/LucideArrowLeft.vue";
 import LucideArrowRight from "@icons/LucideArrowRight.vue";
+import HLSPlayer from "@controls/HLSPlayer.vue";
 
 const vm: PlayerViewModel = useViewModel(PlayerViewModel);
 </script>
@@ -37,8 +38,8 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
         <div class="grid grid-cols-[1fr_320px] grid-rows-[auto_auto_1fr] gap-4 px-5 pb-5 overflow-hidden">
             <div class="card bg-base-100 card-border border-base-300">
                 <div class="card-body">
-                    <div class="aspect-video w-full h-full max-h-[810px] bg-black mx-auto">
-                        Video
+                    <div class="aspect-video w-full h-full max-h-[810px] flex justify-center items-center">
+                        <HLSPlayer ref="player"/>
                     </div>
                 </div>
             </div>
@@ -58,7 +59,9 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
                                 </li>
                                 <li v-for="provider of providers"
                                     :key="provider.name">
-                                    <a class="data-[active=true]:bg-primary data-[active=true]:text-primary-content">
+                                    <a class="data-[active=true]:bg-primary data-[active=true]:text-primary-content"
+                                       :data-active="provider == vm.activeProvider"
+                                       @click="vm.onProviderItem(provider)">
                                         {{ provider.name }}
                                     </a>
                                 </li>

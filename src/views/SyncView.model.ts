@@ -3,10 +3,13 @@ import {ViewModel} from "vue-mvvm";
 import {RouteAdapter, RouterService} from "vue-mvvm/router";
 
 import SyncView from "@views/SyncView.vue";
+
 import {SeriesService} from "@services/series.service";
 import {FetchService} from "@services/fetch.service";
-import {GenreModel} from "@models/genre.model";
 import {GenreService} from "@services/genre.service";
+import {SettingsService} from "@services/settings.service";
+
+import {GenreModel} from "@models/genre.model";
 import {SeriesModel} from "@models/series.model";
 
 enum SyncViewModelPanel {
@@ -22,6 +25,7 @@ export class SyncViewModel extends ViewModel {
     }
 
     private readonly routerService: RouterService;
+    private readonly settingsService: SettingsService;
     private readonly fetchService: FetchService;
     private readonly seriesService: SeriesService;
     private readonly genreService: GenreService;
@@ -36,6 +40,7 @@ export class SyncViewModel extends ViewModel {
     public constructor() {
         super();
         this.routerService = this.ctx.getService(RouterService);
+        this.settingsService = this.ctx.getService(SettingsService);
         this.fetchService = this.ctx.getService(FetchService);
         this.seriesService = this.ctx.getService(SeriesService);
         this.genreService = this.ctx.getService(GenreService);
@@ -61,6 +66,9 @@ export class SyncViewModel extends ViewModel {
         this.panel = SyncViewModelPanel.CONTINUE;
     }
 
+    public getSyncImage(): string {
+        return this.settingsService.getImageVariant("sync", "svg");
+    }
 
     public onStartWatchingBtn(): void {
         this.routerService.navigateBack();

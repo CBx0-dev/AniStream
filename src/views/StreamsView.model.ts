@@ -6,15 +6,20 @@ import {RouteAdapter, RouterService} from "vue-mvvm/router";
 import StreamsView from "@views/StreamsView.vue";
 import {SyncViewModel} from "@views/SyncView.model";
 import {WatchlistViewModel} from "@views//WatchlistView.model";
+
 import {DetailControlModel} from "@/controls/DetailControl.model";
 
 import {SeriesService} from "@services/series.service";
 import {I18nService} from "@services/i18n.service";
-import {SeriesModel} from "@models/series.model";
-import {DefaultProvider, ProviderService} from "@services/provider.service";
+import {ProviderService} from "@services/provider.service";
 import {GenreService} from "@services/genre.service";
+
+import {SeriesModel} from "@models/series.model";
 import {GenreModel} from "@models/genre.model";
+
 import {throttle} from "@utils/throttle";
+
+import {DefaultProvider} from "@providers/default";
 
 export class StreamsViewModel extends ViewModel {
     public static readonly component: Component = StreamsView;

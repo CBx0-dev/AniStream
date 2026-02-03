@@ -30,7 +30,9 @@
             "@controls/*": ["./src/controls/*"],
             "@utils/*": ["./src/utils/*"],
             "@langs/*": ["./src/langs/*"],
-            "@providers/*": ["./src/providers/*"]
+            "@providers/*": ["./src/providers/*"],
+            "@sources": ["./src/sources/index.ts"],
+            "@sources/*": ["./src/sources/*"]
         }
     },
     "include": [
