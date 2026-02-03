@@ -36,8 +36,6 @@ export abstract class DefaultProvider {
 
     public abstract get catalogURL(): string;
 
-    protected abstract get streamURLBase(): string;
-
     private readonly service: DbService;
     private session: DbSession | null;
 
@@ -67,25 +65,11 @@ export abstract class DefaultProvider {
         this.session = null;
     }
 
-    public streamURL(guid: string): string {
-        return `${this.streamURLBase}/${guid}`;
-    }
+    public abstract streamURL(guid: string): string;
 
-    public seasonURL(guid: string, seasonNumber: number): string {
-        if (seasonNumber == 0) {
-            return `${this.streamURLBase}/${guid}/filme`;
-        }
+    public abstract seasonURL(guid: string, seasonNumber: number): string;
 
-        return `${this.streamURLBase}/${guid}/staffel-${seasonNumber}`;
-    }
-
-    public episodeURL(guid: string, seasonNumber: number, episodeNumber: number): string {
-        if (seasonNumber == 0) {
-            return `${this.seasonURL(guid, seasonNumber)}/film-${episodeNumber}`;
-        }
-
-        return `${this.seasonURL(guid, seasonNumber)}/episode-${episodeNumber}`;
-    }
+    public abstract episodeURL(guid: string, seasonNumber: number, episodeNumber: number): string;
 
     public abstract getStorageLocation(): Promise<string>;
 

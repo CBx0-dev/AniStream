@@ -15,21 +15,28 @@ export class StoProvider extends DefaultProvider {
 
     public get uniqueKey(): string {
         return StoProvider.UNIQUE_KEY;
-
     }
 
     public get catalogURL(): string {
         return `${this.baseURL}/serien-alphabet`;
     }
 
-    public get streamURLBase(): string {
-        return `${this.baseURL}/serie/stream`;
-    }
-
     public constructor(service: DbService) {
         super(service);
 
         this.fetcher = null;
+    }
+
+    public streamURL(guid: string): string {
+        return `${this.baseURL}/serie/stream/${guid}`;
+    }
+
+    public seasonURL(guid: string, seasonNumber: number): string {
+        return `${this.baseURL}/serie/stream/${guid}/staffel-${seasonNumber}`;
+    }
+
+    public episodeURL(guid: string, seasonNumber: number, episodeNumber: number): string {
+        return `${this.seasonURL(guid, seasonNumber)}/episode-${episodeNumber}`;
     }
 
     public async getStorageLocation(): Promise<string> {

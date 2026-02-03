@@ -19,14 +19,30 @@ export class AniWorldProvider extends DefaultProvider {
         return `${this.baseURL}/animes-alphabet`;
     }
 
-    public get streamURLBase(): string {
-        return `${this.baseURL}/anime/stream`;
-    }
-
     public constructor(service: DbService) {
         super(service);
 
         this.fetcher = null;
+    }
+
+    public streamURL(guid: string): string {
+        return `${this.baseURL}/anime/stream/${guid}`;
+    }
+
+    public seasonURL(guid: string, seasonNumber: number): string {
+        if (seasonNumber == 0) {
+            return `${this.baseURL}/anime/stream/${guid}/filme`;
+        }
+
+        return `${this.baseURL}/anime/stream/${guid}/staffel-${seasonNumber}`;
+    }
+
+    public episodeURL(guid: string, seasonNumber: number, episodeNumber: number): string {
+        if (seasonNumber == 0) {
+            return `${this.seasonURL(guid, seasonNumber)}/film-${episodeNumber}`;
+        }
+
+        return `${this.seasonURL(guid, seasonNumber)}/episode-${episodeNumber}`;
     }
 
     public async getStorageLocation(): Promise<string> {
