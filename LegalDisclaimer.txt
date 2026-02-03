@@ -1,17 +1,20 @@
 Legal Disclaimer
 
-AniStream is a streaming software that allows users to access online video content
-from third-party sources. The software does not host, store, or distribute copyrighted
-material and only provides a tool for streaming content that is publicly accessible online.
+AniStream is a streaming software that allows users to access online video
+content from third-party sources. The software does not host, store, or
+distribute copyrighted material and only provides a tool for streaming content
+that is publicly accessible online.
 
-The developer does not control the content available through AniStream and does not guarantee
-its legality, accuracy, availability, or safety. Users are solely responsible for ensuring
-that they access and stream content in compliance with all applicable laws and the terms
-of service of any websites or platforms used.
+The developer does not control the content available through AniStream and
+does not guarantee its legality, accuracy, availability, or safety. Users are
+solely responsible for ensuring that they access and stream content in
+compliance with all applicable laws and the terms of service of any websites
+or platforms used.
 
-By using AniStream, you acknowledge that the developer is not liable for any damages,
-losses, or legal issues that may arise from your use of the software or the content
-accessed through it.
+By using AniStream, you acknowledge that the developer is not liable for any
+damages, losses, or legal issues that may arise from your use of the software
+or the content accessed through it.
 
-If you believe content accessed via AniStream infringes your rights, please contact
-the respective website owner, administrator, or hosting provider directly.
+If you believe content accessed via AniStream infringes your rights, please
+contact the respective website owner, administrator, or hosting provider
+directly.
