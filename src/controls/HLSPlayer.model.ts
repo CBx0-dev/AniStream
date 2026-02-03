@@ -1,6 +1,6 @@
 import {UserControl} from "vue-mvvm";
 
-import Hls from "@utils/hls";
+import Hls from "hls.js";
 import {HLSTauriLoader} from "@utils/hls-tauri-bridge";
 
 import {Provider} from "@services/fetch.service";
