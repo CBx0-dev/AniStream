@@ -1,5 +1,11 @@
 {
     "$lang": "en",
     "$group": "SeriesSyncView",
-    "back": "Back"
+    "back": "Back",
+    "description": "Choose the seasons you want to add to your library. You can also refresh already added seasons to make sure everything is up to date and synced with the latest available content.",
+    "availableSeasons": "Available seasons",
+    "refreshSeasons": "Refresh existing seasons",
+    "movies": "Movies",
+    "season": "Season",
+    "startSync": "Start sync"
 }

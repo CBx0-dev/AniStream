@@ -1,0 +1,14 @@
+{
+    "$lang": "de",
+    "$group": "StreamView",
+    "back": "Zurück zur Übersicht",
+    "sync": "Serie synchronisieren",
+    "reset": "Fortschritt zurücksetzen",
+    "info": "Info",
+    "movies": "Filme",
+    "season": "Staffel",
+    "ep": "EP",
+    "watched": "Gesehen",
+    "notWatched": "Nicht gesehen",
+    "markAsWatched": "Als gesehen markieren"
+}

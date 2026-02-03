@@ -1,4 +1,11 @@
 {
     "$lang": "de",
-    "$group": "SeriesSyncView"
+    "$group": "SeriesSyncView",
+    "back": "Zurück",
+    "description": "Wähle die Staffeln aus, die du deiner Bibliothek hinzufügen möchtest. Du kannst auch bereits hinzugefügte Staffeln aktualisieren, um sicherzustellen, dass alles auf dem neuesten Stand und mit den neuesten verfügbaren Inhalten synchronisiert ist.",
+    "availableSeasons": "Verfügbare Staffeln",
+    "refreshSeasons": "Bestehende Staffeln aktualisieren",
+    "movies": "Filme",
+    "season": "Staffel",
+    "startSync": "Sync starten"
 }

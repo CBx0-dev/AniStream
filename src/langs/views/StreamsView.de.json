@@ -1,4 +1,14 @@
 {
     "$lang": "de",
-    "$group": "StreamsView"
+    "$group": "StreamsView",
+    "navbar": {
+        "back": "Zurück zu den Anbietern",
+        "sync": "Streams synchronisieren",
+        "watchlist": "Watchlist",
+        "searchPlaceholder": "Suche",
+        "selectGenre": "Genre wählen"
+    },
+    "content": {
+        "eol": "Nichts mehr zum Anzeigen"
+    }
 }

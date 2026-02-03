@@ -1,4 +1,9 @@
 {
     "$lang": "de",
-    "$group": "SettingsView"
+    "$group": "SettingsView",
+    "pref": "Einstellungen",
+    "changelog": "Changelog",
+    "info": "Info",
+    "back": "Zurück",
+    "changelogContent": "Kein Changelog verfügbar."
 }

@@ -1,0 +1,13 @@
+{
+    "$lang": "de",
+    "$group": "PlayerView",
+    "back": "Zurück zur Übersicht",
+    "movies": "Filme",
+    "season": "Staffel",
+    "movie": "Film",
+    "episode": "Episode",
+    "providers": "Anbieter",
+    "episodes": "Episoden",
+    "previous": "Vorherige Episode",
+    "next": "Nächste Episode"
+}

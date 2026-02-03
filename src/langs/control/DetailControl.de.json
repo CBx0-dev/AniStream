@@ -1,4 +1,9 @@
 {
     "$lang": "de",
-    "$group": "DetailControl"
+    "$group": "DetailControl",
+    "reset": "Fortschritt zurücksetzen",
+    "watch": "Anschauen",
+    "addWatchlist": "Zur Watchlist hinzufügen",
+    "removeWatchlist": "Von der Watchlist entfernen",
+    "addList": "Zur Liste hinzufügen"
 }

@@ -4,5 +4,6 @@
     "pref": "Preferences",
     "changelog": "Changelog",
     "info": "Info",
-    "back": "Back"
+    "back": "Back",
+    "changelogContent": "No changelog available."
 }

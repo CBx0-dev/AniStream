@@ -49,12 +49,12 @@ const vm: SyncViewModel = useViewModel(SyncViewModel);
                 </div>
                 <div v-if="vm.isContinue" class="card-body px-3 pt-0 pb-3">
                     <div class="mx-auto">
-                        The sync process is completed.
+                        <Text :target="I18n.SyncView.completed.title" />
                     </div>
 
                     <button class="join-item btn btn-primary btn-soft mt-8" @click="vm.onStartWatchingBtn">
                         <LucideCloudSync/>
-                        Start watching
+                        <Text :target="I18n.SyncView.completed.start" />
                     </button>
                 </div>
             </div>

@@ -6,6 +6,8 @@ import {PlayerViewModel} from "@views/PlayerView.model";
 import LucideArrowLeft from "@icons/LucideArrowLeft.vue";
 import LucideArrowRight from "@icons/LucideArrowRight.vue";
 import HLSPlayer from "@controls/HLSPlayer.vue";
+import I18n from "@utils/i18n";
+import Text from "@controls/Text.vue";
 
 const vm: PlayerViewModel = useViewModel(PlayerViewModel);
 </script>
@@ -15,23 +17,26 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
         <div class="pt-5 px-5 pb-2 flex gap-4 items-center">
             <button class="btn" @click="vm.onBackBtn">
                 <LucideArrowLeft/>
-                Back to Series
+                <Text :target="I18n.PlayerView.back"/>
             </button>
             <div class="text-sm text-gray-400 text-nowrap truncate">
                 {{ vm.seriesTitle }}
                 &#x2022;
                 <template v-if="vm.seasonNumber == '0'">
-                    Movies
+                    <Text :target="I18n.PlayerView.movies"/>
                 </template>
                 <template v-else>
-                    Season {{ vm.seasonNumber }}
+                    <Text :target="I18n.PlayerView.season"/>
+                    {{ vm.seasonNumber }}
                 </template>
                 &#x2022;
                 <template v-if="vm.seasonNumber == '0'">
-                    Movie {{ vm.episodeNumber }}
+                    <Text :target="I18n.PlayerView.movie"/>
+                    {{ vm.episodeNumber }}
                 </template>
                 <template v-else>
-                    Episode {{ vm.episodeNumber }}
+                    <Text :target="I18n.PlayerView.episode"/>
+                    {{ vm.episodeNumber }}
                 </template>
             </div>
         </div>
@@ -47,7 +52,7 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
                 <div class="card bg-base-100 card-border border-base-300">
                     <div class="card-body">
                         <h1 class="text-xl pb-4">
-                            Providers
+                            <Text :target="I18n.PlayerView.providers"/>
                         </h1>
                         <div v-if="vm.providerLoading" class="skeleton w-full h-[350px]"/>
                         <div v-else>
@@ -72,7 +77,7 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
                 <div class="grow card bg-base-100 card-border border-base-300 overflow-y-auto">
                     <div class="card-body overflow-y-auto">
                         <h1 class="text-xl pb-4">
-                            Episoden
+                            <Text :target="I18n.PlayerView.episodes"/>
                         </h1>
                         <div class="overflow-y-auto">
                             <ul class="menu menu-md w-full p-0">
@@ -93,6 +98,12 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
                                             </span>
                                         </span>
                                     </span>
+                                    <span v-else>
+                                        <span class="text-sm font-semibold">
+                                            {{ episode.episode_number }}:
+                                            {{ episode.english_title }}
+                                        </span>
+                                    </span>
                                 </li>
                             </ul>
                         </div>
@@ -105,12 +116,12 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
                             @click="vm.onPreviousBtn"
                             :disabled="!vm.previousEpisode">
                         <LucideArrowLeft/>
-                        Previous Episode
+                        <Text :target="I18n.PlayerView.previous"/>
                     </button>
                     <button class="btn btn-soft"
                             @click="vm.onNextBtn"
                             :disabled="!vm.nextEpisode">
-                        Next Episode
+                        <Text :target="I18n.PlayerView.next"/>
                         <LucideArrowRight/>
                     </button>
                 </div>

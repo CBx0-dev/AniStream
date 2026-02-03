@@ -1,4 +1,15 @@
 {
     "$lang": "de",
-    "$group": "SyncView"
+    "$group": "SyncView",
+    "title": "Synchronisierung erforderlich",
+    "prepare": {
+        "reason": "Bevor du anfangen kannst deine Lieblingsanimes oder Serien zu schauen, ist eine Synchronisierung erforderlich.",
+        "note": "Die erste Synchronisierung wird etwas Zeit in Anspruch nehmen und etwa **1GB** Speicherplatz benötigen.",
+        "start": "Synchronisierung starten",
+        "back": "Zurück"
+    },
+    "completed": {
+        "title": "Der Synchronisierungsvorgang ist abgeschlossen.",
+        "start": "Anfangen zu schauen"
+    }
 }

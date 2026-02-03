@@ -13,6 +13,8 @@ import LucideEllipsisVertical from "@icons/LucideEllipsisVertical.vue";
 import LucideCheck from "@icons/LucideCheck.vue";
 
 import ImageHash from "@controls/ImageHash.vue";
+import I18n from "@utils/i18n";
+import Text from "@controls/Text.vue";
 
 const vm: StreamViewModel = useViewModel(StreamViewModel);
 </script>
@@ -24,16 +26,16 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                 <div class="flex justify-between w-full">
                     <button class="btn btn-link hover:text-primary cursor-default" @click="vm.onBackBtn">
                         <LucideArrowLeft/>
-                        Back to Series
+                        <Text :target="I18n.StreamView.back"/>
                     </button>
                     <div class="join">
                         <button class="join-item btn btn-soft" @click="vm.onSyncBtn">
                             <LucideCloudSync/>
-                            Sync series
+                            <Text :target="I18n.StreamView.sync"/>
                         </button>
                         <button class="join-item btn btn-soft" @click="vm.onResetBtn">
                             <LucideTimerReset/>
-                            Reset progress
+                            <Text :target="I18n.StreamView.reset"/>
                         </button>
                     </div>
                 </div>
@@ -55,7 +57,7 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                         <input type="radio" name="stream-tabs" checked/>
                         <span class="inline-flex items-center gap-1">
                             <LucideInfo/>
-                            Info
+                            <Text :target="I18n.StreamView.info"/>
                         </span>
                     </label>
                     <div class="tab-content bg-base-100 border-base-300 p-6 overflow-y-auto">
@@ -75,11 +77,11 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                             <input type="radio" name="stream-tabs"/>
                             <span v-if="season.season_number == 0" class="inline-flex items-center gap-1">
                                 <LucidePopcorn/>
-                                Movies
+                                <Text :target="I18n.StreamView.movies"/>
                             </span>
                             <span v-else class="inline-flex items-center gap-1">
                                 <LucideFolder/>
-                                Season
+                                <Text :target="I18n.StreamView.season"/>
                                 {{ season.season_number }}
                             </span>
                         </label>
@@ -90,8 +92,9 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                                      class="bg-base-200 p-4 rounded-lg flex flex-col gap-2 hover:bg-primary/30 duration-200 cursor-pointer"
                                      @click="vm.onEpisodeRowClick(season, episode)">
                                     <div class="relative flex gap-4 items-center">
-                                        <div class="badge badge-soft badge-sm">
-                                            EP {{ episode.episode_number }}
+                                        <div class="badge badge-soft badge-sm text-nowrap gap-1">
+                                            <Text :target="I18n.StreamView.ep"/>
+                                            {{ episode.episode_number }}
                                         </div>
                                         <div class="flex gap-2 items-center textarea-xs text-gray-400">
                                             <input type="radio"
@@ -99,10 +102,10 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                                                    disabled
                                                    :checked="episode.percentage_watched >= 80"/>
                                             <span v-if="episode.percentage_watched >= 80">
-                                                Watched
+                                                <Text :target="I18n.StreamView.watched"/>
                                             </span>
                                             <span v-else>
-                                                Not watched
+                                                <Text :target="I18n.StreamView.notWatched"/>
                                             </span>
                                         </div>
                                         <div
@@ -121,10 +124,10 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                                                     :style="`position-anchor:${vm.getAnchorId(episode.episode_id)}`"
                                                     @click="vm.onPopOverClicked($event)">
                                                     <li>
-                                                        <a class="items-center"
+                                                        <a class="items-center text-nowrap"
                                                            @click="vm.onMarkWatchedBtn(episode)">
                                                             <LucideCheck/>
-                                                            Mark as watched
+                                                            <Text :target="I18n.StreamView.markAsWatched"/>
                                                         </a>
                                                     </li>
                                                 </ul>

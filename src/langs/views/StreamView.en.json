@@ -1,0 +1,14 @@
+{
+    "$lang": "en",
+    "$group": "StreamView",
+    "back": "Back to overview",
+    "sync": "Sync series",
+    "reset": "Reset progress",
+    "info": "Info",
+    "movies": "Movies",
+    "season": "Season",
+    "ep": "EP",
+    "watched": "Watched",
+    "notWatched": "Not watched",
+    "markAsWatched": "Mark as watched"
+}

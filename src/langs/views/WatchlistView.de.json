@@ -1,4 +1,20 @@
 {
     "$lang": "de",
-    "$group": "WatchlistView"
+    "$group": "WatchlistView",
+    "navbar": {
+        "back": "Zurück"
+    },
+    "leftOff": {
+        "title": "Zuletzt gesehen"
+    },
+    "watchlist": {
+        "title": "Watchlist"
+    },
+    "personal": {
+        "title": "Deine Listen"
+    },
+    "tracklist": {
+        "title": "Serien denen du folgst"
+    },
+    "empty": "Hier gibt es aktuell nichts zu sehen."
 }

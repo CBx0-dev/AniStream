@@ -15,5 +15,6 @@
     },
     "tracklist": {
         "title": "Series you track"
-    }
+    },
+    "empty": "There is currently nothing to show here."
 }

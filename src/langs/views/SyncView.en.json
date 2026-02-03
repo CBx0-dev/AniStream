@@ -7,5 +7,9 @@
         "note": "The first sync will take some time and will approximately take **1GB** of storage.",
         "start": "Start syncing",
         "back": "Back"
+    },
+    "completed": {
+        "title": "The sync process is completed.",
+        "start": "Start watching"
     }
 }

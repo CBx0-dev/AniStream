@@ -48,7 +48,7 @@ const vm: SettingsViewModel = useViewModel(SettingsViewModel);
                             </span>
                         </label>
                         <div class="tab-content bg-base-100 border-base-300 p-6">
-                            Tab 1 Content
+                            <Text :target="I18n.SettingsView.changelogContent" />
                         </div>
 
                         <label class="tab">

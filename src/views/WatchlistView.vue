@@ -59,7 +59,9 @@ const vm: WatchlistViewModel = useViewModel(WatchlistViewModel);
             </div>
         </template>
         <template v-if="vm.everythingEmpty">
-            <h1 class="text-center font-semibold text-xl p-10 opacity-70">There is currently nothing to show here.</h1>
+            <h1 class="text-center font-semibold text-xl p-10 opacity-70">
+                <Text :target="I18n.WatchlistView.empty" />
+            </h1>
         </template>
 <!--        <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">-->
 <!--            <Text :target="I18n.WatchlistView.personal.title" class="shrink-0" />-->
