@@ -2,8 +2,12 @@
 import {useUserControl} from "vue-mvvm";
 
 import {InfoControlModel} from "@controls/InfoControl.model";
+import FlowbiteGithubSolid from "@icons/FlowbiteGithubSolid.vue";
+
 import I18n from "@/utils/i18n";
+
 import Text from "@controls/Text.vue";
+
 import tos from "@/../ToS.txt?raw";
 import disclaimer from "@/../LegalDisclaimer.txt?raw";
 
@@ -150,9 +154,16 @@ const vm: InfoControlModel = useUserControl(InfoControlModel);
                 <pre>{{ tos }}</pre>
             </div>
         </section>
-        <p class="text-xs opacity-50 pt-4">
-            © {{ new Date().getFullYear() }} CBx0.
-            <Text :target="I18n.InfoControl.copyright"/>
-        </p>
+        <div class="flex justify-between items-center pt-4">
+            <p class="text-xs opacity-50">
+                © {{ new Date().getFullYear() }} CBx0.
+                <Text :target="I18n.InfoControl.copyright"/>
+            </p>
+            <a href="https://github.com/CBx0-dev/AniStream"
+               target="_blank">
+                <FlowbiteGithubSolid class="w-8 h-8 opacity-50 duration-100 hover:text-primary cursor-pointer"/>
+            </a>
+        </div>
+
     </div>
 </template>

@@ -1,5 +1,5 @@
-import {arch as getArch, platform as getPlatform} from "@tauri-apps/plugin-os"
-import * as fs from "@tauri-apps/plugin-fs"
+import {arch as getArch, platform as getPlatform} from "@tauri-apps/plugin-os";
+import * as fs from "@tauri-apps/plugin-fs";
 import * as path from "@tauri-apps/api/path";
 import {UserControl} from "vue-mvvm";
 
@@ -45,7 +45,7 @@ export class InfoControlModel extends UserControl {
             this.providerService.STO.getStorageLocation()
         ]);
 
-        const aniworldWalker: Promise<void> =  this.walkTree(aniworldLocation, async (entry: fs.DirEntry, stat: fs.FileInfo): Promise<void> => {
+        const aniworldWalker: Promise<void> = this.walkTree(aniworldLocation, async (entry: fs.DirEntry, stat: fs.FileInfo): Promise<void> => {
             if (this.isMetadata(this.providerService.ANIWORLD.uniqueKey, entry)) {
                 this.aniworldMetadataUsage += stat.size;
             } else {
@@ -77,7 +77,7 @@ export class InfoControlModel extends UserControl {
         const units: string[] = ["B", "KB", "MB", "GB"];
 
 
-        let value : number = Math.abs(bytes);
+        let value: number = Math.abs(bytes);
         let index: number = 0;
 
         while (value >= 1000 && index < units.length - 1) {
@@ -100,7 +100,7 @@ export class InfoControlModel extends UserControl {
                 continue;
             }
 
-            const stat: fs.FileInfo =await fs.lstat(fullPath);
+            const stat: fs.FileInfo = await fs.lstat(fullPath);
             await cb(entry, stat);
         }
     }

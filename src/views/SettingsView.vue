@@ -2,6 +2,7 @@
 import {useViewModel} from "vue-mvvm";
 
 import {SettingsViewModel} from "@views/SettingsView.model";
+
 import LucidePalette from "@icons/LucidePalette.vue";
 import LucideInfo from "@icons/LucideInfo.vue";
 import LucideNewspaper from "@icons/LucideNewspaper.vue";
