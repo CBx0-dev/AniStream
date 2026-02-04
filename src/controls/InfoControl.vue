@@ -19,7 +19,7 @@ const vm: InfoControlModel = useUserControl(InfoControlModel);
         <div class="flex items-center gap-4">
             <div class="avatar placeholder">
                 <div class="rounded-lg w-14">
-                    <img src="/128x128.png" alt="AS"/>
+                    <img src="/tauri.svg" alt="AS"/>
                 </div>
             </div>
             <div>
