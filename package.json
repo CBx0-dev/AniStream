@@ -18,7 +18,7 @@
         "@tauri-apps/plugin-sql": "^2.3.1",
         "hls.js": "^1.6.15",
         "vue": "^3.5.13",
-        "vue-mvvm": "^0.3.0",
+        "vue-mvvm": "^0.4.1",
         "vue-router": "^4.6.4"
     },
     "devDependencies": {
