@@ -1,3 +1,4 @@
+import {App} from "vue";
 import {AppShell, WritableGlobalContext} from "vue-mvvm";
 
 import {ProviderViewModel} from "@views/ProviderView.model";
@@ -22,8 +23,11 @@ import {WatchlistService} from "@services/watchlist.service";
 import {I18nService} from "@services/i18n.service";
 import {ChangelogService} from "@services/changelog.service";
 import {SettingsService} from "@services/settings.service";
+import {ReportService} from "@services/report.service";
 
 export class AppConfig implements AppShell {
+    private app: App;
+
     router: AppShell.RouterConfig = {
         views: [
             ProviderViewModel,
@@ -41,6 +45,10 @@ export class AppConfig implements AppShell {
         confirm: ConfirmControlModel
     }
 
+    public constructor(app: App) {
+        this.app = app;
+    }
+
     configureServices(ctx: WritableGlobalContext): void {
         ctx.registerService(I18nService, () => new I18nService());
         ctx.registerService(ProviderService, ctx => new ProviderService(ctx));
@@ -53,8 +61,26 @@ export class AppConfig implements AppShell {
         ctx.registerService(FetchService, ctx => new FetchService(ctx));
         ctx.registerService(ChangelogService, () => new ChangelogService());
         ctx.registerService(SettingsService, ctx => new SettingsService(ctx));
+        ctx.registerService(ReportService, ctx => new ReportService(ctx));
+
+        // Init reporting
+        const reportService: ReportService = ctx.getService(ReportService);
+        this.app.config.errorHandler = async err => {
+            await reportService.handleFatalError(err);
+        }
 
         // For initializing theming etc...
         ctx.getService(SettingsService);
+
+        setTimeout(() => {
+            function foo(i: number) {
+                if (i >= 20) {
+                    throw new Error("Test Error");
+                }
+
+                foo(i + 1);
+            }
+            foo(0);
+        }, 0)
     }
 }

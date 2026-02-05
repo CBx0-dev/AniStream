@@ -9,7 +9,7 @@ import "@/main.css";
 
 const app: App = createApp(MVVMApp);
 
-app.use(createMVVM(new AppConfig()));
+app.use(createMVVM(new AppConfig(app)));
 app.mount("#app");
 
 window.addEventListener("contextmenu", e => e.preventDefault());

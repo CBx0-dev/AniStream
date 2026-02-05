@@ -10,7 +10,7 @@ export class InfoControlModel extends UserControl {
     private readonly providerService: ProviderService;
 
     public version: string = this.computed(() => packageJSON.version);
-    public platform: string = this.ref("");
+    public platform: string = this.computed(() => `${getPlatform()} ${getArch()}`);
     public aniworldMetadataUsage: number = this.ref(0);
     public aniworldMetadataUsagePercentage: number = this.computed(() => this.aniworldMetadataUsage / this.totalUsage * 100);
     public aniworldAssetsUsage: number = this.ref(0)
@@ -29,9 +29,6 @@ export class InfoControlModel extends UserControl {
     }
 
     public async mounted(): Promise<void> {
-        const [arch, platform] = await Promise.all([getArch(), getPlatform()]);
-        this.platform = `${platform} ${arch}`;
-
         this.analyzeSpaceUsage()
     }
 

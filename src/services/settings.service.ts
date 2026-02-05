@@ -1,6 +1,7 @@
-import {readonly, ref, Ref} from "vue";
-import {I18nService} from "@services/i18n.service";
 import {ReadableGlobalContext} from "vue-mvvm";
+import {readonly, ref, Ref} from "vue";
+
+import {I18nService} from "@services/i18n.service";
 
 export class SettingsService {
     private static readonly THEME_KEY: string = "theme";
