@@ -1,0 +1,20 @@
+{
+    "$lang": "de",
+    "$group": "ReportControl",
+    "title": "Etwas ist schiefgelaufen",
+    "description": "Die Anwendung hat einen unerwarteten Fehler festgestellt. Sie können uns helfen, AniStream zu verbessern, indem Sie einen Fehlerbericht senden. Wir schätzen Ihre Privatsphäre: Es werden keine persönlichen Informationen gesendet, sondern nur die unten gezeigten technischen Details.",
+    "environment": {
+        "version": "Version",
+        "platform": "Platform",
+        "language": "Sprache",
+        "theme": "Theme"
+    },
+    "additionalInfo": "Wenn Sie zusätzliche Informationen zu dem Geschehen haben, beschreiben Sie diese bitte unten (vorzugsweise auf Englisch):",
+    "placeholder": "z.B. Was haben Sie gemacht, als der Fehler auftrat?",
+    "restartNote": "Bitte starten Sie die Anwendung neu, um sicherzustellen, dass sie weiterhin korrekt funktioniert, unabhängig davon, ob Sie diesen Bericht senden.",
+    "actions": {
+        "cancel": "Abbrechen",
+        "send": "Bericht senden",
+        "close": "schließen"
+    }
+}

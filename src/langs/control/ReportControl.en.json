@@ -1,0 +1,20 @@
+{
+    "$lang": "en",
+    "$group": "ReportControl",
+    "title": "Something went wrong",
+    "description": "The application encountered an unexpected error. You can help us improve AniStream by sending a crash report. We value your privacy: no personal information is sent, only the technical details shown below.",
+    "environment": {
+        "version": "Version",
+        "platform": "Platform",
+        "language": "Language",
+        "theme": "Theme"
+    },
+    "additionalInfo": "If you have any additional information about what happened, please describe it below (preferably in English):",
+    "placeholder": "e.g. What were you doing when the error occurred?",
+    "restartNote": "Please restart the application to ensure it continues to function correctly, regardless of whether you choose to send this report.",
+    "actions": {
+        "cancel": "Cancel",
+        "send": "Send Report",
+        "close": "close"
+    }
+}

@@ -71,16 +71,5 @@ export class AppConfig implements AppShell {
 
         // For initializing theming etc...
         ctx.getService(SettingsService);
-
-        setTimeout(() => {
-            function foo(i: number) {
-                if (i >= 20) {
-                    throw new Error("Test Error");
-                }
-
-                foo(i + 1);
-            }
-            foo(0);
-        }, 0)
     }
 }
