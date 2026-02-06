@@ -149,18 +149,62 @@ jobs:
         with:
           path: artifacts
 
-      - name: Merge latest.json files
+      - name: Generate latest.json
+        env:
+          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
         run: |
-          mkdir merged
-          
-          jq -s '
-            reduce .[] as $item (
-              {};
-              .version = $item.version
-              | .notes = $item.notes
-              | .platforms += ($item.platforms // {})
-            )
-          ' artifacts/**/latest.json > merged/latest.json
+          mkdir -p merged
+
+          # Read the changelog for release notes
+          NOTES=$(cat changelogs/v${RELEASE_VERSION}.md | sed ':a;N;$!ba;s/\n/\\n/g')
+
+          # Start JSON
+          echo '{
+            "version": "'"${RELEASE_VERSION}"'",
+            "notes": "'"${NOTES}"'",
+            "platforms": {}
+          }' > merged/latest.json
+
+          # Loop over artifacts per OS
+          for ARTIFACT_DIR in artifacts/*; do
+            OS_NAME=$(basename "$ARTIFACT_DIR")
+
+            for FILE in "$ARTIFACT_DIR"/bundle/*; do
+              # Determine platform identifier for updater
+              case "$OS_NAME" in
+                ubuntu-latest)
+                  PLATFORM="linux-x86_64"
+                  ;;
+                windows-latest)
+                  PLATFORM="windows-x86_64"
+                  ;;
+                macos-latest)
+                  PLATFORM="darwin-universal"
+                  ;;
+              esac
+
+              BASENAME=$(basename "$FILE")
+              URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/v${RELEASE_VERSION}/${BASENAME}"
+
+              # Compute SHA256
+              HASH=$(sha256sum "$FILE" | awk '{print $1}')
+
+              # Compute signature
+              SIGNATURE=$(npx tauri signer sign "$FILE" --key <(echo "${{ secrets.SIGNING_KEY }}") --password "${{ secrets.SIGNING_PASSWORD }}" --stdout | base64)
+
+              # Merge into JSON
+              jq --arg platform "$PLATFORM" \
+                 --arg url "$URL" \
+                 --arg hash "sha256:$HASH" \
+                 --arg signature "$SIGNATURE" \
+                 '.platforms[$platform] = {url: $url, hash: $hash, signature: $signature}' \
+                 merged/latest.json > merged/latest.tmp.json
+              mv merged/latest.tmp.json merged/latest.json
+            done
+          done
+
+          echo "✅ latest.json generated:"
+          cat merged/latest.json
 
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
