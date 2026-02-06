@@ -1,52 +1,56 @@
 {
-    "$schema": "https://schema.tauri.app/config/2",
-    "productName": "AniStream",
-    "version": "0.1.0",
-    "identifier": "dev.cbx0.anistream",
-    "build": {
-        "beforeDevCommand": "npm run dev",
-        "devUrl": "http://localhost:1420",
-        "beforeBuildCommand": "npm run build",
-        "frontendDist": "../dist"
-    },
-    "app": {
-        "windows": [
-            {
-                "title": "AniStream",
-                "width": 1200,
-                "height": 600
-            }
-        ],
-        "security": {
-            "csp": null,
-            "assetProtocol": {
-                "enable": true,
-                "scope": ["$APPDATA/**"]
-            }
-        }
-    },
-    "bundle": {
-        "createUpdaterArtifacts": true,
-        "active": true,
-        "targets": "all",
-        "icon": [
-            "icons/32x32.png",
-            "icons/64x64.png",
-            "icons/128x128.png",
-            "icons/128x128@2x.png",
-            "icons/icon.icns",
-            "icons/icon.ico",
-            "icons/Square284x284Logo.png",
-            "icons/Square310x310Logo.png"
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "AniStream",
+  "version": "0.1.0",
+  "identifier": "dev.cbx0.anistream",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "AniStream",
+        "width": 1200,
+        "height": 600
+      }
+    ],
+    "security": {
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "$APPDATA/**"
         ]
-    },
-    "plugins": {
-        "updater": {
-            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEJENjkyMDU4MjBBQjcyRUMKUldUc2Nxc2dXQ0JwdmVuelFCcitEWVpCL3pGZDQvUm1aenZiYjA5T0N0WFZuUy9ocVVjMDJkbWEK",
-            "endpoints": ["https://github.com/CBx0-dev/AniStream/releases/latest/download/latest.json"],
-            "windows": {
-                "installMode": "passive"
-            }
-        }
+      }
     }
+  },
+  "bundle": {
+    "createUpdaterArtifacts": true,
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/64x64.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico",
+      "icons/Square284x284Logo.png",
+      "icons/Square310x310Logo.png"
+    ]
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEJENjkyMDU4MjBBQjcyRUMKUldUc2Nxc2dXQ0JwdmVuelFCcitEWVpCL3pGZDQvUm1aenZiYjA5T0N0WFZuUy9ocVVjMDJkbWEK",
+      "endpoints": [
+        "https://github.com/CBx0-dev/AniStream/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
+  }
 }

@@ -1,38 +1,38 @@
 {
-    "name": "anistream",
-    "private": true,
-    "version": "0.1.0",
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vue-tsc --noEmit && vite build",
-        "preview": "vite preview",
-        "tauri": "tauri"
-    },
-    "dependencies": {
-        "@tauri-apps/api": "^2",
-        "@tauri-apps/plugin-fs": "^2.4.5",
-        "@tauri-apps/plugin-http": "^2.5.5",
-        "@tauri-apps/plugin-opener": "^2",
-        "@tauri-apps/plugin-os": "^2.3.2",
-        "@tauri-apps/plugin-process": "^2.3.1",
-        "@tauri-apps/plugin-sql": "^2.3.1",
-        "@tauri-apps/plugin-updater": "^2.10.0",
-        "hls.js": "^1.6.15",
-        "vue": "^3.5.13",
-        "vue-mvvm": "^0.4.1",
-        "vue-router": "^4.6.4"
-    },
-    "devDependencies": {
-        "@tailwindcss/vite": "^4.1.18",
-        "@tauri-apps/cli": "^2",
-        "@types/node": "^25.0.6",
-        "@types/random-useragent": "^0.3.3",
-        "@vitejs/plugin-vue": "^5.2.1",
-        "daisyui": "^5.5.14",
-        "tailwindcss": "^4.1.18",
-        "typescript": "~5.6.2",
-        "vite": "^6.0.3",
-        "vue-tsc": "^2.1.10"
-    }
+  "name": "anistream",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-fs": "^2.4.5",
+    "@tauri-apps/plugin-http": "^2.5.5",
+    "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-os": "^2.3.2",
+    "@tauri-apps/plugin-process": "^2.3.1",
+    "@tauri-apps/plugin-sql": "^2.3.1",
+    "@tauri-apps/plugin-updater": "^2.10.0",
+    "hls.js": "^1.6.15",
+    "vue": "^3.5.13",
+    "vue-mvvm": "^0.4.1",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "@tauri-apps/cli": "^2",
+    "@types/node": "^25.0.6",
+    "@types/random-useragent": "^0.3.3",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "daisyui": "^5.5.14",
+    "tailwindcss": "^4.1.18",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.3",
+    "vue-tsc": "^2.1.10"
+  }
 }
