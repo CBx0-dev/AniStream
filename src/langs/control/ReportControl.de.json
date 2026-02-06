@@ -14,7 +14,6 @@
     "restartNote": "Bitte starten Sie die Anwendung neu, um sicherzustellen, dass sie weiterhin korrekt funktioniert, unabhängig davon, ob Sie diesen Bericht senden.",
     "actions": {
         "cancel": "Abbrechen",
-        "send": "Bericht senden",
-        "close": "schließen"
+        "send": "Bericht senden"
     }
 }

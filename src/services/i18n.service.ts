@@ -49,7 +49,7 @@ export class I18nService {
         return "?";
     }
 
-    public get(target: readonly [string, readonly string[]]): string {
+    public get(target: readonly [string, readonly string[]], ...args: any[]): string {
         const [group, path] = target;
 
         if (path.length == 0) {
@@ -93,10 +93,16 @@ export class I18nService {
             }
         }
 
-        return this.applyFormat(current as string);
+        return this.applyFormat(current as string, ...args);
     }
 
-    private applyFormat(value: string): string {    
-        return value.replace(/\*\*((?:\*(?!\*)|[^*])+)\*\*/g, "<strong>$1</strong>"); 
+    private applyFormat(value: string, ...args: any[]): string {    
+        let result: string = value.replace(/\*\*((?:\*(?!\*)|[^*])+)\*\*/g, "<strong>$1</strong>"); 
+
+        for (let i = 0; i < args.length; i++) {
+            result = result.replace(`{${i}}`, args[i]);
+        }
+
+        return result;
     }
 }

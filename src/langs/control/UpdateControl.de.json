@@ -1,0 +1,16 @@
+{
+    "$lang": "de",
+    "$group": "UpdateControl",
+    "title": "Neues Update verfügbar",
+    "version": {
+        "current": "Aktuelle Version",
+        "new": "Neue Version"
+    },
+    "description": "Eine neuere Version ist verfügbar. Aktualisieren Sie jetzt, um die neuesten Verbesserungen zu erhalten.",
+    "releaseNotes": "Versionshinweise",
+    "restartNote": "Das Update wird einige Zeit in Anspruch nehmen und erfordert einen Neustart der Anwendung.",
+    "ignore": "Für diese Version nicht mehr erinnern",
+    "cancel": "Abbrechen",
+    "start": "Update starten",
+    "install": "Installieren & Neustarten"
+}

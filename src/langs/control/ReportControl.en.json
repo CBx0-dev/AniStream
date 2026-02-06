@@ -14,7 +14,6 @@
     "restartNote": "Please restart the application to ensure it continues to function correctly, regardless of whether you choose to send this report.",
     "actions": {
         "cancel": "Cancel",
-        "send": "Send Report",
-        "close": "close"
+        "send": "Send Report"
     }
 }

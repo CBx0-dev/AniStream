@@ -24,6 +24,7 @@ import {I18nService} from "@services/i18n.service";
 import {ChangelogService} from "@services/changelog.service";
 import {SettingsService} from "@services/settings.service";
 import {ReportService} from "@services/report.service";
+import {UpdateService} from "@services/update.service";
 
 export class AppConfig implements AppShell {
     private app: App;
@@ -62,6 +63,7 @@ export class AppConfig implements AppShell {
         ctx.registerService(ChangelogService, () => new ChangelogService());
         ctx.registerService(SettingsService, ctx => new SettingsService(ctx));
         ctx.registerService(ReportService, ctx => new ReportService(ctx));
+        ctx.registerService(UpdateService, ctx => new UpdateService(ctx));
 
         // Init reporting
         const reportService: ReportService = ctx.getService(ReportService);
@@ -71,5 +73,6 @@ export class AppConfig implements AppShell {
 
         // For initializing theming etc...
         ctx.getService(SettingsService);
+        ctx.getService(UpdateService);
     }
 }

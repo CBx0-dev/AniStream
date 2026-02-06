@@ -1,8 +1,8 @@
-use tauri::Manager;
 use serde_json::json;
+use tauri::Manager;
 use tauri_plugin_http::reqwest::{
+    header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE},
     Client,
-    header::{CONTENT_TYPE, AUTHORIZATION, ACCEPT},
 };
 
 const REPORT_TOKEN: Option<&'static str> = option_env!("REPORT_TOKEN");
@@ -24,7 +24,6 @@ async fn send_github_issue(title: String, message: String) -> Result<String, Str
         .header(CONTENT_TYPE, "application/json")
         .header(ACCEPT, "application/vnd.github+json")
         .header(AUTHORIZATION, format!("Bearer {}", token))
-        .header("User-Agent", "AniStream-Tauri-App")
         .body(json_body.to_string())
         .send()
         .await
@@ -48,6 +47,8 @@ async fn report_issue(title: String, message: String) -> Result<String, String> 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_fs::init())

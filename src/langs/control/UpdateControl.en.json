@@ -1,0 +1,16 @@
+{
+    "$lang": "en",
+    "$group": "UpdateControl",
+    "title": "New Update available",
+    "version": {
+        "current": "Current Version",
+        "new": "New Version"
+    },
+    "description": "A newer version is available. Update now to get the latest improvements.",
+    "releaseNotes": "Release Notes",
+    "restartNote": "The update will take some time and requires a restart of the application.",
+    "ignore": "Don't remind me again for this version",
+    "cancel": "Cancel",
+    "start": "Start Update",
+    "install": "Install & Restart"
+}

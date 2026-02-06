@@ -37,7 +37,6 @@ const vm: ReportControlModel = useDialogControl(ReportControlModel);
                 <div class="whitespace-pre-wrap">
                     {{ vm.errorStack }}
                 </div>
-
             </div>
 
             <p class="mt-6 mb-2 text-sm opacity-70">
@@ -60,15 +59,13 @@ const vm: ReportControlModel = useDialogControl(ReportControlModel);
                 <button class="btn btn-ghost" @click="vm.onCancel">
                     <Text :target="I18n.ReportControl.actions.cancel"/>
                 </button>
-                <button class="btn btn-primary" @click="vm.onSubmit">
+                <button class="btn btn-soft btn-primary" @click="vm.onSubmit">
                     <Text :target="I18n.ReportControl.actions.send"/>
                 </button>
             </div>
         </div>
         <form method="dialog" class="modal-backdrop" @submit.prevent="vm.onCancel">
-            <button>
-                <Text :target="I18n.ReportControl.actions.close"/>
-            </button>
+            <button></button>
         </form>
     </dialog>
 </template>
