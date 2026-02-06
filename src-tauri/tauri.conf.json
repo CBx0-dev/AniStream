@@ -36,8 +36,8 @@
             "icons/128x128@2x.png",
             "icons/icon.icns",
             "icons/icon.ico",
-            "Square310x310Logo.png",
-            "Square284x284Logo.png"
+            "icons/Square284x284Logo.png",
+            "icons/Square310x310Logo.png"
         ]
     },
     "plugins": {
