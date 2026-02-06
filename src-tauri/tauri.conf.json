@@ -42,7 +42,7 @@
     },
     "plugins": {
         "updater": {
-            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDIyRkZBMENEMERFRTc1RjcKUldUM2RlNE56YUQvSXQ0SDVrajNOZ1lnRjgrSU5ZSzRJNVozKzFDZWc1aFRCM3RJTnFnQlJxZ1YK",
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEJENjkyMDU4MjBBQjcyRUMKUldUc2Nxc2dXQ0JwdmVuelFCcitEWVpCL3pGZDQvUm1aenZiYjA5T0N0WFZuUy9ocVVjMDJkbWEK",
             "endpoints": ["https://github.com/CBx0-dev/AniStream/releases/latest/download/latest.json"],
             "windows": {
                 "installMode": "passive"
