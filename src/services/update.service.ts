@@ -4,6 +4,8 @@ import {DialogService} from "vue-mvvm/dialog";
 
 import {UpdateControlModel} from "@controls/UpdateControl.model";
 
+import {SettingsService} from "@services/settings.service";
+
 export class UpdateService {
     public static readonly CHECK_OFFSET: number = 2_000;
 
@@ -38,10 +40,15 @@ export class UpdateService {
 
     private async checkForUpdates(): Promise<void> {
         const dialogService: DialogService = this.ctx.getService(DialogService);
+        const settingsService: SettingsService = this.ctx.getService(SettingsService);
 
         const update: Update | null = await check();
 
         if (!update) {
+            return;
+        }
+
+        if (settingsService.ignoreVersion.value == update.version) {
             return;
         }
 

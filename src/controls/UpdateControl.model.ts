@@ -5,6 +5,7 @@ import {DialogControl} from "vue-mvvm/dialog";
 import UpdateControl from "@controls/UpdateControl.vue";
 
 import {UpdateService} from "@services/update.service";
+import {SettingsService} from "@services/settings.service";
 
 const enum UpdateState {
     PROMPT,
@@ -15,6 +16,7 @@ const enum UpdateState {
 export class UpdateControlModel extends DialogControl {
     public static component: Component = UpdateControl;
 
+    private settingsService: SettingsService;
     private updateService: UpdateService;
     private update: Update;
 
@@ -35,7 +37,9 @@ export class UpdateControlModel extends DialogControl {
     public constructor(update: Update) {
         super();
 
+        this.settingsService = this.ctx.getService(SettingsService);
         this.updateService = this.ctx.getService(UpdateService);
+
         this.update = update;
     }
 
@@ -52,6 +56,10 @@ export class UpdateControlModel extends DialogControl {
     public async onCancel(): Promise<void> {
         if (!this.isPromptState) {
             return;
+        }
+
+        if (this.ignoreThisUpdate) {
+            this.settingsService.ignoreVersion = this.update.version;
         }
 
         await this.closeDialog();

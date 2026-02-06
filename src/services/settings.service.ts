@@ -7,12 +7,14 @@ export class SettingsService {
     private static readonly THEME_KEY: string = "theme";
     private static readonly LANG_KEY: string = "lang";
     private static readonly TOS_KEY: string = "tos-accepted";
+    private static readonly IGNORE_VERSION_KEY: string = "ignore-version";
 
     private readonly i18nService: I18nService;
 
     private _theme: Ref<string> = ref("");
     private _lang: Ref<string> = ref("");
     private _tosAccepted: Ref<boolean> = ref(false);
+    private _ignoreVersion: Ref<string> = ref("");
 
     public get theme(): Readonly<Ref<string>> {
         return readonly(this._theme);
@@ -43,12 +45,22 @@ export class SettingsService {
         localStorage.setItem(SettingsService.TOS_KEY, v ? "true" : "false");
     }
 
+    public get ignoreVersion(): Readonly<Ref<string>> {
+        return readonly(this._ignoreVersion);
+    }
+
+    public set ignoreVersion(v: string) {
+        this._ignoreVersion.value = v;
+        localStorage.setItem(SettingsService.IGNORE_VERSION_KEY, v);
+    }
+
     public constructor(ctx: ReadableGlobalContext) {
         this.i18nService = ctx.getService(I18nService);
 
         this.theme = this.loadFromStorage(SettingsService.THEME_KEY, "aniworld-light");
         this.lang = this.loadFromStorage(SettingsService.LANG_KEY, "en");
         this.tosAccepted = this.loadFromStorage(SettingsService.TOS_KEY, "false") == "true";
+        this.ignoreVersion = this.loadFromStorage(SettingsService.IGNORE_VERSION_KEY, "0.0.0");
     }
 
     public getImageVariant(name: string, extension: string): string {
