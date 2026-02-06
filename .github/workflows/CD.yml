@@ -49,6 +49,26 @@ jobs:
           
           rm signing.key to-sign.txt to-sign.txt.sig
 
+      - name: Set application version
+        env:
+          VERSION: ${{ env.RELEASE_VERSION }}
+        run: |
+          echo "Setting version to $VERSION"
+
+          # package.json
+          jq ".version = \"$VERSION\"" package.json > package.json.tmp
+          mv package.json.tmp package.json
+
+          # tauri.conf.json (Tauri v2)
+          jq ".version = \"$VERSION\"" src-tauri/tauri.conf.json > src-tauri/tauri.conf.json.tmp
+          mv src-tauri/tauri.conf.json.tmp src-tauri/tauri.conf.json
+
+          # Cargo.toml (optional but strongly recommended)
+          sed -i.bak "s/^version = \".*\"/version = \"$VERSION\"/" src-tauri/Cargo.toml || true
+          rm -f src-tauri/Cargo.toml.bak
+
+          echo "✅ Versions updated"
+
   build:
     name: Build (${{ matrix.os }})
     needs: validate
@@ -145,4 +165,3 @@ jobs:
             merged/latest.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
