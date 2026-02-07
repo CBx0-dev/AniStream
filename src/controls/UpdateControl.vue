@@ -49,8 +49,7 @@ const vm: UpdateControlModel = useDialogControl(UpdateControlModel);
                     <p class="text-xs uppercase opacity-50 font-bold tracking-wider mb-2">
                         <Text :target="I18n.UpdateControl.releaseNotes"/>
                     </p>
-                    <div class="bg-base-300/50 rounded-lg p-4 max-h-48 overflow-y-auto text-sm whitespace-pre-wrap font-sans border border-base-content/5">
-                        {{ vm.body }}
+                    <div class="bg-base-300/50 rounded-lg p-4 max-h-48 overflow-y-auto text-sm whitespace-pre-wrap font-sans border border-base-content/5" v-html="vm.body">
                     </div>
                 </div>
 

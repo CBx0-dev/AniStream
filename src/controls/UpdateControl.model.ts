@@ -7,6 +7,8 @@ import UpdateControl from "@controls/UpdateControl.vue";
 import {UpdateService} from "@services/update.service";
 import {SettingsService} from "@services/settings.service";
 
+import {MarkdownParser} from "@utils/markdown";
+
 const enum UpdateState {
     PROMPT,
     DOWNLOADING,
@@ -16,11 +18,12 @@ const enum UpdateState {
 export class UpdateControlModel extends DialogControl {
     public static component: Component = UpdateControl;
 
+    private parser: MarkdownParser;
     private settingsService: SettingsService;
     private updateService: UpdateService;
     private update: Update;
 
-    private state: UpdateState = this.ref(UpdateState.DOWNLOADING);
+    private state: UpdateState = this.ref(UpdateState.PROMPT);
 
     public opened: boolean = this.ref(false);
     public ignoreThisUpdate: boolean = this.ref(false);
@@ -29,7 +32,7 @@ export class UpdateControlModel extends DialogControl {
 
     public currentVersion: string = this.computed(() => this.update.currentVersion);
     public updatingVersion: string = this.computed(() => this.update.version);
-    public body: string | null = this.computed(() => this.update.body ?? null);
+    public body: string | null = this.computed(() => this.update.body ? this.parser.parse(this.update.body) : null);
     public isPromptState: boolean = this.computed(() => this.state == UpdateState.PROMPT);
     public isDownloadingState: boolean = this.computed(() => this.state == UpdateState.DOWNLOADING);
     public isRestartingState: boolean = this.computed(() => this.state == UpdateState.RESTARTING);
@@ -37,6 +40,7 @@ export class UpdateControlModel extends DialogControl {
     public constructor(update: Update) {
         super();
 
+        this.parser = new MarkdownParser();
         this.settingsService = this.ctx.getService(SettingsService);
         this.updateService = this.ctx.getService(UpdateService);
 
