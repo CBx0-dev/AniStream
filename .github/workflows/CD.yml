@@ -100,7 +100,12 @@ jobs:
         id: changelog
         run: |
           CHANGELOG=$(cat changelogs/v${{ github.event.inputs.version }}.md)
-          echo "content=$CHANGELOG" >> $GITHUB_OUTPUT
+          
+          {
+            echo "content<<EOF"
+            echo "$CHANGELOG"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
