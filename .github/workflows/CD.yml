@@ -8,9 +8,6 @@ on:
         required: true
         type: string
 
-env:
-  RELEASE_VERSION: ${{ github.event.inputs.version }}
-
 jobs:
   validate:
     name: Validate release
@@ -24,12 +21,12 @@ jobs:
 
       - name: Ensure changelog exists
         run: |
-          CHANGELOG="changelogs/v${RELEASE_VERSION}.md"
+          CHANGELOG="changelogs/v${{ github.event.inputs.version }}.md"
           if [ ! -f "$CHANGELOG" ]; then
-            echo "❌ Missing changelog: $CHANGELOG"
+            echo "Missing changelog: $CHANGELOG"
             exit 1
           fi
-          echo "✅ Changelog found"
+          echo "Changelog found"
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -51,21 +48,19 @@ jobs:
           rm to-sign.txt to-sign.txt.sig
 
       - name: Set application version
-        env:
-          VERSION: ${{ env.RELEASE_VERSION }}
         run: |
-          echo "Setting version to $VERSION"
+          echo "Setting version to ${{ github.event.inputs.version }}"
 
           # package.json
-          jq ".version = \"$VERSION\"" package.json > package.json.tmp
+          jq ".version = \"${{ github.event.inputs.version }}\"" package.json > package.json.tmp
           mv package.json.tmp package.json
 
           # tauri.conf.json (Tauri v2)
-          jq ".version = \"$VERSION\"" src-tauri/tauri.conf.json > src-tauri/tauri.conf.json.tmp
+          jq ".version = \"${{ github.event.inputs.version }}\"" src-tauri/tauri.conf.json > src-tauri/tauri.conf.json.tmp
           mv src-tauri/tauri.conf.json.tmp src-tauri/tauri.conf.json
 
           # Cargo.toml (optional but strongly recommended)
-          sed -i.bak "s/^version = \".*\"/version = \"$VERSION\"/" src-tauri/Cargo.toml || true
+          sed -i.bak "s/^version = \".*\"/version = \"${{ github.event.inputs.version }}\"/" src-tauri/Cargo.toml || true
           rm -f src-tauri/Cargo.toml.bak
 
           echo "✅ Versions updated"
@@ -87,19 +82,26 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
-
-    env:
-      REPORT_TOKEN: ${{ secrets.REPORT_TOKEN }}
-      TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.SIGNING_KEY }}
-      TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        platform: [macos-latest, windows-latest, ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            rust_target: x86_64-unknown-linux-gnu
+          - os: macos-latest
+            rust_target: x86_64-apple-darwin
+          - os: macos-latest
+            rust_target: aarch64-apple-darwin
+          - os: windows-latest
+            rust_target: x86_64-pc-windows-msvc
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Read changelog
+        id: changelog
+        run: |
+          CHANGELOG=$(cat changelogs/v${{ github.event.inputs.version }}.md)
+          echo "content=$CHANGELOG" >> $GITHUB_OUTPUT
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -108,114 +110,35 @@ jobs:
           cache: npm
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+        run:
+          curl https://sh.rustup.rs -sSf | sh -s -- -y
 
-      - name: Install Linux system dependencies
+      - name: Install dependencies (ubuntu only)
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            libwebkit2gtk-4.1-dev \
-            libgtk-3-dev \
-            libayatana-appindicator3-dev \
-            librsvg2-dev \
-            libssl-dev \
-            build-essential
+          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
 
       - name: Install JS dependencies
-        run: npm install
+        run: |
+          npm ci
+          npm run build
 
       - name: Build Tauri app + updater
         run: |
           npm run tauri build --ci
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: tauri-${{ matrix.os }}
-          path: |
-            src-tauri/target/release/bundle/**
-            src-tauri/target/release/latest.json
-
-  release:
-    name: Create GitHub Release
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download all build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Generate latest.json
-        env:
-          RELEASE_VERSION: ${{ env.RELEASE_VERSION }}
-        run: |
-          mkdir -p merged
-
-          # Read the changelog for release notes
-          NOTES=$(cat changelogs/v${RELEASE_VERSION}.md | sed ':a;N;$!ba;s/\n/\\n/g')
-
-          # Start JSON
-          echo '{
-            "version": "'"${RELEASE_VERSION}"'",
-            "notes": "'"${NOTES}"'",
-            "platforms": {}
-          }' > merged/latest.json
-
-          # Loop over artifacts per OS
-          for ARTIFACT_DIR in artifacts/*; do
-            OS_NAME=$(basename "$ARTIFACT_DIR")
-
-            for FILE in "$ARTIFACT_DIR"/bundle/*; do
-              # Determine platform identifier for updater
-              case "$OS_NAME" in
-                ubuntu-latest)
-                  PLATFORM="linux-x86_64"
-                  ;;
-                windows-latest)
-                  PLATFORM="windows-x86_64"
-                  ;;
-                macos-latest)
-                  PLATFORM="darwin-universal"
-                  ;;
-              esac
-
-              BASENAME=$(basename "$FILE")
-              URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/v${RELEASE_VERSION}/${BASENAME}"
-
-              # Compute SHA256
-              HASH=$(sha256sum "$FILE" | awk '{print $1}')
-
-              # Compute signature
-              SIGNATURE=$(npx tauri signer sign "$FILE" --key <(echo "${{ secrets.SIGNING_KEY }}") --password "${{ secrets.SIGNING_PASSWORD }}" --stdout | base64)
-
-              # Merge into JSON
-              jq --arg platform "$PLATFORM" \
-                 --arg url "$URL" \
-                 --arg hash "sha256:$HASH" \
-                 --arg signature "$SIGNATURE" \
-                 '.platforms[$platform] = {url: $url, hash: $hash, signature: $signature}' \
-                 merged/latest.json > merged/latest.tmp.json
-              mv merged/latest.tmp.json merged/latest.json
-            done
-          done
-
-          echo "✅ latest.json generated:"
-          cat merged/latest.json
-
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ env.RELEASE_VERSION }}
-          name: Release ${{ env.RELEASE_VERSION }}
-          body_path: changelogs/v${{ env.RELEASE_VERSION }}.md
-          files: |
-            artifacts/**/bundle/**/*
-            merged/latest.json
+      - name: Build the app
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPORT_TOKEN: ${{ secrets.REPORT_TOKEN }}
+          TAURI_PRIVATE_KEY: ${{ secrets.SIGNING_KEY }}
+          TAURI_KEY_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        with:
+          # tauri-action replaces \_\_VERSION\_\_ with the app version
+          tagName: v${{ github.event.inputs.version }}
+          releaseName: "Release v__VERSION__"
+          releaseBody: ${{ steps.changelog.outputs.content }}
+          releaseDraft: true
+          prerelease: false
