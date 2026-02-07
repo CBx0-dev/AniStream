@@ -76,6 +76,8 @@ jobs:
     name: Build (${{ matrix.platform }})
     needs: validate
     runs-on: ${{ matrix.platform }}
+    permissions:
+      contents: write
 
     strategy:
       fail-fast: true
@@ -133,7 +135,7 @@ jobs:
         run: |
           npm ci
 
-      - name: Build the app
+      - name: Build Application
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
