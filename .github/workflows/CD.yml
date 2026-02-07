@@ -75,9 +75,9 @@ jobs:
           git push origin v${RELEASE_VERSION}
 
   build:
-    name: Build (${{ matrix.os }})
+    name: Build (${{ matrix.platform }})
     needs: validate
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.platform }}
 
     strategy:
       fail-fast: true
