@@ -98,6 +98,7 @@ jobs:
 
       - name: Read changelog
         id: changelog
+        shell: bash
         run: |
           CHANGELOG=$(cat changelogs/v${{ github.event.inputs.version }}.md)
           
@@ -127,10 +128,6 @@ jobs:
         run: |
           npm ci
           npm run build
-
-      - name: Build Tauri app + updater
-        run: |
-          npm run tauri build --ci
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
