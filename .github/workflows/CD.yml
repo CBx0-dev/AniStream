@@ -70,8 +70,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git commit -am "chore(release): v${{ github.event.inputs.version }}" || echo "No changes to commit"
-          git tag v${{ github.event.inputs.version }}
-          git push --tags
+          git push
 
   build:
     name: Build (${{ matrix.platform }})
