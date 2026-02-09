@@ -85,12 +85,16 @@ jobs:
         include:
           - platform: ubuntu-latest
             args: ''
+            rustup: ''
           - platform: windows-latest
             args: ''
+            rustup: ''
           - platform: macos-latest
             args: '--target aarch64-apple-darwin'
+            rustup: 'aarch64-apple-darwin'
           - platform: macos-latest
             args: '--target x86_64-apple-darwin'
+            rustup: 'x86_64-apple-darwin'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -119,6 +123,10 @@ jobs:
       - name: Set up Rust
         run:
           curl https://sh.rustup.rs -sSf | sh -s -- -y
+
+      - name: Add build target
+        if: ${{ matrix.rustup != '' }}
+        run: rustup target add ${{ matrix.rustup }}
 
       - name: Install dependencies (ubuntu only)
         if: runner.os == 'Linux'
