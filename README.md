@@ -4,11 +4,11 @@ Desktop stream host for AniWorld.to and S.TO
 
 ## Installing
 
-| Platform | x86_64 / amd64 / x64                                                                                           | aarch64                                                            |
-|----------|----------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
-| Windows  | AniStream_<version>_x64-setup.exe<br>AniStream_<version>_x64_en-US.msi                                         | -                                                                  |
-| Linux    | AniStream-<version>.x86_64.rpm<br>AniStream-<version>_amd64.deb<br>AniStream-<version>_amd64.AppImage         | -                                                                  |
-| macOS    | AniStream_<version>_x64.dmg<br>AniStream_x64.app.tar.gz                                                         | AniStream_<version>_aarch64.dmg<br>AniStream_aarch64.app.tar.gz   |
+| Platform | x86_64 / amd64 / x64                                                                                             | aarch64                                                            |
+|----------|------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| Windows  | AniStream_&lt;version>_x64-setup.exe<br>AniStream_&lt;version>_x64_en-US.msi                                     | -                                                                  |
+| Linux    | AniStream-&lt;version>-1.x86_64.rpm<br>AniStream-&lt;version>_amd64.deb<br>AniStream-&lt;version>_amd64.AppImage | -                                                                  |
+| macOS    | AniStream_&lt;version>_x64.dmg<br>AniStream_x64.app.tar.gz                                                       | AniStream_&lt;version>_aarch64.dmg<br>AniStream_aarch64.app.tar.gz |
 
 Download the latest release file for your platform and run the installer.
 
