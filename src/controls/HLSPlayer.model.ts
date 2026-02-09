@@ -80,8 +80,9 @@ export class HLSPlayerModel extends UserControl {
 
         if (this.interval) {
             clearInterval(this.interval);
+            this.interval = null;
         }
-        this.interval = setInterval(() => this.onProgression, 10_000)
+        this.interval = setInterval(() => this.onProgression(), 10_000);
     }
 
     public async onSeeked(): Promise<void> {
@@ -135,6 +136,7 @@ export class HLSPlayerModel extends UserControl {
         }
         if (this.interval) {
             clearInterval(this.interval);
+            this.interval = null;
         }
     }
 
@@ -144,7 +146,12 @@ export class HLSPlayerModel extends UserControl {
         }
 
         const currentTime: number = this.video.currentTime;
-        const percentage: number = Math.round(currentTime / this.video.duration * 100);
+        const duration: number = this.video.duration;
+        // Video not loaded
+        if (duration == 0) {
+            return;
+        }
+        const percentage: number = Math.round(currentTime / duration * 100);
 
         await this.episodeService.updateEpisodeProgression(this.episodeId, percentage, currentTime);
     }
