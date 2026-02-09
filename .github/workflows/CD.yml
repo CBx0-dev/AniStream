@@ -82,15 +82,14 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform: [macos-latest, windows-latest, ubuntu-latest]
         include:
-          - os: ubuntu-latest
+          - platform: ubuntu-latest
             args: ''
-          - os: windows-latest
+          - platform: windows-latest
             args: ''
-          - os: macos-latest
+          - platform: macos-latest
             args: '--target aarch64-apple-darwin'
-          - os: macos-latest
+          - platform: macos-latest
             args: '--target x86_64-apple-darwin'
     steps:
       - name: Checkout repository
