@@ -85,14 +85,13 @@ jobs:
         platform: [macos-latest, windows-latest, ubuntu-latest]
         include:
           - os: ubuntu-latest
-            rust_target: x86_64-unknown-linux-gnu
-          - os: macos-latest
-            rust_target: x86_64-apple-darwin
-          - os: macos-latest
-            rust_target: aarch64-apple-darwin
+            args: ''
           - os: windows-latest
-            rust_target: x86_64-pc-windows-msvc
-
+            args: ''
+          - os: macos-latest
+            args: '--target aarch64-apple-darwin'
+          - os: macos-latest
+            args: '--target x86_64-apple-darwin'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -152,3 +151,4 @@ jobs:
           releaseBody: ${{ steps.changelog.outputs.content }}
           releaseDraft: true
           prerelease: false
+          args: ${{ matrix.args }}
