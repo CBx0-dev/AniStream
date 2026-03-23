@@ -31,6 +31,8 @@
     "updater": {
         "updatesActive": "Check for updates on Startup",
         "heathDescription": "The Health URL is fetched via an HTTP GET request to determine whether an internet connection is available.",
-        "healthUrl": "Health URL"
+        "healthUrl": "Health URL",
+        "toastTitle": "Setting saved",
+        "toastDescription": "The settings where saved automatically"
     }
 }

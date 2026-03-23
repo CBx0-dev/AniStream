@@ -11,6 +11,8 @@ import {StreamViewModel} from "@views/StreamView.model";
 import {PlayerViewModel} from "@views/PlayerView.model";
 
 import {ConfirmControlModel} from "@controls/ConfirmControl.model";
+import ToastContainer from "@controls/ToastContainer.vue";
+import {InfoToastModel} from "@controls/InfoToast.model";
 
 import {ProviderService} from "@services/provider.service";
 import {SeriesService} from "@services/series.service";
@@ -44,6 +46,11 @@ export class AppConfig implements AppShell {
 
     alert: AppShell.AlertConfig = {
         confirm: ConfirmControlModel
+    }
+
+    toast: AppShell.ToastConfig = {
+        container: ToastContainer,
+        info: InfoToastModel,
     }
 
     public constructor(app: App) {

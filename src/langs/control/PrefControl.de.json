@@ -31,6 +31,8 @@
     "updater": {
         "updatesActive": "Automatisch nach Updates suchen",
         "heathDescription": "Die Health-URL wird per HTTP-GET-Anfrage abgerufen, um zu prüfen, ob eine Internetverbindung besteht.",
-        "healthUrl": "Health URL"
+        "healthUrl": "Health URL",
+        "toastTitle": "Einstellung gespeichert",
+        "toastDescription": "Die Einstellung wurde automatisch gespeichert"
     }
 }
