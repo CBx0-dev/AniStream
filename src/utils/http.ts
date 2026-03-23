@@ -53,3 +53,12 @@ export async function post(url: string, headers: [string, string][]): Promise<st
 
     return await response.text();
 }
+
+export async function runHealthz(healthzUrl: string): Promise<boolean> {
+    try {
+        await get(healthzUrl);
+        return true;
+    } catch {
+        return false;
+    }
+}

@@ -4,7 +4,8 @@
     "title": "Preferences",
     "sections": {
         "theme": "Theme",
-        "language": "Language"
+        "language": "Language",
+        "updater": "Updater"
     },
     "aniworldLight": {
         "title": "AniWorld.to Light",
@@ -26,5 +27,10 @@
         "interfaceLanguage": "Interface language",
         "en": "English",
         "de": "German"
+    },
+    "updater": {
+        "updatesActive": "Check for updates on Startup",
+        "heathDescription": "The Health URL is fetched via an HTTP GET request to determine whether an internet connection is available.",
+        "healthUrl": "Health URL"
     }
 }

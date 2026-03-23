@@ -4,7 +4,8 @@
     "title": "Einstellungen",
     "sections": {
         "theme": "Design",
-        "language": "Sprache"
+        "language": "Sprache",
+        "updater": "Updater"
     },
     "aniworldLight": {
         "title": "AniWorld.to Hell",
@@ -26,5 +27,10 @@
         "interfaceLanguage": "UI Sprache",
         "en": "Englisch",
         "de": "Deutsch"
+    },
+    "updater": {
+        "updatesActive": "Automatisch nach Updates suchen",
+        "heathDescription": "Die Health-URL wird per HTTP-GET-Anfrage abgerufen, um zu prüfen, ob eine Internetverbindung besteht.",
+        "healthUrl": "Health URL"
     }
 }
