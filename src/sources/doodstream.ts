@@ -53,9 +53,8 @@ export async function getStream(embedUrl: string): Promise<string> {
     return directLink;
 }
 
-export async function getPreviewImage(embeddedURL: string): Promise<string> {
-    throw "No preview image found in DOodStream page.";
-
+export async function getPreviewImage(_embeddedURL: string): Promise<string> {
+    throw "No preview image found in DoodStream page.";
 }
 
 export function getHeaders(): [string, string][] {
