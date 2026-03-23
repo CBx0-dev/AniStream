@@ -5,6 +5,7 @@ import * as speedfiles from "@sources/speedfiles";
 import * as luluvdo from "@sources/luluvdo";
 import * as loadx from "@sources/loadx";
 import * as doodstream from "@sources/doodstream";
+import * as filemoon from "@sources/filemoon";
 
 export interface IStreamSource {
     getStream(embeddedURL: string): Promise<string>;
@@ -14,7 +15,7 @@ export interface IStreamSource {
     getHeaders(): [string, string][];
 }
 
-export type SupportedSource = "voe" | "vidoza" | "vidmoly" | "speedfiles" | "luluvdo" | "loadx" | "doodstream";
+export type SupportedSource = "voe" | "vidoza" | "vidmoly" | "speedfiles" | "luluvdo" | "loadx" | "doodstream" | "filemoon";
 
 const supportedSources: Record<SupportedSource, IStreamSource> = {
     voe: voe,
@@ -23,7 +24,8 @@ const supportedSources: Record<SupportedSource, IStreamSource> = {
     speedfiles: speedfiles,
     luluvdo: luluvdo,
     loadx: loadx,
-    doodstream: doodstream
+    doodstream: doodstream,
+    filemoon: filemoon
 }
 
 export function getSource(name: string | SupportedSource): IStreamSource | null {
@@ -54,6 +56,8 @@ export function getSourceKeyFromName(name: string): SupportedSource | null {
             return "loadx";
         case "Doodstream":
             return "doodstream";
+        case "FileMoon":
+            return "filemoon";
         default:
             return null;
     }
