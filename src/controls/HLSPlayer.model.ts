@@ -20,8 +20,8 @@ export class HLSPlayerModel extends UserControl {
     private interval: NodeJS.Timeout | null = null;
     private episodeId: number = this.ref(0);
 
-    private settingsService: SettingsService;
-    private episodeService: EpisodeService;
+    private readonly settingsService: SettingsService;
+    private readonly episodeService: EpisodeService;
 
     public loaded: boolean = this.ref(false);
     public error: string | null = this.ref(null);
@@ -35,14 +35,14 @@ export class HLSPlayerModel extends UserControl {
         this.episodeService = this.ctx.getService(EpisodeService);
     }
 
-    public mounted(): void {
+    protected mounted(): void {
         this.video = document.getElementById("video-player") as HTMLVideoElement | null;
 
         // Trigger loading here to prevent long waiting times
         this.loadHls()
     }
 
-    public beforeUnmount(): void {
+    protected beforeUnmount(): void {
         if (this.interval) {
             clearInterval(this.interval);
             this.interval = null;
