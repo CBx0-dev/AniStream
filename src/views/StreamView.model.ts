@@ -5,6 +5,7 @@ import {AlertService} from "vue-mvvm/alert";
 
 import StreamView from "@views/StreamView.vue";
 import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
+import {PlayerViewModel} from "@views/PlayerView.model";
 
 import {SeriesModel} from "@models/series.model";
 import {SeasonModel} from "@models/season.model";
@@ -12,14 +13,13 @@ import {EpisodeModel} from "@models/episode.model";
 import {GenreModel} from "@models/genre.model";
 
 import {ProviderService} from "@services/provider.service";
-import {I18nService} from "@/services/i18n.service";
+import {I18nService} from "@services/i18n.service";
 import {GenreService} from "@services/genre.service";
 import {SeriesService} from "@services/series.service";
 import {SeasonService} from "@services/season.service";
 import {EpisodeService} from "@services/episode.service";
 
 import I18n from "@utils/i18n";
-import {PlayerViewModel} from "@views/PlayerView.model";
 
 export class StreamViewModel extends ViewModel {
     public static readonly component: Component = StreamView;
