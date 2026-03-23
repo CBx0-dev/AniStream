@@ -1,5 +1,12 @@
 {
     "$lang": "en",
     "$group": "HLSPlayer",
-    "selectProvider": "Select provider"
+    "selectProvider": "Select provider",
+    "rewind": "Rewind 5 seconds",
+    "pause": "Pause",
+    "play": "Play",
+    "volume": "Volume {0}%",
+    "exitFullscreen": "Exit Fullscreen",
+    "enterFullscreen": "Enter Fullscreen",
+    "chooseProvider": "Choose Provider"
 }
