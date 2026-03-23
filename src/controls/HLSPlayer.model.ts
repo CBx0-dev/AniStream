@@ -8,6 +8,7 @@ import {EpisodeService} from "@services/episode.service";
 import {SettingsService} from "@services/settings.service";
 
 import {getSource, IStreamSource} from "@sources";
+import {type EpisodeModel} from "@/models/episode.model";
 
 type HlsModule = typeof Hls
 type HlsImport = typeof import("hls.js");
@@ -75,14 +76,22 @@ export class HLSPlayerModel extends UserControl {
         }
     }
 
-    public onLoadedMetadata(): void {
+    public async onLoadedMetadata(): Promise<void> {
         this.loaded = true;
 
+        
         if (this.interval) {
             clearInterval(this.interval);
             this.interval = null;
         }
         this.interval = setInterval(() => this.onProgression(), 10_000);
+        
+        if (this.video) {
+            const episode: EpisodeModel | null = await this.episodeService.getEpisode(this.episodeId);
+            if (episode) {
+                this.video.currentTime = episode.stopped_time;
+            }
+        }
     }
 
     public async onSeeked(): Promise<void> {
