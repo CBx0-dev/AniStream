@@ -97,4 +97,14 @@ export class EpisodeService extends DbServiceBase {
             episodeId
         );
     }
+
+    public async updateEpisodesProgression(seasonId: number, percentageWatched: number): Promise<void> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        await session.execute(
+            "UPDATE episode SET percentage_watched = ? WHERE season_id = ?;",
+            percentageWatched,
+            seasonId
+        );
+    }
 }
