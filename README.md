@@ -2,6 +2,12 @@
 
 Desktop stream host for AniWorld.to and S.TO
 
+![Provider](./README/Provider.png)
+
+![Series](./README/Series.png)
+
+![Serie](./README/Serie.png)
+
 ## Installing
 
 | Platform | x86_64 / amd64 / x64                                                                                             | aarch64                                                            |
