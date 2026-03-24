@@ -143,5 +143,34 @@ const vm: PrefControlModel = useUserControl(PrefControlModel);
                 </button>
             </div>
         </section>
+
+        <div class="divider"></div>
+
+        <section>
+            <h2 class="text-lg font-semibold mb-4 opacity-70 uppercase tracking-wide">
+                <Text :target="I18n.PrefControl.sections.updater"/>
+            </h2>
+            <div class="flex flex-col gap-4">
+                <label class="label">
+                    <input 
+                        type="checkbox"
+                        :checked="vm.updatesActive"
+                        class="toggle toggle-primary"
+                        @change="vm.onUpdatesActiveToggle()"/>
+                    <Text :target="I18n.PrefControl.updater.updatesActive" />
+                </label>
+                <div>    
+                    <p class="opacity-70 mb-1">
+                        <Text :target="I18n.PrefControl.updater.heathDescription" />
+                    </p>
+                    <label class="input w-148">
+                        <label class="label">
+                            <Text :target="I18n.PrefControl.updater.healthUrl" />
+                        </label>
+                        <input type="url" v-model="vm.healthUrl" @change="vm.onHealthUrlChange()" />
+                    </label>
+                </div>
+            </div>
+        </section>
     </div>
 </template>

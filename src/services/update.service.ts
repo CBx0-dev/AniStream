@@ -1,10 +1,13 @@
 import {check, Update} from "@tauri-apps/plugin-updater";
+
 import {ReadableGlobalContext} from "vue-mvvm";
 import {DialogService} from "vue-mvvm/dialog";
 
 import {UpdateControlModel} from "@controls/UpdateControl.model";
 
 import {SettingsService} from "@services/settings.service";
+
+import * as http from "@utils/http";
 
 export class UpdateService {
     public static readonly CHECK_OFFSET: number = 2_000;
@@ -41,6 +44,13 @@ export class UpdateService {
     private async checkForUpdates(): Promise<void> {
         const dialogService: DialogService = this.ctx.getService(DialogService);
         const settingsService: SettingsService = this.ctx.getService(SettingsService);
+
+        if (!settingsService.updatesActive ||
+            !window.navigator.onLine ||
+            !await http.runHealthz(settingsService.healthz.value)
+        ) {
+            return;
+        }
 
         const update: Update | null = await check();
 

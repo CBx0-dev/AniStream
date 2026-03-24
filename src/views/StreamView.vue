@@ -75,14 +75,40 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                     <template v-for="season of vm.seasons" :key="season.season_id">
                         <label class="tab">
                             <input type="radio" name="stream-tabs"/>
-                            <span v-if="season.season_number == 0" class="inline-flex items-center gap-1">
-                                <LucidePopcorn/>
-                                <Text :target="I18n.StreamView.movies"/>
-                            </span>
-                            <span v-else class="inline-flex items-center gap-1">
-                                <LucideFolder/>
-                                <Text :target="I18n.StreamView.season"/>
-                                {{ season.season_number }}
+                            <span class="inline-flex items-center gap-1">
+                                <template v-if="season.season_number == 0">
+                                    <LucidePopcorn/>
+                                    <Text :target="I18n.StreamView.movies"/>
+                                </template>
+                                <template v-else>
+                                    <LucideFolder/>
+                                    <Text :target="I18n.StreamView.season"/>
+                                    {{ season.season_number }}
+                                </template>
+                                <template v-if="vm.isSeasonWatched(season)">
+                                    <button class="btn btn-xs btn-square btn-ghost z-50"
+                                            :popovertarget="vm.getPopoverId(season.season_id)"
+                                            :style="`anchor-name:${vm.getAnchorId(season.season_id)}`"
+                                            @click.stop>
+                                        <LucideEllipsisVertical/>
+                                    </button>
+                                    <Teleport to="#app">
+                                        <ul class="dropdown menu w-fit rounded-box bg-base-100 shadow-sm"
+                                            popover
+                                            :id="vm.getPopoverId(season.season_id)"
+                                            :style="`position-anchor:${vm.getAnchorId(season.season_id)}`">
+                                            <li>
+                                                <button class="items-center text-nowrap"
+                                                        :popovertarget="vm.getPopoverId(season.season_id)"
+                                                        popovertargetaction="hide"
+                                                        @click="vm.onSeasonMarkWatchedBtn(season)">
+                                                    <LucideCheck/>
+                                                    <Text :target="I18n.StreamView.markAsWatched"/>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </Teleport>
+                                </template>
                             </span>
                         </label>
                         <div class="tab-content bg-base-100 border-base-300 p-6 overflow-y-auto">
@@ -112,23 +138,24 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                                             v-if="episode.percentage_watched < 80"
                                             class="absolute right-0 top-0">
                                             <button class="btn btn-square btn-sm btn-ghost"
-                                                    :popovertarget="vm.getPopoverId(episode.episode_id)"
-                                                    :style="`anchor-name:${vm.getAnchorId(episode.episode_id)}`"
+                                                    :popovertarget="vm.getPopoverId(episode.season_id, episode.episode_id)"
+                                                    :style="`anchor-name:${vm.getAnchorId(episode.season_id, episode.episode_id)}`"
                                                     @click.stop>
                                                 <LucideEllipsisVertical/>
                                             </button>
                                             <Teleport to="#app">
                                                 <ul class="dropdown menu w-fit rounded-box bg-base-100 shadow-sm"
                                                     popover
-                                                    :id="vm.getPopoverId(episode.episode_id)"
-                                                    :style="`position-anchor:${vm.getAnchorId(episode.episode_id)}`"
-                                                    @click="vm.onPopOverClicked($event)">
+                                                    :id="vm.getPopoverId(episode.season_id, episode.episode_id)"
+                                                    :style="`position-anchor:${vm.getAnchorId(episode.season_id, episode.episode_id)}`">
                                                     <li>
-                                                        <a class="items-center text-nowrap"
-                                                           @click="vm.onMarkWatchedBtn(episode)">
+                                                        <button class="items-center text-nowrap"
+                                                                :popovertarget="vm.getPopoverId(episode.season_id, episode.episode_id)"
+                                                                popovertargetaction="hide"
+                                                                @click="vm.onEpisodeMarkWatchedBtn(episode)">
                                                             <LucideCheck/>
                                                             <Text :target="I18n.StreamView.markAsWatched"/>
-                                                        </a>
+                                                        </button>
                                                     </li>
                                                 </ul>
                                             </Teleport>

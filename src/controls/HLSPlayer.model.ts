@@ -9,6 +9,7 @@ import {SettingsService} from "@services/settings.service";
 import {I18nService} from "@services/i18n.service";
 
 import {getSource, IStreamSource} from "@sources";
+import {type EpisodeModel} from "@/models/episode.model";
 
 type HlsModule = typeof Hls
 type HlsImport = typeof import("hls.js");
@@ -71,6 +72,7 @@ export class HLSPlayerModel extends UserControl {
 
     protected beforeUnmount(): void {
         document.removeEventListener("keyup", this.onShortcut);
+
         if (this.interval) {
             clearInterval(this.interval);
             this.interval = null;
@@ -108,9 +110,10 @@ export class HLSPlayerModel extends UserControl {
         }
     }
 
-    public onLoadedMetadata(): void {
+    public async onLoadedMetadata(): Promise<void> {
         this.loaded = true;
 
+        
         if (this.interval) {
             clearInterval(this.interval);
             this.interval = null;
@@ -125,6 +128,13 @@ export class HLSPlayerModel extends UserControl {
 
             this.renderTimes();
         }, 1_000);
+
+        if (this.video) {
+            const episode: EpisodeModel | null = await this.episodeService.getEpisode(this.episodeId);
+            if (episode) {
+                this.video.currentTime = episode.stopped_time;
+            }
+        }
     }
 
     public async onSeeked(event: MouseEvent): Promise<void> {
@@ -144,6 +154,7 @@ export class HLSPlayerModel extends UserControl {
         if (!this.video) {
             return;
         }
+      
         if (event.altKey ||
             event.ctrlKey ||
             event.metaKey ||
