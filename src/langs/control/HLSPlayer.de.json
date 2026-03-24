@@ -1,5 +1,12 @@
 {
     "$lang": "de",
     "$group": "HLSPlayer",
-    "selectProvider": "Anbieter auswählen"
+    "selectProvider": "Anbieter auswählen",
+    "rewind": "5 Sekunden zurückspulen",
+    "pause": "Pause",
+    "play": "Abspielen",
+    "volume": "Lautstärke {0}%",
+    "exitFullscreen": "Vollbild beenden",
+    "enterFullscreen": "Vollbildmodus",
+    "chooseProvider": "Anbieter wählen"
 }
