@@ -72,7 +72,7 @@ export class StreamViewModel extends ViewModel {
         this.episodeService = this.ctx.getService(EpisodeService);
     }
 
-    public async mounted(): Promise<void> {
+    protected async mounted(): Promise<void> {
         this.genres.clear();
         this.mainGenre = null;
 
@@ -161,24 +161,34 @@ export class StreamViewModel extends ViewModel {
         });
     }
 
-    public onPopOverClicked(ev: PointerEvent): void {
-        const popover: HTMLElement | null = (<HTMLElement>ev.target).closest("[popover]") as HTMLElement | null
-        if (!popover) {
-            return;
+    public async onSeasonMarkWatchedBtn(season: SeasonModel): Promise<void> {
+        await this.episodeService.updateEpisodesProgression(season.season_id, 100);
+        for (const episode of this.getEpisodes(season.season_id)) {
+            episode.percentage_watched = 100;
         }
-        popover.hidePopover();
     }
 
-    public async onMarkWatchedBtn(episode: EpisodeModel): Promise<void> {
+    public async onEpisodeMarkWatchedBtn(episode: EpisodeModel): Promise<void> {
         await this.episodeService.updateEpisodeProgression(episode.episode_id, 100, episode.stopped_time);
         episode.percentage_watched = 100;
     }
 
-    public getPopoverId(episodeId: number): string {
-        return `popover-${this.uid}-${episodeId}`;
+    public getPopoverId(seasonId: number, episodeId?: number): string {
+        if (!episodeId) {
+            return `popover-${this.uid}-${seasonId}`;
+        }
+        return `popover-${this.uid}-${seasonId}-${episodeId}`;
     }
 
-    public getAnchorId(episodeId: number): string {
-        return `--anchor-${this.uid}-${episodeId}`;
+    public getAnchorId(seasonId: number, episodeId?: number): string {
+        if (!episodeId) {
+            return `--anchor-${this.uid}-${seasonId}`;
+        }
+        return `--anchor-${this.uid}-${seasonId}-${episodeId}`;
+    }
+
+    public isSeasonWatched(season: SeasonModel): boolean {
+        const episodes: EpisodeModel[] = this.getEpisodes(season.season_id);
+        return episodes.some(episode => episode.percentage_watched < 80);
     }
 }
