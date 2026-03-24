@@ -143,9 +143,11 @@ jobs:
             libssl-dev \
             build-essential
 
-      - name: Install JS dependencies
-        run: |
-          npm ci
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run I18n generator
+        run: node i18n.gen.cjs
 
       - name: Build Application
         uses: tauri-apps/tauri-action@v0
