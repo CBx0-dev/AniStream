@@ -56,7 +56,7 @@ export function getSourceKeyFromName(name: string): SupportedSource | null {
             return "loadx";
         case "Doodstream":
             return "doodstream";
-        case "FileMoon":
+        case "Filemoon":
             return "filemoon";
         default:
             return null;
