@@ -22,5 +22,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run I18n generator
+        run: node i18n.gen.cjs
+
       - name: Build
         run: npm run build
