@@ -40,7 +40,7 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
                 </template>
             </div>
         </div>
-        <div class="grid grid-cols-[1fr_320px] grid-rows-[auto_auto_1fr] gap-4 px-5 pb-5 overflow-hidden">
+        <div class="grid grid-cols-[1fr_320px] grid-rows-[auto_auto_1fr] gap-4 px-5 pb-5 overflow-x-hidden overflow-y-auto">
             <div class="card bg-base-100 card-border border-base-300">
                 <div class="card-body">
                     <div class="aspect-video w-full h-full max-h-[810px] flex justify-center items-center">
@@ -126,7 +126,7 @@ const vm: PlayerViewModel = useViewModel(PlayerViewModel);
                     </button>
                 </div>
             </div>
-            <div class="col-span-1 overflow-hidden">
+            <div class="col-span-1 overflow-hidden min-h-[250px]">
                 <div class="h-full card bg-base-100 card-border border-base-300">
                     <div class="card-body">
                         <h1 v-if="vm.episodeTitleHasGerman" class="text-xl">
