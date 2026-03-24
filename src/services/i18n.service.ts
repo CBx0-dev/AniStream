@@ -45,6 +45,7 @@ export class I18nService {
             return this.get(target[name] as unknown as readonly [string, readonly string[]]);
         }
 
+        console.error("Unknown translation key: Path points to undefined", name);
         return "?";
     }
 
