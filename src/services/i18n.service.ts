@@ -11,7 +11,6 @@ interface I18nUnit {
 
 export class I18nService {
     private readonly groups: Map<string, Map<SupportedLocals, I18nUnit>>;
-    // TODO read from settings
     private readonly _currentLocal: Ref<SupportedLocals> = ref("en");
 
     public get currentLocal(): Readonly<Ref<SupportedLocals>> {
