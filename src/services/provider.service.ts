@@ -5,10 +5,12 @@ import {DbService, DbSession} from "@services/db.service";
 import {DefaultProvider} from "@providers/default";
 import {AniWorldProvider} from "@providers/aniworld";
 import {StoProvider} from "@providers/sto";
+import {FilmpalastProvider} from "@providers/filmpalast";
 
 export class ProviderService {
     public readonly ANIWORLD: AniWorldProvider;
     public readonly STO: StoProvider;
+    public readonly FILMPALST: FilmpalastProvider;
     private static readonly SESSION_KEY: string = "active-provider";
 
     private provider: DefaultProvider | null = null;
@@ -18,6 +20,7 @@ export class ProviderService {
 
         this.ANIWORLD = new AniWorldProvider(dbService);
         this.STO = new StoProvider(dbService);
+        this.FILMPALST = new FilmpalastProvider(dbService);
 
         this.provider = null;
     }
@@ -54,6 +57,8 @@ export class ProviderService {
                 return this.ANIWORLD;
             case StoProvider.UNIQUE_KEY:
                 return this.STO;
+            case FilmpalastProvider.UNIQUE_KEY:
+                return this.FILMPALST;
         }
 
         return null;

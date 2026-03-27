@@ -19,7 +19,7 @@ const vm: ProviderViewModel = useViewModel(ProviderViewModel);
             <h1 class="text-3xl text-center">
                 <Text :target="I18n.ProviderView.title"/>
             </h1>
-            <div class="flex justify-center pt-4">
+            <div class="flex flex-col items-center gap-4 justify-center pt-4">
                 <div class="join">
                     <div class="join-item card bg-base-100 card-border border-base-300 hover:bg-primary/50"
                          @click="vm.onAniworldBtn">
@@ -33,6 +33,13 @@ const vm: ProviderViewModel = useViewModel(ProviderViewModel);
                             <img src="/sto.svg" alt="Sto" class="w-[250px] select-none"/>
                         </div>
                     </div>
+                </div>
+                <div class="card bg-base-100 card-border border-base-300 hover:bg-primary/50"
+                     @click="vm.onFilmpalastBtn">
+                    <div class="card-body">
+                        FILMPALAST
+                    </div>
+
                 </div>
             </div>
         </div>

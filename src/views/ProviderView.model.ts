@@ -63,6 +63,16 @@ export class ProviderViewModel extends ViewModel {
         await this.routerService.navigateTo(StreamsViewModel);
     }
 
+    public async onFilmpalastBtn(): Promise<void> {
+        await this.providerService.setProvider(this.providerService.FILMPALST);
+
+        if (await this.seriesService.requiresSync()) {
+            await this.routerService.navigateTo(SyncViewModel);
+            return;
+        }
+        await this.routerService.navigateTo(StreamsViewModel);
+    }
+
     public async onSettingsBtn(): Promise<void> {
         await this.routerService.navigateTo(SettingsViewModel);
     }
