@@ -15,14 +15,14 @@ export class AniWorldProvider extends DefaultProvider {
         return AniWorldProvider.UNIQUE_KEY;
     }
 
-    public get catalogURL(): string {
-        return `${this.baseURL}/animes-alphabet`;
-    }
-
     public constructor(service: DbService) {
         super(service);
 
         this.fetcher = null;
+    }
+
+    public catalogURL(): string {
+        return `${this.baseURL}/animes-alphabet`;
     }
 
     public streamURL(guid: string): string {
@@ -47,7 +47,7 @@ export class AniWorldProvider extends DefaultProvider {
 
     public async getStorageLocation(): Promise<string> {
         const appDir: string = await path.appDataDir();
-        const dataDir: string = await path.join(appDir, "aniworld");
+        const dataDir: string = await path.join(appDir, AniWorldProvider.UNIQUE_KEY);
 
         if (!await fs.exists(dataDir)) {
             await fs.mkdir(dataDir, {

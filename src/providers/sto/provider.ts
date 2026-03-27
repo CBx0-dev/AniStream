@@ -17,14 +17,14 @@ export class StoProvider extends DefaultProvider {
         return StoProvider.UNIQUE_KEY;
     }
 
-    public get catalogURL(): string {
-        return `${this.baseURL}/serien-alphabet`;
-    }
-
     public constructor(service: DbService) {
         super(service);
 
         this.fetcher = null;
+    }
+
+    public catalogURL(): string {
+        return `${this.baseURL}/serien-alphabet`;
     }
 
     public streamURL(guid: string): string {
@@ -41,7 +41,7 @@ export class StoProvider extends DefaultProvider {
 
     public async getStorageLocation(): Promise<string> {
         const appDir: string = await path.appDataDir();
-        const dataDir: string = await path.join(appDir, "sto");
+        const dataDir: string = await path.join(appDir, StoProvider.UNIQUE_KEY);
 
         if (!await fs.exists(dataDir)) {
             await fs.mkdir(dataDir, {

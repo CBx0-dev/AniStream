@@ -171,7 +171,7 @@ export class SeriesSyncViewModel extends ViewModel {
             this.syncStatus = `Syncing Season ${season == 0 ? "Filme" : season}...`;
 
             const existingSeason: SeasonModel | undefined = this.existingSeasons.find(s => s.season_number == season);
-            const episodes: EpisodeFetchModel[] = await this.fetchService.getEpisodes(this.series.guid, season);
+            const episodes: EpisodeFetchModel[] = await this.fetchService.getEpisodes(this.series, season);
             if (existingSeason) {
                 await this.syncExistingSeason(existingSeason, episodes);
             } else {

@@ -1,5 +1,4 @@
 export interface SeriesFetchModel {
-    series_id: number;
     guid: string;
     title: string;
     description: string;

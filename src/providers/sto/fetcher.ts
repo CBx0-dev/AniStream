@@ -2,7 +2,9 @@ import {path} from "@tauri-apps/api";
 import * as fs from "@tauri-apps/plugin-fs";
 
 import {Provider} from "@services/fetch.service";
-import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";
+
+import {EpisodeLanguage, IInformationFetcher} from "@providers/default";
+import {StoProvider} from "@providers/sto/provider";
 
 import {SeriesFetchModel, SeriesModel} from "@models/series.model";
 import {GenreFetchModel} from "@models/genre.model";
@@ -12,18 +14,17 @@ import {EpisodeFetchModel} from "@models/episode.model";
 import * as http from "@utils/http";
 import * as hash from "@utils/hash";
 
-
 export class StoFetcher implements IInformationFetcher {
-    private readonly provider: DefaultProvider;
+    private readonly provider: StoProvider;
     private readonly parser: DOMParser;
 
-    public constructor(provider: DefaultProvider) {
+    public constructor(provider: StoProvider) {
         this.provider = provider;
         this.parser = new DOMParser();
     }
 
     public async getCatalog(): Promise<string[]> {
-        const html: string = await http.get(this.provider.catalogURL);
+        const html: string = await http.get(this.provider.catalogURL());
         const document: Document = this.parser.parseFromString(html, "text/html");
         const seriesLists: NodeListOf<HTMLUListElement> = document.querySelectorAll("ul.series-list");
         if (seriesLists.length == 0) {
@@ -119,7 +120,8 @@ export class StoFetcher implements IInformationFetcher {
         return seasons;
     }
 
-    public async getEpisodes(guid: string, seasonNumber: number): Promise<EpisodeFetchModel[]> {
+    public async getEpisodes(series: SeriesModel, seasonNumber: number): Promise<EpisodeFetchModel[]> {
+        const guid: string = series.guid;
         const html: string = await http.get(this.provider.seasonURL(guid, seasonNumber));
         const document: Document = this.parser.parseFromString(html, "text/html");
         const tableBody: HTMLTableSectionElement | null = document.querySelector(`table.episode-table`);

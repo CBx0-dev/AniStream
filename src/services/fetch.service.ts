@@ -43,11 +43,11 @@ export class FetchService {
         return await fetcher.getSeasons(series);
     }
 
-    public async getEpisodes(guid: string, seasonNumber: number): Promise<EpisodeFetchModel[]> {
+    public async getEpisodes(series: SeriesModel, seasonNumber: number): Promise<EpisodeFetchModel[]> {
         const provider: DefaultProvider = await this.providerService.getProvider();
         const fetcher: IInformationFetcher = provider.getFetcher();
 
-        return await fetcher.getEpisodes(guid, seasonNumber);
+        return await fetcher.getEpisodes(series, seasonNumber);
     }
 
     public async fetchProviders(guid: string, seasonNumber: number, episodeNumber: number): Promise<Provider[]> {
