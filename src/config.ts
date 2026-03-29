@@ -27,6 +27,8 @@ import {ChangelogService} from "@services/changelog.service";
 import {SettingsService} from "@services/settings.service";
 import {ReportService} from "@services/report.service";
 import {UpdateService} from "@services/update.service";
+import {UserDbService} from "@services/db/user.db";
+import {UserService} from "@services/user.service";
 
 export class AppConfig implements AppShell {
     private app: App;
@@ -71,6 +73,8 @@ export class AppConfig implements AppShell {
         ctx.registerService(SettingsService, ctx => new SettingsService(ctx));
         ctx.registerService(ReportService, ctx => new ReportService(ctx));
         ctx.registerService(UpdateService, ctx => new UpdateService(ctx));
+        ctx.registerService(UserDbService, () => new UserDbService());
+        ctx.registerService(UserService, ctx => new UserService(ctx));
 
         // Init reporting
         const reportService: ReportService = ctx.getService(ReportService);
