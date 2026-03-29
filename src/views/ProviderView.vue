@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import {useViewModel} from "vue-mvvm";
+
 import {ProviderViewModel} from "@views/ProviderView.model";
+
 import LucideSettings from "@icons/LucideSettings.vue";
+
 import I18n from "@utils/i18n";
-import Text from "@/controls/Text.vue";
+
+import Text from "@controls//Text.vue";
 
 const vm: ProviderViewModel = useViewModel(ProviderViewModel);
 </script>

@@ -34,7 +34,7 @@ export class ProviderViewModel extends ViewModel {
         this.seriesService = this.ctx.getService(SeriesService);
     }
 
-    public async mounted(): Promise<void> {
+    protected async mounted(): Promise<void> {
         if (!this.settingsService.tosAccepted.value) {
             const dialog: ToSControlModel = this.dialogService.initDialog(ToSControlModel);
             await dialog.openDialog();
