@@ -2,6 +2,7 @@ import {QueryResult} from "@tauri-apps/plugin-sql";
 import {ReadableGlobalContext} from "vue-mvvm";
 
 import {DbServiceBase, DbSession} from "@services/db.service";
+
 import {SeasonDbModel, SeasonModel} from "@models/season.model";
 
 export class SeasonService extends DbServiceBase {

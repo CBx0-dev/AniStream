@@ -1,20 +1,23 @@
 import {ReadableGlobalContext} from "vue-mvvm";
 
-import {DbService, DbSession} from "@services/db.service";
+import {DbSession} from "@services/db.service";
+import {MetadataDbService} from "@services/db/metadata.db";
 
 import {DefaultProvider} from "@providers/default";
 import {AniWorldProvider} from "@providers/aniworld";
 import {StoProvider} from "@providers/sto";
 
 export class ProviderService {
-    public readonly ANIWORLD: AniWorldProvider;
-    public readonly STO: StoProvider;
     private static readonly SESSION_KEY: string = "active-provider";
 
     private provider: DefaultProvider | null = null;
 
+    public readonly ANIWORLD: AniWorldProvider;
+    public readonly STO: StoProvider;
+
+
     public constructor(ctx: ReadableGlobalContext) {
-        let dbService: DbService = ctx.getService(DbService);
+        let dbService: MetadataDbService = ctx.getService(MetadataDbService);
 
         this.ANIWORLD = new AniWorldProvider(dbService);
         this.STO = new StoProvider(dbService);

@@ -1,7 +1,9 @@
 import {ReadableGlobalContext} from "vue-mvvm";
-import {DbServiceBase, DbSession} from "@services/db.service";
-import {SeriesDbModel, SeriesModel} from "@models/series.model";
 import {QueryResult} from "@tauri-apps/plugin-sql";
+
+import {DbServiceBase, DbSession} from "@services/db.service";
+
+import {SeriesDbModel, SeriesModel} from "@models/series.model";
 
 export class SeriesService extends DbServiceBase {
     public constructor(ctx: ReadableGlobalContext) {

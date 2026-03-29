@@ -18,7 +18,7 @@ import {ProviderService} from "@services/provider.service";
 import {SeriesService} from "@services/series.service";
 import {SeasonService} from "@services/season.service";
 import {EpisodeService} from "@services/episode.service";
-import {DbService} from "@services/db.service";
+import {MetadataDbService} from "@services/db/metadata.db";
 import {FetchService} from "@services/fetch.service";
 import {GenreService} from "@services/genre.service";
 import {WatchlistService} from "@services/watchlist.service";
@@ -65,7 +65,7 @@ export class AppConfig implements AppShell {
         ctx.registerService(EpisodeService, ctx => new EpisodeService(ctx));
         ctx.registerService(GenreService, ctx => new GenreService(ctx));
         ctx.registerService(WatchlistService, ctx => new WatchlistService(ctx));
-        ctx.registerService(DbService, () => new DbService());
+        ctx.registerService(MetadataDbService, () => new MetadataDbService());
         ctx.registerService(FetchService, ctx => new FetchService(ctx));
         ctx.registerService(ChangelogService, () => new ChangelogService());
         ctx.registerService(SettingsService, ctx => new SettingsService(ctx));

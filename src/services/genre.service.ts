@@ -1,8 +1,10 @@
 import {ReadableGlobalContext} from "vue-mvvm";
-import {GenreDbModel, GenreModel} from "@models/genre.model";
-import {DbServiceBase, DbSession} from "@services/db.service";
-import {SeriesModel} from "@models/series.model";
 import {QueryResult} from "@tauri-apps/plugin-sql";
+
+import {GenreDbModel, GenreModel} from "@models/genre.model";
+import {SeriesModel} from "@models/series.model";
+
+import {DbServiceBase, DbSession} from "@services/db.service";
 
 
 export class GenreService extends DbServiceBase {
