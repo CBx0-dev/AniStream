@@ -1,16 +1,18 @@
 import {Component} from "vue";
 import {ViewModel} from "vue-mvvm";
 import {RouteAdapter, RouterService} from "vue-mvvm/router";
+import {DialogService} from "vue-mvvm/dialog";
 
 import ProviderView from "@views/ProviderView.vue";
 import {StreamsViewModel} from "@views/StreamsView.model";
 import {SettingsViewModel} from "@views/SettingsView.model";
+import {SyncViewModel} from "@views/SyncView.model";
+
+import {ToSControlModel} from "@controls/ToSControl.model";
+
 import {ProviderService} from "@services/provider.service";
 import {SeriesService} from "@services/series.service";
-import {SyncViewModel} from "@views/SyncView.model";
-import {DialogService} from "vue-mvvm/dialog";
 import {SettingsService} from "@services/settings.service";
-import {ToSControlModel} from "@controls/ToSControl.model";
 
 export class ProviderViewModel extends ViewModel {
     public static readonly component: Component = ProviderView;
