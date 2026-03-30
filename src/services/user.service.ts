@@ -111,14 +111,18 @@ export class UserService {
         );
     }
 
-    public getAvatarSvg(profile: ProfileModel): string {
+    public getAvatarSvg(backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth): string {
         const result: dicebear.Result = dicebear.createAvatar(botttsNeutral, {
-            backgroundColor: [profile.background_color],
-            eyes: profile.eye,
-            mouth: profile.mouth
+            backgroundColor: [backgroundColor],
+            eyes: [eye],
+            mouth: [mouth]
         });
 
         return result.toDataUri()
+    }
+
+    public getAvatarSvgOfProfile(profile: ProfileModel): string {
+        return this.getAvatarSvg(profile.background_color, profile.eye, profile.mouth);
     }
 
     private async loadCache(): Promise<boolean> {

@@ -17,7 +17,7 @@ import {SettingsService} from "@services/settings.service";
 export class ProviderViewModel extends ViewModel {
     public static readonly component: Component = ProviderView;
     public static readonly route: RouteAdapter = {
-        path: "/"
+        path: "/provider"
     }
 
     private readonly routerService: RouterService;

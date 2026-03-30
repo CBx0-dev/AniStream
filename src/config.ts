@@ -9,6 +9,7 @@ import {WatchlistViewModel} from "@views/WatchlistView.model";
 import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
 import {StreamViewModel} from "@views/StreamView.model";
 import {PlayerViewModel} from "@views/PlayerView.model";
+import {ProfileViewModel} from "@views/ProfileView.model";
 
 import {ConfirmControlModel} from "@controls/ConfirmControl.model";
 import ToastContainer from "@controls/ToastContainer.vue";
@@ -42,7 +43,8 @@ export class AppConfig implements AppShell {
             WatchlistViewModel,
             SeriesSyncViewModel,
             StreamViewModel,
-            PlayerViewModel
+            PlayerViewModel,
+            ProfileViewModel
         ]
     }
 

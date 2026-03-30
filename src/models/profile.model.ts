@@ -1,7 +1,7 @@
 import type {botttsNeutral} from "@dicebear/collection";
 
-export type ProfileEye = botttsNeutral.Options["eyes"];
-export type ProfileMouth = botttsNeutral.Options["mouth"];
+export type ProfileEye = NonNullable<botttsNeutral.Options["eyes"]>[0];
+export type ProfileMouth = NonNullable<botttsNeutral.Options["mouth"]>[0];
 
 export interface ProfileDbModel {
     profile_id: number;
