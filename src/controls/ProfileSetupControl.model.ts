@@ -1,7 +1,8 @@
 import {UserControl} from "vue-mvvm";
+
 import {ProfileEye, ProfileMouth} from "@models/profile.model";
+
 import {UserService} from "@services/user.service";
-import {SettingsService} from "@services/settings.service";
 
 export class ProfileSetupControlModel extends UserControl {
     public static readonly EYES: ProfileEye[] = ["bulging", "dizzy", "eva", "frame1", "frame2", "glow", "happy", "round", "roundFrame01", "roundFrame02", "sensor", "shade01"];
