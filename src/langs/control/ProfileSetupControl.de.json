@@ -1,0 +1,36 @@
+{
+    "$lang": "de",
+    "$group": "ProfileSetupControl",
+    "title": {
+        "creation": "Profil erstellen",
+        "update": "Profil aktualisieren"
+    },
+    "sections": {
+        "eye": "Augen",
+        "mouth": "Mund",
+        "theme": "Design",
+        "language": "Sprache"
+    },
+    "theme": {
+        "aniworldDark": "Aniworld.to Dunkel",
+        "aniworldLight": "Aniworld.to Hell",
+        "stoDark": "S.TO Dunkel",
+        "stoLight": "S.TO Hell"
+    },
+    "languages": {
+        "en": "Englisch",
+        "de": "Deutsch"
+    },
+    "profile": {
+        "label": "Profilname",
+        "placeholder": "Name eingeben"
+    },
+    "background": "Hintergrundfarbe",
+    "actions": {
+        "submit": {
+            "creation": "Profil erstellen",
+            "update": "Profil speichern"
+        },
+        "cancel": "Abbrechen"
+    }
+}

@@ -91,19 +91,19 @@ export class UserService {
         return count == 0;
     }
 
-    public async createProfile(name: string, backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth): Promise<ProfileModel> {
-        const sesssion: DbSession = await this.getDatabase();
+    public async createProfile(name: string, backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth, theme: string, local: string): Promise<ProfileModel> {
+        const session: DbSession = await this.getDatabase();
         const uuid: string = crypto.randomUUID();
 
-        const result: QueryResult = await sesssion.execute(
+        const result: QueryResult = await session.execute(
             "INSERT INTO profile (uuid, name, background_color, eye, mouth, theme, lang, tos_accepted) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             uuid,
             name,
             backgroundColor,
             eye,
             mouth,
-            "aniworld-light",
-            "en",
+            theme,
+            local,
             false
         );
 
@@ -117,6 +117,22 @@ export class UserService {
             "aniworld-light",
             "en",
             false
+        );
+    }
+
+    public async updateProfile(profileId: number, name: string, backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth, theme: string, local: string, tosAccepted: boolean): Promise<void> {
+        const session: DbSession = await this.getDatabase();
+
+        await session.execute(
+            "UPDATE profile SET name = ?, background_color = ?, eye = ?, mouth = ?, theme = ?, lang = ?, tos_accepted = ? WHERE profile_id = ?",
+            name,
+            backgroundColor,
+            eye,
+            mouth,
+            theme,
+            local,
+            tosAccepted,
+            profileId
         );
     }
 

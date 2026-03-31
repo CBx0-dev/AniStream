@@ -1,18 +1,28 @@
 <script setup lang="ts">
 import {useUserControl} from "vue-mvvm";
+
 import {ProfileSetupControlModel} from "@controls/ProfileSetupControl.model";
-
-import I18n from "@utils/i18n";
-
 import Text from "@controls/Text.vue";
 import ColorPicker from "@controls/ColorPicker.vue";
 
+import I18n from "@utils/i18n";
+
 const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
+
+const props = withDefaults(defineProps<{
+    cancellable?: boolean
+}>(), {
+    cancellable: true
+});
+
 </script>
 
 <template>
     <div class="container mx-auto p-8 bg-base-100 rounded-box shadow-sm border border-base-300">
-        <h2 class="text-3xl font-bold mb-8 text-center">Create Your Profile</h2>
+        <h2 class="text-3xl font-bold mb-8 text-center">
+            <Text v-if="vm.isCreation" :target="I18n.ProfileSetupControl.title.creation" />
+            <Text v-else :target="I18n.ProfileSetupControl.title.update" />
+        </h2>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
             <div class="flex flex-col items-center gap-6">
@@ -25,15 +35,15 @@ const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
 
                 <div class="form-control w-full">
                     <label class="label">
-                        Profile Name
+                        <Text :target="I18n.ProfileSetupControl.profile.label" />
                     </label>
-                    <input type="text" v-model="vm.name" placeholder="Enter your name"
+                    <input type="text" v-model="vm.name" :placeholder="vm.i18n(I18n.ProfileSetupControl.profile.placeholder)"
                            class="input input-bordered w-full focus:input-primary"/>
                 </div>
 
                 <div class="form-control w-full">
                     <label class="label">
-                        Background Color
+                        <Text :target="I18n.ProfileSetupControl.background" />
                     </label>
                     <ColorPicker :initial-color="vm.backgroundColor" @update:color="(color: string) => vm.backgroundColor = color" />
                 </div>
@@ -42,7 +52,7 @@ const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
                 <div>
                     <h2 class="text-sm font-semibold mb-5 opacity-70 uppercase tracking-widest flex items-center gap-2">
                         <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                        Eyes
+                        <Text :target="I18n.ProfileSetupControl.sections.eye" />
                     </h2>
                     <div class="flex overflow-x-auto gap-4 py-2 px-1 no-scrollbar">
                         <button v-for="eye in ProfileSetupControlModel.EYES"
@@ -57,7 +67,7 @@ const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
                 <div>
                     <h2 class="text-sm font-semibold mb-5 opacity-70 uppercase tracking-widest flex items-center gap-2">
                         <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                        Mouth
+                        <Text :target="I18n.ProfileSetupControl.sections.mouth" />
                     </h2>
                     <div class="flex overflow-x-auto gap-4 py-2 px-1 no-scrollbar">
                         <button v-for="mouth in ProfileSetupControlModel.MOUTHS"
@@ -74,7 +84,7 @@ const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
                     <section>
                         <h2 class="text-sm font-semibold mb-5 opacity-70 uppercase tracking-widest flex items-center gap-2">
                             <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                            <Text :target="I18n.PrefControl.sections.theme"/>
+                            <Text :target="I18n.ProfileSetupControl.sections.theme" />
                         </h2>
                         <div class="grid grid-cols-[minmax(auto,288px)_minmax(auto,288px)] w-full gap-4">
                             <button
@@ -83,7 +93,7 @@ const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
                                 :data-selected="vm.theme == 'aniworld-light'"
                                 class="relative w-full max-w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
                                 <h3 class="text-lg font-semibold">
-                                    <Text :target="I18n.PrefControl.aniworldLight.title"/>
+                                    <Text :target="I18n.ProfileSetupControl.theme.aniworldLight" />
                                 </h3>
 
                                 <div class="mt-4 flex gap-2">
@@ -100,7 +110,7 @@ const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
                                 :data-selected="vm.theme == 'aniworld-dark'"
                                 class="relative w-full max-w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
                                 <h3 class="text-lg font-semibold">
-                                    <Text :target="I18n.PrefControl.aniworldDark.title"/>
+                                    <Text :target="I18n.ProfileSetupControl.theme.aniworldDark" />
                                 </h3>
 
                                 <div class="mt-4 flex gap-2">
@@ -117,7 +127,7 @@ const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
                                 :data-selected="vm.theme == 'sto-light'"
                                 class="relative w-full max-w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
                                 <h3 class="text-lg font-semibold">
-                                    <Text :target="I18n.PrefControl.stoLight.title"/>
+                                    <Text :target="I18n.ProfileSetupControl.theme.stoLight" />
                                 </h3>
 
                                 <div class="mt-4 flex gap-2">
@@ -134,7 +144,7 @@ const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
                                 :data-selected="vm.theme == 'sto-dark'"
                                 class="relative w-full max-w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
                                 <h3 class="text-lg font-semibold">
-                                    <Text :target="I18n.PrefControl.stoDark.title"/>
+                                    <Text :target="I18n.ProfileSetupControl.theme.stoDark" />
                                 </h3>
 
                                 <div class="mt-4 flex gap-2">
@@ -149,7 +159,7 @@ const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
                     <section>
                         <h2 class="text-sm font-semibold mb-5 opacity-70 uppercase tracking-widest flex items-center gap-2">
                             <span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                            <Text :target="I18n.PrefControl.sections.language"/>
+                            <Text :target="I18n.ProfileSetupControl.sections.language"/>
                         </h2>
                         <div class="grid grid-cols-[minmax(auto,288px)_minmax(auto,288px)] w-full gap-4">
                             <button
@@ -160,7 +170,7 @@ const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
                                     <span class="text-xl leading-none">EN</span>
                                     <div class="flex-1">
                                         <h3 class="text-base font-semibold">
-                                            <Text :target="I18n.PrefControl.languages.en"/>
+                                            <Text :target="I18n.ProfileSetupControl.languages.en"/>
                                         </h3>
                                     </div>
                                 </div>
@@ -174,7 +184,7 @@ const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
                                     <span class="text-xl leading-none">DE</span>
                                     <div class="flex-1">
                                         <h3 class="text-base font-semibold">
-                                            <Text :target="I18n.PrefControl.languages.de"/>
+                                            <Text :target="I18n.ProfileSetupControl.languages.de"/>
                                         </h3>
                                     </div>
                                 </div>
@@ -186,10 +196,15 @@ const vm: ProfileSetupControlModel = useUserControl(ProfileSetupControlModel);
         </div>
         <div class="flex flex-col md:flex-row items-center justify-end gap-6 pt-8">
             <div class="flex gap-4 w-full md:w-auto">
-                <button class="btn btn-ghost flex-1 md:flex-none">Cancel</button>
+                <button v-if="props.cancellable"
+                        class="btn btn-ghost flex-1 md:flex-none"
+                        @click="vm.onCancelBtn()">
+                    <Text :target="I18n.ProfileSetupControl.actions.cancel" />
+                </button>
                 <button class="btn btn-primary px-12 flex-1 md:flex-none" :disabled="!vm.name"
-                        @click="vm.onCreateProfileBtn()">
-                    Create Profile
+                        @click="vm.onCreateOrEditProfileBtn()">
+                    <Text v-if="vm.isCreation" :target="I18n.ProfileSetupControl.actions.submit.creation" />
+                    <Text v-else :target="I18n.ProfileSetupControl.actions.submit.update" />
                 </button>
             </div>
         </div>
