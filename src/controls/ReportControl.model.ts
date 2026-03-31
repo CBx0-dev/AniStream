@@ -27,11 +27,12 @@ export class ReportControlModel extends DialogControl implements Action<ReportRe
     public title: string = this.ref("");
     public errorStack: string = this.ref("");
     public message: string = this.ref("");
-    public platform: string = this.computed(() => `${getPlatform()} ${getArch()}`);
-    public lang: string = this.computed(() => this.settingsService.lang.value);
-    public theme: string = this.computed(() => this.settingsService.theme.value);
-    public version: string = this.computed(() => packageJSON.version);
-    public placeholder: string = this.computed(() => this.i18nService.get(I18n.ReportControl.placeholder));
+    public lang: string = this.ref("en");
+    public theme: string = this.ref("aniworld-light");
+
+    public readonly platform: string = this.computed(() => `${getPlatform()} ${getArch()}`);
+    public readonly version: string = this.computed(() => packageJSON.version);
+    public readonly placeholder: string = this.computed(() => this.i18nService.get(I18n.ReportControl.placeholder));
 
     public constructor(title: string, error: any) {
         super();
@@ -44,6 +45,11 @@ export class ReportControlModel extends DialogControl implements Action<ReportRe
         } else {
             this.errorStack = JSON.stringify(error, null, 2);
         }
+    }
+
+    protected async mounted(): Promise<void> {
+        this.lang = await this.settingsService.getLocal();
+        this.theme = await this.settingsService.getTheme();
     }
 
     public onOpen(): void {

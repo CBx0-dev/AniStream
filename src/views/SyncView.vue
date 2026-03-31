@@ -17,7 +17,7 @@ const vm: SyncViewModel = useViewModel(SyncViewModel);
         <div class="flex justify-center pt-4">
             <div class="card bg-base-100 card-border border-base-300 w-105">
                 <figure>
-                    <img :src="vm.getSyncImage()" alt="Sync" class="h-[300px]" />
+                    <img v-if="vm.syncImage" :src="vm.syncImage" alt="Sync" class="h-[300px]" />
                 </figure>
                 <div v-if="vm.isPreparing" class="card-body px-3 pt-0 pb-3">
                     <p>

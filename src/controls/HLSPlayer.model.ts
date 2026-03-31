@@ -23,9 +23,9 @@ export class HLSPlayerModel extends UserControl {
     private timeout: NodeJS.Timeout | null = null;
     private episodeId: number = this.ref(0);
 
-    private settingsService: SettingsService;
-    private episodeService: EpisodeService;
-    private i18nService: I18nService;
+    private readonly settingsService: SettingsService;
+    private readonly episodeService: EpisodeService;
+    private readonly i18nService: I18nService;
 
     public loaded: boolean = this.ref(false);
     public error: string | null = this.ref(null);
@@ -34,8 +34,9 @@ export class HLSPlayerModel extends UserControl {
     public volume: number = this.ref(100);
     public isRemainingTimeMode: boolean = this.ref(false);
     public showControls: boolean = this.ref(true);
+    public chooseImage: string | null = this.ref(null);
 
-    public neverLoaded: boolean = this.computed(() => this.episodeId == 0);
+    public readonly neverLoaded: boolean = this.computed(() => this.episodeId == 0);
 
     public constructor() {
         super();
@@ -52,7 +53,8 @@ export class HLSPlayerModel extends UserControl {
         return this.i18nService.get(key, ...args);
     }
 
-    protected mounted(): void {
+    protected async mounted(): Promise<void> {
+        this.chooseImage = await this.settingsService.getImageVariant("choose", "svg");
         this.video = document.getElementById("video-player") as HTMLVideoElement | null;
         this.videoWrapper = document.getElementById("video-player-wrapper") as HTMLDivElement | null;
 
@@ -81,10 +83,6 @@ export class HLSPlayerModel extends UserControl {
             clearTimeout(this.timeout as any);
             this.timeout = null;
         }
-    }
-
-    public getChooseImage(): string {
-        return this.settingsService.getImageVariant("choose", "svg");
     }
 
     public async playStream(episodeId: number, provider: Provider): Promise<void> {

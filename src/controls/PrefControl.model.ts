@@ -11,8 +11,9 @@ export class PrefControlModel extends UserControl {
     private readonly i18nService: I18nService;
     private readonly settingsService: SettingsService
 
-    public readonly activeTheme: string = this.computed(() => this.settingsService.theme.value);
-    public readonly activeLocal: string = this.computed(() => this.settingsService.lang.value);
+    public activeTheme: string = this.ref("aniworld-light");
+    public activeLocal: string = this.ref("en");
+
     public readonly updatesActive: boolean = this.computed(() => this.settingsService.updatesActive.value);
     
     public healthUrl: string = this.ref("");
@@ -28,28 +29,39 @@ export class PrefControlModel extends UserControl {
         this.healthUrl = this.settingsService.healthz.value;
     }
 
-    public onAniworldLightThemeBtn(): void {
-        this.settingsService.theme = "aniworld-light";
+    protected async mounted(): Promise<void> {
+        this.activeTheme = await this.settingsService.getTheme();
+        this.activeLocal = await this.settingsService.getLocal();
     }
 
-    public onAniworldDarkThemeBtn(): void {
-        this.settingsService.theme = "aniworld-dark";
+    public async onAniworldLightThemeBtn(): Promise<void> {
+        this.activeTheme = "aniworld-light";
+        await this.settingsService.setTheme("aniworld-light");
     }
 
-    public onStoLightThemeBtn(): void {
-        this.settingsService.theme = "sto-light";
+    public async onAniworldDarkThemeBtn(): Promise<void> {
+        this.activeTheme = "aniworld-dark";
+        await this.settingsService.setTheme("aniworld-dark");
     }
 
-    public onStoDarkThemeBtn(): void {
-        this.settingsService.theme = "sto-dark";
+    public async onStoLightThemeBtn(): Promise<void> {
+        this.activeTheme = "sto-light";
+        await this.settingsService.setTheme("sto-light");
     }
 
-    public onEnLocalBtn(): void {
-        this.settingsService.lang = "en";
+    public async onStoDarkThemeBtn(): Promise<void> {
+        this.activeTheme = "sto-dark";
+        await this.settingsService.setTheme("sto-dark");
     }
 
-    public onDeLocalBtn(): void {
-        this.settingsService.lang = "de";
+    public async onEnLocalBtn(): Promise<void> {
+        this.activeLocal = "en";
+        await this.settingsService.setLocal("en");
+    }
+
+    public async onDeLocalBtn(): Promise<void> {
+        this.activeLocal = "de";
+        await this.settingsService.setLocal("de");
     }
 
     public onUpdatesActiveToggle(): void {

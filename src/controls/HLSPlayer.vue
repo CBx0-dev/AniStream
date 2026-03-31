@@ -74,7 +74,7 @@ const vm: HLSPlayerModel = useUserControl(HLSPlayerModel);
     </div>
     <div v-show="!vm.loaded && !vm.error" class="flex flex-col gap-4 select-none">
         <template v-if="vm.neverLoaded">
-            <img :src="vm.getChooseImage()" :alt="vm.i18n(I18n.HLSPlayer.chooseProvider)" class="w-full"/>
+            <img v-if="vm.chooseImage" :src="vm.chooseImage" :alt="vm.i18n(I18n.HLSPlayer.chooseProvider)" class="w-full"/>
             <h1 class="font-semibold text-xl text-center">
                 <Text :target="I18n.HLSPlayer.selectProvider"/>
             </h1>

@@ -23,6 +23,15 @@ export class UserService {
     }
 
     public async getActiveProfile(): Promise<ProfileModel> {
+        const profile: ProfileModel | null = await this.getActiveProfileOrDefault();
+        if (profile) {
+            return profile;
+        }
+
+        throw "No active profile set and no profile wa registered in the cache";
+    }
+
+    public async getActiveProfileOrDefault(): Promise<ProfileModel | null> {
         if (this.activeProfile) {
             return this.activeProfile;
         }
@@ -31,7 +40,7 @@ export class UserService {
             return this.activeProfile!;
         }
 
-        throw "No active profile set and no profile wa registered in the cache";
+        return null;
     }
 
     public async getProfiles(): Promise<ProfileModel[]> {

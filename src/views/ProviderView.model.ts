@@ -37,7 +37,7 @@ export class ProviderViewModel extends ViewModel {
     }
 
     protected async mounted(): Promise<void> {
-        if (!this.settingsService.tosAccepted.value) {
+        if (!await this.settingsService.isTosAccepted()) {
             const dialog: ToSControlModel = this.dialogService.initDialog(ToSControlModel);
             await dialog.openDialog();
             await this.runAction(dialog);
