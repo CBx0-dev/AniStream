@@ -15,7 +15,10 @@ const vm: ProfileViewModel = useViewModel(ProfileViewModel);
         <ProfileSetupControl ref="profile-setup-control" :cancellable="vm.isProfileSetupFormCancellable" />
     </div>
     <div v-else class="container flex justify-center items-center h-2/3 m-auto gap-4">
-        <button v-for="profile of vm.profiles" :key="profile.profile_id" class="group flex flex-col items-center gap-2 focus:outline-none">
+        <button v-for="profile of vm.profiles"
+                :key="profile.profile_id"
+                class="group flex flex-col items-center gap-2 focus:outline-none"
+                @click="vm.onProfileItem(profile)">
             <div class="relative rounded-box border border-base-300 bg-base-100 transition hover:border-primary group-focus:border-primary group-focus:ring-2 group-focus:ring-primary overflow-clip">
                 <img :src="vm.getProfilePicture(profile)"
                      :alt="profile.name"

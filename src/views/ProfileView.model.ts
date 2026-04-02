@@ -1,8 +1,9 @@
 import {Component, nextTick} from "vue";
 import {ActionResult, ViewModel} from "vue-mvvm";
-import {RouteAdapter} from "vue-mvvm/router";
+import {RouteAdapter, RouterService} from "vue-mvvm/router";
 
 import ProfileView from "@views/ProfileView.vue";
+import {ProviderViewModel} from "@views/ProviderView.model";
 
 import {UserService} from "@services/user.service";
 
@@ -16,6 +17,7 @@ export class ProfileViewModel extends ViewModel {
         path: "/"
     }
 
+    private readonly routerService: RouterService;
     private readonly userService: UserService;
 
     private readonly profileSetupControl: ProfileSetupControlModel | null;
@@ -27,6 +29,7 @@ export class ProfileViewModel extends ViewModel {
     public constructor() {
         super();
 
+        this.routerService = this.ctx.getService(RouterService);
         this.userService = this.ctx.getService(UserService);
 
         this.profileSetupControl = this.getUserControl("profile-setup-control");
@@ -50,6 +53,11 @@ export class ProfileViewModel extends ViewModel {
             this.profiles.push(result.data);
             this.showProfileSetupForm = false;
         }
+    }
+
+    public async onProfileItem(profile: ProfileModel): Promise<void> {
+        await this.userService.setActiveProfile(profile);
+        await this.routerService.navigateTo(ProviderViewModel);
     }
 
     public getProfilePicture(profile: ProfileModel): string {

@@ -1,16 +1,22 @@
 import {path} from "@tauri-apps/api";
+import {QueryResult} from "@tauri-apps/plugin-sql";
+
 import {ReadableGlobalContext} from "vue-mvvm";
+
 import * as dicebear from "@dicebear/core";
 import {botttsNeutral} from "@dicebear/collection";
 
 import {UserDbService} from "@services/db/user.db";
 import {DbSession} from "@services/db.service";
+
 import {ProfileDbModel, ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model";
-import {QueryResult} from "@tauri-apps/plugin-sql";
+import {SettingsService} from "@services/settings.service";
 
 
 export class UserService {
     private static readonly SESSION_KEY: string = "active-profile";
+
+    private readonly ctx: ReadableGlobalContext;
 
     private activeProfile: ProfileModel | null = null;
 
@@ -18,6 +24,8 @@ export class UserService {
     private readonly dbService: UserDbService;
 
     public constructor(ctx: ReadableGlobalContext) {
+        this.ctx = ctx;
+
         this._session = null;
         this.dbService = ctx.getService(UserDbService);
     }
@@ -29,6 +37,15 @@ export class UserService {
         }
 
         throw "No active profile set and no profile wa registered in the cache";
+    }
+
+    public async setActiveProfile(profile: ProfileModel): Promise<void> {
+        this.activeProfile = profile;
+        sessionStorage.setItem(UserService.SESSION_KEY, profile.uuid);
+
+        // Lazy load to prevent circular dependency
+        const settingsService: SettingsService = this.ctx.getService(SettingsService);
+        await settingsService.loadProfileSettings();
     }
 
     public async getActiveProfileOrDefault(): Promise<ProfileModel | null> {
@@ -178,7 +195,15 @@ export class UserService {
         }
 
         this.activeProfile = await this.getProfileByUUID(value);
-        return !!this.activeProfile;
+        if (this.activeProfile) {
+            // Lazy load to prevent circular dependency
+            const settingsService: SettingsService = this.ctx.getService(SettingsService);
+            await settingsService.loadProfileSettings();
+
+            return true;
+        }
+
+        return false;
     }
 
     private async getDatabase(): Promise<DbSession> {
