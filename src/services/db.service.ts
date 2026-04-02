@@ -51,7 +51,7 @@ export class DbSession {
 
     public async close(): Promise<void> {
         this.closed = true;
-        await this.handler.close();
+        await this.handler.close(this.handler.path);
     }
 }
 
