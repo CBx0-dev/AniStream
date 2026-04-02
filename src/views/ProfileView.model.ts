@@ -20,6 +20,7 @@ export class ProfileViewModel extends ViewModel {
 
     private readonly profileSetupControl: ProfileSetupControlModel | null;
 
+    public isProfileSetupFormCancellable: boolean = this.ref(false);
     public showProfileSetupForm: boolean = this.ref(false);
     public profiles: ProfileModel[] = this.ref([]);
 
@@ -38,7 +39,7 @@ export class ProfileViewModel extends ViewModel {
             this.profiles = await this.userService.getProfiles();
             return;
         }
-
+        this.isProfileSetupFormCancellable = false;
         await nextTick();
         if (this.profileSetupControl) {
             const result: ActionResult<ProfileModel> = await this.runAction(this.profileSetupControl);
@@ -55,7 +56,21 @@ export class ProfileViewModel extends ViewModel {
         return this.userService.getAvatarSvgOfProfile(profile);
     }
 
-    public onNewProfileBtn(): void {
+    public async onNewProfileBtn(): Promise<void> {
         this.showProfileSetupForm = true;
+        this.isProfileSetupFormCancellable = true;
+        await nextTick();
+
+        if (!this.profileSetupControl) {
+            throw "Setup form is not loaded";
+        }
+
+        const result: ActionResult<ProfileModel> = await this.runAction(this.profileSetupControl);
+        this.showProfileSetupForm = false;
+        if (!result.success) {
+            return;
+        }
+
+        this.profiles.push(result.data);
     }
 }
