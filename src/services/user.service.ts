@@ -43,6 +43,27 @@ export class UserService {
         return null;
     }
 
+    public async getMigrationProfile(): Promise<ProfileModel> {
+        const session: DbSession = await this.getDatabase();
+
+        const rows: ProfileDbModel[] = await session.query<ProfileDbModel[]>("SELECT * FROM profile ORDER BY profile_id ASC LIMIT 1");
+        if (rows.length == 0) {
+            throw "Could not find migration profile";
+        }
+
+        return ProfileModel(
+            rows[0].profile_id,
+            rows[0].uuid,
+            rows[0].name,
+            rows[0].background_color,
+            rows[0].eye,
+            rows[0].mouth,
+            rows[0].theme,
+            rows[0].lang,
+            rows[0].tos_accepted
+        );
+    }
+
     public async getProfiles(): Promise<ProfileModel[]> {
         const session: DbSession = await this.getDatabase();
 

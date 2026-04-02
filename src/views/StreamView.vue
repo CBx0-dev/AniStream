@@ -126,16 +126,14 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                                             <input type="radio"
                                                    class="radio radio-xs radio-primary !cursor-default !opacity-100"
                                                    disabled
-                                                   :checked="episode.percentage_watched >= 80"/>
-                                            <span v-if="episode.percentage_watched >= 80">
-                                                <Text :target="I18n.StreamView.watched"/>
-                                            </span>
-                                            <span v-else>
-                                                <Text :target="I18n.StreamView.notWatched"/>
+                                                   :checked="vm.isEpisodeWatched(episode)"/>
+                                            <span>
+                                                <Text v-if="vm.isEpisodeWatched(episode)" :target="I18n.StreamView.watched"/>
+                                                <Text v-else :target="I18n.StreamView.notWatched"/>
                                             </span>
                                         </div>
                                         <div
-                                            v-if="episode.percentage_watched < 80"
+                                            v-if="vm.isEpisodeWatched(episode)"
                                             class="absolute right-0 top-0">
                                             <button class="btn btn-square btn-sm btn-ghost"
                                                     :popovertarget="vm.getPopoverId(episode.season_id, episode.episode_id)"

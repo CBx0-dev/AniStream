@@ -2,12 +2,18 @@ import {ReadableGlobalContext} from "vue-mvvm";
 import {QueryResult} from "@tauri-apps/plugin-sql";
 
 import {DbServiceBase, DbSession} from "@services/db.service";
+import {UserService} from "@services/user.service";
 
 import {SeriesDbModel, SeriesModel} from "@models/series.model";
+import {ProfileModel} from "@models/profile.model";
 
 export class SeriesService extends DbServiceBase {
+    private readonly userService: UserService;
+
     public constructor(ctx: ReadableGlobalContext) {
         super(ctx);
+
+        this.userService = ctx.getService(UserService);
     }
 
     public async requiresSync(): Promise<boolean> {
@@ -78,33 +84,6 @@ export class SeriesService extends DbServiceBase {
         return rows.map(row => SeriesModel(row.series_id, row.guid, row.title, row.description, row.preview_image));
     }
 
-    public async getTotalWatchProgression(seriesId: number): Promise<number> {
-        const session: DbSession = await this.provider.getDatabase();
-
-        const [{total_episodes, finished_episodes}] = await session.query<[{
-            total_episodes: number,
-            finished_episodes: number
-        }]>(`
-SELECT COUNT(e.episode_id) AS total_episodes,
-       COALESCE(
-               SUM(CASE WHEN e.percentage_watched > 80 THEN 1 ELSE 0 END),
-               0
-       )                   AS finished_episodes
-FROM series AS s
-         LEFT JOIN season AS se ON s.series_id = se.series_id
-         LEFT JOIN episode AS e ON se.season_id = e.season_id
-WHERE s.series_id = ?
-  AND se.season_number > 0;
-        `, seriesId);
-
-        // Not synced
-        if (total_episodes == 0) {
-            return 0;
-        }
-
-        return finished_episodes / total_episodes;
-    }
-
     public async getSeries(seriesId: number): Promise<SeriesModel | null> {
         const session: DbSession = await this.provider.getDatabase();
 
@@ -117,23 +96,21 @@ WHERE s.series_id = ?
         return SeriesModel(rows[0].series_id, rows[0].guid, rows[0].title, rows[0].description, rows[0].preview_image);
     }
 
-    public async resetProgression(seriesId: number): Promise<void> {
-        const session: DbSession = await this.provider.getDatabase();
-
-        await session.execute("UPDATE episode SET percentage_watched = 0 WHERE season_id IN (SELECT season_id FROM season WHERE series_id = ?)", seriesId);
-    }
-
     public async getStartedSeries(): Promise<SeriesModel[]> {
+        const profile: ProfileModel = await this.userService.getActiveProfile();
         const session: DbSession = await this.provider.getDatabase();
 
+        // language=SQLite
         const rows: SeriesDbModel[] = await session.query<SeriesDbModel[]>(`
-SELECT DISTINCT s.*
-FROM series AS s
-         LEFT JOIN season AS se ON se.series_id = s.series_id
-         LEFT JOIN episode AS e ON se.season_id = e.season_id
-WHERE season_number != 0
-  AND percentage_watched > 80
-        `);
+            SELECT DISTINCT s.*
+            FROM series AS s
+                     LEFT JOIN season AS se ON se.series_id = s.series_id
+                     LEFT JOIN episode AS e ON e.season_id = se.season_id
+                     LEFT JOIN watchtime AS wt ON wt.episode_id = e.episode_id
+            WHERE wt.tenant_id = ?
+              AND se.season_number != 0
+              AND wt.percentage_watched > 80
+        `, profile.uuid);
 
         return rows.map(row => SeriesModel(row.series_id, row.guid, row.title, row.description, row.preview_image));
     }

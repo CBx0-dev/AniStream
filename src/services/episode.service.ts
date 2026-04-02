@@ -25,12 +25,9 @@ export class EpisodeService extends DbServiceBase {
             rows[0].episode_number,
             rows[0].german_title,
             rows[0].english_title,
-            rows[0].description,
-            rows[0].percentage_watched,
-            rows[0].stopped_time
+            rows[0].description
         );
     }
-
 
     public async getEpisodes(seasonId: number): Promise<EpisodeModel[]> {
         const session: DbSession = await this.provider.getDatabase();
@@ -42,9 +39,7 @@ export class EpisodeService extends DbServiceBase {
             rows.episode_number,
             rows.german_title,
             rows.english_title,
-            rows.description,
-            rows.percentage_watched,
-            rows.stopped_time
+            rows.description
         ));
     }
 
@@ -58,17 +53,15 @@ export class EpisodeService extends DbServiceBase {
         const session: DbSession = await this.provider.getDatabase();
 
         const result: QueryResult = await session.execute(
-            "INSERT INTO episode (season_id, episode_number, german_title, english_title, description, percentage_watched, stopped_time) VALUES (?, ?, ?, ?, ?, ?, ?);",
+            "INSERT INTO episode (season_id, episode_number, german_title, english_title, description) VALUES (?, ?, ?, ?, ?);",
             season_id,
             episode_number,
             german_title,
             english_title,
-            description,
-            0,
-            0
+            description
         );
 
-        return EpisodeModel(result.lastInsertId!, season_id, episode_number, german_title, english_title, description, 0, 0);
+        return EpisodeModel(result.lastInsertId!, season_id, episode_number, german_title, english_title, description);
     }
 
     public async updateEpisodeMetadata(
@@ -85,17 +78,6 @@ export class EpisodeService extends DbServiceBase {
             english_title,
             description,
             episode_id
-        );
-    }
-
-    public async updateEpisodeProgression(episodeId: number, percentageWatched: number, stoppedTime: number): Promise<void> {
-        const session: DbSession = await this.provider.getDatabase();
-
-        await session.execute(
-            "UPDATE episode SET percentage_watched = ?, stopped_time = ? WHERE episode_id = ?;",
-            percentageWatched,
-            stoppedTime,
-            episodeId
         );
     }
 

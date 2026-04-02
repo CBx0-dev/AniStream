@@ -30,6 +30,7 @@ import {ReportService} from "@services/report.service";
 import {UpdateService} from "@services/update.service";
 import {UserDbService} from "@services/db/user.db";
 import {UserService} from "@services/user.service";
+import {WatchtimeService} from "@services/watchtime.service";
 
 export class AppConfig implements AppShell {
     private app: App;
@@ -69,7 +70,7 @@ export class AppConfig implements AppShell {
         ctx.registerService(EpisodeService, ctx => new EpisodeService(ctx));
         ctx.registerService(GenreService, ctx => new GenreService(ctx));
         ctx.registerService(WatchlistService, ctx => new WatchlistService(ctx));
-        ctx.registerService(MetadataDbService, () => new MetadataDbService());
+        ctx.registerService(MetadataDbService, ctx => new MetadataDbService(ctx));
         ctx.registerService(FetchService, ctx => new FetchService(ctx));
         ctx.registerService(ChangelogService, () => new ChangelogService());
         ctx.registerService(SettingsService, ctx => new SettingsService(ctx));
@@ -77,6 +78,7 @@ export class AppConfig implements AppShell {
         ctx.registerService(UpdateService, ctx => new UpdateService(ctx));
         ctx.registerService(UserDbService, () => new UserDbService());
         ctx.registerService(UserService, ctx => new UserService(ctx));
+        ctx.registerService(WatchtimeService, ctx => new WatchtimeService(ctx));
 
         // Init reporting
         const reportService: ReportService = ctx.getService(ReportService);

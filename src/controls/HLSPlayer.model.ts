@@ -1,15 +1,17 @@
 import {UserControl} from "vue-mvvm";
 
 import type Hls from "hls.js";
+
 import {HLSTauriLoader} from "@utils/hls-tauri-bridge";
 
 import {Provider} from "@services/fetch.service";
-import {EpisodeService} from "@services/episode.service";
 import {SettingsService} from "@services/settings.service";
 import {I18nService} from "@services/i18n.service";
+import {WatchtimeService} from "@services/watchtime.service";
 
 import {getSource, IStreamSource} from "@sources";
-import {type EpisodeModel} from "@/models/episode.model";
+
+import {WatchtimeModel} from "@models/watchtime.model";
 
 type HlsModule = typeof Hls
 type HlsImport = typeof import("hls.js");
@@ -24,7 +26,7 @@ export class HLSPlayerModel extends UserControl {
     private episodeId: number = this.ref(0);
 
     private readonly settingsService: SettingsService;
-    private readonly episodeService: EpisodeService;
+    private readonly watchtimeService: WatchtimeService;
     private readonly i18nService: I18nService;
 
     public loaded: boolean = this.ref(false);
@@ -42,7 +44,7 @@ export class HLSPlayerModel extends UserControl {
         super();
 
         this.settingsService = this.ctx.getService(SettingsService);
-        this.episodeService = this.ctx.getService(EpisodeService);
+        this.watchtimeService = this.ctx.getService(WatchtimeService);
         this.i18nService = this.ctx.getService(I18nService);
 
         // Must happend because of addEventListener
@@ -128,9 +130,11 @@ export class HLSPlayerModel extends UserControl {
         }, 1_000);
 
         if (this.video) {
-            const episode: EpisodeModel | null = await this.episodeService.getEpisode(this.episodeId);
-            if (episode) {
-                this.video.currentTime = episode.stopped_time;
+            const watchtime: WatchtimeModel | null = await this.watchtimeService.getWatchtimeOfEpisode(this.episodeId);
+            if (watchtime) {
+                this.video.currentTime = watchtime.stopped_time;
+            } else {
+                await this.watchtimeService.createWatchtimeOfEpisode(this.episodeId, 0, 0);
             }
         }
     }
@@ -145,7 +149,7 @@ export class HLSPlayerModel extends UserControl {
         this.video.currentTime = currentTime;
 
         this.renderTimes();
-        await this.episodeService.updateEpisodeProgression(this.episodeId, percent, currentTime);
+        await this.watchtimeService.updateWatchtimeWithEpisode(this.episodeId, percent, currentTime);
     }
 
     public async onShortcut(event: KeyboardEvent): Promise<void> {
@@ -353,7 +357,7 @@ export class HLSPlayerModel extends UserControl {
         }
         const percentage: number = Math.round(currentTime / duration * 100);
 
-        await this.episodeService.updateEpisodeProgression(this.episodeId, percentage, currentTime);
+        await this.watchtimeService.updateWatchtimeWithEpisode(this.episodeId, percentage, currentTime);
     }
 
     private async loadHls(): Promise<HlsModule> {
