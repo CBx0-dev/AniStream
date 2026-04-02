@@ -19,6 +19,11 @@ const vm: ProviderViewModel = useViewModel(ProviderViewModel);
                 <LucideSettings/>
             </button>
         </div>
+        <div class="absolute bottom-5 left-5">
+            <button class="btn btn-lg btn-soft btn-square overflow-clip" @click="vm.onProfileBtn()">
+                <img v-if="vm.profileImage" :src="vm.profileImage" />
+            </button>
+        </div>
         <div>
             <h1 class="text-3xl text-center">
                 <Text :target="I18n.ProviderView.title"/>
