@@ -78,7 +78,7 @@ export class ProfileSetupControlModel extends UserControl implements Action<Prof
         if (!this.existingProfile) {
             const profile: ProfileModel = await this.userService.createProfile(
                 this.name,
-                this.backgroundColor,
+                this.backgroundColorValue,
                 this.eye,
                 this.mouth,
                 this.theme,
@@ -93,7 +93,7 @@ export class ProfileSetupControlModel extends UserControl implements Action<Prof
         await this.userService.updateProfile(
             this.existingProfile.profile_id,
             this.name,
-            this.backgroundColor,
+            this.backgroundColorValue,
             this.eye,
             this.mouth,
             this.theme,
