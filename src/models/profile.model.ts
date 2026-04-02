@@ -12,11 +12,13 @@ export interface ProfileDbModel {
     mouth: ProfileMouth;
     theme: string;
     lang: string;
-    tos_accepted: boolean;
+    tos_accepted: string;
 }
 
-export interface ProfileModel extends ProfileDbModel {
+export interface ProfileModel extends Omit<ProfileDbModel, "tos_accepted"> {
+    tos_accepted: boolean;
     clone(): ProfileModel;
+
 }
 
 export function ProfileModel(
@@ -27,7 +29,7 @@ export function ProfileModel(
     mouth: ProfileMouth,
     theme: string,
     lang: string,
-    tosAccepted: boolean
+    tosAccepted: string
 ): ProfileModel;
 export function ProfileModel(
     profile_id: number,
@@ -38,7 +40,7 @@ export function ProfileModel(
     mouth: ProfileMouth,
     theme: string,
     lang: string,
-    tosAccepted: boolean
+    tosAccepted: string
 ): ProfileModel;
 
 export function ProfileModel(...args: unknown[]): ProfileModel {
@@ -46,7 +48,7 @@ export function ProfileModel(...args: unknown[]): ProfileModel {
         args.unshift(0);
     }
 
-    return _ProfileModel(...args as [number, string, string, string, ProfileEye, ProfileMouth, string, string, boolean]);
+    return _ProfileModel(...args as [number, string, string, string, ProfileEye, ProfileMouth, string, string, string]);
 }
 
 function _ProfileModel(
@@ -58,7 +60,7 @@ function _ProfileModel(
     mouth: ProfileMouth,
     theme: string,
     lang: string,
-    tosAccepted: boolean
+    tosAccepted: string
 ): ProfileModel {
     const obj: ProfileModel = {
         profile_id: profile_id,
@@ -69,7 +71,7 @@ function _ProfileModel(
         mouth: mouth,
         theme: theme,
         lang: lang,
-        tos_accepted: tosAccepted,
+        tos_accepted: tosAccepted == "true",
         clone: clone,
     };
 

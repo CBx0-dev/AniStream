@@ -142,7 +142,7 @@ export class UserService {
             mouth,
             theme,
             local,
-            false
+            "false"
         );
 
         return ProfileModel(
@@ -154,7 +154,7 @@ export class UserService {
             mouth,
             "aniworld-light",
             "en",
-            false
+            "false"
         );
     }
 
@@ -169,7 +169,7 @@ export class UserService {
             mouth,
             theme,
             local,
-            tosAccepted,
+            tosAccepted ? "true" : "false",
             profileId
         );
     }
