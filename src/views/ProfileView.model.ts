@@ -1,11 +1,14 @@
-import {Component} from "vue";
-import {ViewModel} from "vue-mvvm";
+import {Component, nextTick} from "vue";
+import {ActionResult, ViewModel} from "vue-mvvm";
 import {RouteAdapter} from "vue-mvvm/router";
 
 import ProfileView from "@views/ProfileView.vue";
 
 import {UserService} from "@services/user.service";
-import {ProfileModel} from "@models/profile.model";
+
+import type {ProfileModel} from "@models/profile.model";
+
+import {ProfileSetupControlModel} from "@controls/ProfileSetupControl.model";
 
 export class ProfileViewModel extends ViewModel {
     public static readonly component: Component = ProfileView;
@@ -15,6 +18,8 @@ export class ProfileViewModel extends ViewModel {
 
     private readonly userService: UserService;
 
+    private readonly profileSetupControl: ProfileSetupControlModel | null;
+
     public showProfileSetupForm: boolean = this.ref(false);
     public profiles: ProfileModel[] = this.ref([]);
 
@@ -22,6 +27,8 @@ export class ProfileViewModel extends ViewModel {
         super();
 
         this.userService = this.ctx.getService(UserService);
+
+        this.profileSetupControl = this.getUserControl("profile-setup-control");
     }
 
     protected async mounted(): Promise<void> {
@@ -29,6 +36,18 @@ export class ProfileViewModel extends ViewModel {
 
         if (!this.showProfileSetupForm) {
             this.profiles = await this.userService.getProfiles();
+            return;
+        }
+
+        await nextTick();
+        if (this.profileSetupControl) {
+            const result: ActionResult<ProfileModel> = await this.runAction(this.profileSetupControl);
+            if (!result.success) {
+                throw result.error;
+            }
+
+            this.profiles.push(result.data);
+            this.showProfileSetupForm = false;
         }
     }
 

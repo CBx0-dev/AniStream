@@ -12,7 +12,7 @@ const vm: ProfileViewModel = useViewModel(ProfileViewModel);
 
 <template>
     <div v-if="vm.showProfileSetupForm" class="flex justify-center items-center h-screen">
-        <ProfileSetupControl :cancellable="false" />
+        <ProfileSetupControl ref="profile-setup-control" :cancellable="false" />
     </div>
     <div v-else class="container flex justify-center items-center h-2/3 m-auto gap-4">
         <button v-for="profile of vm.profiles" :key="profile.profile_id" class="group flex flex-col items-center gap-2 focus:outline-none">
