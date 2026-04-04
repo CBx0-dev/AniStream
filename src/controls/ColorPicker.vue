@@ -41,15 +41,14 @@ const emit = defineEmits<{
     "update:color": [color: string];
 }>();
 
-const {h: initialColorHue, l: initialColorLight, s: initialColorSaturation} = hexToHSL(props.initialColor);
-
+const {h: initialColorHue, s: initialColorSaturation, l: initialColorLight} = hexToHSL(props.initialColor);
 const slCanvas = ref<HTMLCanvasElement | null>(null);
 const hueCanvas = ref<HTMLCanvasElement | null>(null);
 
 // HSL state
 const hue = ref(initialColorHue); // 0 - 360
-const saturation = ref(initialColorLight); // 0 - 1
-const lightness = ref(initialColorSaturation); // 0 - 1
+const saturation = ref(initialColorSaturation); // 0 - 1
+const lightness = ref(initialColorLight); // 0 - 1
 
 const selectedColor = ref(`hsl(${hue.value}, ${saturation.value * 100}, ${lightness.value * 100})`);
 
