@@ -85,7 +85,7 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                                     <Text :target="I18n.StreamView.season"/>
                                     {{ season.season_number }}
                                 </template>
-                                <template v-if="vm.isSeasonWatched(season)">
+                                <template v-if="!vm.isSeasonWatched(season)">
                                     <button class="btn btn-xs btn-square btn-ghost z-50"
                                             :popovertarget="vm.getPopoverId(season.season_id)"
                                             :style="`anchor-name:${vm.getAnchorId(season.season_id)}`"
