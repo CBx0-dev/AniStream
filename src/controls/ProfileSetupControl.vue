@@ -45,7 +45,7 @@ const props = withDefaults(defineProps<{
                     <label class="label">
                         <Text :target="I18n.ProfileSetupControl.background" />
                     </label>
-                    <ColorPicker :initial-color="vm.backgroundColor" @update:color="(color: string) => vm.backgroundColor = color" />
+                    <ColorPicker :initial-color="vm.initialBackgroundColor" :key="vm.initialBackgroundColor" @update:color="(color: string) => vm.backgroundColor = color" />
                 </div>
             </div>
             <div class="lg:col-span-2 space-y-8">

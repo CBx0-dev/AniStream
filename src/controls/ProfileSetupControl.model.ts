@@ -22,6 +22,7 @@ export class ProfileSetupControlModel extends UserControl implements Action<Prof
 
     public name: string = this.ref("");
     public backgroundColor: string = this.ref("#afec9f");
+    public initialBackgroundColor: string = this.ref("#afec9f")
     public eye: ProfileEye = this.ref("frame1");
     public mouth: ProfileMouth = this.ref("smile01");
     public theme: string = this.ref("aniworld-light");
@@ -64,6 +65,7 @@ export class ProfileSetupControlModel extends UserControl implements Action<Prof
         this.existingProfile = profile;
         this.name = profile.name;
         this.backgroundColor = `#${profile.background_color}`;
+        this.initialBackgroundColor = `#${profile.background_color}`
         this.eye = profile.eye;
         this.mouth = profile.mouth;
         this.theme = profile.theme;
