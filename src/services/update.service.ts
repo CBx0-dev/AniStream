@@ -1,5 +1,4 @@
 import {check, Update} from "@tauri-apps/plugin-updater";
-
 import {ReadableGlobalContext} from "vue-mvvm";
 import {DialogService} from "vue-mvvm/dialog";
 

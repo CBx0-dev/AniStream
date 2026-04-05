@@ -1,7 +1,7 @@
 import {path} from "@tauri-apps/api"
 import * as fs from "@tauri-apps/plugin-fs";
 
-import {DbService} from "@services/db.service";
+import {MetadataDbService} from "@services/db/metadata.db";
 
 import {StoFetcher} from "@providers/sto/fetcher";
 import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";
@@ -21,7 +21,7 @@ export class StoProvider extends DefaultProvider {
         return `${this.baseURL}/serien-alphabet`;
     }
 
-    public constructor(service: DbService) {
+    public constructor(service: MetadataDbService) {
         super(service);
 
         this.fetcher = null;

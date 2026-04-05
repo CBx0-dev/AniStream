@@ -53,7 +53,7 @@ export class ReportService {
         }
 
         const stack: string | undefined = error instanceof Error ? error.stack : JSON.stringify(error, null, 2);
-        const markdown: string = this.generateMarkdown(title, stack || "No stack trace available", result.data.message);
+        const markdown: string = await this.generateMarkdown(title, stack || "No stack trace available", result.data.message);
         await this.createIssue(`[Report]: ${title}`, markdown);
     }
 
@@ -64,8 +64,11 @@ export class ReportService {
         });
     }
 
-    private generateMarkdown(title: string, stack: string, userMessage: string): string {
+    private async generateMarkdown(title: string, stack: string, userMessage: string): Promise<string> {
         const settings: SettingsService = this.ctx.getService(SettingsService);
+        const theme: string = await settings.getTheme();
+        const local: string = await settings.getLocal();
+
         return `## Fatal Error: ${this.sanitizeForMarkdown(title)}
 
 ### User Message
@@ -79,8 +82,8 @@ ${this.sanitizeForMarkdown(stack)}
 ### Environment
 - Version: ${packageJSON.version}
 - Platform: ${getPlatform()} ${getArch()}
-- Language: ${settings.lang.value}
-- Theme: ${settings.theme.value}
+- Language: ${theme}
+- Theme: ${local}
 `;
     }
 

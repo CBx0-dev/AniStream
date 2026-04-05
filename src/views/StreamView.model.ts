@@ -11,6 +11,7 @@ import {SeriesModel} from "@models/series.model";
 import {SeasonModel} from "@models/season.model";
 import {EpisodeModel} from "@models/episode.model";
 import {GenreModel} from "@models/genre.model";
+import {WatchtimeModel} from "@models/watchtime.model";
 
 import {ProviderService} from "@services/provider.service";
 import {I18nService} from "@services/i18n.service";
@@ -18,6 +19,7 @@ import {GenreService} from "@services/genre.service";
 import {SeriesService} from "@services/series.service";
 import {SeasonService} from "@services/season.service";
 import {EpisodeService} from "@services/episode.service";
+import {WatchtimeService} from "@services/watchtime.service";
 
 import I18n from "@utils/i18n";
 
@@ -38,8 +40,10 @@ export class StreamViewModel extends ViewModel {
     private readonly seriesService: SeriesService;
     private readonly seasonService: SeasonService;
     private readonly episodeService: EpisodeService;
+    private readonly watchtimeService: WatchtimeService;
 
     private episodes: Map<number, EpisodeModel[]> = this.ref(new Map<number, EpisodeModel[]>());
+    private watchtimes: Map<number, WatchtimeModel> = this.ref(new Map<number, WatchtimeModel>);
 
     public providerFolder: string | null = this.ref(null);
     public series: SeriesModel | null = this.ref(null);
@@ -70,6 +74,7 @@ export class StreamViewModel extends ViewModel {
         this.seriesService = this.ctx.getService(SeriesService);
         this.seasonService = this.ctx.getService(SeasonService);
         this.episodeService = this.ctx.getService(EpisodeService);
+        this.watchtimeService = this.ctx.getService(WatchtimeService);
     }
 
     protected async mounted(): Promise<void> {
@@ -101,6 +106,11 @@ export class StreamViewModel extends ViewModel {
         await Promise.allSettled(this.seasons.map(async season => {
             this.episodes.set(season.season_id, await this.episodeService.getEpisodes(season.season_id));
         }));
+
+        const watchtimes: WatchtimeModel[] = await this.watchtimeService.getWatchtimesOfSeries(this.series.series_id);
+        for (const watchtime of watchtimes) {
+            this.watchtimes.set(watchtime.episode_id, watchtime);
+        }
     }
 
     public onBackBtn(): void {
@@ -130,9 +140,9 @@ export class StreamViewModel extends ViewModel {
             return;
         }
 
-        await this.seriesService.resetProgression(this.series.series_id);
-        for (const episode of Array.from(this.episodes.values()).flat()) {
-            episode.percentage_watched = 0;
+        await this.watchtimeService.updateWatchtimesOfSeries(this.series.series_id, 0, 0);
+        for (const watchtime of this.watchtimes.values()) {
+            watchtime.percentage_watched = 0;
         }
     }
 
@@ -162,15 +172,29 @@ export class StreamViewModel extends ViewModel {
     }
 
     public async onSeasonMarkWatchedBtn(season: SeasonModel): Promise<void> {
-        await this.episodeService.updateEpisodesProgression(season.season_id, 100);
+        await this.watchtimeService.updateWatchtimesOfSeason(season.season_id, 100, 0);
         for (const episode of this.getEpisodes(season.season_id)) {
-            episode.percentage_watched = 100;
+            const watchtime: WatchtimeModel | undefined = this.watchtimes.get(episode.episode_id);
+            if (!watchtime) {
+                const watchtime: WatchtimeModel = await this.watchtimeService.createWatchtimeOfEpisode(episode.episode_id, 100, 0);
+                this.watchtimes.set(episode.episode_id, watchtime);
+                continue;
+            }
+
+            watchtime.percentage_watched = 100;
         }
     }
 
     public async onEpisodeMarkWatchedBtn(episode: EpisodeModel): Promise<void> {
-        await this.episodeService.updateEpisodeProgression(episode.episode_id, 100, episode.stopped_time);
-        episode.percentage_watched = 100;
+        const watchtime: WatchtimeModel | undefined = this.watchtimes.get(episode.episode_id);
+        if (!watchtime) {
+            const watchtime: WatchtimeModel = await this.watchtimeService.createWatchtimeOfEpisode(episode.episode_id, 100, 0);
+            this.watchtimes.set(episode.episode_id, watchtime);
+            return;
+        }
+
+        await this.watchtimeService.updateWatchtimeWithEpisode(episode.episode_id, 100, watchtime.stopped_time);
+        watchtime.percentage_watched = 100;
     }
 
     public getPopoverId(seasonId: number, episodeId?: number): string {
@@ -187,8 +211,28 @@ export class StreamViewModel extends ViewModel {
         return `--anchor-${this.uid}-${seasonId}-${episodeId}`;
     }
 
+    public isEpisodeWatched(episode: EpisodeModel): boolean {
+        const watchtime: WatchtimeModel | undefined = this.watchtimes.get(episode.episode_id);
+        if (!watchtime) {
+            return false;
+        }
+
+        return watchtime.percentage_watched >= 80;
+    }
+
     public isSeasonWatched(season: SeasonModel): boolean {
         const episodes: EpisodeModel[] = this.getEpisodes(season.season_id);
-        return episodes.some(episode => episode.percentage_watched < 80);
+        for (const episode of episodes) {
+            const watchtime: WatchtimeModel | undefined = this.watchtimes.get(episode.episode_id);
+            if (!watchtime) {
+                return false;
+            }
+
+            if (watchtime.percentage_watched < 80) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

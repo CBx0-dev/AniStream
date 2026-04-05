@@ -25,6 +25,10 @@
         "lucide": {
             "pre": "Icons von",
             "post": "Lucide via Iconify"
+        },
+        "dicebear": {
+            "pre": "Avatare von",
+            "post": "Bottts (botttsNeutral) via DiceBear"
         }
     },
     "legal": {

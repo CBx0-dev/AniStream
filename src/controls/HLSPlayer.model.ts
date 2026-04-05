@@ -1,15 +1,17 @@
 import {UserControl} from "vue-mvvm";
 
 import type Hls from "hls.js";
+
 import {HLSTauriLoader} from "@utils/hls-tauri-bridge";
 
 import {Provider} from "@services/fetch.service";
-import {EpisodeService} from "@services/episode.service";
 import {SettingsService} from "@services/settings.service";
 import {I18nService} from "@services/i18n.service";
+import {WatchtimeService} from "@services/watchtime.service";
 
 import {getSource, IStreamSource} from "@sources";
-import {type EpisodeModel} from "@/models/episode.model";
+
+import {WatchtimeModel} from "@models/watchtime.model";
 
 type HlsModule = typeof Hls
 type HlsImport = typeof import("hls.js");
@@ -23,9 +25,9 @@ export class HLSPlayerModel extends UserControl {
     private timeout: NodeJS.Timeout | null = null;
     private episodeId: number = this.ref(0);
 
-    private settingsService: SettingsService;
-    private episodeService: EpisodeService;
-    private i18nService: I18nService;
+    private readonly settingsService: SettingsService;
+    private readonly watchtimeService: WatchtimeService;
+    private readonly i18nService: I18nService;
 
     public loaded: boolean = this.ref(false);
     public error: string | null = this.ref(null);
@@ -34,14 +36,15 @@ export class HLSPlayerModel extends UserControl {
     public volume: number = this.ref(100);
     public isRemainingTimeMode: boolean = this.ref(false);
     public showControls: boolean = this.ref(true);
+    public chooseImage: string | null = this.ref(null);
 
-    public neverLoaded: boolean = this.computed(() => this.episodeId == 0);
+    public readonly neverLoaded: boolean = this.computed(() => this.episodeId == 0);
 
     public constructor() {
         super();
 
         this.settingsService = this.ctx.getService(SettingsService);
-        this.episodeService = this.ctx.getService(EpisodeService);
+        this.watchtimeService = this.ctx.getService(WatchtimeService);
         this.i18nService = this.ctx.getService(I18nService);
 
         // Must happend because of addEventListener
@@ -52,7 +55,8 @@ export class HLSPlayerModel extends UserControl {
         return this.i18nService.get(key, ...args);
     }
 
-    protected mounted(): void {
+    protected async mounted(): Promise<void> {
+        this.chooseImage = await this.settingsService.getImageVariant("choose", "svg");
         this.video = document.getElementById("video-player") as HTMLVideoElement | null;
         this.videoWrapper = document.getElementById("video-player-wrapper") as HTMLDivElement | null;
 
@@ -81,10 +85,6 @@ export class HLSPlayerModel extends UserControl {
             clearTimeout(this.timeout as any);
             this.timeout = null;
         }
-    }
-
-    public getChooseImage(): string {
-        return this.settingsService.getImageVariant("choose", "svg");
     }
 
     public async playStream(episodeId: number, provider: Provider): Promise<void> {
@@ -130,9 +130,11 @@ export class HLSPlayerModel extends UserControl {
         }, 1_000);
 
         if (this.video) {
-            const episode: EpisodeModel | null = await this.episodeService.getEpisode(this.episodeId);
-            if (episode) {
-                this.video.currentTime = episode.stopped_time;
+            const watchtime: WatchtimeModel | null = await this.watchtimeService.getWatchtimeOfEpisode(this.episodeId);
+            if (watchtime) {
+                this.video.currentTime = watchtime.stopped_time;
+            } else {
+                await this.watchtimeService.createWatchtimeOfEpisode(this.episodeId, 0, 0);
             }
         }
     }
@@ -147,7 +149,7 @@ export class HLSPlayerModel extends UserControl {
         this.video.currentTime = currentTime;
 
         this.renderTimes();
-        await this.episodeService.updateEpisodeProgression(this.episodeId, percent, currentTime);
+        await this.watchtimeService.updateWatchtimeWithEpisode(this.episodeId, percent, currentTime);
     }
 
     public async onShortcut(event: KeyboardEvent): Promise<void> {
@@ -355,7 +357,7 @@ export class HLSPlayerModel extends UserControl {
         }
         const percentage: number = Math.round(currentTime / duration * 100);
 
-        await this.episodeService.updateEpisodeProgression(this.episodeId, percentage, currentTime);
+        await this.watchtimeService.updateWatchtimeWithEpisode(this.episodeId, percentage, currentTime);
     }
 
     private async loadHls(): Promise<HlsModule> {

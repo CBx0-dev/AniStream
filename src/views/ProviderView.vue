@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import {useViewModel} from "vue-mvvm";
+
 import {ProviderViewModel} from "@views/ProviderView.model";
+
 import LucideSettings from "@icons/LucideSettings.vue";
+
 import I18n from "@utils/i18n";
-import Text from "@/controls/Text.vue";
+
+import Text from "@controls//Text.vue";
 
 const vm: ProviderViewModel = useViewModel(ProviderViewModel);
 </script>
@@ -13,6 +17,11 @@ const vm: ProviderViewModel = useViewModel(ProviderViewModel);
         <div class="absolute bottom-5 right-5">
             <button class="btn btn-lg btn-soft btn-square" @click="vm.onSettingsBtn">
                 <LucideSettings/>
+            </button>
+        </div>
+        <div class="absolute bottom-5 left-5">
+            <button class="btn btn-lg btn-soft btn-square overflow-clip" @click="vm.onProfileBtn()">
+                <img v-if="vm.profileImage" :src="vm.profileImage" />
             </button>
         </div>
         <div>

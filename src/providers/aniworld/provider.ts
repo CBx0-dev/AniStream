@@ -1,7 +1,8 @@
 import {path} from "@tauri-apps/api"
 import * as fs from "@tauri-apps/plugin-fs";
 
-import {DbService} from "@services/db.service";
+import {MetadataDbService} from "@services/db/metadata.db";
+
 import {AniWorldFetcher} from "@providers/aniworld/fetcher";
 import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";
 
@@ -19,7 +20,7 @@ export class AniWorldProvider extends DefaultProvider {
         return `${this.baseURL}/animes-alphabet`;
     }
 
-    public constructor(service: DbService) {
+    public constructor(service: MetadataDbService) {
         super(service);
 
         this.fetcher = null;

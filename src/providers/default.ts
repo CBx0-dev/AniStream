@@ -1,6 +1,7 @@
 import {path} from "@tauri-apps/api";
 
-import {DbService, DbSession} from "@services/db.service";
+import {MetadataDbService} from "@services/db/metadata.db";
+import {DbSession} from "@services/db.service";
 import {Provider} from "@services/fetch.service";
 
 import {SeriesFetchModel, SeriesModel} from "@models/series.model";
@@ -36,10 +37,10 @@ export abstract class DefaultProvider {
 
     public abstract get catalogURL(): string;
 
-    private readonly service: DbService;
+    private readonly service: MetadataDbService;
     private session: DbSession | null;
 
-    protected constructor(service: DbService) {
+    protected constructor(service: MetadataDbService) {
         this.service = service;
         this.session = null;
     }

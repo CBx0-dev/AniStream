@@ -9,6 +9,7 @@ import {WatchlistViewModel} from "@views/WatchlistView.model";
 import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
 import {StreamViewModel} from "@views/StreamView.model";
 import {PlayerViewModel} from "@views/PlayerView.model";
+import {ProfileViewModel} from "@views/ProfileView.model";
 
 import {ConfirmControlModel} from "@controls/ConfirmControl.model";
 import ToastContainer from "@controls/ToastContainer.vue";
@@ -18,7 +19,7 @@ import {ProviderService} from "@services/provider.service";
 import {SeriesService} from "@services/series.service";
 import {SeasonService} from "@services/season.service";
 import {EpisodeService} from "@services/episode.service";
-import {DbService} from "@services/db.service";
+import {MetadataDbService} from "@services/db/metadata.db";
 import {FetchService} from "@services/fetch.service";
 import {GenreService} from "@services/genre.service";
 import {WatchlistService} from "@services/watchlist.service";
@@ -27,6 +28,9 @@ import {ChangelogService} from "@services/changelog.service";
 import {SettingsService} from "@services/settings.service";
 import {ReportService} from "@services/report.service";
 import {UpdateService} from "@services/update.service";
+import {UserDbService} from "@services/db/user.db";
+import {UserService} from "@services/user.service";
+import {WatchtimeService} from "@services/watchtime.service";
 
 export class AppConfig implements AppShell {
     private app: App;
@@ -40,7 +44,8 @@ export class AppConfig implements AppShell {
             WatchlistViewModel,
             SeriesSyncViewModel,
             StreamViewModel,
-            PlayerViewModel
+            PlayerViewModel,
+            ProfileViewModel
         ]
     }
 
@@ -65,12 +70,15 @@ export class AppConfig implements AppShell {
         ctx.registerService(EpisodeService, ctx => new EpisodeService(ctx));
         ctx.registerService(GenreService, ctx => new GenreService(ctx));
         ctx.registerService(WatchlistService, ctx => new WatchlistService(ctx));
-        ctx.registerService(DbService, () => new DbService());
+        ctx.registerService(MetadataDbService, ctx => new MetadataDbService(ctx));
         ctx.registerService(FetchService, ctx => new FetchService(ctx));
         ctx.registerService(ChangelogService, () => new ChangelogService());
         ctx.registerService(SettingsService, ctx => new SettingsService(ctx));
         ctx.registerService(ReportService, ctx => new ReportService(ctx));
         ctx.registerService(UpdateService, ctx => new UpdateService(ctx));
+        ctx.registerService(UserDbService, () => new UserDbService());
+        ctx.registerService(UserService, ctx => new UserService(ctx));
+        ctx.registerService(WatchtimeService, ctx => new WatchtimeService(ctx));
 
         // Init reporting
         const reportService: ReportService = ctx.getService(ReportService);

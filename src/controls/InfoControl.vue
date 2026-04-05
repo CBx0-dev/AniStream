@@ -134,6 +134,16 @@ const vm: InfoControlModel = useUserControl(InfoControlModel);
                         <Text :target="I18n.InfoControl.credits.lucide.post"/>
                     </a>
                 </li>
+                <li>
+                    <Text :target="I18n.InfoControl.credits.dicebear.pre"/>
+                    <a
+                        href="https://www.dicebear.com/"
+                        target="_blank"
+                        class="link link-primary ml-1"
+                    >
+                        <Text :target="I18n.InfoControl.credits.dicebear.post"/>
+                    </a>
+                </li>
             </ul>
         </section>
         <div class="divider"></div>

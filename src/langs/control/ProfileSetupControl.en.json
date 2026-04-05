@@ -1,0 +1,36 @@
+{
+    "$lang": "en",
+    "$group": "ProfileSetupControl",
+    "title": {
+        "creation": "Create your Profile",
+        "update": "Update your profile"
+    },
+    "sections": {
+        "eye": "Eyes",
+        "mouth": "Mouth",
+        "theme": "Theme",
+        "language": "Language"
+    },
+    "theme": {
+        "aniworldDark": "Aniworld.to Dark",
+        "aniworldLight": "Aniworld.to Light",
+        "stoDark": "S.TO Dark",
+        "stoLight": "S.TO Light"
+    },
+    "languages": {
+        "en": "English",
+        "de": "German"
+    },
+    "profile": {
+        "label": "Profile Name",
+        "placeholder": "Enter your name"
+    },
+    "background": "Background Color",
+    "actions": {
+        "submit": {
+            "creation": "Create Profile",
+            "update": "Update Profile"
+        },
+        "cancel": "Cancel"
+    }
+}

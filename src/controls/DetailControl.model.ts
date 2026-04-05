@@ -1,6 +1,6 @@
-import { Component, ComponentInternalInstance, getCurrentInstance } from "vue";
+import {Component, ComponentInternalInstance, getCurrentInstance} from "vue";
 import {RouterService} from "vue-mvvm/router";
-import { DialogControl } from "vue-mvvm/dialog";
+import {DialogControl} from "vue-mvvm/dialog";
 import {AlertService} from "vue-mvvm/alert";
 
 import DetailControl from "@controls/DetailControl.vue";
@@ -13,9 +13,9 @@ import {GenreModel} from "@models/genre.model";
 
 import {GenreService} from "@services/genre.service";
 import {I18nService} from "@services/i18n.service";
-import {SeriesService} from "@services/series.service";
 import {SeasonService} from "@services/season.service";
 import {WatchlistService} from "@services/watchlist.service";
+import {WatchtimeService} from "@services/watchtime.service";
 
 import I18n from "@utils/i18n";
 
@@ -24,10 +24,10 @@ export class DetailControlModel extends DialogControl {
 
     private readonly routerService: RouterService;
     private readonly alertService: AlertService;
-    private readonly seriesService: SeriesService;
     private readonly seasonService: SeasonService;
     private readonly genreService: GenreService;
     private readonly watchlistService: WatchlistService;
+    private readonly watchtimeService: WatchtimeService;
     private readonly i18nService: I18nService;
 
     public opened: boolean = this.ref(false);
@@ -58,10 +58,10 @@ export class DetailControlModel extends DialogControl {
 
         this.routerService = this.ctx.getService(RouterService);
         this.alertService = this.ctx.getService(AlertService);
-        this.seriesService = this.ctx.getService(SeriesService);
         this.seasonService = this.ctx.getService(SeasonService);
         this.genreService = this.ctx.getService(GenreService);
         this.watchlistService = this.ctx.getService(WatchlistService);
+        this.watchtimeService = this.ctx.getService(WatchtimeService);
         this.i18nService = this.ctx.getService(I18nService);
 
         this.providerFolder = providerFolder;
@@ -76,7 +76,7 @@ export class DetailControlModel extends DialogControl {
 
         this.mainGenre = await this.genreService.getMainGenreOfSeries(this.seriesId);
         this.genres.push(...await this.genreService.getNonMainGenresOfSeries(this.seriesId));
-        this.watchProgression = await this.seriesService.getTotalWatchProgression(this.seriesId);
+        this.watchProgression = await this.watchtimeService.getTotalWatchProgression(this.seriesId);
         this.onWatchlist = await this.watchlistService.isSeriesOnWatchlist(this.seriesId);
     }
 
@@ -94,7 +94,7 @@ export class DetailControlModel extends DialogControl {
             return;
         }
 
-    
+
         await this.routerService.navigateTo(StreamViewModel, {
             series_id: this.seriesId
         });
@@ -117,7 +117,7 @@ export class DetailControlModel extends DialogControl {
             return;
         }
 
-        await this.seriesService.resetProgression(this.seriesId);
+        await this.watchtimeService.updateWatchtimesOfSeries(this.seriesId, 0, 0);
         this.watchProgression = 0;
     }
 

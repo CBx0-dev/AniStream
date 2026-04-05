@@ -4,7 +4,10 @@ import {useUserControl} from "vue-mvvm";
 import {PrefControlModel} from "@controls/PrefControl.model";
 import I18n from "@utils/i18n";
 
-import Text from "@/controls/Text.vue";
+import Text from "@controls/Text.vue";
+
+import LucideEdit from "@icons/LucideEdit.vue";
+import LucideTrash from "@icons/LucideTrash.vue";
 
 const vm: PrefControlModel = useUserControl(PrefControlModel);
 </script>
@@ -12,7 +15,23 @@ const vm: PrefControlModel = useUserControl(PrefControlModel);
 <template>
     <div class="space-y-6 max-w-2xl mx-auto">
         <section>
-            <h2 class="text-lg font-semibold mb-4 opacity-70 uppercase tracking-wide">
+            <div class="flex flex-col items-center gap-4">
+                <div class="avatar relative">
+                    <div
+                        class="w-24 rounded-2xl ring ring-primary ring-offset-base-100 ring-offset-4 overflow-hidden bg-base-200">
+                        <img v-if="vm.avatarSvg" :src="vm.avatarSvg" alt="Avatar Preview"/>
+                    </div>
+                    <button class="opacity-0 hover:opacity-100 focus:opacity-100 rounded-2xl duration-100 flex absolute size-24 justify-center items-center bg-base-200/70 cursor-pointer" @click="vm.onProfileBtn()">
+                        <LucideEdit class="size-8 text-primary" />
+                    </button>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-semibold">{{ vm.profileName }}</h2>
+                </div>
+            </div>
+        </section>
+        <section>
+            <h2 class="text-sm font-semibold mb-2 uppercase opacity-60">
                 <Text :target="I18n.PrefControl.sections.theme"/>
             </h2>
             <div class="flex flex-wrap gap-5">
@@ -105,7 +124,7 @@ const vm: PrefControlModel = useUserControl(PrefControlModel);
         <div class="divider"></div>
 
         <section>
-            <h2 class="text-lg font-semibold mb-4 opacity-70 uppercase tracking-wide">
+            <h2 class="text-sm font-semibold mb-2 uppercase opacity-60">
                 <Text :target="I18n.PrefControl.sections.language"/>
             </h2>
             <div class="flex flex-wrap gap-4">
@@ -147,30 +166,36 @@ const vm: PrefControlModel = useUserControl(PrefControlModel);
         <div class="divider"></div>
 
         <section>
-            <h2 class="text-lg font-semibold mb-4 opacity-70 uppercase tracking-wide">
+            <h2 class="text-sm font-semibold mb-2 uppercase opacity-60">
                 <Text :target="I18n.PrefControl.sections.updater"/>
             </h2>
             <div class="flex flex-col gap-4">
                 <label class="label">
-                    <input 
+                    <input
                         type="checkbox"
                         :checked="vm.updatesActive"
                         class="toggle toggle-primary"
                         @change="vm.onUpdatesActiveToggle()"/>
-                    <Text :target="I18n.PrefControl.updater.updatesActive" />
+                    <Text :target="I18n.PrefControl.updater.updatesActive"/>
                 </label>
-                <div>    
+                <div>
                     <p class="opacity-70 mb-1">
-                        <Text :target="I18n.PrefControl.updater.heathDescription" />
+                        <Text :target="I18n.PrefControl.updater.heathDescription"/>
                     </p>
                     <label class="input w-148">
                         <label class="label">
-                            <Text :target="I18n.PrefControl.updater.healthUrl" />
+                            <Text :target="I18n.PrefControl.updater.healthUrl"/>
                         </label>
-                        <input type="url" v-model="vm.healthUrl" @change="vm.onHealthUrlChange()" />
+                        <input type="url" v-model="vm.healthUrl" @change="vm.onHealthUrlChange()"/>
                     </label>
                 </div>
             </div>
+        </section>
+        <section>
+            <button class="btn btn-error btn-soft" @click="vm.onProfileDeleteBtn()">
+                <LucideTrash />
+                Delete Profile
+            </button>
         </section>
     </div>
 </template>

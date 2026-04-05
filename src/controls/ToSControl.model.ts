@@ -47,7 +47,7 @@ export class ToSControlModel extends DialogControl implements Action<void> {
             return;
         }
 
-        this.settingsService.tosAccepted = true;
+        await this.settingsService.setTosAccepted(true);
         this.actionContext.completeAction();
         await this.closeDialog();
     }

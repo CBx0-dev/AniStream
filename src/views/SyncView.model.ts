@@ -29,21 +29,29 @@ export class SyncViewModel extends ViewModel {
     private readonly fetchService: FetchService;
     private readonly seriesService: SeriesService;
     private readonly genreService: GenreService;
+
     private panel: SyncViewModelPanel = this.ref(SyncViewModelPanel.PREPARE);
 
-    public isPreparing: boolean = this.computed(() => this.panel == SyncViewModelPanel.PREPARE);
-    public isSyncing: boolean = this.computed(() => this.panel == SyncViewModelPanel.SYNCING);
-    public isContinue: boolean = this.computed(() => this.panel == SyncViewModelPanel.CONTINUE);
     public processed: number = this.ref(1);
     public totalToProceed: number = this.ref(1);
+    public syncImage: string | null = this.ref(null);
+
+    public readonly isPreparing: boolean = this.computed(() => this.panel == SyncViewModelPanel.PREPARE);
+    public readonly isSyncing: boolean = this.computed(() => this.panel == SyncViewModelPanel.SYNCING);
+    public readonly isContinue: boolean = this.computed(() => this.panel == SyncViewModelPanel.CONTINUE);
 
     public constructor() {
         super();
+
         this.routerService = this.ctx.getService(RouterService);
         this.settingsService = this.ctx.getService(SettingsService);
         this.fetchService = this.ctx.getService(FetchService);
         this.seriesService = this.ctx.getService(SeriesService);
         this.genreService = this.ctx.getService(GenreService);
+    }
+
+    protected async mounted(): Promise<void> {
+        this.syncImage = await this.settingsService.getImageVariant("sync", "svg");
     }
 
     public onBackBtn(): void {
@@ -64,10 +72,6 @@ export class SyncViewModel extends ViewModel {
         await Promise.all(Array.from({length: workers}, () => this.worker(stream)));
 
         this.panel = SyncViewModelPanel.CONTINUE;
-    }
-
-    public getSyncImage(): string {
-        return this.settingsService.getImageVariant("sync", "svg");
     }
 
     public onStartWatchingBtn(): void {
