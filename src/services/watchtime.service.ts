@@ -66,14 +66,16 @@ export class WatchtimeService extends DbServiceBase {
             total_episodes: number,
             finished_episodes: number
         }]>(`
-            SELECT COUNT(e.episode_id)                                                      AS total_episodes,
-                   COALESCE(SUM(CASE WHEN wt.percentage_watched > 80 THEN 1 ELSE 0 END), 0) AS finished_episodes
-            FROM watchtime AS wt
-                     LEFT JOIN episode AS e ON e.episode_id = wt.episode_id
+            SELECT COUNT(e.episode_id)              AS total_episodes,
+                   COALESCE(SUM(CASE
+                                    WHEN wt.tenant_id = ? AND
+                                         wt.percentage_watched > 80 THEN 1
+                                    ELSE 0 END), 0) AS finished_episodes
+            FROM episode AS e
+                     LEFT JOIN watchtime AS wt ON wt.episode_id = e.episode_id
                      LEFT JOIN season AS se ON se.season_id = e.season_id
-            WHERE wt.tenant_id = ?
-              AND se.series_id = ?
-              AND se.season_number > 0;
+            WHERE se.series_id = ?
+              AND se.season_number > 0
         `, profile.uuid, seriesId);
 
         if (total_episodes == 0) {
