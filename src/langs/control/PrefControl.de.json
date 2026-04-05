@@ -34,5 +34,9 @@
         "healthUrl": "Health URL",
         "toastTitle": "Einstellung gespeichert",
         "toastDescription": "Die Einstellung wurde automatisch gespeichert"
+    },
+    "alert": {
+        "title": "Profile löschen",
+        "description": "Wollen Sie wirklich ihr Profile löschen? Ihr Watch-Fortschritt kann nicht wiederhergestellt werden."
     }
 }

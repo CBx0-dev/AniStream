@@ -34,5 +34,9 @@
         "healthUrl": "Health URL",
         "toastTitle": "Setting saved",
         "toastDescription": "The settings where saved automatically"
+    },
+    "alert": {
+        "title": "Delete profile",
+        "description": "Are you sure you want to delete your profile? All progress and profile-related data cannot be recovered."
     }
 }

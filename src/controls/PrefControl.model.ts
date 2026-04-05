@@ -1,22 +1,32 @@
 import {ActionResult, UserControl} from "vue-mvvm";
+import {RouterService} from "vue-mvvm/router";
 import {DialogService} from "vue-mvvm/dialog";
+import {AlertService} from "vue-mvvm/alert";
 import {ToastService} from "vue-mvvm/toast";
 
 import {SettingsService} from "@services/settings.service";
 import {I18nService} from "@services/i18n.service";
 import {UserService} from "@services/user.service";
+import {ProviderService} from "@services/provider.service";
 
 import I18n from "@utils/i18n";
+
 import {ProfileModel} from "@models/profile.model";
+
 import {ProfileDialogModel} from "@controls/ProfileDialog.model";
 
+import {ProfileViewModel} from "@views/ProfileView.model";
+
 export class PrefControlModel extends UserControl {
+    private readonly routerService: RouterService;
     private readonly dialogService: DialogService;
+    private readonly alertService: AlertService;
     private readonly toastService: ToastService;
 
     private readonly i18nService: I18nService;
     private readonly settingsService: SettingsService;
     private readonly userService: UserService;
+    private readonly providerService: ProviderService;
 
     private profile: ProfileModel | null = this.ref(null);
 
@@ -38,12 +48,15 @@ export class PrefControlModel extends UserControl {
     public constructor() {
         super();
 
+        this.routerService = this.ctx.getService(RouterService);
         this.dialogService = this.ctx.getService(DialogService);
+        this.alertService = this.ctx.getService(AlertService);
         this.toastService = this.ctx.getService(ToastService);
 
         this.i18nService = this.ctx.getService(I18nService);
         this.settingsService = this.ctx.getService(SettingsService);
         this.userService = this.ctx.getService(UserService);
+        this.providerService = this.ctx.getService(ProviderService);
 
         this.healthUrl = this.settingsService.healthz.value;
     }
@@ -113,5 +126,19 @@ export class PrefControlModel extends UserControl {
             title: this.i18nService.get(I18n.PrefControl.updater.toastTitle),
             description: this.i18nService.get(I18n.PrefControl.updater.toastDescription),
         });
+    }
+
+    public async onProfileDeleteBtn(): Promise<void> {
+        if (!await this.alertService.showConfirm({
+            title: this.i18nService.get(I18n.PrefControl.alert.title),
+            description: this.i18nService.get(I18n.PrefControl.alert.title)
+        })) {
+            return;
+        }
+        const profile: ProfileModel = await this.userService.getActiveProfile();
+        await this.providerService.deleteProfile(profile);
+        await this.userService.deleteProfile(profile);
+
+        await this.routerService.replaceTo(ProfileViewModel);
     }
 }

@@ -4,8 +4,10 @@ import {useUserControl} from "vue-mvvm";
 import {PrefControlModel} from "@controls/PrefControl.model";
 import I18n from "@utils/i18n";
 
-import Text from "@/controls/Text.vue";
+import Text from "@controls/Text.vue";
+
 import LucideEdit from "@icons/LucideEdit.vue";
+import LucideTrash from "@icons/LucideTrash.vue";
 
 const vm: PrefControlModel = useUserControl(PrefControlModel);
 </script>
@@ -188,6 +190,12 @@ const vm: PrefControlModel = useUserControl(PrefControlModel);
                     </label>
                 </div>
             </div>
+        </section>
+        <section>
+            <button class="btn btn-error btn-soft" @click="vm.onProfileDeleteBtn()">
+                <LucideTrash />
+                Delete Profile
+            </button>
         </section>
     </div>
 </template>

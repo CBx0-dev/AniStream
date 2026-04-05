@@ -63,6 +63,7 @@ export class UserService {
     public async getMigrationProfile(): Promise<ProfileModel> {
         const session: DbSession = await this.getDatabase();
 
+        // language=SQLite
         const rows: ProfileDbModel[] = await session.query<ProfileDbModel[]>("SELECT * FROM profile ORDER BY profile_id ASC LIMIT 1");
         if (rows.length == 0) {
             throw "Could not find migration profile";
@@ -101,6 +102,7 @@ export class UserService {
     public async getProfileByUUID(uuid: string): Promise<ProfileModel | null> {
         const session: DbSession = await this.getDatabase();
 
+        // language=SQLite
         const rows: ProfileDbModel[] = await session.query<ProfileDbModel[]>("SELECT * FROM profile WHERE uuid = ? LIMIT 1", uuid);
         if (rows.length == 0) {
             return null;
@@ -133,6 +135,7 @@ export class UserService {
         const session: DbSession = await this.getDatabase();
         const uuid: string = crypto.randomUUID();
 
+        // language=SQLite
         const result: QueryResult = await session.execute(
             "INSERT INTO profile (uuid, name, background_color, eye, mouth, theme, lang, tos_accepted) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             uuid,
@@ -161,6 +164,7 @@ export class UserService {
     public async updateProfile(profileId: number, name: string, backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth, theme: string, local: string, tosAccepted: boolean): Promise<void> {
         const session: DbSession = await this.getDatabase();
 
+        // language=SQLite
         await session.execute(
             "UPDATE profile SET name = ?, background_color = ?, eye = ?, mouth = ?, theme = ?, lang = ?, tos_accepted = ? WHERE profile_id = ?",
             name,
@@ -182,6 +186,16 @@ export class UserService {
         });
 
         return result.toDataUri()
+    }
+
+    public async deleteProfile(profile: ProfileModel): Promise<void> {
+        const session: DbSession = await this.getDatabase();
+
+        // language=SQLite
+        await session.execute(
+            "DELETE FROM profile WHERE uuid = ?",
+            profile.uuid
+        );
     }
 
     public getAvatarSvgOfProfile(profile: ProfileModel): string {
