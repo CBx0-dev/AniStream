@@ -47,13 +47,12 @@ def generate_stats():
     asset_names = sorted(list(asset_names))
 
     # Prepare data for plotting (Y-axis)
-    # Each asset will have a list of sizes corresponding to each tag (in MB)
+    # Each asset will have a list of sizes corresponding to each tag (in Bytes)
     asset_data = {name: [] for name in asset_names}
     for entry in data:
         for name in asset_names:
             size_bytes = entry['assets'].get(name, 0) # Use 0 if asset is missing for a tag
-            size_mb = size_bytes / (1000 * 1000)
-            asset_data[name].append(size_mb)
+            asset_data[name].append(size_bytes)
 
     # Define groupings
     groupings = {
@@ -82,21 +81,32 @@ def generate_stats():
             
         plt.figure(figsize=(15, 8))
         has_data = False
+        
+        # Define factor and unit based on group
+        if group_name == "SourceCode":
+            factor = 1000
+            unit = "KB"
+        else:
+            factor = 1000 * 1000
+            unit = "MB"
+
         for name in members:
             if name in asset_data:
                 # Find the first index where the asset has a size > 0
-                sizes = asset_data[name]
+                raw_sizes = asset_data[name]
                 first_non_zero = -1
-                for i, size in enumerate(sizes):
+                for i, size in enumerate(raw_sizes):
                     if size > 0:
                         first_non_zero = i
                         break
                 
                 if first_non_zero != -1:
+                    # Convert to target unit
+                    converted_sizes = [s / factor for s in raw_sizes[first_non_zero:]]
                     # Plot only from the first non-zero size to the end
                     # Use numeric indices for X-axis to ensure consistent mapping
                     x_values = range(first_non_zero, len(tags))
-                    plt.plot(x_values, sizes[first_non_zero:], marker='o', label=name)
+                    plt.plot(x_values, converted_sizes, marker='o', label=name)
                     has_data = True
         
         if not has_data:
@@ -105,7 +115,7 @@ def generate_stats():
 
         plt.title(f'{group_name} File sizes over Versions')
         plt.xlabel('Tags')
-        plt.ylabel('Filesize (MB)')
+        plt.ylabel(f'Filesize ({unit})')
         plt.xticks(range(len(tags)), tags)
         plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
         plt.grid(True, linestyle='--', alpha=0.7)
