@@ -84,16 +84,6 @@ class EpisodeServiceImpl extends DbServiceBase implements EpisodeService {
             episode_id
         );
     }
-
-    public async updateEpisodesProgression(seasonId: number, percentageWatched: number): Promise<void> {
-        const session: DbSession = await this.provider.getDatabase();
-
-        await session.execute(
-            "UPDATE episode SET percentage_watched = ? WHERE season_id = ?;",
-            percentageWatched,
-            seasonId
-        );
-    }
 }
 
 export default {
