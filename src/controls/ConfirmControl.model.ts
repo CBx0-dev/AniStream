@@ -1,8 +1,8 @@
 import {Component} from "vue";
+import {ActionContext} from "vue-mvvm";
 import {ConfirmControl, ConfirmOptions} from "vue-mvvm/alert";
 
 import ConfirmControlComponent  from "@controls/ConfirmControl.vue";
-import {ActionContext} from "vue-mvvm";
 
 export class ConfirmControlModel extends ConfirmControl {
     public static readonly component: Component = ConfirmControlComponent;

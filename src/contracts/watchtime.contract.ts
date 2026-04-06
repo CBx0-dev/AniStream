@@ -3,9 +3,9 @@ import {ServiceKey} from "vue-mvvm";
 import type {WatchtimeModel} from "@models/watchtime.model";
 
 export interface WatchtimeService {
-    getWachtimeOfEpisode(episodeId: number): Promise<WatchtimeModel | null>;
+    getWatchtimeOfEpisode(episodeId: number): Promise<WatchtimeModel | null>;
 
-    getWachtimeOfSeries(seriesId: number): Promise<WatchtimeModel[]>;
+    getWatchtimesOfSeries(seriesId: number): Promise<WatchtimeModel[]>;
 
     getTotalWatchProgression(seriesId: number): Promise<number>;
 

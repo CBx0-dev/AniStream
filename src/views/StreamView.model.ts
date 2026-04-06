@@ -13,13 +13,13 @@ import {EpisodeModel} from "@models/episode.model";
 import {GenreModel} from "@models/genre.model";
 import {WatchtimeModel} from "@models/watchtime.model";
 
-import {ProviderService} from "@services/provider.service";
-import {I18nService} from "@services/i18n.service";
-import {GenreService} from "@services/genre.service";
-import {SeriesService} from "@services/series.service";
-import {SeasonService} from "@services/season.service";
-import {EpisodeService} from "@services/episode.service";
-import {WatchtimeService} from "@services/watchtime.service";
+import {ProviderService} from "@contracts/provider.contract";
+import {I18nService} from "@contracts/i18n.contract";
+import {GenreService} from "@contracts/genre.contract";
+import {SeriesService} from "@contracts/series.contract";
+import {SeasonService} from "@contracts/season.contract";
+import {EpisodeService} from "@contracts/episode.contract";
+import {WatchtimeService} from "@contracts/watchtime.contract";
 
 import I18n from "@utils/i18n";
 

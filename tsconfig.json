@@ -23,7 +23,7 @@
         "noFallthroughCasesInSwitch": true,
         "paths": {
             "@/*": ["./src/*"],
-            "@services/*": ["./src/services/*"],
+            "@services/*": ["./src/services/standalone/*", "./src/services/shared/*"],
             "@views/*": ["./src/views/*"],
             "@models/*": ["./src/models/*"],
             "@icons/*": ["./src/icons/*"],

@@ -5,10 +5,10 @@ import {DialogControl} from "vue-mvvm/dialog";
 
 import ReportControlComponent from "@controls/ReportControl.vue";
 
-import {SettingsService} from "@services/settings.service";
+import {SettingsService} from "@contracts/settings.contract";
+import {I18nService} from "@contracts/i18n.contract";
 
-import {I18nService} from "@services/i18n.service";
-import I18n from "@/utils/i18n";
+import I18n from "@utils/i18n";
 
 import * as packageJSON from "@/../package.json";
 

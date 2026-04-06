@@ -1,6 +1,8 @@
 import type {Ref} from "vue";
 import {ServiceKey} from "vue-mvvm";
 
+import {SupportedLocals} from "@contracts/i18n.contract";
+
 export interface SettingsService {
     get ignoreVersion(): Readonly<Ref<string>>;
 
@@ -22,13 +24,13 @@ export interface SettingsService {
 
     getTheme(): Promise<string>;
 
-    setLocal(local: string): Promise<void>;
+    setLocal(local: SupportedLocals): Promise<void>;
 
     setLocalSession(local: string): void;
 
-    getDefaultLocal(): string;
+    getDefaultLocal(): SupportedLocals;
 
-    getLocal(): Promise<string>;
+    getLocal(): Promise<SupportedLocals>;
 
     setTosAccepted(value: boolean): Promise<void>;
 

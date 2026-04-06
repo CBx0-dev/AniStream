@@ -4,7 +4,7 @@ import type {AniWorldProvider} from "@providers/aniworld";
 import type {StoProvider} from "@providers/sto";
 import type {DefaultProvider} from "@providers/default";
 
-import type {DbSession} from "@services/db.service";
+import type {DbSession} from "@services/utils/db";
 
 import {ProfileModel} from "@models/profile.model";
 

@@ -1,11 +1,14 @@
 import {ReadableGlobalContext} from "vue-mvvm";
 
-import {DbServiceBase, DbSession} from "@services/db.service";
-import {UserService} from "@services/user.service";
+import {WatchlistService} from "@contracts/watchlist.contract";
+import {UserService} from "@contracts/user.contract";
+
+import {ServiceDeclaration} from "@services/declaration";
+import {DbServiceBase, DbSession} from "@services/utils/db";
 
 import {ProfileModel} from "@models/profile.model";
 
-export class WatchlistService extends DbServiceBase {
+class WatchlistServiceImpl extends DbServiceBase implements WatchlistService {
     private readonly userService: UserService;
 
     public constructor(ctx: ReadableGlobalContext) {
@@ -45,3 +48,8 @@ export class WatchlistService extends DbServiceBase {
         await session.execute("DELETE FROM watchlist WHERE series_id = ?", seriesId);
     }
 }
+
+export default {
+    key: WatchlistService,
+    ctor: WatchlistServiceImpl
+} satisfies ServiceDeclaration<WatchlistService>;

@@ -1,12 +1,15 @@
 import {ReadableGlobalContext} from "vue-mvvm";
 import {readonly, ref, Ref} from "vue";
 
-import {I18nService} from "@services/i18n.service";
-import {UserService} from "@services/user.service";
+import {SettingsService} from "@contracts/settings.contract";
+import {I18nService, SupportedLocals} from "@contracts/i18n.contract";
+import {UserService} from "@contracts/user.contract";
+
+import {ServiceDeclaration} from "@services/declaration";
 
 import {ProfileModel} from "@models/profile.model";
 
-export class SettingsService {
+class SettingsServiceImpl implements SettingsService {
     private static readonly IGNORE_VERSION_KEY: string = "ignore-version";
     private static readonly UPDATES_ACTIVE_KEY: string = "updates-active";
     private static readonly HEALTHZ_KEY: string = "healthz";
@@ -24,7 +27,7 @@ export class SettingsService {
 
     public set ignoreVersion(v: string) {
         this._ignoreVersion.value = v;
-        localStorage.setItem(SettingsService.IGNORE_VERSION_KEY, v);
+        localStorage.setItem(SettingsServiceImpl.IGNORE_VERSION_KEY, v);
     }
 
     public get updatesActive(): Readonly<Ref<boolean>> {
@@ -33,7 +36,7 @@ export class SettingsService {
 
     public set updatesActive(v: boolean) {
         this._updatesActive.value = v;
-        localStorage.setItem(SettingsService.UPDATES_ACTIVE_KEY, v ? "true" : "false");
+        localStorage.setItem(SettingsServiceImpl.UPDATES_ACTIVE_KEY, v ? "true" : "false");
     }
 
     public get healthz(): Readonly<Ref<string>> {
@@ -42,16 +45,16 @@ export class SettingsService {
 
     public set healthz(v: string) {
         this._healthz.value = v;
-        localStorage.setItem(SettingsService.HEALTHZ_KEY, v);
+        localStorage.setItem(SettingsServiceImpl.HEALTHZ_KEY, v);
     }
 
     public constructor(ctx: ReadableGlobalContext) {
         this.i18nService = ctx.getService(I18nService);
         this.userService = ctx.getService(UserService);
 
-        this.ignoreVersion = this.loadFromStorage(SettingsService.IGNORE_VERSION_KEY, "0.0.0");
-        this.updatesActive = this.loadFromStorage(SettingsService.UPDATES_ACTIVE_KEY, "true") == "true";
-        this.healthz = this.loadFromStorage(SettingsService.HEALTHZ_KEY, "https://www.google.com/generate_204");
+        this.ignoreVersion = this.loadFromStorage(SettingsServiceImpl.IGNORE_VERSION_KEY, "0.0.0");
+        this.updatesActive = this.loadFromStorage(SettingsServiceImpl.UPDATES_ACTIVE_KEY, "true") == "true";
+        this.healthz = this.loadFromStorage(SettingsServiceImpl.HEALTHZ_KEY, "https://www.google.com/generate_204");
 
         this.setThemeSession(this.getDefaultTheme());
         this.setLocalSession(this.getDefaultLocal());
@@ -83,18 +86,18 @@ export class SettingsService {
         return profile.theme;
     }
 
-    public async setLocal(local: string): Promise<void> {
+    public async setLocal(local: SupportedLocals): Promise<void> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
         profile.lang = local;
         this.setLocalSession(local);
         await this.updateProfile(profile);
     }
 
-    public setLocalSession(local: string): void {
+    public setLocalSession(local: SupportedLocals): void {
         this.i18nService.setLocal(local);
     }
 
-    public getDefaultLocal(): string {
+    public getDefaultLocal(): SupportedLocals {
         const lang: string = window.navigator.language;
         if (lang != "en" && lang != "de") {
             return "en";
@@ -103,7 +106,7 @@ export class SettingsService {
         return lang;
     }
 
-    public async getLocal(): Promise<string> {
+    public async getLocal(): Promise<SupportedLocals> {
         const profile: ProfileModel | null = await this.userService.getActiveProfileOrDefault();
         if (!profile) {
             return this.getDefaultLocal();
@@ -150,3 +153,8 @@ export class SettingsService {
         return localStorage.getItem(key) ?? defaultValue;
     }
 }
+
+export default {
+    key: SettingsService,
+    ctor: SettingsServiceImpl
+} satisfies ServiceDeclaration<SettingsService>;

@@ -1,7 +1,8 @@
 import {path} from "@tauri-apps/api";
 import * as fs from "@tauri-apps/plugin-fs";
 
-import {Provider} from "@services/fetch.service";
+import {Provider} from "@contracts/fetch.contract";
+
 import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";
 
 import {SeriesFetchModel, SeriesModel} from "@models/series.model";

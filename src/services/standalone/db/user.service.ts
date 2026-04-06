@@ -1,8 +1,12 @@
 import Database from "@tauri-apps/plugin-sql";
 
-import {DbSession, DbVersion, DbVersionConstructor} from "@services/db.service";
+import {ServiceKey} from "vue-mvvm";
 
-export class UserDbService {
+import {ServiceDeclaration} from "@services/declaration";
+
+import {DbSession, DbVersion, DbVersionConstructor} from "@services/utils/db";
+
+export class UserDbServiceImpl {
     public constructor() {
     }
 
@@ -83,3 +87,11 @@ CREATE TABLE profile
 // ================================================================================================================== //
 
 const LATEST_VERSION: Exclude<UserDbVersionConstructor, null> = DbVersion1;
+
+export type UserDbService = UserDbServiceImpl;
+export const UserDbService: ServiceKey<UserDbServiceImpl> = new ServiceKey<UserDbServiceImpl>("user.db.service");
+
+export default {
+    key: UserDbService,
+    ctor: UserDbServiceImpl
+} satisfies ServiceDeclaration<UserDbServiceImpl>;

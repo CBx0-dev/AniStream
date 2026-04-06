@@ -15,22 +15,11 @@ import {ConfirmControlModel} from "@controls/ConfirmControl.model";
 import ToastContainer from "@controls/ToastContainer.vue";
 import {InfoToastModel} from "@controls/InfoToast.model";
 
-import {ProviderService} from "@services/provider.service";
-import {SeriesService} from "@services/series.service";
-import {SeasonService} from "@services/season.service";
-import {EpisodeService} from "@services/episode.service";
-import {MetadataDbService} from "@services/db/metadata.db";
-import {FetchService} from "@services/fetch.service";
-import {GenreService} from "@services/genre.service";
-import {WatchlistService} from "@services/watchlist.service";
-import {I18nService} from "@services/i18n.service";
-import {ChangelogService} from "@services/changelog.service";
-import {SettingsService} from "@services/settings.service";
-import {ReportService} from "@services/report.service";
-import {UpdateService} from "@services/update.service";
-import {UserDbService} from "@services/db/user.db";
-import {UserService} from "@services/user.service";
-import {WatchtimeService} from "@services/watchtime.service";
+import {ReportService} from "@contracts/report.contract";
+import {SettingsService} from "@contracts/settings.contract";
+import {UpdateService} from "@contracts/update.contract";
+
+import {services} from "virtual:services";
 
 export class AppConfig implements AppShell {
     private app: App;
@@ -63,22 +52,9 @@ export class AppConfig implements AppShell {
     }
 
     configureServices(ctx: WritableGlobalContext): void {
-        ctx.registerService(I18nService, () => new I18nService());
-        ctx.registerService(ProviderService, ctx => new ProviderService(ctx));
-        ctx.registerService(SeriesService, ctx => new SeriesService(ctx));
-        ctx.registerService(SeasonService, ctx => new SeasonService(ctx));
-        ctx.registerService(EpisodeService, ctx => new EpisodeService(ctx));
-        ctx.registerService(GenreService, ctx => new GenreService(ctx));
-        ctx.registerService(WatchlistService, ctx => new WatchlistService(ctx));
-        ctx.registerService(MetadataDbService, ctx => new MetadataDbService(ctx));
-        ctx.registerService(FetchService, ctx => new FetchService(ctx));
-        ctx.registerService(ChangelogService, () => new ChangelogService());
-        ctx.registerService(SettingsService, ctx => new SettingsService(ctx));
-        ctx.registerService(ReportService, ctx => new ReportService(ctx));
-        ctx.registerService(UpdateService, ctx => new UpdateService(ctx));
-        ctx.registerService(UserDbService, () => new UserDbService());
-        ctx.registerService(UserService, ctx => new UserService(ctx));
-        ctx.registerService(WatchtimeService, ctx => new WatchtimeService(ctx));
+        for (const service of Object.values(services)) {
+            ctx.registerService(service.key, ctx => new service.ctor(ctx));
+        }
 
         // Init reporting
         const reportService: ReportService = ctx.getService(ReportService);

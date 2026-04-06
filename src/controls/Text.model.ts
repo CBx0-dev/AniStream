@@ -1,5 +1,6 @@
-import { I18nService } from "@/services/i18n.service";
-import { UserControl } from "vue-mvvm";
+import {UserControl} from "vue-mvvm";
+
+import {I18nService} from "@contracts/i18n.contract";
 
 export class TextControlModel extends UserControl {
     private readonly i18nService: I18nService;
@@ -15,7 +16,7 @@ export class TextControlModel extends UserControl {
     public i18n(...args: any[]): string {
         if (args.length >= 1 && Array.isArray(args[0])) {
             return this.i18nService.get(args[0] as [string, string[]], ...args.slice(1));
-        } 
+        }
 
         return this.i18nService.getDynamic(args[0], args[1]);
     }

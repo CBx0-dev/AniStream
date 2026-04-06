@@ -11,11 +11,11 @@ import {StreamViewModel} from "@views/StreamView.model";
 import {SeriesModel} from "@models/series.model";
 import {GenreModel} from "@models/genre.model";
 
-import {GenreService} from "@services/genre.service";
-import {I18nService} from "@services/i18n.service";
-import {SeasonService} from "@services/season.service";
-import {WatchlistService} from "@services/watchlist.service";
-import {WatchtimeService} from "@services/watchtime.service";
+import {GenreService} from "@contracts/genre.contract";
+import {I18nService} from "@contracts/i18n.contract";
+import {SeasonService} from "@contracts/season.contract";
+import {WatchlistService} from "@contracts/watchlist.contract";
+import {WatchtimeService} from "@contracts/watchtime.contract";
 
 import I18n from "@utils/i18n";
 

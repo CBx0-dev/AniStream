@@ -2,14 +2,16 @@ import {QueryResult} from "@tauri-apps/plugin-sql";
 
 import {ReadableGlobalContext} from "vue-mvvm";
 
-import {DbServiceBase, DbSession} from "@services/db.service";
-import {UserService} from "@services/user.service";
+import {WatchtimeService} from "@contracts/watchtime.contract";
+import {UserService} from "@contracts/user.contract";
+
+import {ServiceDeclaration} from "@services/declaration";
+import {DbServiceBase, DbSession} from "@services/utils/db";
 
 import {WatchtimeDbModel, WatchtimeModel} from "@models/watchtime.model";
 import {ProfileModel} from "@models/profile.model";
 
-
-export class WatchtimeService extends DbServiceBase {
+class WatchtimeServiceImpl extends DbServiceBase implements WatchtimeService {
     private readonly userService: UserService;
 
     public constructor(ctx: ReadableGlobalContext) {
@@ -164,3 +166,8 @@ export class WatchtimeService extends DbServiceBase {
         `, percentageWatched, stoppedTime, profile.uuid, seriesId);
     }
 }
+
+export default {
+    key: WatchtimeService,
+    ctor: WatchtimeServiceImpl
+} satisfies ServiceDeclaration<WatchtimeService>;

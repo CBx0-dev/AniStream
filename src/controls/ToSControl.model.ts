@@ -1,9 +1,10 @@
 import {Component} from "vue";
+import {Action, ActionContext} from "vue-mvvm";
 import {DialogControl} from "vue-mvvm/dialog";
 
 import ToSControl from "@controls/ToSControl.vue";
-import {Action, ActionContext} from "vue-mvvm";
-import {SettingsService} from "@services/settings.service";
+
+import {SettingsService} from "@contracts/settings.contract";
 
 export class ToSControlModel extends DialogControl implements Action<void> {
     public static readonly component: Component = ToSControl;

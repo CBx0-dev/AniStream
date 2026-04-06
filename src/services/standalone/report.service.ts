@@ -1,15 +1,19 @@
 import {invoke} from "@tauri-apps/api/core";
 import {arch as getArch, platform as getPlatform} from "@tauri-apps/plugin-os";
+
 import {Action, ActionContext, ActionResult, ReadableGlobalContext, syncio} from "vue-mvvm";
 import {DialogService} from "vue-mvvm/dialog";
 
-import {ReportControlModel, ReportResult} from "@controls/ReportControl.model";
+import {ReportService} from "@contracts/report.contract";
+import {SettingsService} from "@contracts/settings.contract";
 
-import {SettingsService} from "@services/settings.service";
+import {ServiceDeclaration} from "@services/declaration";
+
+import {ReportControlModel, ReportResult} from "@controls/ReportControl.model";
 
 import * as packageJSON from "@/../package.json";
 
-export class ReportService {
+class ReportServiceImpl implements ReportService {
     private ctx: ReadableGlobalContext;
 
     public constructor(ctx: ReadableGlobalContext) {
@@ -96,3 +100,8 @@ ${this.sanitizeForMarkdown(stack)}
     }
 
 }
+
+export default {
+    key: ReportService,
+    ctor: ReportServiceImpl
+} satisfies ServiceDeclaration<ReportService>;

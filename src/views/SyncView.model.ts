@@ -4,10 +4,10 @@ import {RouteAdapter, RouterService} from "vue-mvvm/router";
 
 import SyncView from "@views/SyncView.vue";
 
-import {SeriesService} from "@services/series.service";
-import {FetchService} from "@services/fetch.service";
-import {GenreService} from "@services/genre.service";
-import {SettingsService} from "@services/settings.service";
+import {SeriesService} from "@contracts/series.contract";
+import {FetchService} from "@contracts/fetch.contract";
+import {GenreService} from "@contracts/genre.contract";
+import {SettingsService} from "@contracts/settings.contract";
 
 import {GenreModel} from "@models/genre.model";
 import {SeriesModel} from "@models/series.model";

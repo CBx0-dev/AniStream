@@ -5,7 +5,13 @@ import type {GenreFetchModel} from "@models/genre.model";
 import type {SeasonFetchModel} from "@models/season.model";
 import type {EpisodeFetchModel} from "@models/episode.model";
 
-import type {Provider} from "@services/fetch.service";
+import {EpisodeLanguage} from "@providers/default";
+
+export interface Provider {
+    name: string;
+    language: EpisodeLanguage;
+    embeddedURL: string;
+}
 
 export interface FetchService {
     getCatalog(): Promise<string[]>;
@@ -14,7 +20,7 @@ export interface FetchService {
 
     getSeasons(series: SeriesModel): Promise<SeasonFetchModel[]>;
 
-    getEpisodes(guid: string, seasonNumber: number): Promise<EpisodeFetchModel>;
+    getEpisodes(guid: string, seasonNumber: number): Promise<EpisodeFetchModel[]>;
 
     getProviders(guid: string, seasonNumber: number, episodeNumber: number): Promise<Provider[]>;
 }

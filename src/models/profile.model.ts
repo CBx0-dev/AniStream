@@ -1,5 +1,7 @@
 import type {botttsNeutral} from "@dicebear/collection";
 
+import {SupportedLocals} from "@contracts/i18n.contract";
+
 export type ProfileEye = NonNullable<botttsNeutral.Options["eyes"]>[0];
 export type ProfileMouth = NonNullable<botttsNeutral.Options["mouth"]>[0];
 
@@ -11,7 +13,7 @@ export interface ProfileDbModel {
     eye: ProfileEye;
     mouth: ProfileMouth;
     theme: string;
-    lang: string;
+    lang: SupportedLocals;
     tos_accepted: string;
 }
 
@@ -28,7 +30,7 @@ export function ProfileModel(
     eye: ProfileEye,
     mouth: ProfileMouth,
     theme: string,
-    lang: string,
+    lang: SupportedLocals,
     tosAccepted: string
 ): ProfileModel;
 export function ProfileModel(
@@ -39,7 +41,7 @@ export function ProfileModel(
     eye: ProfileEye,
     mouth: ProfileMouth,
     theme: string,
-    lang: string,
+    lang: SupportedLocals,
     tosAccepted: string
 ): ProfileModel;
 
@@ -48,7 +50,7 @@ export function ProfileModel(...args: unknown[]): ProfileModel {
         args.unshift(0);
     }
 
-    return _ProfileModel(...args as [number, string, string, string, ProfileEye, ProfileMouth, string, string, string]);
+    return _ProfileModel(...args as [number, string, string, string, ProfileEye, ProfileMouth, string, SupportedLocals, string]);
 }
 
 function _ProfileModel(
@@ -59,7 +61,7 @@ function _ProfileModel(
     eye: ProfileEye,
     mouth: ProfileMouth,
     theme: string,
-    lang: string,
+    lang: SupportedLocals,
     tosAccepted: string
 ): ProfileModel {
     const obj: ProfileModel = {

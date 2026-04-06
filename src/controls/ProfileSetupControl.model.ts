@@ -2,9 +2,9 @@ import {Action, ActionContext, UserControl} from "vue-mvvm";
 
 import {ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model";
 
-import {UserService} from "@services/user.service";
-import {SettingsService} from "@services/settings.service";
-import {I18nService} from "@services/i18n.service";
+import {UserService} from "@contracts/user.contract";
+import {SettingsService} from "@contracts/settings.contract";
+import {I18nService, SupportedLocals} from "@contracts/i18n.contract";
 
 export class ProfileSetupControlModel extends UserControl implements Action<ProfileModel> {
     public static readonly EYES: ProfileEye[] = ["bulging", "dizzy", "eva", "frame1", "frame2", "glow", "happy", "round", "roundFrame01", "roundFrame02", "sensor", "shade01"];
@@ -26,7 +26,7 @@ export class ProfileSetupControlModel extends UserControl implements Action<Prof
     public eye: ProfileEye = this.ref("frame1");
     public mouth: ProfileMouth = this.ref("smile01");
     public theme: string = this.ref("aniworld-light");
-    public local: string = this.ref("en");
+    public local: SupportedLocals = this.ref("en");
 
     public isCreation: boolean = this.computed(() => !this.existingProfile);
     public avatarSvg: string = this.computed(() => this.userService.getAvatarSvg(this.backgroundColorValue, this.eye, this.mouth));

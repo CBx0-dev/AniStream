@@ -5,7 +5,7 @@ import type {SeriesModel} from "@models/series.model";
 export interface SeriesService {
     requiresSync(): Promise<boolean>;
 
-    existByGUID(guid: string): Promise<SeriesModel[]>;
+    existByGUID(guid: string): Promise<boolean>;
 
     insertSeries(guid: string, title: string, description: string, previewImage: string | null): Promise<SeriesModel>;
 

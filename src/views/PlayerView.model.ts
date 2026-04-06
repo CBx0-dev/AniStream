@@ -8,11 +8,11 @@ import {SeriesModel} from "@models/series.model";
 import {EpisodeModel} from "@models/episode.model";
 import {SeasonModel} from "@models/season.model";
 
-import {SeriesService} from "@services/series.service";
-import {SeasonService} from "@services/season.service";
-import {EpisodeService} from "@services/episode.service";
-import {FetchService, Provider} from "@services/fetch.service";
-import {I18nService} from "@services/i18n.service";
+import {SeriesService} from "@contracts/series.contract";
+import {SeasonService} from "@contracts/season.contract";
+import {EpisodeService} from "@contracts/episode.contract";
+import {FetchService, Provider} from "@contracts/fetch.contract";
+import {I18nService} from "@contracts/i18n.contract";
 
 import {EpisodeLanguage} from "@providers/default";
 

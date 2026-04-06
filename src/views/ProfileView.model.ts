@@ -5,7 +5,7 @@ import {RouteAdapter, RouterService} from "vue-mvvm/router";
 import ProfileView from "@views/ProfileView.vue";
 import {ProviderViewModel} from "@views/ProviderView.model";
 
-import {UserService} from "@services/user.service";
+import {UserService} from "@contracts/user.contract";
 
 import type {ProfileModel} from "@models/profile.model";
 

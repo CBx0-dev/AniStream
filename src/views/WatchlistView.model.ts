@@ -7,9 +7,9 @@ import WatchlistView from "@views/WatchlistView.vue";
 
 import {DetailControlModel} from "@controls/DetailControl.model";
 
-import {ProviderService} from "@services/provider.service";
-import {SeriesService} from "@services/series.service";
-import {WatchlistService} from "@services/watchlist.service";
+import {ProviderService} from "@contracts/provider.contract";
+import {SeriesService} from "@contracts/series.contract";
+import {WatchlistService} from "@contracts/watchlist.contract";
 
 import {SeriesModel} from "@models/series.model";
 

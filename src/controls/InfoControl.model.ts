@@ -1,10 +1,12 @@
 import {arch as getArch, platform as getPlatform} from "@tauri-apps/plugin-os";
 import * as fs from "@tauri-apps/plugin-fs";
 import * as path from "@tauri-apps/api/path";
+
 import {UserControl} from "vue-mvvm";
 
+import {ProviderService} from "@contracts/provider.contract";
+
 import * as packageJSON from "@/../package.json";
-import {ProviderService} from "@services/provider.service";
 
 export class InfoControlModel extends UserControl {
     private readonly providerService: ProviderService;
