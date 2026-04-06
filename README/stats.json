@@ -1,0 +1,57 @@
+[
+    {
+        "tag": "v1.0.0",
+        "assets": {
+            "x86_64.rpm": 10321748,
+            "aarch64.dmg": 8638974,
+            "amd64.AppImage": 82397688,
+            "amd64.deb": 10321114,
+            "x86_64.exe": 5704668,
+            "x86_64.msi": 8245248,
+            "aarch64.app.tar.gz": 8835527,
+            "html": 577,
+            "assets": 548091,
+            "css": 101982,
+            "javascript": 828081,
+            "changelogs": 507
+        }
+    },
+    {
+        "tag": "v1.0.1",
+        "assets": {
+            "x86_64.rpm": 10322261,
+            "aarch64.dmg": 8625640,
+            "amd64.AppImage": 82385400,
+            "amd64.deb": 10321652,
+            "x86_64.exe": 5701806,
+            "x86_64.dmg": 8952738,
+            "x86_64.msi": 8245248,
+            "aarch64.app.tar.gz": 8832518,
+            "x86_64.app.tar.gz": 9094241,
+            "html": 577,
+            "assets": 548091,
+            "css": 101982,
+            "javascript": 828239,
+            "changelogs": 830
+        }
+    },
+    {
+        "tag": "v1.1.0",
+        "assets": {
+            "x86_64.rpm": 10293273,
+            "aarch64.dmg": 8587229,
+            "amd64.AppImage": 82352632,
+            "amd64.deb": 10291616,
+            "x86_64.exe": 5707549,
+            "x86_64.dmg": 8880651,
+            "x86_64.msi": 8192000,
+            "aarch64.app.tar.gz": 8802032,
+            "x86_64.app.tar.gz": 9023123,
+            "html": 577,
+            "assets": 548091,
+            "css": 110342,
+            "javascript": 858419,
+            "changelogs": 1578
+        }
+    }
+]
