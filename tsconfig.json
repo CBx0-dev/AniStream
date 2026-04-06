@@ -32,7 +32,8 @@
             "@langs/*": ["./src/langs/*"],
             "@providers/*": ["./src/providers/*"],
             "@sources": ["./src/sources/index.ts"],
-            "@sources/*": ["./src/sources/*"]
+            "@sources/*": ["./src/sources/*"],
+            "@contracts/*": ["./src/contracts/*"]
         }
     },
     "include": [

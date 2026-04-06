@@ -20,7 +20,8 @@ export default defineConfig(async () => ({
             "@utils": path.join(__dirname, "src", "utils"),
             "@langs": path.join(__dirname, "src", "langs"),
             "@providers": path.join(__dirname, "src", "providers"),
-            "@sources": path.join(__dirname, "src", "sources")
+            "@sources": path.join(__dirname, "src", "sources"),
+            "@contracts": path.join(__dirname, "src", "contracts")
         }
     },
 
