@@ -50,7 +50,7 @@ export class FetchService {
         return await fetcher.getEpisodes(guid, seasonNumber);
     }
 
-    public async fetchProviders(guid: string, seasonNumber: number, episodeNumber: number): Promise<Provider[]> {
+    public async getProviders(guid: string, seasonNumber: number, episodeNumber: number): Promise<Provider[]> {
         const provider: DefaultProvider = await this.providerService.getProvider();
         const fetcher: IInformationFetcher = provider.getFetcher();
 

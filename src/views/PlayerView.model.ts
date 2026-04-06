@@ -192,7 +192,7 @@ export class PlayerViewModel extends ViewModel {
         this.providerLoading = true;
         this.providers.clear();
 
-        const providers: Provider[] = await this.fetchService.fetchProviders(this.series.guid, this.season.season_number, this.episode.episode_number);
+        const providers: Provider[] = await this.fetchService.getProviders(this.series.guid, this.season.season_number, this.episode.episode_number);
         this.providers.push(...providers.groupTo2D(provider => provider.language));
 
         this.providerLoading = false;
