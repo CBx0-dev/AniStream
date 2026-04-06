@@ -9,14 +9,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        target: ["standalone"]
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install dependencies
@@ -26,4 +28,6 @@ jobs:
         run: node i18n.gen.cjs
 
       - name: Build
-        run: npm run build
+        run:
+          export APPLICATION_TARGET="${{ matrix.target }}"
+          npm run build
