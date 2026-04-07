@@ -11,3 +11,5 @@ declare module "virtual:services" {
 
     export const services: Record<string, ServiceDeclaration<unknown>>;
 }
+
+declare const APPLICATION_TARGET: "standalone";

@@ -6,6 +6,7 @@
     "environment": {
         "version": "Version",
         "platform": "Platform",
+        "target": "Zielplattform",
         "language": "Sprache",
         "theme": "Theme"
     },

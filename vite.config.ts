@@ -123,5 +123,8 @@ export default defineConfig(async (): Promise<UserConfig> => {
                 ignored: ["**/src-tauri/**", "**/src/langs/**"],
             },
         },
+        define: {
+            APPLICATION_TARGET: JSON.stringify(APPLICATION_TARGET)
+        }
     }
 });

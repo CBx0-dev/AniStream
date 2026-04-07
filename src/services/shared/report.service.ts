@@ -86,6 +86,7 @@ ${this.sanitizeForMarkdown(stack)}
 ### Environment
 - Version: ${packageJSON.version}
 - Platform: ${getPlatform()} ${getArch()}
+- Application Target: ${APPLICATION_TARGET}
 - Language: ${theme}
 - Theme: ${local}
 `;
