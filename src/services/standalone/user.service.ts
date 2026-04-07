@@ -8,9 +8,9 @@ import {botttsNeutral} from "@dicebear/collection";
 
 import {UserService} from "@contracts/user.contract";
 import {SettingsService} from "@contracts/settings.contract";
+import {UserDbService} from "@contracts/standalone/user.contract";
 
 import {ServiceDeclaration} from "@services/declaration";
-import {UserDbService} from "@services/db/user.service";
 import {DbSession} from "@services/utils/db";
 
 import {ProfileDbModel, ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model";

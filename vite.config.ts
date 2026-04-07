@@ -5,16 +5,20 @@ import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 import * as fs from "node:fs";
 
-const host = process.env.TAURI_DEV_HOST;
+const host: string = process.env.TAURI_DEV_HOST;
 
 function dynamicServiceResolver(applicationTarget: string): PluginOption {
+    const cache: Map<string, string | null> = new Map<string, string | null>();
+
     return {
         name: "dynamic-service-resolver",
-        enforce: "pre",
-
         resolveId(source: string): string | null {
             if (!source.startsWith("@services/")) {
                 return null;
+            }
+
+            if (cache.has(source)) {
+                return cache.get(source);
             }
 
             const relativePath: string = source.replace("@services/", "");
@@ -30,34 +34,46 @@ function dynamicServiceResolver(applicationTarget: string): PluginOption {
                 for (const extension of extensions) {
                     const finalPath: string = destination + extension;
                     if (fs.existsSync(finalPath) && !fs.lstatSync(finalPath).isDirectory()) {
+                        cache.set(source, finalPath);
                         return finalPath;
                     }
                 }
             }
 
+            cache.set(source, null);
             return null;
         }
     }
 }
 
 function virtualServiceLoader(applicationTarget: string): PluginOption {
+    const virtualModuleId: string = 'virtual:services';
+    const resolvedVirtualModuleId: string = '\0' + virtualModuleId;
+
     return {
         name: "virtual-service-loader",
-        resolveId(id) {
-            if (id == "virtual:services") {
-                return "\0virtual:services";
+        enforce: "pre",
+        resolveId(id: string): string | null {
+            if (id == virtualModuleId) {
+                return resolvedVirtualModuleId;
             }
+            return null;
         },
-        load(id) {
-            if (id == "\0virtual:services") {
+        load(id: string): string | null {
+            if (id == resolvedVirtualModuleId) {
                 // language=TypeScript
                 return `
-                    export const services = import.meta.glob([
-                        "/src/services/shared/**/*.service.ts",
-                        "/src/services/${applicationTarget}/**/*.service.ts"
-                    ], {eager: true, import: "default"});
+                    const s1 = import.meta.glob("/src/services/${applicationTarget}/**/*.service.ts", {eager: true, import: "default"});
+                    const s2 = import.meta.glob("/src/services/shared/**/*.service.ts", {eager: true, import: "default"});
+                    
+                    export const services = {
+                        ...s2,
+                        ...s1
+                    };
                 `;
             }
+
+            return null;
         }
     }
 }

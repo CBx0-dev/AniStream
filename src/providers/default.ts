@@ -1,9 +1,8 @@
 import {path} from "@tauri-apps/api";
 
-import {MetadataDbService} from "@services/db/metadata.service";
-
 import {DbSession} from "@services/utils/db";
 
+import {MetadataDbService} from "@contracts/standalone/metadata.contract";
 import {Provider} from "@contracts/fetch.contract";
 
 import {SeriesFetchModel, SeriesModel} from "@models/series.model";

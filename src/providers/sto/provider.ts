@@ -1,7 +1,7 @@
 import {path} from "@tauri-apps/api"
 import * as fs from "@tauri-apps/plugin-fs";
 
-import {MetadataDbService} from "@services/db/metadata.service";
+import {MetadataDbService} from "@contracts/standalone/metadata.contract";
 
 import {StoFetcher} from "@providers/sto/fetcher";
 import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";

@@ -1,6 +1,8 @@
 import Database from "@tauri-apps/plugin-sql";
 
-import {ReadableGlobalContext, ServiceKey} from "vue-mvvm";
+import {ReadableGlobalContext} from "vue-mvvm";
+
+import {MetadataDbService} from "@contracts/standalone/metadata.contract";
 
 import {ServiceDeclaration} from "@services/declaration";
 import {DbSession, DbVersion, DbVersionConstructor} from "@services/utils/db";
@@ -9,7 +11,7 @@ import {UserService} from "@contracts/user.contract";
 
 import {ProfileModel} from "@models/profile.model";
 
-class MetadataDbServiceImpl {
+class MetadataDbServiceImpl implements MetadataDbService {
     private readonly userService: UserService;
 
     public constructor(ctx: ReadableGlobalContext) {
@@ -208,9 +210,6 @@ DROP TABLE episode_old;
 // ================================================================================================================== //
 
 const LATEST_VERSION: Exclude<MetadataDbVersionConstructor, null> = DbVersion3;
-
-export type MetadataDbService = MetadataDbServiceImpl;
-export const MetadataDbService: ServiceKey<MetadataDbServiceImpl> = new ServiceKey<MetadataDbServiceImpl>("metadata.db.service");
 
 export default {
     key: MetadataDbService,

@@ -1,10 +1,10 @@
 import {ReadableGlobalContext} from "vue-mvvm";
 
 import {ProviderService} from "@contracts/provider.contract";
+import {MetadataDbService} from "@contracts/standalone/metadata.contract";
 
 import {ServiceDeclaration} from "@services/declaration";
 import {DbSession} from "@services/utils/db";
-import {MetadataDbService} from "@services/db/metadata.service";
 
 import {DefaultProvider} from "@providers/default";
 import {AniWorldProvider} from "@providers/aniworld";
