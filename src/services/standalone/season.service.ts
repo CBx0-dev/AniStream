@@ -1,11 +1,15 @@
 import {QueryResult} from "@tauri-apps/plugin-sql";
+
 import {ReadableGlobalContext} from "vue-mvvm";
 
-import {DbServiceBase, DbSession} from "@services/db.service";
+import {SeasonService} from "@contracts/season.contract";
+
+import {ServiceDeclaration} from "@services/declaration";
+import {DbServiceBase, DbSession} from "@services/utils/db";
 
 import {SeasonDbModel, SeasonModel} from "@models/season.model";
 
-export class SeasonService extends DbServiceBase {
+class SeasonServiceImpl extends DbServiceBase implements SeasonService {
 
     public constructor(ctx: ReadableGlobalContext) {
         super(ctx);
@@ -48,3 +52,8 @@ export class SeasonService extends DbServiceBase {
         return SeasonModel(result.lastInsertId!, seriesId, seasonNumber);
     }
 }
+
+export default {
+    key: SeasonService,
+    ctor: SeasonServiceImpl
+} satisfies ServiceDeclaration<SeasonService>;

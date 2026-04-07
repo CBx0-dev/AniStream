@@ -23,7 +23,7 @@
         "noFallthroughCasesInSwitch": true,
         "paths": {
             "@/*": ["./src/*"],
-            "@services/*": ["./src/services/*"],
+            "@services/*": ["./src/services/standalone/*", "./src/services/shared/*"],
             "@views/*": ["./src/views/*"],
             "@models/*": ["./src/models/*"],
             "@icons/*": ["./src/icons/*"],
@@ -32,7 +32,8 @@
             "@langs/*": ["./src/langs/*"],
             "@providers/*": ["./src/providers/*"],
             "@sources": ["./src/sources/index.ts"],
-            "@sources/*": ["./src/sources/*"]
+            "@sources/*": ["./src/sources/*"],
+            "@contracts/*": ["./src/contracts/*"]
         }
     },
     "include": [

@@ -4,10 +4,10 @@ import {DialogService} from "vue-mvvm/dialog";
 import {AlertService} from "vue-mvvm/alert";
 import {ToastService} from "vue-mvvm/toast";
 
-import {SettingsService} from "@services/settings.service";
-import {I18nService} from "@services/i18n.service";
-import {UserService} from "@services/user.service";
-import {ProviderService} from "@services/provider.service";
+import {SettingsService} from "@contracts/settings.contract";
+import {I18nService} from "@contracts/i18n.contract";
+import {UserService} from "@contracts/user.contract";
+import {ProviderService} from "@contracts/provider.contract";
 
 import I18n from "@utils/i18n";
 

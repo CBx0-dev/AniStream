@@ -9,10 +9,10 @@ import {WatchlistViewModel} from "@views//WatchlistView.model";
 
 import {DetailControlModel} from "@/controls/DetailControl.model";
 
-import {SeriesService} from "@services/series.service";
-import {I18nService} from "@services/i18n.service";
-import {ProviderService} from "@services/provider.service";
-import {GenreService} from "@services/genre.service";
+import {SeriesService} from "@contracts/series.contract";
+import {I18nService} from "@contracts/i18n.contract";
+import {ProviderService} from "@contracts/provider.contract";
+import {GenreService} from "@contracts/genre.contract";
 
 import {SeriesModel} from "@models/series.model";
 import {GenreModel} from "@models/genre.model";

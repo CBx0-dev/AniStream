@@ -1,11 +1,15 @@
-import {ReadableGlobalContext} from "vue-mvvm";
 import {QueryResult} from "@tauri-apps/plugin-sql";
 
-import {DbServiceBase, DbSession} from "@services/db.service";
+import {ReadableGlobalContext} from "vue-mvvm";
+
+import {EpisodeService} from "@contracts/episode.contract";
+
+import {ServiceDeclaration} from "@services/declaration";
+import {DbServiceBase, DbSession} from "@services/utils/db";
 
 import {EpisodeDbModel, EpisodeModel} from "@models/episode.model";
 
-export class EpisodeService extends DbServiceBase {
+class EpisodeServiceImpl extends DbServiceBase implements EpisodeService {
     public constructor(ctx: ReadableGlobalContext) {
         super(ctx);
     }
@@ -81,3 +85,8 @@ export class EpisodeService extends DbServiceBase {
         );
     }
 }
+
+export default {
+    key: EpisodeService,
+    ctor: EpisodeServiceImpl
+} satisfies ServiceDeclaration<EpisodeService>;

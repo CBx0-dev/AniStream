@@ -1,7 +1,8 @@
 import Database, {QueryResult} from "@tauri-apps/plugin-sql";
+
 import {ReadableGlobalContext} from "vue-mvvm";
 
-import {ProviderService} from "@services/provider.service";
+import {ProviderService} from "@contracts/provider.contract";
 
 export class DbServiceBase {
     protected readonly provider: ProviderService;

@@ -5,10 +5,10 @@ import {RouteAdapter, RouterService} from "vue-mvvm/router";
 import SeriesSyncView from "@views/SeriesSyncView.vue";
 import {StreamViewModel} from "@views/StreamView.model";
 
-import {SeriesService} from "@services/series.service";
-import {SeasonService} from "@services/season.service";
-import {FetchService} from "@services/fetch.service";
-import {EpisodeService} from "@services/episode.service";
+import {SeriesService} from "@contracts/series.contract";
+import {SeasonService} from "@contracts/season.contract";
+import {FetchService} from "@contracts/fetch.contract";
+import {EpisodeService} from "@contracts/episode.contract";
 
 import {SeriesModel} from "@models/series.model";
 import {SeasonFetchModel, SeasonModel} from "@models/season.model";

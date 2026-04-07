@@ -10,10 +10,10 @@ import {SyncViewModel} from "@views/SyncView.model";
 
 import {ToSControlModel} from "@controls/ToSControl.model";
 
-import {ProviderService} from "@services/provider.service";
-import {SeriesService} from "@services/series.service";
-import {SettingsService} from "@services/settings.service";
-import {UserService} from "@services/user.service";
+import {ProviderService} from "@contracts/provider.contract";
+import {SeriesService} from "@contracts/series.contract";
+import {SettingsService} from "@contracts/settings.contract";
+import {UserService} from "@contracts/user.contract";
 
 import {ProfileModel} from "@models/profile.model";
 

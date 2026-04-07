@@ -1,8 +1,11 @@
 import Database from "@tauri-apps/plugin-sql";
 
-import {DbSession, DbVersion, DbVersionConstructor} from "@services/db.service";
+import {UserDbService} from "@contracts/standalone/user.contract";
 
-export class UserDbService {
+import {ServiceDeclaration} from "@services/declaration";
+import {DbSession, DbVersion, DbVersionConstructor} from "@services/utils/db";
+
+export class UserDbServiceImpl implements UserDbService {
     public constructor() {
     }
 
@@ -83,3 +86,8 @@ CREATE TABLE profile
 // ================================================================================================================== //
 
 const LATEST_VERSION: Exclude<UserDbVersionConstructor, null> = DbVersion1;
+
+export default {
+    key: UserDbService,
+    ctor: UserDbServiceImpl
+} satisfies ServiceDeclaration<UserDbServiceImpl>;

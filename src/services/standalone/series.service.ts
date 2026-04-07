@@ -1,13 +1,17 @@
-import {ReadableGlobalContext} from "vue-mvvm";
 import {QueryResult} from "@tauri-apps/plugin-sql";
 
-import {DbServiceBase, DbSession} from "@services/db.service";
-import {UserService} from "@services/user.service";
+import {ReadableGlobalContext} from "vue-mvvm";
+
+import {SeriesService} from "@contracts/series.contract";
+import {UserService} from "@contracts/user.contract";
+
+import {ServiceDeclaration} from "@services/declaration";
+import {DbServiceBase, DbSession} from "@services/utils/db";
 
 import {SeriesDbModel, SeriesModel} from "@models/series.model";
 import {ProfileModel} from "@models/profile.model";
 
-export class SeriesService extends DbServiceBase {
+class SeriesServiceImpl extends DbServiceBase implements SeriesService {
     private readonly userService: UserService;
 
     public constructor(ctx: ReadableGlobalContext) {
@@ -126,3 +130,8 @@ export class SeriesService extends DbServiceBase {
         return rows.map(row => SeriesModel(row.series_id, row.guid, row.title, row.description, row.preview_image));
     }
 }
+
+export default {
+    key: SeriesService,
+    ctor: SeriesServiceImpl
+} satisfies ServiceDeclaration<SeriesService>;

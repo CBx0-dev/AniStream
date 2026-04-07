@@ -1,3 +1,6 @@
+import {ServiceDeclaration} from "@services/declaration";
+import {ChangelogService, ChangelogEntry} from "@contracts/changelog.contract";
+
 import {MarkdownParser} from "@utils/markdown";
 
 // @ts-ignore
@@ -6,13 +9,7 @@ const modules: Record<string, () => Promise<string>> = import.meta.glob("/change
     import: "default"
 });
 
-export interface ChangelogEntry {
-    version: string;
-    content: string;
-    parsedContent: string;
-}
-
-export class ChangelogService {
+class ChangelogServiceImpl implements ChangelogService {
     private parser: MarkdownParser;
     private changelogs: ChangelogEntry[] = [];
     private loaded: boolean = false;
@@ -48,3 +45,8 @@ export class ChangelogService {
         return this.changelogs;
     }
 }
+
+export default {
+    key: ChangelogService,
+    ctor: ChangelogServiceImpl
+} satisfies ServiceDeclaration<ChangelogService>;

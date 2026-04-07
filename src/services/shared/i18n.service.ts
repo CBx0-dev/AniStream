@@ -1,6 +1,10 @@
 import {readonly, ref, Ref} from "vue";
 
-const modules: Record<string, {"default": I18nUnit}> = import.meta.glob('@langs/**/*.json', {eager: true})
+import {I18nService} from "@contracts/i18n.contract";
+
+import {ServiceDeclaration} from "@services/declaration";
+
+const modules: Record<string, {"default": I18nUnit}> = import.meta.glob('@langs/**/*.json', {eager: true});
 
 type SupportedLocals = "de" | "en";
 
@@ -9,7 +13,7 @@ interface I18nUnit {
     $group: string;
 }
 
-export class I18nService {
+class I18nServiceImpl implements I18nService {
     private readonly groups: Map<string, Map<SupportedLocals, I18nUnit>>;
     private readonly _currentLocal: Ref<SupportedLocals> = ref("en");
 
@@ -106,3 +110,8 @@ export class I18nService {
         return result;
     }
 }
+
+export default {
+    key: I18nService,
+    ctor: I18nServiceImpl
+} satisfies ServiceDeclaration<I18nService>;

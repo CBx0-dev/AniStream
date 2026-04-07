@@ -31,8 +31,9 @@ const vm: ReportControlModel = useDialogControl(ReportControlModel);
                 <div class="mb-4">
                     <Text :target="I18n.ReportControl.environment.version"/>: {{ vm.version }}<br/>
                     <Text :target="I18n.ReportControl.environment.platform"/>: {{ vm.platform }}<br/>
+                    <Text :target="I18n.ReportControl.environment.target"/>: {{ vm.target }}<br/>
                     <Text :target="I18n.ReportControl.environment.language"/>: {{ vm.lang}}<br/>
-                    <Text :target="I18n.ReportControl.environment.theme"/>: {{vm.theme }}<br/>
+                    <Text :target="I18n.ReportControl.environment.theme"/>: {{ vm.theme }}<br/>
                 </div>
                 <div class="whitespace-pre-wrap">
                     {{ vm.errorStack }}

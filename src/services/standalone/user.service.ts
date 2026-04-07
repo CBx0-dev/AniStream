@@ -6,14 +6,16 @@ import {ReadableGlobalContext} from "vue-mvvm";
 import * as dicebear from "@dicebear/core";
 import {botttsNeutral} from "@dicebear/collection";
 
-import {UserDbService} from "@services/db/user.db";
-import {DbSession} from "@services/db.service";
+import {UserService} from "@contracts/user.contract";
+import {SettingsService} from "@contracts/settings.contract";
+import {UserDbService} from "@contracts/standalone/user.contract";
+
+import {ServiceDeclaration} from "@services/declaration";
+import {DbSession} from "@services/utils/db";
 
 import {ProfileDbModel, ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model";
-import {SettingsService} from "@services/settings.service";
 
-
-export class UserService {
+class UserServiceImpl implements UserService {
     private static readonly SESSION_KEY: string = "active-profile";
 
     private readonly ctx: ReadableGlobalContext;
@@ -41,7 +43,7 @@ export class UserService {
 
     public async setActiveProfile(profile: ProfileModel): Promise<void> {
         this.activeProfile = profile;
-        sessionStorage.setItem(UserService.SESSION_KEY, profile.uuid);
+        sessionStorage.setItem(UserServiceImpl.SESSION_KEY, profile.uuid);
 
         // Lazy load to prevent circular dependency
         const settingsService: SettingsService = this.ctx.getService(SettingsService);
@@ -203,7 +205,7 @@ export class UserService {
     }
 
     private async loadCache(): Promise<boolean> {
-        let value: string | null = sessionStorage.getItem(UserService.SESSION_KEY);
+        let value: string | null = sessionStorage.getItem(UserServiceImpl.SESSION_KEY);
         if (!value) {
             return false;
         }
@@ -229,6 +231,11 @@ export class UserService {
         const dbFile: string = await path.join(appDir, "profiles.db");
         this._session = await this.dbService.openDB(dbFile);
 
-        return this._session;
+        return this._session!;
     }
 }
+
+export default {
+    key: UserService,
+    ctor: UserServiceImpl
+} satisfies ServiceDeclaration<UserService>;

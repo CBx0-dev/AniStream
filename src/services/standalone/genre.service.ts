@@ -1,13 +1,16 @@
-import {ReadableGlobalContext} from "vue-mvvm";
 import {QueryResult} from "@tauri-apps/plugin-sql";
+
+import {ReadableGlobalContext} from "vue-mvvm";
+
+import {GenreService} from "@contracts/genre.contract";
 
 import {GenreDbModel, GenreModel} from "@models/genre.model";
 import {SeriesModel} from "@models/series.model";
 
-import {DbServiceBase, DbSession} from "@services/db.service";
+import {ServiceDeclaration} from "@services/declaration";
+import {DbServiceBase, DbSession} from "@services/utils/db";
 
-
-export class GenreService extends DbServiceBase {
+class GenreServiceImpl extends DbServiceBase implements GenreService {
     public constructor(ctx: ReadableGlobalContext) {
         super(ctx);
     }
@@ -70,3 +73,8 @@ export class GenreService extends DbServiceBase {
         return rows.map(row => GenreModel(row.genre_id, row.key));
     }
 }
+
+export default {
+    key: GenreService,
+    ctor: GenreServiceImpl
+} satisfies ServiceDeclaration<GenreService>;

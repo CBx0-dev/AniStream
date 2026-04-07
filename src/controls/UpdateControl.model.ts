@@ -4,8 +4,8 @@ import {DialogControl} from "vue-mvvm/dialog";
 
 import UpdateControl from "@controls/UpdateControl.vue";
 
-import {UpdateService} from "@services/update.service";
-import {SettingsService} from "@services/settings.service";
+import {UpdateService} from "@contracts/update.contract";
+import {SettingsService} from "@contracts/settings.contract";
 
 import {MarkdownParser} from "@utils/markdown";
 

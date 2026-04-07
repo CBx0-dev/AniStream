@@ -1,5 +1,6 @@
 import {UserControl} from "vue-mvvm";
-import {ChangelogEntry, ChangelogService} from "@services/changelog.service";
+
+import {ChangelogEntry, ChangelogService} from "@contracts/changelog.contract";
 
 export class ChangelogControlModel extends UserControl {
     public changelogs: ChangelogEntry[] = [];

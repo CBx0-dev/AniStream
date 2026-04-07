@@ -1,7 +1,10 @@
 import {ReadableGlobalContext} from "vue-mvvm";
 
-import {DbSession} from "@services/db.service";
-import {MetadataDbService} from "@services/db/metadata.db";
+import {ProviderService} from "@contracts/provider.contract";
+import {MetadataDbService} from "@contracts/standalone/metadata.contract";
+
+import {ServiceDeclaration} from "@services/declaration";
+import {DbSession} from "@services/utils/db";
 
 import {DefaultProvider} from "@providers/default";
 import {AniWorldProvider} from "@providers/aniworld";
@@ -9,7 +12,7 @@ import {StoProvider} from "@providers/sto";
 
 import {ProfileModel} from "@models/profile.model";
 
-export class ProviderService {
+class ProviderServiceImpl implements ProviderService {
     private static readonly SESSION_KEY: string = "active-provider";
 
     private provider: DefaultProvider | null = null;
@@ -53,7 +56,7 @@ export class ProviderService {
         }
         this.provider = provider;
 
-        sessionStorage.setItem(ProviderService.SESSION_KEY, provider.uniqueKey);
+        sessionStorage.setItem(ProviderServiceImpl.SESSION_KEY, provider.uniqueKey);
     }
 
     public async deleteProfile(profile: ProfileModel): Promise<void> {
@@ -80,7 +83,7 @@ export class ProviderService {
     }
 
     private async loadCache(): Promise<boolean> {
-        let value: string | null = sessionStorage.getItem(ProviderService.SESSION_KEY);
+        let value: string | null = sessionStorage.getItem(ProviderServiceImpl.SESSION_KEY);
         if (!value) {
             return false;
         }
@@ -90,3 +93,8 @@ export class ProviderService {
         return !!this.provider;
     }
 }
+
+export default {
+    key: ProviderService,
+    ctor: ProviderServiceImpl
+} satisfies ServiceDeclaration<ProviderService>;

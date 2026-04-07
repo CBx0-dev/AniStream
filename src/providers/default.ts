@@ -1,8 +1,9 @@
 import {path} from "@tauri-apps/api";
 
-import {MetadataDbService} from "@services/db/metadata.db";
-import {DbSession} from "@services/db.service";
-import {Provider} from "@services/fetch.service";
+import {DbSession} from "@services/utils/db";
+
+import {MetadataDbService} from "@contracts/standalone/metadata.contract";
+import {Provider} from "@contracts/fetch.contract";
 
 import {SeriesFetchModel, SeriesModel} from "@models/series.model";
 import {SeasonFetchModel} from "@models/season.model";
@@ -54,7 +55,7 @@ export abstract class DefaultProvider {
         const dbFile: string = await path.join(dataDir, "metadata.db");
 
         this.session = await this.service.openDB(dbFile, this.uniqueKey);
-        return this.session;
+        return this.session!;
     }
 
     public async closeDatabase(): Promise<void> {

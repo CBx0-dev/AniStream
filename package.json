@@ -22,19 +22,19 @@
     "@tauri-apps/plugin-updater": "^2.10.0",
     "hls.js": "^1.6.15",
     "vue": "^3.5.13",
-    "vue-mvvm": "^0.6.3",
+    "vue-mvvm": "^0.7.0",
     "vue-router": "^5.0.4"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.1.18",
+    "@tailwindcss/vite": "^4.2.2",
     "@tauri-apps/cli": "^2",
     "@types/node": "^25.0.6",
     "@types/random-useragent": "^0.3.3",
-    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitejs/plugin-vue": "^6.0.5",
     "daisyui": "^5.5.14",
     "tailwindcss": "^4.1.18",
     "typescript": "~5.6.2",
-    "vite": "^6.0.3",
+    "vite": "^8.0.5",
     "vue-tsc": "^2.1.10"
   }
 }

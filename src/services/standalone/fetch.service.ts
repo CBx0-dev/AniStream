@@ -1,21 +1,19 @@
 import {ReadableGlobalContext} from "vue-mvvm";
 
-import {ProviderService} from "@services/provider.service";
+import {FetchService, Provider} from "@contracts/fetch.contract";
+import {ProviderService} from "@contracts/provider.contract";
+
+import {ServiceDeclaration} from "@services/declaration";
+
 
 import {SeriesFetchModel, SeriesModel} from "@models/series.model";
 import {GenreFetchModel} from "@models/genre.model";
 import {SeasonFetchModel} from "@models/season.model";
 import {EpisodeFetchModel} from "@models/episode.model";
 
-import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";
+import {DefaultProvider, IInformationFetcher} from "@providers/default";
 
-export interface Provider {
-    name: string;
-    language: EpisodeLanguage;
-    embeddedURL: string;
-}
-
-export class FetchService {
+class FetchServiceImpl implements FetchService {
     private readonly providerService: ProviderService;
 
     public constructor(ctx: ReadableGlobalContext) {
@@ -50,10 +48,15 @@ export class FetchService {
         return await fetcher.getEpisodes(guid, seasonNumber);
     }
 
-    public async fetchProviders(guid: string, seasonNumber: number, episodeNumber: number): Promise<Provider[]> {
+    public async getProviders(guid: string, seasonNumber: number, episodeNumber: number): Promise<Provider[]> {
         const provider: DefaultProvider = await this.providerService.getProvider();
         const fetcher: IInformationFetcher = provider.getFetcher();
 
         return await fetcher.fetchProviders(guid, seasonNumber, episodeNumber);
     }
 }
+
+export default {
+    key: FetchService,
+    ctor: FetchServiceImpl
+} satisfies ServiceDeclaration<FetchService>;

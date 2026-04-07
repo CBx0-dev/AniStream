@@ -5,10 +5,10 @@ import {DialogControl} from "vue-mvvm/dialog";
 
 import ReportControlComponent from "@controls/ReportControl.vue";
 
-import {SettingsService} from "@services/settings.service";
+import {SettingsService} from "@contracts/settings.contract";
+import {I18nService} from "@contracts/i18n.contract";
 
-import {I18nService} from "@services/i18n.service";
-import I18n from "@/utils/i18n";
+import I18n from "@utils/i18n";
 
 import * as packageJSON from "@/../package.json";
 
@@ -30,8 +30,9 @@ export class ReportControlModel extends DialogControl implements Action<ReportRe
     public lang: string = this.ref("en");
     public theme: string = this.ref("aniworld-light");
 
-    public readonly platform: string = this.computed(() => `${getPlatform()} ${getArch()}`);
     public readonly version: string = this.computed(() => packageJSON.version);
+    public readonly platform: string = this.computed(() => `${getPlatform()} ${getArch()}`);
+    public readonly target: string = this.computed(() => APPLICATION_TARGET);
     public readonly placeholder: string = this.computed(() => this.i18nService.get(I18n.ReportControl.placeholder));
 
     public constructor(title: string, error: any) {

@@ -2,20 +2,23 @@ import {check, Update} from "@tauri-apps/plugin-updater";
 import {ReadableGlobalContext} from "vue-mvvm";
 import {DialogService} from "vue-mvvm/dialog";
 
-import {UpdateControlModel} from "@controls/UpdateControl.model";
+import {UpdateService} from "@contracts/update.contract";
+import {SettingsService} from "@contracts/settings.contract";
 
-import {SettingsService} from "@services/settings.service";
+import {ServiceDeclaration} from "@services/declaration";
+
+import {UpdateControlModel} from "@controls/UpdateControl.model";
 
 import * as http from "@utils/http";
 
-export class UpdateService {
+class UpdateServiceImpl implements UpdateService {
     public static readonly CHECK_OFFSET: number = 2_000;
 
     private readonly ctx: ReadableGlobalContext;
 
     public constructor(ctx: ReadableGlobalContext) {
         this.ctx = ctx;
-        setTimeout(() => this.checkForUpdates(), UpdateService.CHECK_OFFSET);
+        setTimeout(() => this.checkForUpdates(), UpdateServiceImpl.CHECK_OFFSET);
     }
 
     public startDownloading(update: Update, onFinish: () => void | Promise<void>, onProgress: (downloadedChunkSize: number) => void | Promise<void>): Promise<number | null> {
@@ -65,3 +68,8 @@ export class UpdateService {
         await updateDialog.openDialog();
     }
 }
+
+export default {
+    key: UpdateService,
+    ctor: UpdateServiceImpl
+} satisfies ServiceDeclaration<UpdateService>;

@@ -4,10 +4,10 @@ import type Hls from "hls.js";
 
 import {HLSTauriLoader} from "@utils/hls-tauri-bridge";
 
-import {Provider} from "@services/fetch.service";
-import {SettingsService} from "@services/settings.service";
-import {I18nService} from "@services/i18n.service";
-import {WatchtimeService} from "@services/watchtime.service";
+import {Provider} from "@contracts/fetch.contract";
+import {SettingsService} from "@contracts/settings.contract";
+import {I18nService} from "@contracts/i18n.contract";
+import {WatchtimeService} from "@contracts/watchtime.contract";
 
 import {getSource, IStreamSource} from "@sources";
 
