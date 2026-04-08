@@ -26,6 +26,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Pull repository
+        run: git pull
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
