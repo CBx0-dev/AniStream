@@ -30,169 +30,163 @@ const vm: PrefControlModel = useUserControl(PrefControlModel);
                 </div>
             </div>
         </section>
-        <section>
-            <h2 class="text-sm font-semibold mb-2 uppercase opacity-60">
+        <section class="grid grid-cols-[min-content] md:grid-cols-[min-content_min-content] justify-center gap-5">
+            <h2 class="text-sm font-semibold -mb-3 uppercase opacity-60 md:col-span-2">
                 <Text :target="I18n.PrefControl.sections.theme"/>
             </h2>
-            <div class="flex flex-wrap gap-5">
-                <button
-                    @click="vm.onAniworldLightThemeBtn"
-                    data-theme="aniworld-light"
-                    :data-selected="vm.activeTheme == 'aniworld-light'"
-                    class="group relative w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
-                    <h3 class="text-lg font-semibold">
-                        <Text :target="I18n.PrefControl.aniworldLight.title"/>
-                    </h3>
+            <button
+                @click="vm.onAniworldLightThemeBtn"
+                data-theme="aniworld-light"
+                :data-selected="vm.activeTheme == 'aniworld-light'"
+                class="group relative w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
+                <h3 class="text-lg font-semibold">
+                    <Text :target="I18n.PrefControl.aniworldLight.title"/>
+                </h3>
 
-                    <p class="mt-1 text-sm text-gray-500">
-                        <Text :target="I18n.PrefControl.aniworldLight.description"/>
-                    </p>
+                <p class="mt-1 text-sm text-gray-500">
+                    <Text :target="I18n.PrefControl.aniworldLight.description"/>
+                </p>
 
-                    <div class="mt-4 flex gap-2">
-                        <span class="h-6 w-6 rounded-full bg-primary"></span>
-                        <span class="h-6 w-6 rounded-full bg-secondary"></span>
-                        <span class="h-6 w-6 rounded-full bg-base-300"></span>
-                        <span class="h-6 w-6 rounded-full bg-base-100 border border-base-300"></span>
-                    </div>
-                </button>
+                <div class="mt-4 flex gap-2">
+                    <span class="h-6 w-6 rounded-full bg-primary"></span>
+                    <span class="h-6 w-6 rounded-full bg-secondary"></span>
+                    <span class="h-6 w-6 rounded-full bg-base-300"></span>
+                    <span class="h-6 w-6 rounded-full bg-base-100 border border-base-300"></span>
+                </div>
+            </button>
 
-                <button
-                    @click="vm.onAniworldDarkThemeBtn"
-                    data-theme="aniworld-dark"
-                    :data-selected="vm.activeTheme == 'aniworld-dark'"
-                    class="group relative w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
-                    <h3 class="text-lg font-semibold">
-                        <Text :target="I18n.PrefControl.aniworldDark.title"/>
-                    </h3>
+            <button
+                @click="vm.onAniworldDarkThemeBtn"
+                data-theme="aniworld-dark"
+                :data-selected="vm.activeTheme == 'aniworld-dark'"
+                class="group relative w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
+                <h3 class="text-lg font-semibold">
+                    <Text :target="I18n.PrefControl.aniworldDark.title"/>
+                </h3>
 
-                    <p class="mt-1 text-sm text-gray-500">
-                        <Text :target="I18n.PrefControl.aniworldDark.description"/>
-                    </p>
+                <p class="mt-1 text-sm text-gray-500">
+                    <Text :target="I18n.PrefControl.aniworldDark.description"/>
+                </p>
 
-                    <div class="mt-4 flex gap-2">
-                        <span class="h-6 w-6 rounded-full bg-primary"></span>
-                        <span class="h-6 w-6 rounded-full bg-secondary"></span>
-                        <span class="h-6 w-6 rounded-full bg-base-300"></span>
-                        <span class="h-6 w-6 rounded-full bg-base-100 border border-base-300"></span>
-                    </div>
-                </button>
+                <div class="mt-4 flex gap-2">
+                    <span class="h-6 w-6 rounded-full bg-primary"></span>
+                    <span class="h-6 w-6 rounded-full bg-secondary"></span>
+                    <span class="h-6 w-6 rounded-full bg-base-300"></span>
+                    <span class="h-6 w-6 rounded-full bg-base-100 border border-base-300"></span>
+                </div>
+            </button>
 
-                <button
-                    @click="vm.onStoLightThemeBtn"
-                    data-theme="sto-light"
-                    :data-selected="vm.activeTheme == 'sto-light'"
-                    class="group relative w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
-                    <h3 class="text-lg font-semibold">
-                        <Text :target="I18n.PrefControl.stoLight.title"/>
-                    </h3>
+            <button
+                @click="vm.onStoLightThemeBtn"
+                data-theme="sto-light"
+                :data-selected="vm.activeTheme == 'sto-light'"
+                class="group relative w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
+                <h3 class="text-lg font-semibold">
+                    <Text :target="I18n.PrefControl.stoLight.title"/>
+                </h3>
 
-                    <p class="mt-1 text-sm text-gray-500">
-                        <Text :target="I18n.PrefControl.stoLight.description"/>
-                    </p>
+                <p class="mt-1 text-sm text-gray-500">
+                    <Text :target="I18n.PrefControl.stoLight.description"/>
+                </p>
 
-                    <div class="mt-4 flex gap-2">
-                        <span class="h-6 w-6 rounded-full bg-primary"></span>
-                        <span class="h-6 w-6 rounded-full bg-secondary"></span>
-                        <span class="h-6 w-6 rounded-full bg-base-300"></span>
-                        <span class="h-6 w-6 rounded-full bg-base-100 border border-base-300"></span>
-                    </div>
-                </button>
+                <div class="mt-4 flex gap-2">
+                    <span class="h-6 w-6 rounded-full bg-primary"></span>
+                    <span class="h-6 w-6 rounded-full bg-secondary"></span>
+                    <span class="h-6 w-6 rounded-full bg-base-300"></span>
+                    <span class="h-6 w-6 rounded-full bg-base-100 border border-base-300"></span>
+                </div>
+            </button>
 
-                <button
-                    @click="vm.onStoDarkThemeBtn"
-                    data-theme="sto-dark"
-                    :data-selected="vm.activeTheme == 'sto-dark'"
-                    class="group relative w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
-                    <h3 class="text-lg font-semibold">
-                        <Text :target="I18n.PrefControl.stoDark.title"/>
-                    </h3>
+            <button
+                @click="vm.onStoDarkThemeBtn"
+                data-theme="sto-dark"
+                :data-selected="vm.activeTheme == 'sto-dark'"
+                class="group relative w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
+                <h3 class="text-lg font-semibold">
+                    <Text :target="I18n.PrefControl.stoDark.title"/>
+                </h3>
 
-                    <p class="mt-1 text-sm text-gray-500">
-                        <Text :target="I18n.PrefControl.stoDark.description"/>
-                    </p>
+                <p class="mt-1 text-sm text-gray-500">
+                    <Text :target="I18n.PrefControl.stoDark.description"/>
+                </p>
 
-                    <div class="mt-4 flex gap-2">
-                        <span class="h-6 w-6 rounded-full bg-primary"></span>
-                        <span class="h-6 w-6 rounded-full bg-secondary"></span>
-                        <span class="h-6 w-6 rounded-full bg-base-300"></span>
-                        <span class="h-6 w-6 rounded-full bg-base-100 border border-base-300"></span>
-                    </div>
-                </button>
-            </div>
+                <div class="mt-4 flex gap-2">
+                    <span class="h-6 w-6 rounded-full bg-primary"></span>
+                    <span class="h-6 w-6 rounded-full bg-secondary"></span>
+                    <span class="h-6 w-6 rounded-full bg-base-300"></span>
+                    <span class="h-6 w-6 rounded-full bg-base-100 border border-base-300"></span>
+                </div>
+            </button>
         </section>
 
         <div class="divider"></div>
 
-        <section>
-            <h2 class="text-sm font-semibold mb-2 uppercase opacity-60">
+        <section class="grid grid-cols-[min-content] md:grid-cols-[min-content_min-content] justify-center gap-5">
+            <h2 class="text-sm font-semibold -mb-3 uppercase opacity-60 md:col-span-2">
                 <Text :target="I18n.PrefControl.sections.language"/>
             </h2>
-            <div class="flex flex-wrap gap-4">
-                <button
-                    @click="vm.onEnLocalBtn"
-                    :data-selected="vm.activeLocal == 'en'"
-                    class="group relative w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
-                    <div class="flex items-center gap-4">
-                        <span class="text-xl leading-none">EN</span>
-                        <div class="flex-1">
-                            <h3 class="text-base font-semibold">
-                                <Text :target="I18n.PrefControl.languages.en"/>
-                            </h3>
-                            <p class="mt-0.5 text-sm text-gray-500">
-                                <Text :target="I18n.PrefControl.languages.interfaceLanguage"/>
-                            </p>
-                        </div>
+            <button
+                @click="vm.onEnLocalBtn"
+                :data-selected="vm.activeLocal == 'en'"
+                class="group relative w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
+                <div class="flex items-center gap-4">
+                    <span class="text-xl leading-none">EN</span>
+                    <div class="flex-1">
+                        <h3 class="text-base font-semibold">
+                            <Text :target="I18n.PrefControl.languages.en"/>
+                        </h3>
+                        <p class="mt-0.5 text-sm text-gray-500">
+                            <Text :target="I18n.PrefControl.languages.interfaceLanguage"/>
+                        </p>
                     </div>
-                </button>
-                <button
-                    @click="vm.onDeLocalBtn"
-                    :data-selected="vm.activeLocal == 'de'"
-                    class="group relative w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
-                    <div class="flex items-center gap-4">
-                        <span class="text-xl leading-none">DE</span>
-                        <div class="flex-1">
-                            <h3 class="text-base font-semibold">
-                                <Text :target="I18n.PrefControl.languages.de"/>
-                            </h3>
-                            <p class="mt-0.5 text-sm text-gray-500">
-                                <Text :target="I18n.PrefControl.languages.interfaceLanguage"/>
-                            </p>
-                        </div>
+                </div>
+            </button>
+            <button
+                @click="vm.onDeLocalBtn"
+                :data-selected="vm.activeLocal == 'de'"
+                class="group relative w-72 rounded-box border border-base-300 bg-base-100 p-4 text-left transition hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary data-[selected=true]:ring-2 data-[selected=true]:ring-primary">
+                <div class="flex items-center gap-4">
+                    <span class="text-xl leading-none">DE</span>
+                    <div class="flex-1">
+                        <h3 class="text-base font-semibold">
+                            <Text :target="I18n.PrefControl.languages.de"/>
+                        </h3>
+                        <p class="mt-0.5 text-sm text-gray-500">
+                            <Text :target="I18n.PrefControl.languages.interfaceLanguage"/>
+                        </p>
                     </div>
-                </button>
-            </div>
+                </div>
+            </button>
         </section>
 
         <div class="divider"></div>
 
-        <section>
-            <h2 class="text-sm font-semibold mb-2 uppercase opacity-60">
+        <section class="grid grid-cols-[minmax(18rem,37rem)] justify-center gap-5">
+            <h2 class="text-sm font-semibold -mb-3 uppercase opacity-60">
                 <Text :target="I18n.PrefControl.sections.updater"/>
             </h2>
-            <div class="flex flex-col gap-4">
-                <label class="label">
-                    <input
-                        type="checkbox"
-                        :checked="vm.updatesActive"
-                        class="toggle toggle-primary"
-                        @change="vm.onUpdatesActiveToggle()"/>
-                    <Text :target="I18n.PrefControl.updater.updatesActive"/>
-                </label>
-                <div>
-                    <p class="opacity-70 mb-1">
-                        <Text :target="I18n.PrefControl.updater.heathDescription"/>
-                    </p>
-                    <label class="input w-148">
-                        <label class="label">
-                            <Text :target="I18n.PrefControl.updater.healthUrl"/>
-                        </label>
-                        <input type="url" v-model="vm.healthUrl" @change="vm.onHealthUrlChange()"/>
+            <label class="label">
+                <input
+                    type="checkbox"
+                    :checked="vm.updatesActive"
+                    class="toggle toggle-primary"
+                    @change="vm.onUpdatesActiveToggle()"/>
+                <Text :target="I18n.PrefControl.updater.updatesActive"/>
+            </label>
+            <div>
+                <p class="opacity-70 mb-1">
+                    <Text :target="I18n.PrefControl.updater.heathDescription"/>
+                </p>
+                <label class="input w-full">
+                    <label class="label">
+                        <Text :target="I18n.PrefControl.updater.healthUrl"/>
                     </label>
-                </div>
+                    <input type="url" v-model="vm.healthUrl" @change="vm.onHealthUrlChange()"/>
+                </label>
             </div>
         </section>
-        <section>
-            <button class="btn btn-error btn-soft" @click="vm.onProfileDeleteBtn()">
+        <section class="grid grid-cols-[minmax(18rem,37rem)] justify-center gap-5">
+            <button class="btn btn-error btn-soft w-fit ml-auto" @click="vm.onProfileDeleteBtn()">
                 <LucideTrash />
                 Delete Profile
             </button>
