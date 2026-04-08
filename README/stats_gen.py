@@ -2,20 +2,23 @@ import json
 import matplotlib.pyplot as plt
 import os
 
-def format_size(size_bytes):
-    if size_bytes == '-':
+def format_value(value, unit):
+    if value == '-':
         return '-'
     try:
-        size = float(size_bytes)
+        val = float(value)
     except ValueError:
-        return size_bytes
+        return value
     
-    if size < 1000:
-        return f"{size:.2f} B"
-    elif size < 1000 * 1000:
-        return f"{size / 1000:.2f} KB"
+    if unit == "%":
+        return f"{val:.2f}%"
+    
+    if val < 1000:
+        return f"{val:.2f} B"
+    elif val < 1000 * 1000:
+        return f"{val / 1000:.2f} KB"
     else:
-        return f"{size / (1000 * 1000):.2f} MB"
+        return f"{val / (1000 * 1000):.2f} MB"
 
 def generate_stats():
     # Load stats.json
@@ -38,33 +41,10 @@ def generate_stats():
     # Extract tags (X-axis)
     tags = [entry['tag'] for entry in data]
     
-    # Identify all unique asset names
-    asset_names = set()
-    for entry in data:
-        asset_names.update(entry['assets'].keys())
+    # Identify all groups and assets
+    groups = ["vite dist", "source", "x86_64", "amd64", "aarch64",]
     
-    # Sort asset names to keep consistent legend order
-    asset_names = sorted(list(asset_names))
-
-    # Prepare data for plotting (Y-axis)
-    # Each asset will have a list of sizes corresponding to each tag (in Bytes)
-    asset_data = {name: [] for name in asset_names}
-    for entry in data:
-        for name in asset_names:
-            size_bytes = entry['assets'].get(name, 0) # Use 0 if asset is missing for a tag
-            asset_data[name].append(size_bytes)
-
-    # Define groupings
-    groupings = {
-        "SourceCode": ["assets", "changelogs", "css", "html", "javascript"],
-        "x86_64": [name for name in asset_names if "x86_64" in name.lower()],
-        "amd64": [name for name in asset_names if "amd64" in name.lower()],
-        "aarch64": [name for name in asset_names if "aarch64" in name.lower()]
-    }
-
     # Ensure graphs directory exists
-    # If we are in the README folder, graphs are in graphs/
-    # If we are in the project root, graphs are in README/graphs/
     if os.path.basename(os.getcwd()) == 'README':
         graphs_dir = 'graphs'
     else:
@@ -75,7 +55,16 @@ def generate_stats():
         print(f"Created directory {graphs_dir}")
 
     graph_filenames = []
-    for group_name, members in groupings.items():
+    
+    # To store all asset names for the total comparison table
+    all_assets_by_group = {group: set() for group in groups}
+    for entry in data:
+        for group in groups:
+            if group in entry:
+                all_assets_by_group[group].update(entry[group].keys())
+
+    for group_name in groups:
+        members = sorted(list(all_assets_by_group[group_name]))
         if not members:
             continue
             
@@ -83,39 +72,43 @@ def generate_stats():
         has_data = False
         
         # Define factor and unit based on group
-        if group_name == "SourceCode":
+        if group_name == "vite dist":
             factor = 1000
             unit = "KB"
+        elif group_name == "source":
+            factor = 1
+            unit = "%"
         else:
             factor = 1000 * 1000
             unit = "MB"
 
         for name in members:
-            if name in asset_data:
-                # Find the first index where the asset has a size > 0
-                raw_sizes = asset_data[name]
-                first_non_zero = -1
-                for i, size in enumerate(raw_sizes):
-                    if size > 0:
-                        first_non_zero = i
-                        break
-                
-                if first_non_zero != -1:
-                    # Convert to target unit
-                    converted_sizes = [s / factor for s in raw_sizes[first_non_zero:]]
-                    # Plot only from the first non-zero size to the end
-                    # Use numeric indices for X-axis to ensure consistent mapping
-                    x_values = range(first_non_zero, len(tags))
-                    plt.plot(x_values, converted_sizes, marker='o', label=name)
-                    has_data = True
+            raw_sizes = []
+            for entry in data:
+                size = entry.get(group_name, {}).get(name, 0)
+                raw_sizes.append(size)
+            
+            # Find the first index where the asset has a size > 0
+            first_non_zero = -1
+            for i, size in enumerate(raw_sizes):
+                if size > 0:
+                    first_non_zero = i
+                    break
+            
+            if first_non_zero != -1:
+                # Convert to target unit
+                converted_sizes = [s / factor for s in raw_sizes[first_non_zero:]]
+                x_values = range(first_non_zero, len(tags))
+                plt.plot(x_values, converted_sizes, marker='o', label=name)
+                has_data = True
         
         if not has_data:
             plt.close()
             continue
 
-        plt.title(f'{group_name} File sizes over Versions')
+        plt.title(f'{group_name} over Versions')
         plt.xlabel('Tags')
-        plt.ylabel(f'Filesize ({unit})')
+        plt.ylabel(f'Value ({unit})' if unit == "%" else f'Filesize ({unit})')
         plt.xticks(range(len(tags)), tags)
         plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0.)
         plt.grid(True, linestyle='--', alpha=0.7)
@@ -135,43 +128,51 @@ def generate_stats():
     
     for group_name, filename in graph_filenames:
         md_content += f"## {group_name} Assets\n\n"
-        # The markdown is in the root, and images are in README/graphs/
-        md_content += f"![{group_name} File sizes](README/graphs/{filename})\n\n"
+        md_content += f"![{group_name} data](README/graphs/{filename})\n\n"
         
-        # Mini-table for this group
-        members = [m for m in groupings[group_name] if m in asset_names]
+        members = sorted(list(all_assets_by_group[group_name]))
         if members:
-            # Header: Tag as first column, then all tags
+            # Determine unit for formatting
+            unit = ""
+            if group_name == "source":
+                unit = "%"
+            
             header = "| Asset | " + " | ".join([f"**{t}**" for t in tags]) + " |\n"
             separator = "| --- | " + " | ".join(["---"] * len(tags)) + " |\n"
             md_content += header
             md_content += separator
             
-            # Rows: One row per asset
             for name in members:
                 row_values = []
                 for entry in data:
-                    size = entry['assets'].get(name, '-')
-                    row_values.append(format_size(size))
+                    val = entry.get(group_name, {}).get(name, '-')
+                    row_values.append(format_value(val, unit))
                 md_content += f"| {name} | " + " | ".join(row_values) + " |\n"
             md_content += "\n"
     
     # Generate Total Comparison Table
     md_content += "## Total Comparison\n\n"
-    
-    # Header: Asset as first column, then all tags
-    header = "| Asset | " + " | ".join([f"**{t}**" for t in tags]) + " |\n"
-    separator = "| --- | " + " | ".join(["---"] * len(tags)) + " |\n"
+    header = "| Group | Asset | " + " | ".join([f"**{t}**" for t in tags]) + " |\n"
+    separator = "| --- | --- | " + " | ".join(["---"] * len(tags)) + " |\n"
     md_content += header
     md_content += separator
     
-    # Rows: One row per asset
-    for name in asset_names:
-        row_values = []
-        for entry in data:
-            size = entry['assets'].get(name, '-')
-            row_values.append(format_size(size))
-        md_content += f"| {name} | " + " | ".join(row_values) + " |\n"
+    for group_name in groups:
+        members = sorted(list(all_assets_by_group[group_name]))
+        
+        # Determine unit for formatting
+        unit = ""
+        if group_name == "source":
+            unit = "%"
+            
+        for i, name in enumerate(members):
+            row_values = []
+            for entry in data:
+                val = entry.get(group_name, {}).get(name, '-')
+                row_values.append(format_value(val, unit))
+            
+            group_col = f"**{group_name}**" if i == 0 else ""
+            md_content += f"| {group_col} | {name} | " + " | ".join(row_values) + " |\n"
 
     stats_md_path = 'Stats.md'
     if os.path.basename(os.getcwd()) == 'README':
