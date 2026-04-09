@@ -115,7 +115,7 @@ def generate_stats():
         plt.tight_layout()
 
         # Save the graph
-        filename = f'{group_name.lower()}.png'
+        filename = f'{group_name.lower()}.png'.replace(' ', '-')
         graph_path = os.path.join(graphs_dir, filename)
         
         plt.savefig(graph_path)
