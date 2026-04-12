@@ -15,6 +15,7 @@ import {FetchService} from "@contracts/fetch.contract";
 import {I18nService} from "@contracts/i18n.contract";
 import {ProviderService} from "@contracts/provider.contract";
 import {GenreService} from "@contracts/genre.contract";
+import {SettingsService} from "@contracts/settings.contract";
 
 import {SeriesModel} from "@models/series.model";
 import {GenreModel} from "@models/genre.model";
@@ -34,11 +35,13 @@ export class StreamsViewModel extends ViewModel {
     private readonly routerService: RouterService;
     private readonly dialogService: DialogService;
     private readonly toastService: ToastService;
+
     private readonly providerService: ProviderService;
     private readonly fetchService: FetchService;
     private readonly i18nService: I18nService;
     private readonly seriesService: SeriesService;
     private readonly genreService: GenreService;
+    private readonly settingsService: SettingsService;
 
     private searchStringWatcher: WatchHandle;
     private ignoreObserverOnce: boolean;
@@ -59,11 +62,13 @@ export class StreamsViewModel extends ViewModel {
         this.routerService = this.ctx.getService(RouterService);
         this.dialogService = this.ctx.getService(DialogService);
         this.toastService = this.ctx.getService(ToastService);
+
         this.providerService = this.ctx.getService(ProviderService);
         this.fetchService = this.ctx.getService(FetchService);
         this.i18nService = this.ctx.getService(I18nService);
         this.seriesService = this.ctx.getService(SeriesService);
         this.genreService = this.ctx.getService(GenreService);
+        this.settingsService = this.ctx.getService(SettingsService);
 
         this.searchStringWatcher = watch(() => this.searchText, throttle(async () => {
             await this.onFilterUpdate();
@@ -170,6 +175,10 @@ export class StreamsViewModel extends ViewModel {
     }
 
     private async startSync(): Promise<void> {
+        if (!await this.settingsService.getAutoSyncCatalog()) {
+            return;
+        }
+
         const provider: DefaultProvider = await this.providerService.getProvider();
         const storageKey: string = `synced-${provider.uniqueKey}`;
         if (!!sessionStorage.getItem(storageKey)) {

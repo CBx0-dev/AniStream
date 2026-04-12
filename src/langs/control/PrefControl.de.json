@@ -5,7 +5,8 @@
     "sections": {
         "theme": "Design",
         "language": "Sprache",
-        "updater": "Updater"
+        "updater": "Updater",
+        "other": "Sonstiges"
     },
     "aniworldLight": {
         "title": "AniWorld.to Hell",
@@ -34,6 +35,9 @@
         "healthUrl": "Health URL",
         "toastTitle": "Einstellung gespeichert",
         "toastDescription": "Die Einstellung wurde automatisch gespeichert"
+    },
+    "other": {
+        "syncCatalog": "Den Katalog beim Start automatisch synchronisieren"
     },
     "alert": {
         "title": "Profile löschen",

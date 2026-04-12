@@ -80,7 +80,8 @@ class UserServiceImpl implements UserService {
             rows[0].mouth,
             rows[0].theme,
             rows[0].lang,
-            rows[0].tos_accepted
+            rows[0].tos_accepted,
+            rows[0].sync_catalog
         );
     }
 
@@ -97,7 +98,8 @@ class UserServiceImpl implements UserService {
             row.mouth,
             row.theme,
             row.lang,
-            row.tos_accepted
+            row.tos_accepted,
+            row.sync_catalog
         ));
     }
 
@@ -119,7 +121,8 @@ class UserServiceImpl implements UserService {
             rows[0].mouth,
             rows[0].theme,
             rows[0].lang,
-            rows[0].tos_accepted
+            rows[0].tos_accepted,
+            rows[0].sync_catalog
         );
     }
 
@@ -147,6 +150,7 @@ class UserServiceImpl implements UserService {
             mouth,
             theme,
             local,
+            "false",
             "false"
         );
 
@@ -159,16 +163,17 @@ class UserServiceImpl implements UserService {
             mouth,
             "aniworld-light",
             "en",
+            "false",
             "false"
         );
     }
 
-    public async updateProfile(profileId: number, name: string, backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth, theme: string, local: string, tosAccepted: boolean): Promise<void> {
+    public async updateProfile(profileId: number, name: string, backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth, theme: string, local: string, tosAccepted: boolean, syncCatalog: boolean): Promise<void> {
         const session: DbSession = await this.getDatabase();
 
         // language=SQLite
         await session.execute(
-            "UPDATE profile SET name = ?, background_color = ?, eye = ?, mouth = ?, theme = ?, lang = ?, tos_accepted = ? WHERE profile_id = ?",
+            "UPDATE profile SET name = ?, background_color = ?, eye = ?, mouth = ?, theme = ?, lang = ?, tos_accepted = ?, sync_catalog = ? WHERE profile_id = ?",
             name,
             backgroundColor,
             eye,
@@ -176,6 +181,7 @@ class UserServiceImpl implements UserService {
             theme,
             local,
             tosAccepted ? "true" : "false",
+            syncCatalog ? "true" : "false",
             profileId
         );
     }

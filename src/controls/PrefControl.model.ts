@@ -33,10 +33,11 @@ export class PrefControlModel extends UserControl {
     public activeTheme: string = this.ref("aniworld-light");
     public activeLocal: string = this.ref("en");
     public healthUrl: string = this.ref("");
+    public autoSyncCatalog: boolean = this.ref(false);
 
 
     public readonly updatesActive: boolean = this.computed(() => this.settingsService.updatesActive.value);
-    public avatarSvg: string | null = this.computed(() => {
+    public readonly avatarSvg: string | null = this.computed(() => {
         if (!this.profile) {
             return null;
         }
@@ -64,6 +65,7 @@ export class PrefControlModel extends UserControl {
     protected async mounted(): Promise<void> {
         this.activeTheme = await this.settingsService.getTheme();
         this.activeLocal = await this.settingsService.getLocal();
+        this.autoSyncCatalog = await this.settingsService.getAutoSyncCatalog();
 
         this.profile = await this.userService.getActiveProfile();
     }
@@ -126,6 +128,12 @@ export class PrefControlModel extends UserControl {
             title: this.i18nService.get(I18n.PrefControl.updater.toastTitle),
             description: this.i18nService.get(I18n.PrefControl.updater.toastDescription),
         });
+    }
+
+    public async onAutoSyncCatalogToggle(): Promise<void> {
+        this.autoSyncCatalog = !this.autoSyncCatalog;
+
+        await this.settingsService.setAutoSyncCatalog(this.autoSyncCatalog);
     }
 
     public async onProfileDeleteBtn(): Promise<void> {

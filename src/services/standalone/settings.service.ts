@@ -126,6 +126,17 @@ class SettingsServiceImpl implements SettingsService {
         return profile.tos_accepted;
     }
 
+    public async getAutoSyncCatalog(): Promise<boolean> {
+        const profile: ProfileModel = await this.userService.getActiveProfile();
+        return profile.sync_catalog;
+    }
+
+    public async setAutoSyncCatalog(sync: boolean): Promise<void> {
+        const profile: ProfileModel = await this.userService.getActiveProfile();
+        profile.sync_catalog = sync;
+        await this.updateProfile(profile);
+    }
+
     public async getImageVariant(name: string, extension: string): Promise<string> {
         return `/${name}/${await this.getTheme()}.${extension}`
     }
@@ -145,7 +156,8 @@ class SettingsServiceImpl implements SettingsService {
             profile.mouth,
             profile.theme,
             profile.lang,
-            profile.tos_accepted
+            profile.tos_accepted,
+            profile.sync_catalog
         );
     }
 
