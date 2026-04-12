@@ -36,6 +36,10 @@ export interface SettingsService {
 
     isTosAccepted(): Promise<boolean>;
 
+    getAutoSyncCatalog(): Promise<boolean>;
+
+    setAutoSyncCatalog(sync: boolean): Promise<void>;
+
     getImageVariant(name: string, extension: string): Promise<string>;
 
     loadProfileSettings(): Promise<void>;

@@ -14,6 +14,7 @@ import {ProfileViewModel} from "@views/ProfileView.model";
 import {ConfirmControlModel} from "@controls/ConfirmControl.model";
 import ToastContainer from "@controls/ToastContainer.vue";
 import {InfoToastModel} from "@controls/InfoToast.model";
+import {ProgressToastModel} from "@controls/ProgressToast.model";
 
 import {ReportService} from "@contracts/report.contract";
 import {SettingsService} from "@contracts/settings.contract";
@@ -45,6 +46,7 @@ export class AppConfig implements AppShell {
     toast: AppShell.ToastConfig = {
         container: ToastContainer,
         info: InfoToastModel,
+        progress: ProgressToastModel
     }
 
     public constructor(app: App) {

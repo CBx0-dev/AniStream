@@ -10,5 +10,9 @@
     },
     "content": {
         "eol": "Nothing more to show"
+    },
+    "toast": {
+        "title": "Syncing catalog",
+        "description": "We sync the catalog in the background"
     }
 }

@@ -20,36 +20,36 @@ class FetchServiceImpl implements FetchService {
         this.providerService = ctx.getService(ProviderService);
     }
 
-    public async getCatalog(): Promise<string[]> {
-        const provider: DefaultProvider = await this.providerService.getProvider();
+    public async getCatalog(provider: DefaultProvider | null = null): Promise<string[]> {
+        provider ??= await this.providerService.getProvider();
         const fetcher: IInformationFetcher = provider.getFetcher();
 
         return await fetcher.getCatalog();
     }
 
-    public async getSeries(guid: string): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[]]> {
-        const provider: DefaultProvider = await this.providerService.getProvider();
+    public async getSeries(guid: string, provider: DefaultProvider | null = null): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[]]> {
+        provider ??= await this.providerService.getProvider();
         const fetcher: IInformationFetcher = provider.getFetcher();
 
         return await fetcher.getSeries(guid);
     }
 
-    public async getSeasons(series: SeriesModel): Promise<SeasonFetchModel[]> {
-        const provider: DefaultProvider = await this.providerService.getProvider();
+    public async getSeasons(series: SeriesModel, provider: DefaultProvider | null = null): Promise<SeasonFetchModel[]> {
+        provider ??= await this.providerService.getProvider();
         const fetcher: IInformationFetcher = provider.getFetcher();
 
         return await fetcher.getSeasons(series);
     }
 
-    public async getEpisodes(guid: string, seasonNumber: number): Promise<EpisodeFetchModel[]> {
-        const provider: DefaultProvider = await this.providerService.getProvider();
+    public async getEpisodes(guid: string, seasonNumber: number, provider: DefaultProvider | null = null): Promise<EpisodeFetchModel[]> {
+        provider ??= await this.providerService.getProvider();
         const fetcher: IInformationFetcher = provider.getFetcher();
 
         return await fetcher.getEpisodes(guid, seasonNumber);
     }
 
-    public async getProviders(guid: string, seasonNumber: number, episodeNumber: number): Promise<Provider[]> {
-        const provider: DefaultProvider = await this.providerService.getProvider();
+    public async getProviders(guid: string, seasonNumber: number, episodeNumber: number, provider: DefaultProvider | null = null): Promise<Provider[]> {
+        provider ??= await this.providerService.getProvider();
         const fetcher: IInformationFetcher = provider.getFetcher();
 
         return await fetcher.fetchProviders(guid, seasonNumber, episodeNumber);

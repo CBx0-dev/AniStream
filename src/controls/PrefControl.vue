@@ -185,6 +185,25 @@ const vm: PrefControlModel = useUserControl(PrefControlModel);
                 </label>
             </div>
         </section>
+
+        <div class="divider"></div>
+
+        <section class="grid grid-cols-[minmax(18rem,37rem)] justify-center gap-5">
+            <h2 class="text-sm font-semibold -mb-3 uppercase opacity-60">
+                <Text :target="I18n.PrefControl.sections.other"/>
+            </h2>
+            <label class="label">
+                <input
+                    type="checkbox"
+                    :checked="vm.autoSyncCatalog"
+                    class="toggle toggle-primary"
+                    @change="vm.onAutoSyncCatalogToggle()"/>
+                <Text :target="I18n.PrefControl.other.syncCatalog"/>
+            </label>
+        </section>
+
+        <div class="divider"></div>
+
         <section class="grid grid-cols-[minmax(18rem,37rem)] justify-center gap-5">
             <button class="btn btn-error btn-soft w-fit ml-auto" @click="vm.onProfileDeleteBtn()">
                 <LucideTrash />

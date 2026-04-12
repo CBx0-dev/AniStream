@@ -15,12 +15,13 @@ export interface ProfileDbModel {
     theme: string;
     lang: SupportedLocals;
     tos_accepted: string;
+    sync_catalog: string;
 }
 
-export interface ProfileModel extends Omit<ProfileDbModel, "tos_accepted"> {
+export interface ProfileModel extends Omit<ProfileDbModel, "tos_accepted" | "sync_catalog"> {
     tos_accepted: boolean;
+    sync_catalog: boolean;
     clone(): ProfileModel;
-
 }
 
 export function ProfileModel(
@@ -31,7 +32,8 @@ export function ProfileModel(
     mouth: ProfileMouth,
     theme: string,
     lang: SupportedLocals,
-    tosAccepted: string
+    tosAccepted: string,
+    syncCatalog: string
 ): ProfileModel;
 export function ProfileModel(
     profile_id: number,
@@ -42,15 +44,16 @@ export function ProfileModel(
     mouth: ProfileMouth,
     theme: string,
     lang: SupportedLocals,
-    tosAccepted: string
+    tosAccepted: string,
+    syncCatalog: string
 ): ProfileModel;
 
 export function ProfileModel(...args: unknown[]): ProfileModel {
-    if (args.length == 8) {
+    if (args.length == 9) {
         args.unshift(0);
     }
 
-    return _ProfileModel(...args as [number, string, string, string, ProfileEye, ProfileMouth, string, SupportedLocals, string]);
+    return _ProfileModel(...args as [number, string, string, string, ProfileEye, ProfileMouth, string, SupportedLocals, string, string]);
 }
 
 function _ProfileModel(
@@ -62,7 +65,8 @@ function _ProfileModel(
     mouth: ProfileMouth,
     theme: string,
     lang: SupportedLocals,
-    tosAccepted: string
+    tosAccepted: string,
+    syncCatalog: string,
 ): ProfileModel {
     const obj: ProfileModel = {
         profile_id: profile_id,
@@ -74,6 +78,7 @@ function _ProfileModel(
         theme: theme,
         lang: lang,
         tos_accepted: tosAccepted == "true",
+        sync_catalog: syncCatalog == "true",
         clone: clone,
     };
 
@@ -92,6 +97,7 @@ function clone(this: ProfileModel): ProfileModel {
         theme: this.theme,
         lang: this.lang,
         tos_accepted: this.tos_accepted,
+        sync_catalog: this.sync_catalog,
         clone: clone,
     };
 
