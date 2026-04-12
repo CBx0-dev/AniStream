@@ -25,6 +25,10 @@ export class UserDbServiceImpl implements UserDbService {
 
         let latest: UserDbVersion = new LATEST_VERSION();
 
+        if (latest.version < currentVersion) {
+            throw "Database version is ahead of application service version";
+        }
+
         if (latest.version == currentVersion) {
             return;
         }
