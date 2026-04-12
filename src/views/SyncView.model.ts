@@ -89,7 +89,7 @@ export class SyncViewModel extends ViewModel {
                 if (!await this.seriesService.existByGUID(guid)) {
                     const [fetchedSeries, fetchedGenres] = await this.fetchService.getSeries(guid);
                     const series: SeriesModel = await this.seriesService.insertSeries(fetchedSeries.guid, fetchedSeries.title, fetchedSeries.description, fetchedSeries.preview_image);
-                    await Promise.all(fetchedGenres.map(fetchedGenre => (async (): Promise<void> => {
+                    await Promise.all(fetchedGenres.map(fetchedGenre => (async () => {
                         let genre: GenreModel | null = await this.genreService.getGenreByKey(fetchedGenre.key);
                         if (!genre) {
                             genre = await this.genreService.insertGenre(fetchedGenre.key);

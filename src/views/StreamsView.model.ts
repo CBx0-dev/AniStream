@@ -2,14 +2,16 @@ import {Component, watch, WatchHandle} from "vue";
 import {ViewModel} from "vue-mvvm";
 import {DialogService} from "vue-mvvm/dialog";
 import {RouteAdapter, RouterService} from "vue-mvvm/router";
+import {ProgressToastControl, ToastService} from "vue-mvvm/toast";
 
 import StreamsView from "@views/StreamsView.vue";
 import {SyncViewModel} from "@views/SyncView.model";
-import {WatchlistViewModel} from "@views//WatchlistView.model";
+import {WatchlistViewModel} from "@views/WatchlistView.model";
 
-import {DetailControlModel} from "@/controls/DetailControl.model";
+import {DetailControlModel} from "@controls/DetailControl.model";
 
 import {SeriesService} from "@contracts/series.contract";
+import {FetchService} from "@contracts/fetch.contract";
 import {I18nService} from "@contracts/i18n.contract";
 import {ProviderService} from "@contracts/provider.contract";
 import {GenreService} from "@contracts/genre.contract";
@@ -21,6 +23,8 @@ import {throttle} from "@utils/throttle";
 
 import {DefaultProvider} from "@providers/default";
 
+import I18n from "@utils/i18n";
+
 export class StreamsViewModel extends ViewModel {
     public static readonly component: Component = StreamsView;
     public static readonly route: RouteAdapter = {
@@ -29,10 +33,12 @@ export class StreamsViewModel extends ViewModel {
 
     private readonly routerService: RouterService;
     private readonly dialogService: DialogService;
+    private readonly toastService: ToastService;
     private readonly providerService: ProviderService;
+    private readonly fetchService: FetchService;
     private readonly i18nService: I18nService;
     private readonly seriesService: SeriesService;
-    private readonly genresService: GenreService;
+    private readonly genreService: GenreService;
 
     private searchStringWatcher: WatchHandle;
     private ignoreObserverOnce: boolean;
@@ -52,10 +58,12 @@ export class StreamsViewModel extends ViewModel {
         super();
         this.routerService = this.ctx.getService(RouterService);
         this.dialogService = this.ctx.getService(DialogService);
+        this.toastService = this.ctx.getService(ToastService);
         this.providerService = this.ctx.getService(ProviderService);
+        this.fetchService = this.ctx.getService(FetchService);
         this.i18nService = this.ctx.getService(I18nService);
         this.seriesService = this.ctx.getService(SeriesService);
-        this.genresService = this.ctx.getService(GenreService);
+        this.genreService = this.ctx.getService(GenreService);
 
         this.searchStringWatcher = watch(() => this.searchText, throttle(async () => {
             await this.onFilterUpdate();
@@ -89,7 +97,8 @@ export class StreamsViewModel extends ViewModel {
             this.observer.observe(intersectionLine);
         }
 
-        this.genres.push(...await this.genresService.getGenres());
+        this.genres.push(...await this.genreService.getGenres());
+        this.startSync();
     }
 
     public unmounted(): void {
@@ -158,5 +167,42 @@ export class StreamsViewModel extends ViewModel {
         this.series.clear();
         this.ignoreObserverOnce = true;
         await this.loadNextChunk();
+    }
+
+    private async startSync(): Promise<void> {
+        const provider: DefaultProvider = await this.providerService.getProvider();
+        const storageKey: string = `synced-${provider.uniqueKey}`;
+        if (!!sessionStorage.getItem(storageKey)) {
+            return;
+        }
+
+        sessionStorage.setItem(storageKey, "true");
+
+        const guids: string[] = await this.fetchService.getCatalog(provider);
+
+        using toast: ProgressToastControl = await this.toastService.showProgress({
+            type: "info",
+            title: this.i18nService.get(I18n.StreamsView.toast.title),
+            description: this.i18nService.get(I18n.StreamsView.toast.description),
+            max: guids.length
+        });
+
+        for (const guid of guids) {
+            toast.value++;
+            if (await this.seriesService.existByGUID(guid)) {
+                continue;
+            }
+
+            const [fetchedSeries, fetchedGenres] = await this.fetchService.getSeries(guid, provider);
+            const series: SeriesModel = await this.seriesService.insertSeries(fetchedSeries.guid, fetchedSeries.title, fetchedSeries.description, fetchedSeries.preview_image);
+            await Promise.all(fetchedGenres.map(fetchedGenre => (async () => {
+                let genre: GenreModel | null = await this.genreService.getGenreByKey(fetchedGenre.key);
+                if (!genre) {
+                    genre = await this.genreService.insertGenre(fetchedGenre.key);
+                }
+
+                await this.genreService.insertGenreToSeries(genre, series, fetchedGenre.main)
+            })()));
+        }
     }
 }
