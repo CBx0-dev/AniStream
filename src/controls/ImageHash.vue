@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import {computed, ComputedRef, ref, Ref, watch} from "vue";
 import {convertFileSrc} from "@tauri-apps/api/core";
 import {path} from "@tauri-apps/api";
+
+import {computed, ComputedRef, ref, Ref, watch} from "vue";
 
 const props = defineProps<{
     providerFolder: string | null;
@@ -10,9 +11,10 @@ const props = defineProps<{
     height: number;
 }>();
 
-const styleString: ComputedRef<string> = computed(() => `width: ${props.width}px; height: ${props.height}px;`);
 const url: Ref<string | null> = ref(null);
 const loaded: Ref<boolean> = ref(false);
+
+const styleString: ComputedRef<string> = computed(() => `width:${props.width}px;height:${props.height}px`);
 
 watch(props, buildURL, {
     immediate: true
