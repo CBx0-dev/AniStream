@@ -10,5 +10,9 @@
     },
     "content": {
         "eol": "Nichts mehr zum Anzeigen"
+    },
+    "toast": {
+        "title": "Syncing Katalog",
+        "description": "Ihr Katalog wird im Hintergrund gesynced"
     }
 }

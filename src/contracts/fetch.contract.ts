@@ -5,7 +5,7 @@ import type {GenreFetchModel} from "@models/genre.model";
 import type {SeasonFetchModel} from "@models/season.model";
 import type {EpisodeFetchModel} from "@models/episode.model";
 
-import {EpisodeLanguage} from "@providers/default";
+import {DefaultProvider, EpisodeLanguage} from "@providers/default";
 
 export interface Provider {
     name: string;
@@ -14,15 +14,15 @@ export interface Provider {
 }
 
 export interface FetchService {
-    getCatalog(): Promise<string[]>;
+    getCatalog(provider?: DefaultProvider | null): Promise<string[]>;
 
-    getSeries(guid: string): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[]]>;
+    getSeries(guid: string, provider?: DefaultProvider | null): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[]]>;
 
-    getSeasons(series: SeriesModel): Promise<SeasonFetchModel[]>;
+    getSeasons(series: SeriesModel, provider?: DefaultProvider | null): Promise<SeasonFetchModel[]>;
 
-    getEpisodes(guid: string, seasonNumber: number): Promise<EpisodeFetchModel[]>;
+    getEpisodes(guid: string, seasonNumber: number, provider?: DefaultProvider | null): Promise<EpisodeFetchModel[]>;
 
-    getProviders(guid: string, seasonNumber: number, episodeNumber: number): Promise<Provider[]>;
+    getProviders(guid: string, seasonNumber: number, episodeNumber: number, provider?: DefaultProvider | null): Promise<Provider[]>;
 }
 
 export const FetchService: ServiceKey<FetchService> = new ServiceKey<FetchService>("fetch.service");

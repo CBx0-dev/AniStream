@@ -100,7 +100,8 @@ export class ProfileSetupControlModel extends UserControl implements Action<Prof
             this.mouth,
             this.theme,
             this.local,
-            this.existingProfile.tos_accepted
+            this.existingProfile.tos_accepted,
+            this.existingProfile.sync_catalog
         );
 
         this.existingProfile.name = this.name;

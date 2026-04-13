@@ -5,7 +5,8 @@
     "sections": {
         "theme": "Theme",
         "language": "Language",
-        "updater": "Updater"
+        "updater": "Updater",
+        "other": "Other"
     },
     "aniworldLight": {
         "title": "AniWorld.to Light",
@@ -34,6 +35,9 @@
         "healthUrl": "Health URL",
         "toastTitle": "Setting saved",
         "toastDescription": "The settings where saved automatically"
+    },
+    "other": {
+        "syncCatalog": "Automatically sync the catalog on startup"
     },
     "alert": {
         "title": "Delete profile",

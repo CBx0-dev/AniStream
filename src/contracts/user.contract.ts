@@ -36,7 +36,8 @@ export interface UserService {
         mouth: ProfileMouth,
         theme: string,
         local: SupportedLocals,
-        tosAccepted: boolean
+        tosAccepted: boolean,
+        syncCatalog: boolean
     ): Promise<void>;
 
     deleteProfile(profile: ProfileModel): Promise<void>;
