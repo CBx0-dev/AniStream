@@ -202,16 +202,20 @@ export class StreamsViewModel extends ViewModel {
                 continue;
             }
 
-            const [fetchedSeries, fetchedGenres] = await this.fetchService.getSeries(guid, provider);
-            const series: SeriesModel = await this.seriesService.insertSeries(fetchedSeries.guid, fetchedSeries.title, fetchedSeries.description, fetchedSeries.preview_image);
-            await Promise.all(fetchedGenres.map(fetchedGenre => (async () => {
-                let genre: GenreModel | null = await this.genreService.getGenreByKey(fetchedGenre.key);
-                if (!genre) {
-                    genre = await this.genreService.insertGenre(fetchedGenre.key);
-                }
+            try {
+                const [fetchedSeries, fetchedGenres] = await this.fetchService.getSeries(guid, provider);
+                const series: SeriesModel = await this.seriesService.insertSeries(fetchedSeries.guid, fetchedSeries.title, fetchedSeries.description, fetchedSeries.preview_image);
+                await Promise.all(fetchedGenres.map(fetchedGenre => (async () => {
+                    let genre: GenreModel | null = await this.genreService.getGenreByKey(fetchedGenre.key);
+                    if (!genre) {
+                        genre = await this.genreService.insertGenre(fetchedGenre.key);
+                    }
 
-                await this.genreService.insertGenreToSeries(genre, series, fetchedGenre.main)
-            })()));
+                    await this.genreService.insertGenreToSeries(genre, series, fetchedGenre.main)
+                })()));
+            } catch (e) {
+                console.error(e);
+            }
         }
     }
 }
