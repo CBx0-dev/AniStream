@@ -11,11 +11,15 @@ import {ProviderService} from "@contracts/provider.contract";
 import {SeriesService} from "@contracts/series.contract";
 import {WatchlistService} from "@contracts/watchlist.contract";
 import {ListService} from "@contracts/list.contract";
+import {I18nService} from "@contracts/i18n.contract";
 
 import {SeriesModel} from "@models/series.model";
 import {ListModel} from "@models/list.model";
 
 import {DefaultProvider} from "@providers/default";
+import {ListViewModel} from "@views/ListView.model";
+
+import I18n from "@utils/i18n";
 
 export class WatchlistViewModel extends ViewModel {
     public static readonly component: Component = WatchlistView;
@@ -30,6 +34,7 @@ export class WatchlistViewModel extends ViewModel {
     private readonly seriesService: SeriesService;
     private readonly watchlistService: WatchlistService;
     private readonly listService: ListService;
+    private readonly i18nService: I18nService;
 
     private customListHashes: Map<number, string[]> = this.ref(new Map<number, string[]>());
 
@@ -37,8 +42,6 @@ export class WatchlistViewModel extends ViewModel {
     public startedSeries: SeriesModel[] = this.ref([]);
     public watchlistSeries: SeriesModel[] = this.ref([]);
     public customLists: ListModel[] = this.ref([]);
-
-    public everythingEmpty: boolean = this.computed(() => this.startedSeries.length == 0 && this.watchlistSeries.length == 0)
 
     public constructor() {
         super();
@@ -50,6 +53,7 @@ export class WatchlistViewModel extends ViewModel {
         this.seriesService = this.ctx.getService(SeriesService);
         this.watchlistService = this.ctx.getService(WatchlistService);
         this.listService = this.ctx.getService(ListService);
+        this.i18nService = this.ctx.getService(I18nService);
     }
 
     protected async mounted(): Promise<void> {
@@ -73,13 +77,26 @@ export class WatchlistViewModel extends ViewModel {
         this.routerService.navigateBack();
     }
 
-    public async onCardClick(series: SeriesModel): Promise<void> {
+    public async onSeriesCardClick(series: SeriesModel): Promise<void> {
         if (!this.providerFolder) {
             return;
         }
 
         const dialog: DetailControlModel = this.dialogService.initDialog(DetailControlModel, this.providerFolder, series);
         await dialog.openDialog();
+    }
+
+    public async onListCardClick(list: ListModel): Promise<void> {
+        await this.routerService.navigateTo(ListViewModel, {
+            id: list.list_id
+        });
+    }
+
+    public async onListCreateCardClick(): Promise<void> {
+        const name: string = this.i18nService.get(I18n.WatchlistView.personal.newList);
+
+        const list: ListModel = await this.listService.createList(name);
+        await this.onListCardClick(list);
     }
 
     public getCustomListPreviewHashes(list: ListModel): string[] | null {

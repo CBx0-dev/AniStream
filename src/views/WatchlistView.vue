@@ -9,6 +9,7 @@ import I18n from "@utils/i18n";
 import LucideArrowLeft from "@icons/LucideArrowLeft.vue";
 import ImageHash from "@controls/ImageHash.vue";
 import ListHash from "@controls/ListHash.vue";
+import LucidePlus from "@icons/LucidePlus.vue";
 
 const vm: WatchlistViewModel = useViewModel(WatchlistViewModel);
 </script>
@@ -39,7 +40,7 @@ const vm: WatchlistViewModel = useViewModel(WatchlistViewModel);
                     :hash="series.preview_image"
                     :width="150"
                     :height="225"
-                    @click="vm.onCardClick(series)"/>
+                    @click="vm.onSeriesCardClick(series)"/>
             </div>
         </template>
         <template v-if="vm.watchlistSeries.length > 0">
@@ -56,34 +57,33 @@ const vm: WatchlistViewModel = useViewModel(WatchlistViewModel);
                     :hash="series.preview_image"
                     :width="150"
                     :height="225"
-                    @click="vm.onCardClick(series)"/>
+                    @click="vm.onSeriesCardClick(series)"/>
             </div>
         </template>
-        <template v-if="vm.customLists.length > 0">
-            <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">
-                <Text :target="I18n.WatchlistView.personal.title" class="shrink-0"/>
-                <div class="bg-primary w-full h-1"/>
-            </h1>
-            <div class="grid grid-cols-[repeat(auto-fill,150px)] justify-center gap-3 py-6">
-                <div
-                    v-for="list of vm.customLists"
-                    :key="list.list_id"
-                    class="group hover:scale-110 duration-300">
-                    <ListHash
-                        class="border border-base-300 rounded-box group-hover:shadow-sm overflow-clip"
-                        :provider-folder="vm.providerFolder"
-                        :hashes="vm.getCustomListPreviewHashes(list)"
-                        :width="150"
-                        :height="225"/>
-                    <h2 class="text-center w-30 mx-auto text-nowrap overflow-hidden text-ellipsis">{{ list.name }}</h2>
-                </div>
+        <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">
+            <Text :target="I18n.WatchlistView.personal.title" class="shrink-0"/>
+            <div class="bg-primary w-full h-1"/>
+        </h1>
+        <div class="grid grid-cols-[repeat(auto-fill,150px)] justify-center gap-3 py-6">
+            <div
+                v-for="list of vm.customLists"
+                :key="list.list_id"
+                class="group hover:scale-110 duration-300"
+                @click="vm.onListCardClick(list)">
+                <ListHash
+                    class="border border-base-300 rounded-box group-hover:shadow-sm overflow-clip"
+                    :provider-folder="vm.providerFolder"
+                    :hashes="vm.getCustomListPreviewHashes(list)"
+                    :width="150"
+                    :height="225"/>
+                <h2 class="text-center w-30 mx-auto text-nowrap overflow-hidden text-ellipsis">{{ list.name }}</h2>
             </div>
-        </template>
-        <template v-if="vm.everythingEmpty">
-            <h1 class="text-center font-semibold text-xl p-10 opacity-70">
-                <Text :target="I18n.WatchlistView.empty"/>
-            </h1>
-        </template>
+            <div
+                class="h-[225px] border border-base-300 bg-base-100 rounded-box duration-300 overflow-clip hover:shadow-sm hover:scale-110 flex justify-center items-center"
+                @click="vm.onListCreateCardClick()">
+                <LucidePlus class="size-10"/>
+            </div>
+        </div>
         <!--        <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">-->
         <!--            <Text :target="I18n.WatchlistView.tracklist.title" class="shrink-0" />-->
         <!--            <div class="bg-primary w-full h-1" />-->
