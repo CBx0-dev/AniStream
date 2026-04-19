@@ -1,0 +1,12 @@
+{
+    "$lang": "de",
+    "$group": "ListView",
+    "navbar": {
+        "back": "Zurück",
+        "delete": "Liste löschen"
+    },
+    "confirm": {
+        "title": "Liste löschen?",
+        "description": "Wollen Sie die Liste wirklich löschen? Die Daten können nicht wieder hergestellt werden"
+    }
+}

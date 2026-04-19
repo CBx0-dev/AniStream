@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { useViewModel } from "vue-mvvm";
+import {useViewModel} from "vue-mvvm";
 
-import { WatchlistViewModel } from "@views/WatchlistView.model";
+import {WatchlistViewModel} from "@views/WatchlistView.model";
 
 import Text from "@controls/Text.vue";
 import I18n from "@utils/i18n";
 
 import LucideArrowLeft from "@icons/LucideArrowLeft.vue";
 import ImageHash from "@controls/ImageHash.vue";
+import ListHash from "@controls/ListHash.vue";
+import LucidePlus from "@icons/LucidePlus.vue";
 
 const vm: WatchlistViewModel = useViewModel(WatchlistViewModel);
 </script>
@@ -18,16 +20,16 @@ const vm: WatchlistViewModel = useViewModel(WatchlistViewModel);
             <div class="card-body">
                 <div class="flex justify-between w-full">
                     <button class="btn btn-link hover:text-primary" @click="vm.onBackBtn">
-                        <LucideArrowLeft />
-                        <Text :target="I18n.WatchlistView.navbar.back" />
+                        <LucideArrowLeft/>
+                        <Text :target="I18n.WatchlistView.navbar.back"/>
                     </button>
                 </div>
             </div>
         </div>
         <template v-if="vm.startedSeries.length > 0">
             <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">
-                <Text :target="I18n.WatchlistView.leftOff.title" class="shrink-0" />
-                <div class="bg-primary w-full h-1" />
+                <Text :target="I18n.WatchlistView.leftOff.title" class="shrink-0"/>
+                <div class="bg-primary w-full h-1"/>
             </h1>
             <div class="grid grid-cols-[repeat(auto-fill,150px)] justify-center gap-3 py-6">
                 <ImageHash
@@ -38,13 +40,13 @@ const vm: WatchlistViewModel = useViewModel(WatchlistViewModel);
                     :hash="series.preview_image"
                     :width="150"
                     :height="225"
-                    @click="vm.onCardClick(series)"/>
+                    @click="vm.onSeriesCardClick(series)"/>
             </div>
         </template>
         <template v-if="vm.watchlistSeries.length > 0">
             <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">
-                <Text :target="I18n.WatchlistView.watchlist.title" class="shrink-0" />
-                <div class="bg-primary w-full h-1" />
+                <Text :target="I18n.WatchlistView.watchlist.title" class="shrink-0"/>
+                <div class="bg-primary w-full h-1"/>
             </h1>
             <div class="grid grid-cols-[repeat(auto-fill,150px)] justify-center gap-3 py-6">
                 <ImageHash
@@ -55,32 +57,42 @@ const vm: WatchlistViewModel = useViewModel(WatchlistViewModel);
                     :hash="series.preview_image"
                     :width="150"
                     :height="225"
-                    @click="vm.onCardClick(series)"/>
+                    @click="vm.onSeriesCardClick(series)"/>
             </div>
         </template>
-        <template v-if="vm.everythingEmpty">
-            <h1 class="text-center font-semibold text-xl p-10 opacity-70">
-                <Text :target="I18n.WatchlistView.empty" />
-            </h1>
-        </template>
-<!--        <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">-->
-<!--            <Text :target="I18n.WatchlistView.personal.title" class="shrink-0" />-->
-<!--            <div class="bg-primary w-full h-1" />-->
-<!--        </h1>-->
-<!--        <div class="grid grid-cols-[repeat(auto-fill,150px)] justify-center gap-3 py-6">-->
-<!--            <div v-for="i of 10" :key="i"-->
-<!--                class="w-[150px] h-[225px] bg-base-100 border border-base-300 rounded-sm hover:scale-110 hover:shadow-sm duration-300">-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">-->
-<!--            <Text :target="I18n.WatchlistView.tracklist.title" class="shrink-0" />-->
-<!--            <div class="bg-primary w-full h-1" />-->
-<!--        </h1>-->
-<!--        <div class="grid grid-cols-[repeat(auto-fill,150px)] justify-center gap-3 py-6">-->
-<!--            <div v-for="i of 10" :key="i"-->
-<!--                class="w-[150px] h-[225px] bg-base-100 border border-base-300 rounded-sm hover:scale-110 hover:shadow-sm duration-300"-->
-<!--                @click="vm.onCardClick">-->
-<!--            </div>-->
-<!--        </div>-->
+        <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">
+            <Text :target="I18n.WatchlistView.personal.title" class="shrink-0"/>
+            <div class="bg-primary w-full h-1"/>
+        </h1>
+        <div class="grid grid-cols-[repeat(auto-fill,150px)] justify-center gap-3 py-6">
+            <div
+                v-for="list of vm.customLists"
+                :key="list.list_id"
+                class="group hover:scale-110 duration-300"
+                @click="vm.onListCardClick(list)">
+                <ListHash
+                    class="border border-base-300 rounded-box group-hover:shadow-sm overflow-clip"
+                    :provider-folder="vm.providerFolder"
+                    :hashes="vm.getCustomListPreviewHashes(list)"
+                    :width="150"
+                    :height="225"/>
+                <h2 class="text-center w-30 mx-auto text-nowrap overflow-hidden text-ellipsis">{{ list.name }}</h2>
+            </div>
+            <div
+                class="h-[225px] border border-base-300 bg-base-100 rounded-box duration-300 overflow-clip hover:shadow-sm hover:scale-110 flex justify-center items-center"
+                @click="vm.onListCreateCardClick()">
+                <LucidePlus class="size-10"/>
+            </div>
+        </div>
+        <!--        <h1 class="text-2xl font-semibold mt-10 flex gap-4 items-center">-->
+        <!--            <Text :target="I18n.WatchlistView.tracklist.title" class="shrink-0" />-->
+        <!--            <div class="bg-primary w-full h-1" />-->
+        <!--        </h1>-->
+        <!--        <div class="grid grid-cols-[repeat(auto-fill,150px)] justify-center gap-3 py-6">-->
+        <!--            <div v-for="i of 10" :key="i"-->
+        <!--                class="w-[150px] h-[225px] bg-base-100 border border-base-300 rounded-sm hover:scale-110 hover:shadow-sm duration-300"-->
+        <!--                @click="vm.onCardClick">-->
+        <!--            </div>-->
+        <!--        </div>-->
     </div>
 </template>

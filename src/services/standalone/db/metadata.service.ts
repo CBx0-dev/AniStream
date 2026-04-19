@@ -28,6 +28,7 @@ class MetadataDbServiceImpl implements MetadataDbService {
     }
 
     private async beginMigration(session: DbSession, provider: string): Promise<void> {
+        // language=SQLite
         const [{user_version: currentVersion}] = await session.query<Array<{
             user_version: number;
         }>>("PRAGMA user_version");
@@ -58,6 +59,7 @@ class MetadataDbServiceImpl implements MetadataDbService {
             for (const migration of chain) {
                 await migration.migrate(this, userService, provider);
             }
+            // language=SQLite
             await session.execute(`PRAGMA user_version = ${latest.version}`);
         });
     }
@@ -77,6 +79,7 @@ class DbVersion1 implements MetadataDbVersion {
     }
 
     public async migrate(session: DbSession, _userService: UserService, _provider: string): Promise<void> {
+        // language=SQLite
         await session.execute(`
 PRAGMA user_version = 1;
 
@@ -135,6 +138,7 @@ class DbVersion2 implements MetadataDbVersion {
     public version: number = 2;
 
     public async migrate(session: DbSession, _userService: UserService, _provider: string): Promise<void> {
+        // language=SQLite
         await session.execute(`
 CREATE TABLE watchlist
 (
@@ -154,6 +158,7 @@ class DbVersion3 implements MetadataDbVersion {
     public async migrate(session: DbSession, userService: UserService, _provider: string): Promise<void> {
         const profile: ProfileModel = await userService.getMigrationProfile();
 
+        // language=SQLite
         await session.execute(`
 CREATE TABLE watchlist_new
 (
@@ -205,11 +210,37 @@ DROP TABLE episode_old;
     }
 }
 
+class DbVersion4 implements MetadataDbVersion {
+    public previousVersion: MetadataDbVersionConstructor = DbVersion3;
+    public version: number = 4;
+
+    public async migrate(session: DbSession, _userService: UserService, _provider: string): Promise<void> {
+        // language=SQLite
+        await session.execute(`
+CREATE TABLE list
+(
+    list_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name           TEXT NOT NULL,
+    tenant_id      TEXT NOT NULL
+);
+
+CREATE TABLE list_to_series
+(
+    list_id INTEGER NOT NULL,
+    series_id INTEGER NOT NULL,
+    PRIMARY KEY (list_id, series_id),
+    FOREIGN KEY (list_id) REFERENCES list (list_id) ON DELETE CASCADE,
+    FOREIGN KEY (series_id) REFERENCES series (series_id) ON DELETE RESTRICT
+);
+        `);
+    }
+}
+
 // ================================================================================================================== //
 //                                                   END MIGRATION                                                    //
 // ================================================================================================================== //
 
-const LATEST_VERSION: Exclude<MetadataDbVersionConstructor, null> = DbVersion3;
+const LATEST_VERSION: Exclude<MetadataDbVersionConstructor, null> = DbVersion4;
 
 export default {
     key: MetadataDbService,

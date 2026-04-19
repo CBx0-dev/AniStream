@@ -16,19 +16,25 @@ import {I18nService} from "@contracts/i18n.contract";
 import {SeasonService} from "@contracts/season.contract";
 import {WatchlistService} from "@contracts/watchlist.contract";
 import {WatchtimeService} from "@contracts/watchtime.contract";
+import {ListService} from "@contracts/list.contract";
 
 import I18n from "@utils/i18n";
+import {ListModel} from "@models/list.model";
 
 export class DetailControlModel extends DialogControl {
     public static readonly component: Component = DetailControl;
 
     private readonly routerService: RouterService;
     private readonly alertService: AlertService;
+
     private readonly seasonService: SeasonService;
     private readonly genreService: GenreService;
     private readonly watchlistService: WatchlistService;
     private readonly watchtimeService: WatchtimeService;
     private readonly i18nService: I18nService;
+    private readonly listService: ListService;
+
+    private memberOfLists: number[] = this.ref([]);
 
     public opened: boolean = this.ref(false);
     public uid: number = this.computed(() => {
@@ -39,8 +45,10 @@ export class DetailControlModel extends DialogControl {
 
         return instance.uid;
     });
-    public popoverId: string = this.computed(() => `popover-${this.uid}`);
-    public anchorId: string = this.computed(() => `--anchor-${this.uid}`);
+    public mainPopoverId: string = this.computed(() => `popover-main-${this.uid}`);
+    public mainAnchorId: string = this.computed(() => `--anchor-main-${this.uid}`);
+    public customPopoverId: string = this.computed(() => `popover-custom-${this.uid}`);
+    public customAnchorId: string = this.computed(() => `--anchor-custom-${this.uid}`);
     public providerFolder: string | null = this.ref(null)
     public seriesId: number = this.ref(0);
     public title: string = this.ref("");
@@ -52,23 +60,31 @@ export class DetailControlModel extends DialogControl {
     public genreOverflow: number = this.computed(() => this.genres.length - 3);
     public watchProgression: number = this.ref(0);
     public onWatchlist: boolean = this.ref(false);
+    public customLists: ListModel[] = this.ref([]);
 
     public constructor(providerFolder: string, series: SeriesModel) {
         super();
 
         this.routerService = this.ctx.getService(RouterService);
         this.alertService = this.ctx.getService(AlertService);
+
         this.seasonService = this.ctx.getService(SeasonService);
         this.genreService = this.ctx.getService(GenreService);
         this.watchlistService = this.ctx.getService(WatchlistService);
         this.watchtimeService = this.ctx.getService(WatchtimeService);
         this.i18nService = this.ctx.getService(I18nService);
+        this.listService = this.ctx.getService(ListService);
 
         this.providerFolder = providerFolder;
         this.seriesId = series.series_id;
         this.title = series.title;
         this.description = series.description;
         this.previewImage = series.preview_image;
+    }
+
+    protected async mounted(): Promise<void> {
+        this.customLists = await this.listService.getLists();
+        this.memberOfLists = (await this.listService.getListsOfSeries(this.seriesId)).map(list => list.list_id);
     }
 
     protected async onOpen(): Promise<void> {
@@ -100,14 +116,6 @@ export class DetailControlModel extends DialogControl {
         });
     }
 
-    public onPopOverClicked(ev: PointerEvent): void {
-        const popover: HTMLElement | null = (<HTMLElement>ev.target).closest("[popover]") as HTMLElement | null
-        if (!popover) {
-            return;
-        }
-        popover.hidePopover();
-    }
-
     public async onResetBtn(): Promise<void> {
         const confirmResult: boolean = await this.alertService.showConfirm({
             title: "Reset progression",
@@ -131,9 +139,21 @@ export class DetailControlModel extends DialogControl {
         this.onWatchlist = false;
     }
 
-    // public onAddListBtn(): void {
-    //
-    // }
+    public async onCustomListBtn(list: ListModel): Promise<void> {
+        const idx: number = this.memberOfLists.findIndex(id => list.list_id == id);
+        if (idx == -1) {
+            this.memberOfLists.push(list.list_id);
+            await this.listService.addSeriesToList(this.seriesId, list.list_id);
+            return;
+        }
+
+        this.memberOfLists.splice(idx, 1);
+        await this.listService.removeSeriesFromList(this.seriesId, list.list_id);
+    }
+
+    public isMemberOfList(list: ListModel): boolean {
+        return this.memberOfLists.includes(list.list_id);
+    }
 
     public getGenreName(key: string): string {
         return this.i18nService.getDynamic(I18n.Genres, key);

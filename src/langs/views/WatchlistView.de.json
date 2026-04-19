@@ -11,10 +11,10 @@
         "title": "Watchlist"
     },
     "personal": {
-        "title": "Deine Listen"
+        "title": "Deine Listen",
+        "newList": "Neue Liste"
     },
     "tracklist": {
         "title": "Serien denen du folgst"
-    },
-    "empty": "Hier gibt es aktuell nichts zu sehen."
+    }
 }
