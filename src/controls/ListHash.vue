@@ -14,7 +14,7 @@ const props = defineProps<{
 const urls: Ref<string[]> = ref([]);
 const loadCounter: Ref<number> = ref(0);
 
-const loaded: Ref<boolean> = computed(() => loadCounter.value == props.hashes?.length);
+const loaded: Ref<boolean> = computed(() => loadCounter.value == props.hashes?.length || urls.value.length == 0);
 const styleString: ComputedRef<string> = computed(() => `width:${props.width}px;height:${props.height}px`);
 const gridConfig: ComputedRef<{ container: string, items: string[] }> = computed(() => {
     const count: number = props.hashes?.length ?? 0;
@@ -51,7 +51,7 @@ const gridConfig: ComputedRef<{ container: string, items: string[] }> = computed
             }
         default:
             return {
-                container: "",
+                container: "border border-base-300 bg-base-100",
                 items: []
             }
     }
@@ -82,11 +82,11 @@ function onLoaded() {
 <template>
     <div
         v-bind="$attrs"
-        v-if="urls.length == 0 || !loaded"
+        v-if="!loaded"
         :style="styleString" class="skeleton"/>
     <div
         v-bind="$attrs"
-        v-show="urls.length > 0 && loaded"
+        v-show="loaded"
         :style="styleString">
         <div
             :style="styleString"
