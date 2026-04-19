@@ -133,7 +133,7 @@ const vm: StreamViewModel = useViewModel(StreamViewModel);
                                             </span>
                                         </div>
                                         <div
-                                            v-if="vm.isEpisodeWatched(episode)"
+                                            v-if="!vm.isEpisodeWatched(episode)"
                                             class="absolute right-0 top-0">
                                             <button class="btn btn-square btn-sm btn-ghost"
                                                     :popovertarget="vm.getPopoverId(episode.season_id, episode.episode_id)"
