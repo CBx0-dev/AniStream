@@ -38,6 +38,45 @@ class ListServiceImpl extends DbServiceBase implements ListService {
         ));
     }
 
+    public async getListsOfSeries(seriesId: number): Promise<ListModel[]> {
+        const profile: ProfileModel = await this.userService.getActiveProfile();
+        const session: DbSession = await this.provider.getDatabase();
+
+        // language=SQLite
+        const rows: ListDbModel[] = await session.query(`
+            SELECT l.*
+            FROM list_to_series AS ls
+                     LEFT JOIN list AS l ON ls.list_id = l.list_id AND l.tenant_id = ?
+            WHERE ls.series_id = ?
+        `, profile.uuid, seriesId);
+
+        return rows.map(row => ListModel(
+            row.list_id,
+            row.name,
+            row.tenant_id
+        ));
+    }
+
+    public async getList(listId: number): Promise<ListModel | null> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        // language=SQLite
+        const rows: ListDbModel[] = await session.query(
+            "SELECT * FROM list WHERE list_id = ?",
+            listId
+        );
+
+        if (rows.length == 0) {
+            return null;
+        }
+
+        return ListModel(
+            rows[0].list_id,
+            rows[0].name,
+            rows[0].tenant_id
+        );
+    }
+
     public async createList(name: string): Promise<ListModel> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
         const session: DbSession = await this.provider.getDatabase();
@@ -53,6 +92,17 @@ class ListServiceImpl extends DbServiceBase implements ListService {
             result.lastInsertId!,
             name,
             profile.uuid
+        );
+    }
+
+    public async updateList(listId: number, name: string): Promise<void> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        // language=SQLite
+        await session.execute(
+            "UPDATE list SET name = ? WHERE list_id = ?",
+            name,
+            listId
         );
     }
 
@@ -84,6 +134,20 @@ class ListServiceImpl extends DbServiceBase implements ListService {
             row.description,
             row.preview_image
         ));
+    }
+
+    public async addSeriesToList(seriesId: number, listId: number): Promise<void> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        // language=SQLite
+        await session.execute("INSERT INTO list_to_series (list_id, series_id) VALUES (?, ?)", listId, seriesId);
+    }
+
+    public async removeSeriesFromList(seriesId:number, listId:number): Promise<void> {
+        const session: DbSession = await this.provider.getDatabase();
+
+        // language=SQLite
+        await session.execute("DELETE FROM list_to_series WHERE list_id = ? AND series_id = ?", listId, seriesId);
     }
 
     public async getPreviewHashes(listId: number): Promise<string[]> {
