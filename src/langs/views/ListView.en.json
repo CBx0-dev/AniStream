@@ -1,0 +1,12 @@
+{
+    "$lang": "en",
+    "$group": "ListView",
+    "navbar": {
+        "back": "Back",
+        "delete": "Delete List"
+    },
+    "confirm": {
+        "title": "Delete list",
+        "description": "Do you really want to delete this list? The data cannot be restored"
+    }
+}
