@@ -106,14 +106,19 @@ class SeriesServiceImpl extends DbServiceBase implements SeriesService {
 
         // language=SQLite
         const rows: SeriesDbModel[] = await session.query<SeriesDbModel[]>(`
-            SELECT DISTINCT s.*
+            SELECT s.*
             FROM series AS s
-                     LEFT JOIN season AS se ON se.series_id = s.series_id
-                     LEFT JOIN episode AS e ON e.season_id = se.season_id
+                     JOIN season AS se ON se.series_id = s.series_id
+                     JOIN episode AS e ON e.season_id = se.season_id
                      LEFT JOIN watchtime AS wt ON wt.episode_id = e.episode_id
-            WHERE wt.tenant_id = ?
-              AND se.season_number != 0
-              AND wt.percentage_watched > 80
+                AND wt.tenant_id = 'c5e8c854-bdbf-42d3-930c-8385aa6bf308'
+            WHERE se.season_number > 0
+            GROUP BY s.series_id
+            HAVING
+               -- 1. Must have at least one episode watched (> 0%)
+                MAX(wt.percentage_watched) > 0
+               -- 2. Must have at least one episode NOT finished (<= 80% or never started)
+               AND MIN(COALESCE(wt.percentage_watched, 0)) <= 80;
         `, profile.uuid);
 
         return rows.map(row => SeriesModel(row.series_id, row.guid, row.title, row.description, row.preview_image));
