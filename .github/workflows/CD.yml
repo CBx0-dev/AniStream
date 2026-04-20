@@ -37,7 +37,7 @@ jobs:
         run: npm ci
 
       - name: Run I18n generator
-        run: node i18n.gen.cjs
+        run: node app/i18n.gen.cjs
 
       - name: Signing key validation
         env:
