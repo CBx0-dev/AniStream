@@ -5,8 +5,8 @@ import {UserDbService} from "@contracts/standalone/user.contract";
 import {ServiceDeclaration} from "@services/declaration";
 import {DbSession, DbVersion, DbVersionConstructor} from "@services/utils/db";
 
-import sql1 from "@/../../migration/sqlite/profile/1.sql?raw";
-import sql2 from "@/../../migration/sqlite/profile/2.sql?raw";
+import sql1 from "../../../../../migration/standalone/profile/1.sql?raw";
+import sql2 from "../../../../../migration/standalone/profile/2.sql?raw";
 
 export class UserDbServiceImpl implements UserDbService {
     public constructor() {

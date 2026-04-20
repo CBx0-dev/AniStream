@@ -11,10 +11,10 @@ import {UserService} from "@contracts/user.contract";
 
 import {ProfileModel} from "@models/profile.model";
 
-import sql1 from "@/../../migration/sqlite/metadata/1.sql?raw";
-import sql2 from "@/../../migration/sqlite/metadata/2.sql?raw";
-import sql3 from "@/../../migration/sqlite/metadata/3.sql?raw";
-import sql4 from "@/../../migration/sqlite/metadata/4.sql?raw";
+import sql1 from "../../../../../migration/standalone/metadata/1.sql?raw";
+import sql2 from "../../../../../migration/standalone/metadata/2.sql?raw";
+import sql3 from "../../../../../migration/standalone/metadata/3.sql?raw";
+import sql4 from "../../../../../migration/standalone/metadata/4.sql?raw";
 
 class MetadataDbServiceImpl implements MetadataDbService {
     private readonly userService: UserService;
