@@ -9,10 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AniStream.API.Controllers;
 
-
 [Route("api/credentials")]
 [ApiController]
-public class CredentialsController : ApiControllerBase 
+public class CredentialsController : ApiControllerBase
 {
     public const string LOGIN_ROUTE = "/api/credentials/login";
     public const string LOGOUT_ROUTE = "/api/credentials/logout";
@@ -27,7 +26,7 @@ public class CredentialsController : ApiControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel credentials)
     {
-        if (!_credentialsService.ValidateCredentials(credentials.Username, credentials.Password))
+        if (!await _credentialsService.ValidateCredentials(credentials.Username, credentials.Password))
         {
             return Unauthorized("Credentials are wrong");
         }

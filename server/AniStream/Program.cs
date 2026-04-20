@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using AniStream.API.Controllers;
 using AniStream.Contracts;
 using AniStream.API.Serivces;
+using AniStream.Contexts;
+using AniStream.Services;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,13 +15,12 @@ public static class Program
 {
     public static void Main(string[] args)
     {
+        AppConfig.Initialize();
+
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers();
-        builder.Services.Configure<MvcOptions>(options =>
-        {
-            options.ModelMetadataDetailsProviders.Add(new EmptyStringEnabledDisplayMetadataProvider());
-        });
+        builder.Services.Configure<MvcOptions>(options => { options.ModelMetadataDetailsProviders.Add(new EmptyStringEnabledDisplayMetadataProvider()); });
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
@@ -36,6 +37,7 @@ public static class Program
                         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         return Task.CompletedTask;
                     }
+
                     context.Response.Redirect(context.RedirectUri);
                     return Task.CompletedTask;
                 };
@@ -74,16 +76,31 @@ public static class Program
 
         app.MapOpenApi();
         app.MapControllers();
-        app.MapScalarApiReference(options =>
-        {
-            options.Title = "AniStream API";
-        });
+        app.MapScalarApiReference(options => { options.Title = "AniStream API"; });
 
         app.Run();
     }
 
     private static void SetupDependencyInjection(WebApplicationBuilder builder)
     {
+        // DB Contexts
+        builder.Services.AddSingleton(
+            new ProfileDbContextFactory(
+                AppConfig.CurrentConfig.DatabaseDriver,
+                AppConfig.CurrentConfig.MigrationPath,
+                AppConfig.CurrentConfig.DatabaseProfileConnectionString)
+        );
+        builder.Services.AddSingleton(
+            new MetadataDbContextFactory(
+                AppConfig.CurrentConfig.DatabaseDriver,
+                AppConfig.CurrentConfig.MigrationPath,
+                AppConfig.CurrentConfig.DatabaseMetadataConnectionString)
+        );
+
+        // Proprietary services
         builder.Services.AddSingleton<ICredentialsService, CredentialsService>();
+
+        // BL Layer
+        AutoLoader.LoadServices(builder.Services);
     }
 }

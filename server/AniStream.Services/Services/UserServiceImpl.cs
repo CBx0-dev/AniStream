@@ -1,5 +1,6 @@
 using AniStream.Contexts;
 using AniStream.Contracts;
+using Microsoft.EntityFrameworkCore;
 
 namespace AniStream.Services;
 
@@ -20,8 +21,16 @@ public class UserServiceImpl : IUserService
 
     public async Task<ProfileModel[]> GetProfiles()
     {
-        await using ProfileDbContext db = _dbFactory.GetContext();
+        await using ProfileDbContext db = await _dbFactory.GetContext();
 
         return db.Profiles.ToArray();
+    }
+
+    public async Task<ProfileModel?> GetProfileByUsernameOrDefault(string username)
+    {
+        await using ProfileDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<ProfileModel> query = from profile in db.Profiles where profile.Name == username select profile;
+        return await query.FirstOrDefaultAsync();
     }
 }

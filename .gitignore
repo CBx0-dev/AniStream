@@ -24,5 +24,6 @@ dist-ssr
 
 bin
 obj
+tmp
 
 app/src/utils/i18n.ts

@@ -4,14 +4,22 @@ namespace AniStream.API.Serivces;
 
 public sealed class CredentialsService : ICredentialsService
 {
-    public bool ValidateCredentials(string username, string password)
+    private readonly IUserService _userService;
+
+    public CredentialsService(IUserService userService)
     {
-        // TODO connect with EF
-        if (username == "admin" && password == "admin")
+        _userService = userService;
+    }
+
+    public async Task<bool> ValidateCredentials(string username, string password)
+    {
+        ProfileModel? profile = await _userService.GetProfileByUsernameOrDefault(username);
+        if (profile is null)
         {
-            return true;
+            return false;
         }
 
-        return false;
+        // TODO check password
+        return true;
     }
 }
