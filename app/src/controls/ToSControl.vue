@@ -3,8 +3,8 @@ import {useDialogControl} from "vue-mvvm/dialog";
 
 import {ToSControlModel} from "@controls/ToSControl.model";
 import LucideInfo from "@icons/LucideInfo.vue";
-import tos from "@/../ToS.txt?raw";
-import disclaimer from "@/../LegalDisclaimer.txt?raw";
+import tos from "@/../../ToS.txt?raw";
+import disclaimer from "@/../../LegalDisclaimer.txt?raw";
 
 const vm: ToSControlModel = useDialogControl(ToSControlModel);
 </script>

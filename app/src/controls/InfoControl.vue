@@ -8,8 +8,8 @@ import I18n from "@/utils/i18n";
 
 import Text from "@controls/Text.vue";
 
-import tos from "@/../ToS.txt?raw";
-import disclaimer from "@/../LegalDisclaimer.txt?raw";
+import tos from "@/../../ToS.txt?raw";
+import disclaimer from "@/../../LegalDisclaimer.txt?raw";
 
 const vm: InfoControlModel = useUserControl(InfoControlModel);
 </script>

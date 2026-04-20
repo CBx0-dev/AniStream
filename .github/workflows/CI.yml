@@ -22,12 +22,15 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          cd app
+          npm ci
 
       - name: Run I18n generator
         run: node i18n.gen.cjs
 
       - name: Build
         run: |
+          cd app
           export APPLICATION_TARGET="${{ matrix.target }}"
           npm run build
