@@ -5,6 +5,9 @@ import {UserDbService} from "@contracts/standalone/user.contract";
 import {ServiceDeclaration} from "@services/declaration";
 import {DbSession, DbVersion, DbVersionConstructor} from "@services/utils/db";
 
+import sql1 from "@/../../migration/sqlite/profile/1.sql?raw";
+import sql2 from "@/../../migration/sqlite/profile/2.sql?raw";
+
 export class UserDbServiceImpl implements UserDbService {
     public constructor() {
     }
@@ -66,23 +69,7 @@ class DbVersion1 implements UserDbVersion {
     }
 
     public async migrate(session: DbSession): Promise<void> {
-        // language=SQLite
-        await session.execute(`
-PRAGMA user_version = 1;
-
-CREATE TABLE profile
-(
-    profile_id       INTEGER PRIMARY KEY AUTOINCREMENT,
-    uuid             TEXT UNIQUE NOT NULL,
-    name             TEXT        NOT NULL,
-    background_color TEXT        NOT NULL,
-    eye              TEXT        NOT NULL,
-    mouth            TEXT        NOT NULL,
-    theme            TEXT        NOT NULL,
-    lang             TEXT        NOT NULL,
-    tos_accepted     BOOLEAN     NOT NULL
-);
-        `);
+        await session.execute(sql1);
     }
 }
 
@@ -94,29 +81,7 @@ class DbVersion2 implements UserDbVersion {
     }
 
     public async migrate(session: DbSession): Promise<void> {
-        // language=SQLite
-        await session.execute(`
-CREATE TABLE profile_new
-(
-    profile_id       INTEGER PRIMARY KEY AUTOINCREMENT,
-    uuid             TEXT UNIQUE NOT NULL,
-    name             TEXT        NOT NULL,
-    background_color TEXT        NOT NULL,
-    eye              TEXT        NOT NULL,
-    mouth            TEXT        NOT NULL,
-    theme            TEXT        NOT NULL,
-    lang             TEXT        NOT NULL,
-    tos_accepted     BOOLEAN     NOT NULL,
-    sync_catalog     BOOLEAN     NOT NULL
-);
-
-INSERT INTO profile_new (profile_id, uuid, name, background_color, eye, mouth, theme, lang, tos_accepted, sync_catalog)
-SELECT profile_id, uuid, name, background_color, eye, mouth, theme, lang, tos_accepted, false FROM profile;
-
-DROP TABLE profile;
-
-ALTER TABLE profile_new RENAME TO profile;
-        `);
+        await session.execute(sql2);
     }
 }
 

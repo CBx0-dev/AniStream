@@ -11,6 +11,11 @@ import {UserService} from "@contracts/user.contract";
 
 import {ProfileModel} from "@models/profile.model";
 
+import sql1 from "@/../../migration/sqlite/metadata/1.sql?raw";
+import sql2 from "@/../../migration/sqlite/metadata/2.sql?raw";
+import sql3 from "@/../../migration/sqlite/metadata/3.sql?raw";
+import sql4 from "@/../../migration/sqlite/metadata/4.sql?raw";
+
 class MetadataDbServiceImpl implements MetadataDbService {
     private readonly userService: UserService;
 
@@ -79,56 +84,7 @@ class DbVersion1 implements MetadataDbVersion {
     }
 
     public async migrate(session: DbSession, _userService: UserService, _provider: string): Promise<void> {
-        // language=SQLite
-        await session.execute(`
-PRAGMA user_version = 1;
-
-CREATE TABLE series
-(
-    series_id     INTEGER PRIMARY KEY AUTOINCREMENT,
-    guid          TEXT UNIQUE NOT NULL,
-    title         TEXT        NOT NULL,
-    description   TEXT        NOT NULL,
-    preview_image TEXT UNIQUE
-);
-
-CREATE TABLE season
-(
-    season_id     INTEGER PRIMARY KEY AUTOINCREMENT,
-    series_id     INTEGER NOT NULL,
-    season_number INTEGER NOT NULL,
-    FOREIGN KEY (series_id) REFERENCES series (series_id) ON DELETE RESTRICT
-);
-
-CREATE TABLE episode
-(
-    episode_id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    season_id          INTEGER NOT NULL,
-    episode_number     INTEGER NOT NULL,
-    german_title       TEXT    NOT NULL,
-    english_title      TEXT    NOT NULL,
-    description        TEXT    NOT NULL,
-    percentage_watched INTEGER NOT NULL,
-    stopped_time       INTEGER NOT NULL,
-    FOREIGN KEY (season_id) REFERENCES season (season_id) ON DELETE RESTRICT
-);
-
-CREATE TABLE genre
-(
-    genre_id     INTEGER PRIMARY KEY AUTOINCREMENT,
-    key          TEXT UNIQUE NOT NULL
-);
-
-CREATE TABLE genre_to_series
-(
-    genre_to_series_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    genre_id           INTEGER NOT NULL,
-    series_id          INTEGER NOT NULL,
-    main_genre         BOOLEAN NOT NULL,
-    FOREIGN KEY (genre_id) REFERENCES genre (genre_id) ON DELETE RESTRICT,
-    FOREIGN KEY (series_id) REFERENCES series (series_id) ON DELETE RESTRICT
-);
-        `);
+        await session.execute(sql1);
     }
 }
 
@@ -138,15 +94,7 @@ class DbVersion2 implements MetadataDbVersion {
     public version: number = 2;
 
     public async migrate(session: DbSession, _userService: UserService, _provider: string): Promise<void> {
-        // language=SQLite
-        await session.execute(`
-CREATE TABLE watchlist
-(
-    watchlist_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    series_id    INTEGER UNIQUE NOT NULL,
-    FOREIGN KEY (series_id) REFERENCES series (series_id) ON DELETE RESTRICT
-);
-        `);
+        await session.execute(sql2);
     }
 }
 
@@ -158,55 +106,7 @@ class DbVersion3 implements MetadataDbVersion {
     public async migrate(session: DbSession, userService: UserService, _provider: string): Promise<void> {
         const profile: ProfileModel = await userService.getMigrationProfile();
 
-        // language=SQLite
-        await session.execute(`
-CREATE TABLE watchlist_new
-(
-    watchlist_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    series_id    INTEGER UNIQUE NOT NULL,
-    tenant_id    TEXT NOT NULL,
-    FOREIGN KEY (series_id) REFERENCES series (series_id) ON DELETE RESTRICT
-);
-
-INSERT INTO watchlist_new (watchlist_id, series_id, tenant_id)
-SELECT watchlist_id, series_id, ? FROM watchlist;
-
-DROP TABLE watchlist;
-
-ALTER TABLE watchlist_new RENAME TO watchlist;
-
-CREATE TABLE episode_new
-(
-    episode_id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    season_id          INTEGER NOT NULL,
-    episode_number     INTEGER NOT NULL,
-    german_title       TEXT    NOT NULL,
-    english_title      TEXT    NOT NULL,
-    description        TEXT    NOT NULL,
-    FOREIGN KEY (season_id) REFERENCES season (season_id) ON DELETE RESTRICT
-);
-
-INSERT INTO episode_new (episode_id, season_id, episode_number, german_title, english_title, description)
-SELECT episode_id, season_id, episode_number, german_title, english_title, description FROM episode;
-
-ALTER TABLE episode RENAME TO episode_old;
-ALTER TABLE episode_new RENAME TO episode;
-
-CREATE TABLE watchtime
-(
-    watchtime_id       INTEGER PRIMARY KEY AUTOINCREMENT,
-    episode_id         INTEGER NOT NULL,
-    percentage_watched INTEGER NOT NULL,
-    stopped_time       INTEGER NOT NULL,
-    tenant_id          TEXT NOT NULL,
-    FOREIGN KEY (episode_id) REFERENCES episode (episode_id) ON DELETE CASCADE
-);
-
-INSERT INTO watchtime (episode_id, percentage_watched, stopped_time, tenant_id)
-SELECT episode_id, percentage_watched, stopped_time, ? FROM episode_old;
-
-DROP TABLE episode_old;
-        `, profile.uuid, profile.uuid);
+        await session.execute(sql3, profile.uuid, profile.uuid);
     }
 }
 
@@ -215,24 +115,7 @@ class DbVersion4 implements MetadataDbVersion {
     public version: number = 4;
 
     public async migrate(session: DbSession, _userService: UserService, _provider: string): Promise<void> {
-        // language=SQLite
-        await session.execute(`
-CREATE TABLE list
-(
-    list_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name           TEXT NOT NULL,
-    tenant_id      TEXT NOT NULL
-);
-
-CREATE TABLE list_to_series
-(
-    list_id INTEGER NOT NULL,
-    series_id INTEGER NOT NULL,
-    PRIMARY KEY (list_id, series_id),
-    FOREIGN KEY (list_id) REFERENCES list (list_id) ON DELETE CASCADE,
-    FOREIGN KEY (series_id) REFERENCES series (series_id) ON DELETE RESTRICT
-);
-        `);
+        await session.execute(sql4);
     }
 }
 
