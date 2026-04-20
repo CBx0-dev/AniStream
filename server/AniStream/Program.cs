@@ -60,6 +60,7 @@ public static class Program
         });
         builder.Services.AddEndpointsApiExplorer();
         SetupDependencyInjection(builder);
+        // TODO setup EFCore integration
 
         WebApplication app = builder.Build();
 
