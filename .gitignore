@@ -22,4 +22,7 @@ dist-ssr
 *.sln
 *.sw?
 
+bin
+obj
+
 app/src/utils/i18n.ts
