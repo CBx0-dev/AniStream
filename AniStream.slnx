@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/server/">
+    <Project Path="server/AniStream.Services/AniStream.Services.csproj" />
     <Project Path="server/AniStream/AniStream.csproj" />
   </Folder>
 </Solution>
