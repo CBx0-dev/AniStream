@@ -29,7 +29,7 @@ public abstract class DbMigrator
         string fullPath = Path.Join(_migrationPath, _driverKeyword, _databaseSchema, $"{version}.sql");
         if (!File.Exists(fullPath))
         {
-            throw new ArgumentException($"Migration file not found for version '{version}'");
+            throw new ArgumentException($"Migration file not found for version '{version}' ('{fullPath}')");
         }
 
         return File.ReadAllText(fullPath);

@@ -7,7 +7,7 @@ namespace AniStream.Migrators;
 
 public sealed class SqliteMigrator : DbMigrator
 {
-    public SqliteMigrator(string migrationPath, string databaseSchema) : base(migrationPath, databaseSchema, "sqlite2")
+    public SqliteMigrator(string migrationPath, string databaseSchema) : base(migrationPath, databaseSchema, "sqlite")
     {
     }
 
@@ -51,7 +51,13 @@ public sealed class SqliteMigrator : DbMigrator
 
     private bool CheckDbFileExists(DbContext context)
     {
+        string dbFile = GetDatabaseFile(context);
+        return File.Exists(dbFile);
+    }
+
+    private string GetDatabaseFile(DbContext context)
+    {
         SqliteConnection connection = (SqliteConnection)context.Database.GetDbConnection();
-        return File.Exists(connection.DataSource);
+        return connection.DataSource;
     }
 }

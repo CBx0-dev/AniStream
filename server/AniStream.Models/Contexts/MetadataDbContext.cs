@@ -5,6 +5,11 @@ namespace AniStream.Contexts;
 
 public sealed class MetadataDbContext : DbContext
 {
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Conventions.Add(_ => new SnakeCaseConvention());
+    }
+
     public MetadataDbContext(DbContextOptions<MetadataDbContext> options) : base(options)
     {
     }

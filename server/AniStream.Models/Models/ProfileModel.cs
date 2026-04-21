@@ -1,6 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 [PrimaryKey(nameof(ProfileId))]
+[Table("profile")]
 public class ProfileModel
 {
     public int ProfileId { get; init; }

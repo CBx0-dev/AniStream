@@ -5,6 +5,11 @@ namespace AniStream.Contexts;
 
 public sealed class ProfileDbContext : DbContext
 {
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Conventions.Add(_ => new SnakeCaseConvention());
+    }
+
     public ProfileDbContext(DbContextOptions<ProfileDbContext> options) : base(options)
     {
     }
