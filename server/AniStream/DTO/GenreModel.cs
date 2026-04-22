@@ -1,6 +1,6 @@
 namespace AniStream.API.DTO;
 
-public class GenreModel
+public sealed class GenreModel
 {
     public required int GenreId { get; set; }
 
