@@ -22,7 +22,7 @@ public sealed class SeriesModel
         string guid,
         string title,
         string description,
-        string previewImage
+        string? previewImage
     )
     {
         SeriesId = seriesId;
@@ -36,7 +36,7 @@ public sealed class SeriesModel
         string guid,
         string title,
         string description,
-        string previewImage
+        string? previewImage
     ) : this (
         0,
         guid,
