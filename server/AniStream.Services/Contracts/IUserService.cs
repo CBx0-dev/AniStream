@@ -1,3 +1,5 @@
+using AniStream.Models;
+
 namespace AniStream.Contracts;
 
 public interface IUserService

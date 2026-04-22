@@ -1,5 +1,6 @@
 using AniStream.Contexts;
 using AniStream.Contracts;
+using AniStream.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AniStream.Services;

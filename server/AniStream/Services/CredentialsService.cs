@@ -1,3 +1,4 @@
+using AniStream.Models;
 using AniStream.Contracts;
 
 namespace AniStream.API.Serivces;

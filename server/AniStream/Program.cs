@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using AniStream.API.Controllers;
 using AniStream.Contracts;
 using AniStream.API.Serivces;
-using AniStream.Contexts;
 using AniStream.Services;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using AniStream.API.Middelware;
 
 namespace AniStream.API;
 
@@ -66,6 +66,8 @@ public static class Program
 
         WebApplication app = builder.Build();
 
+        app.UseMiddleware<ProviderMiddelware>();
+
         if (app.Environment.IsProduction())
         {
             app.UseHttpsRedirection();
@@ -83,24 +85,16 @@ public static class Program
 
     private static void SetupDependencyInjection(WebApplicationBuilder builder)
     {
-        // DB Contexts
-        builder.Services.AddSingleton(
-            new ProfileDbContextFactory(
-                AppConfig.CurrentConfig.DatabaseDriver,
-                AppConfig.CurrentConfig.MigrationPath,
-                AppConfig.CurrentConfig.DatabaseProfileConnectionString)
-        );
-        builder.Services.AddSingleton(
-            new MetadataDbContextFactory(
-                AppConfig.CurrentConfig.DatabaseDriver,
-                AppConfig.CurrentConfig.MigrationPath,
-                AppConfig.CurrentConfig.DatabaseMetadataConnectionString)
-        );
-
         // Proprietary services
-        builder.Services.AddSingleton<ICredentialsService, CredentialsService>();
+        builder.Services.AddScoped<ICredentialsService, CredentialsService>();
 
         // BL Layer
-        AutoLoader.LoadServices(builder.Services);
+        AutoLoader.LoadServices(builder.Services, new AutoLoader.Options
+        {
+            DatabaseDriver = AppConfig.CurrentConfig.DatabaseDriver,
+            MigrationPath = AppConfig.CurrentConfig.MigrationPath,
+            DatabaseMetadataConnectionString = AppConfig.CurrentConfig.DatabaseMetadataConnectionString,
+            DatabaseProfileConnectionString = AppConfig.CurrentConfig.DatabaseProfileConnectionString
+        });
     }
 }

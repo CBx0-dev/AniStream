@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
+namespace AniStream.Models;
+
 [PrimaryKey(nameof(ProfileId))]
 [Table("profile")]
 public class ProfileModel

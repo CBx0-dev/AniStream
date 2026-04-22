@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace AniStream.API.Models;
+namespace AniStream.API.DTO;
 
 public sealed class LoginModel
 {

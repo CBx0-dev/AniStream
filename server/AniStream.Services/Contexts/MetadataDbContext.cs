@@ -1,4 +1,6 @@
-﻿using AniStream.Utils;
+﻿using AniStream.Contracts;
+using AniStream.Models;
+using AniStream.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace AniStream.Contexts;
@@ -13,19 +15,24 @@ public sealed class MetadataDbContext : DbContext
     public MetadataDbContext(DbContextOptions<MetadataDbContext> options) : base(options)
     {
     }
+
+    public DbSet<GenreModel> Genres { get; set; }
 }
 
 public sealed class MetadataDbContextFactory : DbContextFactory<MetadataDbContext>
 {
     private readonly string _connectionString;
+    private readonly IProviderService _providerService;
 
-    public MetadataDbContextFactory(string dbType, string migrationFolder, string connectionString) : base(dbType, migrationFolder, "metadata")
+    public MetadataDbContextFactory(string dbType, string migrationFolder, string connectionString, IProviderService providerService) : base(dbType, migrationFolder, "metadata")
     {
         _connectionString = connectionString;
+        _providerService = providerService;
     }
 
-    public async Task<MetadataDbContext> GetContext(string providerName)
+    public async Task<MetadataDbContext> GetContext()
     {
+        string providerName = _providerService.GetActiveProvider();
         string actualConnString = String.Format(_connectionString, providerName);
 
         DbContextOptionsBuilder<MetadataDbContext> builder = new DbContextOptionsBuilder<MetadataDbContext>();

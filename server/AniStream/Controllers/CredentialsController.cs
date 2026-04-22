@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using AniStream.API.Models;
+using AniStream.API.DTO;
 using AniStream.API.Utils;
 using AniStream.Contracts;
 using Microsoft.AspNetCore.Authentication;
@@ -11,7 +11,7 @@ namespace AniStream.API.Controllers;
 
 [Route("api/credentials")]
 [ApiController]
-public class CredentialsController : ApiControllerBase
+public sealed class CredentialsController : ApiControllerBase
 {
     public const string LOGIN_ROUTE = "/api/credentials/login";
     public const string LOGOUT_ROUTE = "/api/credentials/logout";
