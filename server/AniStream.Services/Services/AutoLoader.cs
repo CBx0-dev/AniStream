@@ -30,6 +30,7 @@ public sealed class AutoLoader
 
         services.AddScoped<IUserService, UserServiceImpl>();
         services.AddScoped<IGenreService, GenreServiceImpl>();
+        services.AddScoped<ISeriesService, SeriesSerivceImpl>();
     }
 
     public struct Options
