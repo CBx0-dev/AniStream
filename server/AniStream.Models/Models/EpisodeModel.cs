@@ -9,6 +9,8 @@ public sealed class EpisodeModel
 {
     public int EpisodeId { get; set; }
 
+    public int SeasonId { get; set; }
+
     public int EpisodeNumber { get; set; }
 
     public string GermanTitle { get; set; }
@@ -19,6 +21,7 @@ public sealed class EpisodeModel
 
     public EpisodeModel(
         int episodeId,
+        int seasonId,
         int episodeNumber,
         string germanTitle,
         string englishTitle,
@@ -26,6 +29,7 @@ public sealed class EpisodeModel
     )
     {
         EpisodeId = episodeId;
+        SeasonId = seasonId;
         EpisodeNumber = episodeNumber;
         GermanTitle = germanTitle;
         EnglishTitle = englishTitle;
@@ -34,11 +38,13 @@ public sealed class EpisodeModel
 
     public EpisodeModel(
         int episodeNumber,
+        int seasonId,
         string germanTitle,
         string englishTitle,
         string description
     ) : this(
         0,
+        seasonId,
         episodeNumber,
         germanTitle,
         englishTitle,
