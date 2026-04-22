@@ -8,6 +8,7 @@ using AniStream.Services;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using AniStream.API.Middelware;
+using AniStream.Utils;
 
 namespace AniStream.API;
 
@@ -19,7 +20,11 @@ public static class Program
 
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCasePolicy();
+            });
         builder.Services.Configure<MvcOptions>(options => { options.ModelMetadataDetailsProviders.Add(new EmptyStringEnabledDisplayMetadataProvider()); });
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
@@ -54,9 +59,27 @@ public static class Program
                 {
                     Type = SecuritySchemeType.ApiKey,
                     In = ParameterLocation.Cookie,
-                    Name = ".AspNetCore.Cookies"
+                    Name = ".AniStream.Cookies"
                 };
 
+                return Task.CompletedTask;
+            });
+            options.AddSchemaTransformer((schema, context, cancellationToken) =>
+            {
+                if (schema.Properties is null)
+                {
+                    return Task.CompletedTask;
+                }   
+
+                Dictionary<string, OpenApiSchema> updated = new Dictionary<string, OpenApiSchema>();
+
+                foreach (var (key, propSchema) in schema.Properties)
+                {
+                    string snake = SnakeCaseConvention.ToSnakeCase(key);
+                    updated[snake] = propSchema;
+                }
+
+                schema.Properties = updated;
                 return Task.CompletedTask;
             });
         });
