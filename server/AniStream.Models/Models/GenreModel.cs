@@ -6,7 +6,7 @@ namespace AniStream.Models;
 
 [Table("genre")]
 [PrimaryKey(nameof(GenreId))]
-public class GenreModel
+public sealed class GenreModel
 {
     public int GenreId { get; set; }
 

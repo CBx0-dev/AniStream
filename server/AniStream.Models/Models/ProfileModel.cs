@@ -5,7 +5,7 @@ namespace AniStream.Models;
 
 [PrimaryKey(nameof(ProfileId))]
 [Table("profile")]
-public class ProfileModel
+public sealed class ProfileModel
 {
     public int ProfileId { get; set; }
 
