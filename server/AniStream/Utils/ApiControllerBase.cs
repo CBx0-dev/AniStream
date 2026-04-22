@@ -5,7 +5,7 @@ namespace AniStream.API.Utils;
 
 public abstract class ApiControllerBase : ControllerBase
 {
-    protected IActionResult Unauthorized(string message)
+    protected ObjectResult Unauthorized(string message)
     {
         return Problem(
             title: "Unauthorized",
@@ -13,4 +13,15 @@ public abstract class ApiControllerBase : ControllerBase
             statusCode: StatusCodes.Status401Unauthorized
         );
     }
+
+    protected ObjectResult NotFound(string message)
+    {
+        return Problem(
+            title: "Not found",
+            detail: message,
+            statusCode: StatusCodes.Status404NotFound
+        );
+    }
+
+    
 }

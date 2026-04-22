@@ -17,10 +17,10 @@ CREATE TABLE genre
 
 CREATE TABLE genre_to_series
 (
-    genre_to_series_id INTEGER PRIMARY KEY AUTOINCREMENT,
     genre_id           INTEGER NOT NULL,
     series_id          INTEGER NOT NULL,
     main_genre         BOOLEAN NOT NULL,
+    PRIMARY KEY (genre_id, series_id),
     FOREIGN KEY (genre_id) REFERENCES genre (genre_id) ON DELETE RESTRICT,
     FOREIGN KEY (series_id) REFERENCES series (series_id) ON DELETE RESTRICT
 );

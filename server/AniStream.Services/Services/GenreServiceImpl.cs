@@ -15,19 +15,25 @@ public sealed class GenreServiceImpl : IGenreService
         _dbFactory = dbFactory;
     }
 
-    public Task<GenreModel> CreateGenre(string key)
+    public async Task<GenreModel> CreateGenre(string key)
     {
-        throw new NotImplementedException();
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+        GenreModel model = new GenreModel(key);
+
+        db.Genres.Add(model);
+        await db.SaveChangesAsync();
+
+        return model;
     }
 
-    public Task CreateGenreToSeries(int genreId, int seriesId, bool mainGenre)
+    public async Task CreateGenreToSeries(int genreId, int seriesId, bool mainGenre)
     {
-        throw new NotImplementedException();
-    }
+        await using MetadataDbContext db = await _dbFactory.GetContext();
 
-    public Task<GenreModel> GetGenreByKey(string key)
-    {
-        throw new NotImplementedException();
+        GenreToSeries genreToSeries = new GenreToSeries(genreId, seriesId, mainGenre);
+        db.GenresToSeries.Add(genreToSeries);
+        
+        await db.SaveChangesAsync();
     }
 
     public async Task<GenreModel[]> GetGenres()
@@ -36,13 +42,27 @@ public sealed class GenreServiceImpl : IGenreService
         return await db.Genres.ToArrayAsync();
     }
 
-    public Task<GenreModel?> GetMainGenreOfSeries(int seriesId)
+    public async Task<GenreModel?> GetGenreByKey(string key)
     {
-        throw new NotImplementedException();
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<GenreModel> query = from genre in db.Genres where genre.Key == key select genre;
+        return query.FirstOrDefault();
     }
 
-    public Task<GenreModel[]> GetNonMainGenresOfSeries(int seriesId)
+    public async Task<GenreModel?> GetMainGenreOfSeries(int seriesId)
     {
-        throw new NotImplementedException();
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<GenreModel> query = from gs in db.GenresToSeries join g in db.Genres on gs.GenreId equals g.GenreId where gs.SeriesId == seriesId && gs.MainGenre select g;
+        return query.FirstOrDefault();
+    }
+
+    public async Task<GenreModel[]> GetNonMainGenresOfSeries(int seriesId)
+    {
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<GenreModel> query = from gs in db.GenresToSeries join g in db.Genres on gs.GenreId equals g.GenreId where gs.SeriesId == seriesId && !gs.MainGenre select g;
+        return await query.ToArrayAsync();
     }
 }

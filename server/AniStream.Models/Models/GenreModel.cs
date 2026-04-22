@@ -8,7 +8,18 @@ namespace AniStream.Models;
 [PrimaryKey(nameof(GenreId))]
 public class GenreModel
 {
-    public int GenreId {get; set; }
+    public int GenreId { get; set; }
 
-    public string Key { get; set; }    
+    public string Key { get; set; }
+
+    public GenreModel(string key) : this(0, key)
+    {
+        
+    }
+
+    public GenreModel(int genreId, string key)
+    {
+        GenreId = genreId;
+        Key = key;
+    }
 }
