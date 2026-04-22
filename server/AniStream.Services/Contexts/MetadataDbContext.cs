@@ -19,6 +19,12 @@ public sealed class MetadataDbContext : DbContext
     public DbSet<GenreModel> Genres { get; set; }
 
     public DbSet<GenreToSeries> GenresToSeries { get; set; }
+
+    public DbSet<SeriesModel> Series { get; set; }
+
+    public DbSet<SeasonModel> Seasons { get; set; }
+
+    public DbSet<EpisodeModel> Episodes { get; set; }
 }
 
 public sealed class MetadataDbContextFactory : DbContextFactory<MetadataDbContext>
