@@ -2,6 +2,8 @@ using System.ComponentModel.DataAnnotations;
 using AniStream.Contexts;
 using AniStream.Contracts;
 using AniStream.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace AniStream.Services;
 
@@ -50,41 +52,32 @@ public sealed class SeriesSerivceImpl : ISeriesService
         return query.ToArray();
     }
 
-    public async Task<SeriesModel[]> GetSeriesChunk(int offset, int limit)
-    {
-        await using MetadataDbContext db = await _dbFactory.GetContext();
-
-        IQueryable<SeriesModel> query = from series in db.Series orderby series.Title select series;
-        return query.Skip(offset).Take(limit).ToArray();
-    }
-
     public async Task<SeriesModel[]> GetSeriesChunk(
         int offset,
         int limit,
-        string searchText
+        string? searchText,
+        int[]? genreIds
     )
     {
-        searchText = searchText.ToLower();
-
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
-        IQueryable<SeriesModel> query = from series in db.Series orderby series.Title where series.Title.ToLower().Contains(searchText) select series;
-        return query.Skip(offset).Take(limit).ToArray();
-    }
+        IQueryable<SeriesModel> query = db.Series.AsQueryable();
 
-    public async Task<SeriesModel[]> GetSeriesChunk(
-        int offset,
-        int limit,
-        string searchText,
-        int[] genreIds
-    )
-    {
-        searchText = searchText.ToLower();
+        if (searchText is not null)
+        {
+            query = query.Where(s => s.Title.Contains(searchText));
+        }
 
-        await using MetadataDbContext db = await _dbFactory.GetContext();
+        if (genreIds is not null)
+        {
+            query = from s in query where db.GenresToSeries.Any(gs => gs.SeriesId == s.SeriesId && genreIds.Contains(gs.GenreId)) select s;
+        }
 
-        IQueryable<SeriesModel> query = from series in db.Series join genre in db.GenresToSeries on series.SeriesId equals genre.GenreId orderby series.Title where series.Title.ToLower().Contains(searchText) && genreIds.Contains(genre.GenreId) select series;
-        return query.Skip(offset).Take(limit).ToArray();
+        return query
+            .OrderBy(s => s.Title)
+            .Skip(offset)
+            .Take(limit)
+            .ToArray();
     }
 
     public Task<SeriesModel[]> GetStartedSeries()

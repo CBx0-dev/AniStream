@@ -15,15 +15,11 @@ public interface ISeriesService
         string? previewImage
     );
 
-    public Task<SeriesModel[]> GetSeriesChunk(int offset, int limit);
-
-    public Task<SeriesModel[]> GetSeriesChunk(int offset, int limit, string searchText);
-
     public Task<SeriesModel[]> GetSeriesChunk(
         int offset,
         int limit,
-        string searchText,
-        int[] genreIds
+        string? searchText,
+        int[]? genreIds
     );
 
     public Task<SeriesModel[]> GetStartedSeries();
