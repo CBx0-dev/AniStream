@@ -24,7 +24,7 @@ export class StoFetcher implements IInformationFetcher {
     }
 
     public async getCatalog(): Promise<string[]> {
-        const html: string = await http.get(this.provider.catalogURL);
+        const html: string = await http.get(this.provider.catalogURL).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
         const seriesLists: NodeListOf<HTMLUListElement> = document.querySelectorAll("ul.series-list");
         if (seriesLists.length == 0) {
@@ -49,7 +49,7 @@ export class StoFetcher implements IInformationFetcher {
     }
 
     public async getSeries(guid: string): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[]]> {
-        const html: string = await http.get(this.provider.streamURL(guid));
+        const html: string = await http.get(this.provider.streamURL(guid)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
 
         const titleElement: HTMLElement | null = document.querySelector("div.show-header-wrapper > div.container-fluid.px-2.px-md-3.px-lg-3.px-xl-4.position-relative > div.row.g-4.mb-2 > div.col-12.col-md-9.col-lg-10.text-light > h1")
@@ -71,7 +71,7 @@ export class StoFetcher implements IInformationFetcher {
                 }
                 url = `${this.provider.baseURL}${url}`;
             }
-            const binary: Uint8Array = await http.getBinary(url);
+            const binary: Uint8Array = await http.get(url).uint8Array();
             previewImage = hash.fnv1a(guid);
 
             const storageLocation: string = await this.provider.getStorageLocation();
@@ -95,7 +95,7 @@ export class StoFetcher implements IInformationFetcher {
     }
 
     public async getSeasons(series: SeriesModel): Promise<SeasonFetchModel[]> {
-        const html: string = await http.get(this.provider.streamURL(series.guid));
+        const html: string = await http.get(this.provider.streamURL(series.guid)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
 
         const seasonElements: NodeListOf<HTMLAnchorElement> = document.querySelectorAll("#season-nav > ul a")
@@ -121,7 +121,7 @@ export class StoFetcher implements IInformationFetcher {
     }
 
     public async getEpisodes(guid: string, seasonNumber: number): Promise<EpisodeFetchModel[]> {
-        const html: string = await http.get(this.provider.seasonURL(guid, seasonNumber));
+        const html: string = await http.get(this.provider.seasonURL(guid, seasonNumber)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
         const tableBody: HTMLTableSectionElement | null = document.querySelector(`table.episode-table`);
 
@@ -161,7 +161,7 @@ export class StoFetcher implements IInformationFetcher {
     }
 
     private async fetchDescription(guid: string, seasonNumber: number, episodeNumber: number): Promise<string> {
-        const html: string = await http.get(this.provider.episodeURL(guid, seasonNumber, episodeNumber));
+        const html: string = await http.get(this.provider.episodeURL(guid, seasonNumber, episodeNumber)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
         const descriptionPanel: HTMLElement | null = document.querySelector("[id^='desc-'] > div");
         if (!descriptionPanel) {
@@ -172,7 +172,7 @@ export class StoFetcher implements IInformationFetcher {
     }
 
     public async fetchProviders(guid: string, seasonNumber: number, episodeNumber: number): Promise<Provider[]> {
-        const html: string = await http.get(this.provider.episodeURL(guid, seasonNumber, episodeNumber));
+        const html: string = await http.get(this.provider.episodeURL(guid, seasonNumber, episodeNumber)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
 
         const providerElements: NodeListOf<HTMLButtonElement> = document.querySelectorAll("#episode-links button");

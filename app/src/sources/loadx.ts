@@ -88,7 +88,7 @@ export async function getStream(embeddedLoadXLink: string): Promise<string> {
         const [idHash, host] = extractIdHashFromURL(response.url);
 
         const postURL: string = `https://${host}/player/index.php?data=${idHash}&do=getVideo`;
-        const apiResponse: string = await http.post(postURL, [["X-Requested-With", "XMLHttpRequest"]]);
+        const apiResponse: string = await http.post(postURL, null, [["X-Requested-With", "XMLHttpRequest"]]).text();
 
         return parseVideoResponse(apiResponse);
     } catch (error) {

@@ -38,10 +38,10 @@ export async function getStream(embedUrl: string): Promise<string> {
         throw "Embed URL cannot be empty";
     }
 
-    const html: string = await http.get(embedUrl, getHeaders());
+    const html: string = await http.get(embedUrl, getHeaders()).text();
     const md5Url: string = getPassMd5Url(html, embedUrl);
     const token: string = getToken(html, embedUrl);
-    const md5Html: string = await http.get(md5Url, getHeaders());
+    const md5Html: string = await http.get(md5Url, getHeaders()).text();
     const videoBaseUrl: string = md5Html.trim();
     if (!videoBaseUrl) {
         throw `Empty video base URL returned from ${embedUrl}`;

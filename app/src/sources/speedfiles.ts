@@ -102,7 +102,7 @@ export async function getStream(embeddedSpeedFilesLink: string): Promise<string>
     try {
         const validatedURL: string = validateSpeedFilesURL(embeddedSpeedFilesLink);
 
-        const html: string = await http.get(validatedURL, []);
+        const html: string = await http.get(validatedURL, []).text();
         checkServerStatus(html);
 
         const encodedData: string = extractEncodedData(html);

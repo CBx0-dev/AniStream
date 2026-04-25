@@ -24,7 +24,7 @@ export class AniWorldFetcher implements IInformationFetcher {
     }
 
     public async getCatalog(): Promise<string[]> {
-        const html: string = await http.get(this.provider.catalogURL);
+        const html: string = await http.get(this.provider.catalogURL).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
         const seriesList: HTMLUListElement | null = document.querySelector("#seriesContainer ul");
         if (!seriesList) {
@@ -47,7 +47,7 @@ export class AniWorldFetcher implements IInformationFetcher {
     }
 
     public async getSeries(guid: string): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[]]> {
-        const html: string = await http.get(this.provider.streamURL(guid));
+        const html: string = await http.get(this.provider.streamURL(guid)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
 
         const informationPanel: HTMLElement | null = document.querySelector("#series");
@@ -68,7 +68,7 @@ export class AniWorldFetcher implements IInformationFetcher {
         let previewImage: string | null = null;
         if (previewImageElement && previewImageElement.hasAttribute("data-src")) {
             const url: string = previewImageElement.getAttribute("data-src")!.substring(1);
-            const binary: Uint8Array = await http.getBinary(`${this.provider.baseURL}/${url}`);
+            const binary: Uint8Array = await http.get(`${this.provider.baseURL}/${url}`).uint8Array();
             previewImage = hash.fnv1a(guid);
 
             const storageLocation: string = await this.provider.getStorageLocation();
@@ -99,7 +99,7 @@ export class AniWorldFetcher implements IInformationFetcher {
     }
 
     public async getSeasons(series: SeriesModel): Promise<SeasonFetchModel[]> {
-        const html: string = await http.get(this.provider.streamURL(series.guid));
+        const html: string = await http.get(this.provider.streamURL(series.guid)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
         const streamPanel: HTMLElement | null = document.querySelector("#stream");
         if (!streamPanel) {
@@ -134,7 +134,7 @@ export class AniWorldFetcher implements IInformationFetcher {
     }
 
     public async getEpisodes(guid: string, seasonNumber: number): Promise<EpisodeFetchModel[]> {
-        const html: string = await http.get(this.provider.seasonURL(guid, seasonNumber));
+        const html: string = await http.get(this.provider.seasonURL(guid, seasonNumber)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
         const tableBody: HTMLTableSectionElement | null = document.querySelector(`#season${seasonNumber}`);
 
@@ -170,7 +170,7 @@ export class AniWorldFetcher implements IInformationFetcher {
     }
 
     private async fetchDescription(guid: string, seasonNumber: number, episodeNumber: number): Promise<string> {
-        const html: string = await http.get(this.provider.episodeURL(guid, seasonNumber, episodeNumber));
+        const html: string = await http.get(this.provider.episodeURL(guid, seasonNumber, episodeNumber)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
         const descriptionPanel: HTMLElement | null = document.querySelector("#wrapper div.hosterSiteTitle p.descriptionSpoiler");
         if (!descriptionPanel) {
@@ -181,7 +181,7 @@ export class AniWorldFetcher implements IInformationFetcher {
     }
 
     public async fetchProviders(guid: string, seasonNumber: number, episodeNumber: number): Promise<Provider[]> {
-        const html: string = await http.get(this.provider.episodeURL(guid, seasonNumber, episodeNumber));
+        const html: string = await http.get(this.provider.episodeURL(guid, seasonNumber, episodeNumber)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
 
         const row: HTMLUListElement | null = document.querySelector(".hosterSiteVideo ul.row");

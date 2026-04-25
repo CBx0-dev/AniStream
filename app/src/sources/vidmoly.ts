@@ -12,7 +12,7 @@ const FILE_LINK_PATTERN: RegExp = /file:\s*"(https?:\/\/[^"]+)"/;
  */
 export async function getStream(embeddedVidmolyLink: string): Promise<string> {
     try {
-        const html: string = await http.get(embeddedVidmolyLink);
+        const html: string = await http.get(embeddedVidmolyLink).text();
 
         const match: RegExpMatchArray | null = html.match(FILE_LINK_PATTERN);
         if (match) {
@@ -43,7 +43,7 @@ export async function getStream(embeddedVidmolyLink: string): Promise<string> {
  */
 export async function getPreviewImage(embeddedVidmolyLink: string): Promise<string> {
     try {
-        const html: string = await http.get(embeddedVidmolyLink);
+        const html: string = await http.get(embeddedVidmolyLink).text();
 
         const match: RegExpMatchArray | null = html.match(/image\s*:\s*"([^"]+\.jpg)"/);
         if (match) {

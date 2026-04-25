@@ -99,7 +99,7 @@ function extractVOEFromScript(html: string): string | null {
 export async function getStream(embeddedVOELink: string): Promise<string> {
     try {
         // Initial request to get redirect URL
-        const response: string = await http.get(embeddedVOELink);
+        const response: string = await http.get(embeddedVOELink).text();
 
         // Find redirect URL using compiled regex
         const redirectMatch: RegExpMatchArray | null = response.match(REDIRECT_PATTERN);
@@ -119,7 +119,7 @@ export async function getStream(embeddedVOELink: string): Promise<string> {
 
         // Follow redirect and get final HTML
         try {
-            html = await http.get(redirectURL);
+            html = await http.get(redirectURL).text();
         } catch (e) {
             throw `Failed to follow redirect: ${e}`;
         }
@@ -169,7 +169,7 @@ export async function getStream(embeddedVOELink: string): Promise<string> {
 export async function getPreviewImage(embeddedVOELink: string): Promise<string> {
     try {
         // Initial request to get redirect URL
-        const response: string = await http.get(embeddedVOELink);
+        const response: string = await http.get(embeddedVOELink).text();
 
         // Find redirect URL using compiled regex
         const redirectMatch: RegExpMatchArray | null = response.match(REDIRECT_PATTERN);

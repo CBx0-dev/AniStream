@@ -122,7 +122,7 @@ export async function getStream(embeddedLuluvdoLink: string): Promise<string> {
         const embedURL: string = buildEmbedURL(luluvdoId);
         const headers: [string, string][] = buildHeaders();
 
-        const html: string = await http.get(embedURL, headers);
+        const html: string = await http.get(embedURL, headers).text();
         return extractVideoURL(html);
     } catch (error) {
         throw "Failed to extract video from LuluVDO: " + error;

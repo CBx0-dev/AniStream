@@ -12,7 +12,7 @@ const SOURCE_LINK_PART: RegExp = /src:\s*"([^"]+)"/;
  */
 export async function getStream(embeddedVidozaLink: string): Promise<string> {
     try {
-        const html: string = await http.get(embeddedVidozaLink);
+        const html: string = await http.get(embeddedVidozaLink).text();
         if (html.search("sourcesCode:") != -1) {
             const match: RegExpMatchArray | null = html.match(SOURCE_LINK_PART);
             if (match) {

@@ -127,7 +127,7 @@ async function tryByseApi(
         const baseUrl = `${parsed.protocol}//${parsed.host}`;
         const apiUrl = `${baseUrl}/api/videos/${fileCode}`;
 
-        const content: string = await http.get(apiUrl, getHeaders());
+        const content: string = await http.get(apiUrl, getHeaders()).text();
         const data = JSON.parse(content);
         const playback = data?.playback;
         if (!playback) return null;
@@ -213,7 +213,7 @@ export async function getStream(embedUrl: string): Promise<string> {
         }
     }
 
-    const html: string = await http.get(embedUrl, getHeaders());
+    const html: string = await http.get(embedUrl, getHeaders()).text();
     const url: string | null = tryExtractFromHtml(html);
 
     if (url) {
