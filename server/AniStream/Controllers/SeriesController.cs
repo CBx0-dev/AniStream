@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AniStream.API.Controllers;
 
-[Route("{provider}/series")]
+[Route("api/{provider}/series")]
 [ApiController]
 [Authorize]
 public class SeriesController : ApiControllerBase
@@ -19,7 +19,7 @@ public class SeriesController : ApiControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<SeriesModel[]>> GetSeriesByIds(int[] seriesIds)
+    public async Task<ActionResult<SeriesModel[]>> GetSeriesByIds([FromQuery] int[] seriesIds)
     {
         Models.SeriesModel[] series = await _seriesService.GetSeriesByIds(seriesIds);
 
@@ -55,5 +55,13 @@ public class SeriesController : ApiControllerBase
         }
 
         return series.ToDTO();
+    }
+
+    [HttpGet("started")]
+    public async Task<ActionResult<SeriesModel[]>> GetStartedSeries()
+    {
+        Models.SeriesModel[] series = await _seriesService.GetStartedSeries();
+
+        return series.Select(series => series.ToDTO()).ToArray();
     }
 }

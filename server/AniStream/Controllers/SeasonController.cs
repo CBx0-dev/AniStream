@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AniStream.API.Controllers;
 
-[Route("{provider}/seasons")]
+[Route("api/{provider}/seasons")]
 [ApiController]
 [Authorize]
 public class SeasonController : ApiControllerBase

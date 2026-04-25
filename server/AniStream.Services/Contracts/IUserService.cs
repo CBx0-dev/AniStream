@@ -8,5 +8,7 @@ public interface IUserService
 
     public Task<ProfileModel[]> GetProfiles();
 
-    public Task<ProfileModel?> GetProfileByUsernameOrDefault(string username);
+    public Task<ProfileModel?> GetProfile(string username);
+
+    public Task<ProfileModel?> GetProfile(int profileId);
 }

@@ -14,7 +14,7 @@ public sealed class CredentialsService : ICredentialsService
 
     public async Task<bool> ValidateCredentials(string username, string password)
     {
-        ProfileModel? profile = await _userService.GetProfileByUsernameOrDefault(username);
+        ProfileModel? profile = await _userService.GetProfile(username);
         if (profile is null)
         {
             return false;

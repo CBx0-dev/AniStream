@@ -10,7 +10,9 @@ public interface IGenreService
 
     public Task<GenreModel[]> GetGenres();
 
-    public Task<GenreModel?> GetGenreByKey(string key);
+    public Task<GenreModel?> GetGenre(int genreId);
+
+    public Task<GenreModel?> GetGenre(string key);
 
     public Task<GenreModel?> GetMainGenreOfSeries(int seriesId);
 

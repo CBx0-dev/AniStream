@@ -32,7 +32,7 @@ public sealed class GenreServiceImpl : IGenreService
 
         GenreToSeries genreToSeries = new GenreToSeries(genreId, seriesId, mainGenre);
         db.GenresToSeries.Add(genreToSeries);
-        
+
         await db.SaveChangesAsync();
     }
 
@@ -42,27 +42,41 @@ public sealed class GenreServiceImpl : IGenreService
         return await db.Genres.ToArrayAsync();
     }
 
-    public async Task<GenreModel?> GetGenreByKey(string key)
+    public async Task<GenreModel?> GetGenre(int genreId)
+    {
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<GenreModel> query = from genre in db.Genres where genre.GenreId == genreId select genre;
+        return await query.FirstOrDefaultAsync();
+    }
+
+    public async Task<GenreModel?> GetGenre(string key)
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
         IQueryable<GenreModel> query = from genre in db.Genres where genre.Key == key select genre;
-        return query.FirstOrDefault();
+        return await query.FirstOrDefaultAsync();
     }
 
     public async Task<GenreModel?> GetMainGenreOfSeries(int seriesId)
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
-        IQueryable<GenreModel> query = from gs in db.GenresToSeries join g in db.Genres on gs.GenreId equals g.GenreId where gs.SeriesId == seriesId && gs.MainGenre select g;
-        return query.FirstOrDefault();
+        IQueryable<GenreModel> query = from gs in db.GenresToSeries
+            join g in db.Genres on gs.GenreId equals g.GenreId
+            where gs.SeriesId == seriesId && gs.MainGenre
+            select g;
+        return await query.FirstOrDefaultAsync();
     }
 
     public async Task<GenreModel[]> GetNonMainGenresOfSeries(int seriesId)
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
-        IQueryable<GenreModel> query = from gs in db.GenresToSeries join g in db.Genres on gs.GenreId equals g.GenreId where gs.SeriesId == seriesId && !gs.MainGenre select g;
+        IQueryable<GenreModel> query = from gs in db.GenresToSeries
+            join g in db.Genres on gs.GenreId equals g.GenreId
+            where gs.SeriesId == seriesId && !gs.MainGenre
+            select g;
         return await query.ToArrayAsync();
     }
 }

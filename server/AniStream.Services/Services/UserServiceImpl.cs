@@ -27,11 +27,19 @@ public class UserServiceImpl : IUserService
         return db.Profiles.ToArray();
     }
 
-    public async Task<ProfileModel?> GetProfileByUsernameOrDefault(string username)
+    public async Task<ProfileModel?> GetProfile(string username)
     {
         await using ProfileDbContext db = await _dbFactory.GetContext();
 
         IQueryable<ProfileModel> query = from profile in db.Profiles where profile.Name == username select profile;
+        return await query.FirstOrDefaultAsync();
+    }
+
+    public async Task<ProfileModel?> GetProfile(int profileId)
+    {
+        await using ProfileDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<ProfileModel> query = from profile in db.Profiles where profile.ProfileId == profileId select profile;
         return await query.FirstOrDefaultAsync();
     }
 }
