@@ -6,10 +6,10 @@ import * as http from "@utils/http";
 
 export type PathParts = Array<string | number>;
 export type QueryTypes = string | number | boolean;
-export type PathParameter = PathParts[] | RouteBuilder;
+export type PathParameter = PathParts | RouteBuilder;
 
 export interface RouteBuilder {
-    path: PathParts[];
+    path: PathParts;
     query: Record<string, QueryTypes | QueryTypes[]>;
 }
 
@@ -25,9 +25,17 @@ export class ApiServiceBase {
         return await http.get(url).json<Response>();
     }
 
-    protected async post<Response extends object, Body extends RequestInit["body"]>(def: PathParameter, body: Body): Promise<Response> {
+    protected async post<Response extends object, Body extends object | string>(def: PathParameter, body: Body): Promise<Response> {
+        let data: string;
+
+        if (typeof body == "object") {
+            data = JSON.stringify(body);
+        } else {
+            data = body;
+        }
+
         const url: string = this.buildURL(def);
-        return await http.post(url, body).json<Response>();
+        return await http.post(url, data).json<Response>();
     }
 
     private buildURL(def: PathParameter): string {
