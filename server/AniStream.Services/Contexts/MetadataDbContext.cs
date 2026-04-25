@@ -25,6 +25,10 @@ public sealed class MetadataDbContext : DbContext
     public DbSet<SeasonModel> Seasons { get; set; }
 
     public DbSet<EpisodeModel> Episodes { get; set; }
+
+    public DbSet<ListModel> Lists { get; set; }
+
+    public DbSet<ListToSeriesModel> ListsToSeries { get; set; }
 }
 
 public sealed class MetadataDbContextFactory : DbContextFactory<MetadataDbContext>
