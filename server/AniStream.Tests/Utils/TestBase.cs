@@ -31,7 +31,8 @@ public abstract class TestBase : IDisposable
         _services.AddScoped<DbContextFactory<MetadataDbContext>>(_ => new MetadataDbContextFactory(MIGRATION_PATH));
         _services.AddScoped<DbContextFactory<ProfileDbContext>>(_ => new ProfileDbContextFactory(MIGRATION_PATH));
 
-        // TODO inject credentials service mock
+        _services.AddScoped<ICredentialsService, MockCredentialService>();
+
         _provider = _services.BuildServiceProvider();
         _scope = _provider.CreateScope();
 

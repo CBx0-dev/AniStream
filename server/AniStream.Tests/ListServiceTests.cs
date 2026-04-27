@@ -7,85 +7,216 @@ namespace AniStream.Tests;
 public sealed class ListServiceTests : TestBase
 {
     private readonly IListService _listService;
+    private readonly ISeriesService _seriesService;
 
     public ListServiceTests()
     {
         _listService = GetService<IListService>();
+        _seriesService = GetService<ISeriesService>();
     }
 
     [Fact]
-    public async Task GetLists_ThrowsNotImplementedException()
+    public async Task GetLists()
     {
-        await Assert.ThrowsAsync<NotImplementedException>(() => _listService.GetLists());
+        await _listService.CreateList("watchlist");
+        await _listService.CreateList("favorites");
+
+        ListModel[] lists = await _listService.GetLists();
+
+        Assert.Equal(2, lists.Length);
+        Assert.Contains(lists, l => l.Name == "watchlist");
+        Assert.Contains(lists, l => l.Name == "favorites");
     }
 
     [Fact]
-    public async Task GetList_ThrowsNotImplementedException()
+    public async Task GetList()
     {
-        await Assert.ThrowsAsync<NotImplementedException>(() => _listService.GetList(1));
+        ListModel created = await _listService.CreateList("watchlist");
+
+        ListModel? list = await _listService.GetList(created.ListId);
+
+        Assert.NotNull(list);
+        Assert.Equal(created.ListId, list!.ListId);
+        Assert.Equal("watchlist", list.Name);
     }
 
     [Fact]
-    public async Task GetListsOfSeries_ThrowsNotImplementedException()
+    public async Task GetListsOfSeries()
     {
-        await Assert.ThrowsAsync<NotImplementedException>(() => _listService.GetListsOfSeries(1));
+        await CreateSeries();
+        ListModel list1 = await _listService.CreateList("list1");
+        ListModel list2 = await _listService.CreateList("list2");
+
+        await _listService.AddSeriesToList(list1.ListId, 1);
+        await _listService.AddSeriesToList(list2.ListId, 1);
+
+        ListModel[] lists = await _listService.GetListsOfSeries(1);
+
+        Assert.Equal(2, lists.Length);
+        Assert.Contains(lists, l => l.Name == "list1");
+        Assert.Contains(lists, l => l.Name == "list2");
     }
 
     [Fact]
-    public async Task CreateList_ThrowsNotImplementedException()
+    public async Task CreateList()
     {
-        await Assert.ThrowsAsync<NotImplementedException>(() => _listService.CreateList("watchlist"));
+        ListModel list = await _listService.CreateList("watchlist");
+
+        Assert.Equal(1, list.ListId);
+        Assert.Equal("watchlist", list.Name);
+        Assert.Equal(MockCredentialService.MOCK_UUID, list.TenantId);
     }
 
     [Fact]
-    public async Task UpdateListById_ThrowsNotImplementedException()
+    public async Task UpdateListById()
     {
-        await Assert.ThrowsAsync<NotImplementedException>(() => _listService.UpdateList(1, "updated"));
+        ListModel created = await _listService.CreateList("watchlist");
+
+        ListModel updated = await _listService.UpdateList(created.ListId, "updated");
+
+        Assert.Equal("updated", updated.Name);
+
+        ListModel? fetched = await _listService.GetList(created.ListId);
+        Assert.Equal("updated", fetched!.Name);
     }
 
     [Fact]
-    public async Task UpdateListByModel_ThrowsNotImplementedException()
+    public async Task UpdateListByModel()
     {
-        ListModel list = new ListModel("watchlist", "");
+        ListModel created = await _listService.CreateList("watchlist");
 
-        await Assert.ThrowsAsync<NotImplementedException>(() => _listService.UpdateList(list, "updated"));
+        ListModel updated = await _listService.UpdateList(created, "updated");
+
+        Assert.Equal("updated", updated.Name);
     }
 
     [Fact]
-    public async Task DeleteListById_ThrowsNotImplementedException()
+    public async Task DeleteListById()
     {
-        await Assert.ThrowsAsync<NotImplementedException>(() => _listService.DeleteList(1));
+        ListModel created = await _listService.CreateList("watchlist");
+
+        await _listService.DeleteList(created.ListId);
+
+        ListModel? list = await _listService.GetList(created.ListId);
+        Assert.Null(list);
     }
 
     [Fact]
-    public async Task DeleteListByModel_ThrowsNotImplementedException()
+    public async Task DeleteListByModel()
     {
-        ListModel list = new ListModel("watchlist", "");
+        ListModel created = await _listService.CreateList("watchlist");
 
-        await Assert.ThrowsAsync<NotImplementedException>(() => _listService.DeleteList(list));
+        await _listService.DeleteList(created);
+
+        ListModel? list = await _listService.GetList(created.ListId);
+        Assert.Null(list);
     }
 
     [Fact]
-    public async Task GetSeries_ThrowsNotImplementedException()
+    public async Task GetSeriesById()
     {
-        await Assert.ThrowsAsync<NotImplementedException>(() => _listService.GetSeries(1));
+        ListModel list = await _listService.CreateList("watchlist");
+        await CreateSeries();
+        await _listService.AddSeriesToList(list.ListId, 1);
+
+        SeriesModel[] seriesInList = await _listService.GetSeries(list.ListId);
+
+        Assert.Single(seriesInList);
+        Assert.Equal(1, seriesInList[0].SeriesId);
     }
 
     [Fact]
-    public async Task AddSeriesToList_ThrowsNotImplementedException()
+    public async Task GetSeriesByModel()
     {
-        await Assert.ThrowsAsync<NotImplementedException>(() => _listService.AddSeriesToList(1, 1));
+        ListModel list = await _listService.CreateList("watchlist");
+        await CreateSeries();
+        await _listService.AddSeriesToList(list, 1);
+
+        SeriesModel[] seriesInList = await _listService.GetSeries(list);
+
+        Assert.Single(seriesInList);
+        Assert.Equal(1, seriesInList[0].SeriesId);
     }
 
     [Fact]
-    public async Task RemoveSeriesFromList_ThrowsNotImplementedException()
+    public async Task AddSeriesToListById()
     {
-        await Assert.ThrowsAsync<NotImplementedException>(() => _listService.RemoveSeriesFromList(1, 1));
+        ListModel list = await _listService.CreateList("watchlist");
+        await CreateSeries();
+
+        await _listService.AddSeriesToList(list.ListId, 1);
+
+        SeriesModel[] seriesInList = await _listService.GetSeries(list.ListId);
+        Assert.Single(seriesInList);
     }
 
     [Fact]
-    public async Task GetPreviewImages_ThrowsNotImplementedException()
+    public async Task AddSeriesToListByModel()
     {
-        await Assert.ThrowsAsync<NotImplementedException>(() => _listService.GetPreviewImages(1));
+        ListModel list = await _listService.CreateList("watchlist");
+        await CreateSeries();
+
+        await _listService.AddSeriesToList(list, 1);
+
+        SeriesModel[] seriesInList = await _listService.GetSeries(list.ListId);
+        Assert.Single(seriesInList);
+    }
+
+    [Fact]
+    public async Task RemoveSeriesFromListById()
+    {
+        ListModel list = await _listService.CreateList("watchlist");
+        await CreateSeries();
+        await _listService.AddSeriesToList(list.ListId, 1);
+
+        await _listService.RemoveSeriesFromList(list.ListId, 1);
+
+        SeriesModel[] seriesInList = await _listService.GetSeries(list.ListId);
+        Assert.Empty(seriesInList);
+    }
+
+    [Fact]
+    public async Task RemoveSeriesFromListByModel()
+    {
+        ListModel list = await _listService.CreateList("watchlist");
+        await CreateSeries();
+        await _listService.AddSeriesToList(list.ListId, 1);
+
+        await _listService.RemoveSeriesFromList(list, 1);
+
+        SeriesModel[] seriesInList = await _listService.GetSeries(list.ListId);
+        Assert.Empty(seriesInList);
+    }
+
+    [Fact]
+    public async Task GetPreviewImagesById()
+    {
+        ListModel list = await _listService.CreateList("watchlist");
+        await CreateSeries();
+        await _listService.AddSeriesToList(list.ListId, 1);
+
+        string[] images = await _listService.GetPreviewImages(list.ListId);
+
+        Assert.Single(images);
+        Assert.Equal("ABCDEFG", images[0]);
+    }
+
+    [Fact]
+    public async Task GetPreviewImagesByModel()
+    {
+        ListModel list = await _listService.CreateList("watchlist");
+        await CreateSeries();
+        await _listService.AddSeriesToList(list.ListId, 1);
+
+        string[] images = await _listService.GetPreviewImages(list);
+
+        Assert.Single(images);
+        Assert.Equal("ABCDEFG", images[0]);
+    }
+
+    private async Task CreateSeries()
+    {
+        SeriesModel series = await _seriesService.CreateSeries(Guid.NewGuid().ToString(), "Title", "Desc", "ABCDEFG");
+        Assert.Equal(1, series.SeriesId);
     }
 }
