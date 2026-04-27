@@ -1,14 +1,15 @@
 using AniStream.Contexts;
 using AniStream.Contracts;
 using AniStream.Models;
+using AniStream.Utils;
 
 namespace AniStream.Services;
 
 public class SeasonServiceImpl : ISeasonService
 {
-    private MetadataDbContextFactory _dbFactory;
+    private DbContextFactory<MetadataDbContext> _dbFactory;
 
-    public SeasonServiceImpl(MetadataDbContextFactory dbFactory)
+    public SeasonServiceImpl(DbContextFactory<MetadataDbContext> dbFactory)
     {
         _dbFactory = dbFactory;
     }

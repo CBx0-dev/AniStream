@@ -1,14 +1,14 @@
-using Scalar.AspNetCore;
-using AniStream.API.Utils;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using AniStream.API.Controllers;
-using AniStream.Contracts;
-using AniStream.API.Serivces;
-using AniStream.Services;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Mvc;
 using AniStream.API.Middelware;
+using AniStream.API.Serivces;
+using AniStream.API.Utils;
+using AniStream.Contracts;
+using AniStream.Services;
 using AniStream.Utils;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
+using Scalar.AspNetCore;
 
 namespace AniStream.API;
 

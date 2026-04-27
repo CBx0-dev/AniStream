@@ -1,18 +1,40 @@
 using AniStream.Contexts;
 using AniStream.Contracts;
 using AniStream.Models;
+using AniStream.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace AniStream.Services;
 
 public class UserServiceImpl : IUserService
 {
-    private readonly ProfileDbContextFactory _dbFactory;
+    private readonly DbContextFactory<ProfileDbContext> _dbFactory;
 
-
-    public UserServiceImpl(ProfileDbContextFactory dbFactory)
+    public UserServiceImpl(DbContextFactory<ProfileDbContext> dbFactory)
     {
         _dbFactory = dbFactory;
+    }
+
+    public async Task<ProfileModel> CreateProfile(
+        string uuid,
+        string name,
+        string backgroundColor,
+        string eye,
+        string mouth,
+        string theme,
+        string lang,
+        bool tosAccepted,
+        bool syncCatalog
+    )
+    {
+        await using ProfileDbContext db = await _dbFactory.GetContext();
+
+        ProfileModel profile = new ProfileModel(uuid, name, backgroundColor, eye, mouth, theme, lang, tosAccepted, syncCatalog);
+
+        db.Profiles.Add(profile);
+        await db.SaveChangesAsync();
+
+        return profile;
     }
 
     public Task<ProfileModel> GetActiveProfile()

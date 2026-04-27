@@ -8,5 +8,5 @@ public interface ISeasonService
 
     public Task<SeasonModel[]> GetSeasons(int seriesId);
 
-    public Task<SeasonModel> CreateSeason(int seriesId, int seasonNumer);   
+    public Task<SeasonModel> CreateSeason(int seriesId, int seasonNumber);
 }

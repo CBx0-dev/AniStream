@@ -1,14 +1,15 @@
 ﻿using AniStream.Contexts;
 using AniStream.Contracts;
 using AniStream.Models;
+using AniStream.Utils;
 
 namespace AniStream.Services;
 
 public sealed class ListServiceImpl : IListService
 {
-    private MetadataDbContextFactory _dbFactory;
+    private DbContextFactory<MetadataDbContext> _dbFactory;
 
-    public ListServiceImpl(MetadataDbContextFactory dbFactory)
+    public ListServiceImpl(DbContextFactory<MetadataDbContext> dbFactory)
     {
         _dbFactory = dbFactory;
     }

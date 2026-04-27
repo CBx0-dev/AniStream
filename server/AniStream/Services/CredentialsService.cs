@@ -1,5 +1,5 @@
-using AniStream.Models;
 using AniStream.Contracts;
+using AniStream.Models;
 
 namespace AniStream.API.Serivces;
 

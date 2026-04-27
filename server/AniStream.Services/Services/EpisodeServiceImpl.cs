@@ -1,17 +1,15 @@
-using System.Data.Common;
-using System.Reflection.Metadata.Ecma335;
 using AniStream.Contexts;
 using AniStream.Contracts;
 using AniStream.Models;
-using Microsoft.EntityFrameworkCore;
+using AniStream.Utils;
 
 namespace AniStream.Services;
 
 class EpisodeServiceImpl : IEpisodeService
 {
-    private readonly MetadataDbContextFactory _dbFactory;
+    private readonly DbContextFactory<MetadataDbContext> _dbFactory;
 
-    public EpisodeServiceImpl(MetadataDbContextFactory dbFactory)
+    public EpisodeServiceImpl(DbContextFactory<MetadataDbContext> dbFactory)
     {
         _dbFactory = dbFactory;
     }

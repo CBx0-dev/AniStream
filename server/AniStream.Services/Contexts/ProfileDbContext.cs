@@ -27,7 +27,7 @@ public sealed class ProfileDbContextFactory : DbContextFactory<ProfileDbContext>
         _connectionString = connectionString;
     }
 
-    public async Task<ProfileDbContext> GetContext()
+    public override async Task<ProfileDbContext> GetContext()
     {
         DbContextOptionsBuilder<ProfileDbContext> builder = new DbContextOptionsBuilder<ProfileDbContext>();
         UseDbVariant(builder, _connectionString);

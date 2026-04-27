@@ -31,7 +31,7 @@ public sealed class MetadataDbContext : DbContext
     public DbSet<ListToSeriesModel> ListsToSeries { get; set; }
 }
 
-public sealed class MetadataDbContextFactory : DbContextFactory<MetadataDbContext>
+internal sealed class MetadataDbContextFactory : DbContextFactory<MetadataDbContext>
 {
     private readonly string _connectionString;
     private readonly IProviderService _providerService;
@@ -42,7 +42,7 @@ public sealed class MetadataDbContextFactory : DbContextFactory<MetadataDbContex
         _providerService = providerService;
     }
 
-    public async Task<MetadataDbContext> GetContext()
+    public override async Task<MetadataDbContext> GetContext()
     {
         string providerName = _providerService.GetActiveProvider();
         string actualConnString = String.Format(_connectionString, providerName);

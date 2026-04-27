@@ -2,15 +2,16 @@ using System.Threading.Tasks;
 using AniStream.Contexts;
 using AniStream.Contracts;
 using AniStream.Models;
+using AniStream.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace AniStream.Services;
 
 public sealed class GenreServiceImpl : IGenreService
 {
-    private readonly MetadataDbContextFactory _dbFactory;
+    private readonly DbContextFactory<MetadataDbContext> _dbFactory;
 
-    public GenreServiceImpl(MetadataDbContextFactory dbFactory)
+    public GenreServiceImpl(DbContextFactory<MetadataDbContext> dbFactory)
     {
         _dbFactory = dbFactory;
     }

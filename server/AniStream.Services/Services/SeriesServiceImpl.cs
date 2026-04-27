@@ -2,16 +2,15 @@ using System.ComponentModel.DataAnnotations;
 using AniStream.Contexts;
 using AniStream.Contracts;
 using AniStream.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
+using AniStream.Utils;
 
 namespace AniStream.Services;
 
 public sealed class SeriesSerivceImpl : ISeriesService
 {
-    private MetadataDbContextFactory _dbFactory;
+    private DbContextFactory<MetadataDbContext> _dbFactory;
 
-    public SeriesSerivceImpl(MetadataDbContextFactory dbFactory)
+    public SeriesSerivceImpl(DbContextFactory<MetadataDbContext> dbFactory)
     {
         _dbFactory = dbFactory;
     }

@@ -36,6 +36,8 @@ public abstract class DbContextFactory<T> where T : DbContext
         }
     }
 
+    public abstract Task<T> GetContext();
+
     protected void UseDbVariant(DbContextOptionsBuilder<T> builder, string connectionString)
     {
         switch (_dbType)
