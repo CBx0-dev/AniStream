@@ -16,7 +16,7 @@ public abstract class TestBase : IDisposable
     public TestBase(bool setProvider = true)
     {
         // TODO resolve dynamically
-        const string MIGRATION_PATH = "/home/christoph/Documents/Workbench/rust/AniStream/migration";
+        const string MIGRATION_PATH = "./migration";
         _services = new ServiceCollection();
 
         AutoLoader.LoadServices(_services, new AutoLoader.Options

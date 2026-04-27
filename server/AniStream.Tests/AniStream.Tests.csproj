@@ -20,6 +20,13 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Include="../../migration/**/*">
+            <Link>migration/%(RecursiveDir)/%(Filename)%(Extension)</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    
+    <ItemGroup>
         <Using Include="Xunit"/>
     </ItemGroup>
 

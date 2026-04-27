@@ -7,7 +7,8 @@ on:
     branches: [ main, master ]
 
 jobs:
-  build:
+  build_targets:
+    name: Build ${{ matrix.target }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,3 +36,20 @@ jobs:
           cd app
           export APPLICATION_TARGET="${{ matrix.target }}"
           npm run build
+
+  server_unittest:
+    name: Server Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup ASP.NET Core
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Build Solution
+        run: dotnet build ./AniStream.slnx
+
+      - name: Run Unit tests
+        run: dotnet test ./AniStream.slnx --no-build
