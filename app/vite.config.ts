@@ -98,7 +98,8 @@ export default defineConfig(async (): Promise<UserConfig> => {
                 "@langs": path.join(__dirname, "src", "langs"),
                 "@providers": path.join(__dirname, "src", "providers"),
                 "@sources": path.join(__dirname, "src", "sources"),
-                "@contracts": path.join(__dirname, "src", "contracts")
+                "@contracts": path.join(__dirname, "src", "contracts"),
+                "@test": path.join(__dirname, "tests")
             }
         },
 

@@ -33,14 +33,16 @@
             "@providers/*": ["./src/providers/*"],
             "@sources": ["./src/sources/index.ts"],
             "@sources/*": ["./src/sources/*"],
-            "@contracts/*": ["./src/contracts/*"]
+            "@contracts/*": ["./src/contracts/*"],
+            "@test/*": ["./tests/*"]
         }
     },
     "include": [
         "src/**/*.ts",
         "src/**/*.d.ts",
         "src/**/*.tsx",
-        "src/**/*.vue"
+        "src/**/*.vue",
+        "tests/**/*.ts"
     ],
     "references": [
         {

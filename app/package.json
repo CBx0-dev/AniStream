@@ -4,6 +4,7 @@
   "version": "1.3.0",
   "type": "module",
   "scripts": {
+    "test": "vitest run",
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
@@ -21,6 +22,7 @@
     "@tauri-apps/plugin-sql": "^2.3.1",
     "@tauri-apps/plugin-updater": "^2.10.0",
     "hls.js": "^1.6.15",
+    "vitest": "^4.1.5",
     "vue": "^3.5.13",
     "vue-mvvm": "^0.7.0",
     "vue-router": "^5.0.4"
