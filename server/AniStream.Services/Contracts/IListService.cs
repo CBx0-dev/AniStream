@@ -22,9 +22,17 @@ public interface IListService
 
     public Task<SeriesModel[]> GetSeries(int listId);
 
+    public Task<SeriesModel[]> GetSeries(ListModel list);
+
     public Task AddSeriesToList(int listId, int seriesId);
+
+    public Task AddSeriesToList(ListModel list, int seriesId);
 
     public Task RemoveSeriesFromList(int listId, int seriesId);
 
+    public Task RemoveSeriesFromList(ListModel list, int seriesId);
+
     public Task<string[]> GetPreviewImages(int listId);
+
+    public Task<string[]> GetPreviewImages(ListModel list);
 }

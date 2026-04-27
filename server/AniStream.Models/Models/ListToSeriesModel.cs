@@ -10,4 +10,10 @@ public sealed class ListToSeriesModel
     public int ListId { get; set; }
 
     public int SeriesId { get; set; }
+
+    public ListToSeriesModel(int listId, int seriesId)
+    {
+        ListId = listId;
+        SeriesId = seriesId;
+    }
 }

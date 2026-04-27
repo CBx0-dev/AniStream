@@ -26,14 +26,15 @@ public sealed class CredentialsController : ApiControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel credentials)
     {
-        if (!await _credentialsService.ValidateCredentials(credentials.Username, credentials.Password))
+        Models.ProfileModel? profile = await _credentialsService.ValidateCredentials(credentials.Username, credentials.Password);
+        if (profile is null)
         {
             return Unauthorized("Credentials are wrong");
         }
 
         List<Claim> claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, credentials.Username),
+            new Claim(ClaimTypes.Name, profile.Uuid),
         };
         ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         ClaimsPrincipal principal = new ClaimsPrincipal(identity);

@@ -31,7 +31,7 @@ class EpisodeServiceImpl : IEpisodeService
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
         IQueryable<EpisodeModel> query = from episode in db.Episodes where episode.EpisodeId == episodeId select episode;
-        
+
         return query.FirstOrDefault();
     }
 
@@ -84,18 +84,22 @@ class EpisodeServiceImpl : IEpisodeService
         {
             episode.SeasonId = (int)seasonId;
         }
+
         if (episodeNumber is not null)
         {
             episode.EpisodeNumber = (int)episodeNumber;
         }
+
         if (germanTitle is not null)
         {
             episode.GermanTitle = germanTitle;
         }
+
         if (englishTitle is not null)
         {
             episode.EnglishTitle = englishTitle;
         }
+
         if (description is not null)
         {
             episode.Description = description;
@@ -106,6 +110,4 @@ class EpisodeServiceImpl : IEpisodeService
 
         return episode;
     }
-
-    
 }
