@@ -15,6 +15,7 @@ dist-ssr
 # Editor directories and files
 .vscode
 .idea
+AniStream.sln.DotSettings.user
 .DS_Store
 *.suo
 *.ntvs*
