@@ -13,8 +13,9 @@ dist-ssr
 *.local
 
 # Editor directories and files
-.vscode/*
+.vscode
 .idea
+AniStream.sln.DotSettings.user
 .DS_Store
 *.suo
 *.ntvs*
@@ -22,4 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
-src/utils/i18n.ts
+bin
+obj
+tmp
+
+app/src/utils/i18n.ts

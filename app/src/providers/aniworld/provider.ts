@@ -1,0 +1,87 @@
+import * as fs from "@tauri-apps/plugin-fs";
+
+import {MetadataDbService} from "@contracts/standalone/metadata.contract";
+
+import {AniWorldFetcher} from "@providers/aniworld/fetcher";
+import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";
+
+import * as path from "@utils/path";
+
+import * as AppEnv from "@AppEnv";
+
+export class AniWorldProvider extends DefaultProvider {
+    public static readonly UNIQUE_KEY: string = "aniworld";
+    private fetcher: IInformationFetcher | null;
+
+    public readonly baseURL: string = "https://aniworld.to";
+
+    public get uniqueKey(): string {
+        return AniWorldProvider.UNIQUE_KEY;
+    }
+
+    public get catalogURL(): string {
+        return `${this.baseURL}/animes-alphabet`;
+    }
+
+    public constructor(service: MetadataDbService) {
+        super(service);
+
+        this.fetcher = null;
+    }
+
+    public streamURL(guid: string): string {
+        return `${this.baseURL}/anime/stream/${guid}`;
+    }
+
+    public seasonURL(guid: string, seasonNumber: number): string {
+        if (seasonNumber == 0) {
+            return `${this.baseURL}/anime/stream/${guid}/filme`;
+        }
+
+        return `${this.baseURL}/anime/stream/${guid}/staffel-${seasonNumber}`;
+    }
+
+    public episodeURL(guid: string, seasonNumber: number, episodeNumber: number): string {
+        if (seasonNumber == 0) {
+            return `${this.seasonURL(guid, seasonNumber)}/film-${episodeNumber}`;
+        }
+
+        return `${this.seasonURL(guid, seasonNumber)}/episode-${episodeNumber}`;
+    }
+
+    public async getStorageLocation(): Promise<string> {
+        const appDir: string = await path.appDataDir()
+        const dataDir: string = path.join(appDir, "aniworld");
+
+        if (!AppEnv.isTesting) {
+            if (!await fs.exists(dataDir)) {
+                await fs.mkdir(dataDir, {
+                    recursive: true
+                });
+            }
+        }
+
+
+        return dataDir;
+    }
+
+    public encodeLanguageNumber(id: number): EpisodeLanguage {
+        switch (id) {
+            case 1:
+                return EpisodeLanguage.DE_DUB;
+            case 2:
+                return EpisodeLanguage.EN_SUP
+            case 3:
+                return EpisodeLanguage.DE_SUP;
+            default:
+                return EpisodeLanguage.UNKNOWN;
+        }
+    }
+
+    public getFetcher(): IInformationFetcher {
+        if (!this.fetcher) {
+            this.fetcher = new AniWorldFetcher(this);
+        }
+        return this.fetcher;
+    }
+}

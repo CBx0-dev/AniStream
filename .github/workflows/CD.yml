@@ -21,7 +21,7 @@ jobs:
 
       - name: Ensure changelog exists
         run: |
-          CHANGELOG="changelogs/v${{ github.event.inputs.version }}.md"
+          CHANGELOG="app/changelogs/v${{ github.event.inputs.version }}.md"
           if [ ! -f "$CHANGELOG" ]; then
             echo "Missing changelog: $CHANGELOG"
             exit 1
@@ -32,12 +32,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache-dependency-path: ./app/package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
       - name: Run I18n generator
-        run: node i18n.gen.cjs
+        run: node app/i18n.gen.cjs
 
       - name: Signing key validation
         env:
@@ -55,16 +56,16 @@ jobs:
           echo "Setting version to ${{ github.event.inputs.version }}"
 
           # package.json
-          jq ".version = \"${{ github.event.inputs.version }}\"" package.json > package.json.tmp
-          mv package.json.tmp package.json
+          jq ".version = \"${{ github.event.inputs.version }}\"" app/package.json > app/package.json.tmp
+          mv app/package.json.tmp app/package.json
 
           # tauri.conf.json (Tauri v2)
-          jq ".version = \"${{ github.event.inputs.version }}\"" src-tauri/tauri.conf.json > src-tauri/tauri.conf.json.tmp
-          mv src-tauri/tauri.conf.json.tmp src-tauri/tauri.conf.json
+          jq ".version = \"${{ github.event.inputs.version }}\"" app/src-tauri/tauri.conf.json > app/src-tauri/tauri.conf.json.tmp
+          mv app/src-tauri/tauri.conf.json.tmp app/src-tauri/tauri.conf.json
 
           # Cargo.toml (optional but strongly recommended)
-          sed -i.bak "s/^version = \".*\"/version = \"${{ github.event.inputs.version }}\"/" src-tauri/Cargo.toml || true
-          rm -f src-tauri/Cargo.toml.bak
+          sed -i.bak "s/^version = \".*\"/version = \"${{ github.event.inputs.version }}\"/" app/src-tauri/Cargo.toml || true
+          rm -f app/src-tauri/Cargo.toml.bak
 
           echo "✅ Versions updated"
 
@@ -109,7 +110,7 @@ jobs:
         id: changelog
         shell: bash
         run: |
-          CHANGELOG=$(cat changelogs/v${{ github.event.inputs.version }}.md)
+          CHANGELOG=$(cat app/changelogs/v${{ github.event.inputs.version }}.md)
           
           {
             echo "content<<EOF"
@@ -144,10 +145,14 @@ jobs:
             build-essential
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          cd app
+          npm ci
 
       - name: Run I18n generator
-        run: node i18n.gen.cjs
+        run: |
+          cd app
+          node i18n.gen.cjs
 
       - name: Build Application
         uses: tauri-apps/tauri-action@v0
@@ -165,3 +170,4 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+          projectPath: ./app
