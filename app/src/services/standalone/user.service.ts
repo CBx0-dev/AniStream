@@ -39,7 +39,7 @@ export class UserServiceImpl implements UserService {
             return profile;
         }
 
-        throw "No active profile set and no profile wa registered in the cache";
+        throw "No active profile set and no profile was registered in the cache";
     }
 
     public async setActiveProfile(profile: ProfileModel): Promise<void> {
