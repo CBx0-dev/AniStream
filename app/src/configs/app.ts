@@ -1,6 +1,8 @@
 import {App} from "vue";
 import {AppShell, WritableGlobalContext} from "vue-mvvm";
 
+import {BaseConfig} from "@configs/base";
+
 import {ProviderViewModel} from "@views/ProviderView.model";
 import {SettingsViewModel} from "@views/SettingsView.model";
 import {StreamsViewModel} from "@views/StreamsView.model";
@@ -21,12 +23,10 @@ import {ReportService} from "@contracts/report.contract";
 import {SettingsService} from "@contracts/settings.contract";
 import {UpdateService} from "@contracts/update.contract";
 
-import {services} from "virtual:services";
-
-export class AppConfig implements AppShell {
+export class AppConfig extends BaseConfig {
     private app: App;
 
-    router: AppShell.RouterConfig = {
+    public router: AppShell.RouterConfig = {
         views: [
             ProviderViewModel,
             SettingsViewModel,
@@ -41,25 +41,23 @@ export class AppConfig implements AppShell {
         ]
     }
 
-    alert: AppShell.AlertConfig = {
+    public alert: AppShell.AlertConfig = {
         confirm: ConfirmControlModel
     }
 
-    toast: AppShell.ToastConfig = {
+    public toast: AppShell.ToastConfig = {
         container: ToastContainer,
         info: InfoToastModel,
         progress: ProgressToastModel
     }
 
     public constructor(app: App) {
+        super();
+
         this.app = app;
     }
 
-    configureServices(ctx: WritableGlobalContext): void {
-        for (const service of Object.values(services)) {
-            ctx.registerService(service.key, ctx => new service.ctor(ctx));
-        }
-
+    protected afterConfigureServices(ctx: WritableGlobalContext): void {
         // Init reporting
         const reportService: ReportService = ctx.getService(ReportService);
         this.app.config.errorHandler = async err => {

@@ -12,6 +12,8 @@ import {StoProvider} from "@providers/sto";
 
 import {ProfileModel} from "@models/profile.model";
 
+import * as AppEnv from "@AppEnv";
+
 class ProviderServiceImpl implements ProviderService {
     private static readonly SESSION_KEY: string = "active-provider";
 
@@ -56,7 +58,9 @@ class ProviderServiceImpl implements ProviderService {
         }
         this.provider = provider;
 
-        sessionStorage.setItem(ProviderServiceImpl.SESSION_KEY, provider.uniqueKey);
+        if (!AppEnv.isTesting) {
+            sessionStorage.setItem(ProviderServiceImpl.SESSION_KEY, provider.uniqueKey);
+        }
     }
 
     public async deleteProfile(profile: ProfileModel): Promise<void> {
@@ -83,6 +87,10 @@ class ProviderServiceImpl implements ProviderService {
     }
 
     private async loadCache(): Promise<boolean> {
+        if (AppEnv.isTesting) {
+            return false;
+        }
+
         let value: string | null = sessionStorage.getItem(ProviderServiceImpl.SESSION_KEY);
         if (!value) {
             return false;

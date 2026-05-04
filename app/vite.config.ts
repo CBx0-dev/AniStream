@@ -99,6 +99,8 @@ export default defineConfig(async (): Promise<UserConfig> => {
                 "@providers": path.join(__dirname, "src", "providers"),
                 "@sources": path.join(__dirname, "src", "sources"),
                 "@contracts": path.join(__dirname, "src", "contracts"),
+                "@configs": path.join(__dirname, "src", "configs"),
+                "@AppEnv": path.join(__dirname, "src", "AppEnv.ts"),
                 "@test": path.join(__dirname, "tests")
             }
         },
@@ -126,6 +128,9 @@ export default defineConfig(async (): Promise<UserConfig> => {
         },
         define: {
             APPLICATION_TARGET: JSON.stringify(APPLICATION_TARGET)
+        },
+        optimizeDeps: {
+            exclude: ["better-sqlite3"]
         }
     }
 });

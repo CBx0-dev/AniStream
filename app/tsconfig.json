@@ -34,6 +34,8 @@
             "@sources": ["./src/sources/index.ts"],
             "@sources/*": ["./src/sources/*"],
             "@contracts/*": ["./src/contracts/*"],
+            "@configs/*": ["./src/configs/*"],
+            "@AppEnv": ["./src/AppEnv.ts"],
             "@test/*": ["./tests/*"]
         }
     },

@@ -1,10 +1,13 @@
-import {path} from "@tauri-apps/api"
 import * as fs from "@tauri-apps/plugin-fs";
 
 import {MetadataDbService} from "@contracts/standalone/metadata.contract";
 
 import {StoFetcher} from "@providers/sto/fetcher";
 import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";
+
+import * as path from "@utils/path";
+
+import * as AppEnv from "@AppEnv";
 
 export class StoProvider extends DefaultProvider {
     public static readonly UNIQUE_KEY: string = "sto";
@@ -40,13 +43,15 @@ export class StoProvider extends DefaultProvider {
     }
 
     public async getStorageLocation(): Promise<string> {
-        const appDir: string = await path.appDataDir();
-        const dataDir: string = await path.join(appDir, "sto");
+        const appDir: string = await path.appDataDir()
+        const dataDir: string = path.join(appDir, "sto");
 
-        if (!await fs.exists(dataDir)) {
-            await fs.mkdir(dataDir, {
-                recursive: true
-            });
+        if (!AppEnv.isTesting) {
+            if (!await fs.exists(dataDir)) {
+                await fs.mkdir(dataDir, {
+                    recursive: true
+                });
+            }
         }
 
         return dataDir;

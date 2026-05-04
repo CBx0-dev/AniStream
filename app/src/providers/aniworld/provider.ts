@@ -1,10 +1,13 @@
-import {path} from "@tauri-apps/api"
 import * as fs from "@tauri-apps/plugin-fs";
 
 import {MetadataDbService} from "@contracts/standalone/metadata.contract";
 
 import {AniWorldFetcher} from "@providers/aniworld/fetcher";
 import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";
+
+import * as path from "@utils/path";
+
+import * as AppEnv from "@AppEnv";
 
 export class AniWorldProvider extends DefaultProvider {
     public static readonly UNIQUE_KEY: string = "aniworld";
@@ -47,13 +50,15 @@ export class AniWorldProvider extends DefaultProvider {
     }
 
     public async getStorageLocation(): Promise<string> {
-        const appDir: string = await path.appDataDir();
-        const dataDir: string = await path.join(appDir, "aniworld");
+        const appDir: string = await path.appDataDir()
+        const dataDir: string = path.join(appDir, "aniworld");
 
-        if (!await fs.exists(dataDir)) {
-            await fs.mkdir(dataDir, {
-                recursive: true
-            });
+        if (!AppEnv.isTesting) {
+            if (!await fs.exists(dataDir)) {
+                await fs.mkdir(dataDir, {
+                    recursive: true
+                });
+            }
         }
 
 

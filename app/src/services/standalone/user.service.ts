@@ -1,4 +1,3 @@
-import {path} from "@tauri-apps/api";
 import {QueryResult} from "@tauri-apps/plugin-sql";
 
 import {ReadableGlobalContext} from "vue-mvvm";
@@ -12,6 +11,10 @@ import {UserDbService} from "@contracts/standalone/user.contract";
 
 import {ServiceDeclaration} from "@services/declaration";
 import {DbSession} from "@services/utils/db";
+
+import * as path from "@utils/path";
+
+import * as AppEnv from "@AppEnv";
 
 import {ProfileDbModel, ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model";
 
@@ -234,7 +237,7 @@ class UserServiceImpl implements UserService {
         }
 
         const appDir: string = await path.appDataDir();
-        const dbFile: string = await path.join(appDir, "profiles.db");
+        const dbFile: string = path.join(appDir, "profiles.db");
         this._session = await this.dbService.openDB(dbFile);
 
         return this._session!;

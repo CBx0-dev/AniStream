@@ -1,5 +1,3 @@
-import {path} from "@tauri-apps/api";
-
 import {DbSession} from "@services/utils/db";
 
 import {MetadataDbService} from "@contracts/standalone/metadata.contract";
@@ -9,6 +7,8 @@ import {SeriesFetchModel, SeriesModel} from "@models/series.model";
 import {SeasonFetchModel} from "@models/season.model";
 import {EpisodeFetchModel} from "@models/episode.model";
 import {GenreFetchModel} from "@models/genre.model";
+
+import * as path from "@utils/path";
 
 export enum EpisodeLanguage {
     DE_DUB,
@@ -52,7 +52,7 @@ export abstract class DefaultProvider {
         }
 
         const dataDir: string = await this.getStorageLocation();
-        const dbFile: string = await path.join(dataDir, "metadata.db");
+        const dbFile: string = path.join(dataDir, "metadata.db");
 
         this.session = await this.service.openDB(dbFile, this.uniqueKey);
         return this.session!;

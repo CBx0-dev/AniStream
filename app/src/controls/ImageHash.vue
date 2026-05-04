@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import {convertFileSrc} from "@tauri-apps/api/core";
-import {path} from "@tauri-apps/api";
 
 import {computed, ComputedRef, ref, Ref, watch} from "vue";
+
+import * as path from "@utils/path";
 
 const props = defineProps<{
     providerFolder: string | null;
@@ -20,14 +21,14 @@ watch(props, buildURL, {
     immediate: true
 });
 
-async function buildURL() {
+function buildURL() {
     loaded.value = false;
     if (!props.providerFolder || !props.hash) {
         url.value = null;
         return;
     }
 
-    url.value = convertFileSrc(await path.join(props.providerFolder, props.hash));
+    url.value = convertFileSrc(path.join(props.providerFolder, props.hash));
 }
 
 function onLoaded() {

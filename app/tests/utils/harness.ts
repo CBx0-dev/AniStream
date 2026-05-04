@@ -1,6 +1,8 @@
 import {describe, test} from "vitest";
 import {syncio} from "vue-mvvm";
 
+import {ProviderService} from "@contracts/provider.contract";
+
 export interface ServiceTestHarness {
     setUp(): void | Promise<void>;
 
@@ -19,18 +21,25 @@ export type TestDefinition = [
 export abstract class TestBase {
     public static harnessFactory: (() => ServiceTestHarness) | null = null;
 
+    private setProvider: boolean;
     private harness: ServiceTestHarness;
 
-    public constructor() {
+    public constructor(setProvider: boolean = true) {
         if (!TestBase.harnessFactory) {
             throw `No harness factory defined for target '${TestBase.applicationTarget}'`;
         }
 
+        this.setProvider = setProvider;
         this.harness = TestBase.harnessFactory();
     }
 
     public async setUp(): Promise<void> {
         await syncio.ensureSync(this.harness.setUp());
+
+        if (this.setProvider) {
+            const service: ProviderService = this.harness.getService(ProviderService);
+            await service.setProvider(service.STO);
+        }
     }
 
     public async tearDown(): Promise<void> {

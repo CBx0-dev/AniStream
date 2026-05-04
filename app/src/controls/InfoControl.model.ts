@@ -1,10 +1,11 @@
 import {arch as getArch, platform as getPlatform} from "@tauri-apps/plugin-os";
 import * as fs from "@tauri-apps/plugin-fs";
-import * as path from "@tauri-apps/api/path";
 
 import {UserControl} from "vue-mvvm";
 
 import {ProviderService} from "@contracts/provider.contract";
+
+import * as path from "@utils/path";
 
 import * as packageJSON from "@/../package.json";
 
@@ -92,7 +93,7 @@ export class InfoControlModel extends UserControl {
     private async walkTree(startFolder: string, cb: (entry: fs.DirEntry, stat: fs.FileInfo) => Promise<void>): Promise<void> {
         const entries: fs.DirEntry[] = await fs.readDir(startFolder);
         for (const entry of entries) {
-            const fullPath: string = await path.join(startFolder, entry.name);
+            const fullPath: string = path.join(startFolder, entry.name);
 
             if (entry.isDirectory) {
                 await this.walkTree(fullPath, cb);

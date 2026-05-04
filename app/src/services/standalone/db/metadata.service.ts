@@ -16,7 +16,7 @@ import sql2 from "../../../../../migration/standalone/metadata/2.sql?raw";
 import sql3 from "../../../../../migration/standalone/metadata/3.sql?raw";
 import sql4 from "../../../../../migration/standalone/metadata/4.sql?raw";
 
-class MetadataDbServiceImpl implements MetadataDbService {
+export class MetadataDbServiceImpl implements MetadataDbService {
     private readonly userService: UserService;
 
     public constructor(ctx: ReadableGlobalContext) {
@@ -32,7 +32,7 @@ class MetadataDbServiceImpl implements MetadataDbService {
         return session;
     }
 
-    private async beginMigration(session: DbSession, provider: string): Promise<void> {
+    protected async beginMigration(session: DbSession, provider: string): Promise<void> {
         // language=SQLite
         const [{user_version: currentVersion}] = await session.query<Array<{
             user_version: number;

@@ -1,6 +1,6 @@
-import { App, createApp } from "vue";
-import { createMVVM, MVVMApp } from "vue-mvvm";
-import { AppConfig } from "@/config";
+import {App, createApp} from "vue";
+import {createMVVM, MVVMApp} from "vue-mvvm";
+import {AppConfig} from "@configs/app";
 
 import "@utils/array";
 import "@utils/string";

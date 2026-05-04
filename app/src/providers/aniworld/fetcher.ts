@@ -1,4 +1,3 @@
-import {path} from "@tauri-apps/api";
 import * as fs from "@tauri-apps/plugin-fs";
 
 import {Provider} from "@contracts/fetch.contract";
@@ -12,7 +11,7 @@ import {EpisodeFetchModel} from "@models/episode.model";
 
 import * as http from "@utils/http";
 import * as hash from "@utils/hash";
-
+import * as path from "@utils/path";
 
 export class AniWorldFetcher implements IInformationFetcher {
     private readonly provider: DefaultProvider;
@@ -72,7 +71,7 @@ export class AniWorldFetcher implements IInformationFetcher {
             previewImage = hash.fnv1a(guid);
 
             const storageLocation: string = await this.provider.getStorageLocation();
-            const filePath: string = await path.join(storageLocation, previewImage);
+            const filePath: string = path.join(storageLocation, previewImage);
             await fs.writeFile(filePath, binary);
         }
 

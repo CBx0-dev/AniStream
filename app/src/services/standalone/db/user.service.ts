@@ -21,7 +21,7 @@ export class UserDbServiceImpl implements UserDbService {
         return session;
     }
 
-    private async beginMigration(session: DbSession): Promise<void> {
+    protected async beginMigration(session: DbSession): Promise<void> {
         const [{user_version: currentVersion}] = await session.query<Array<{
             user_version: number;
         }>>("PRAGMA user_version");

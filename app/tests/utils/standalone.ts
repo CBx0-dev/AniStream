@@ -1,14 +1,47 @@
+import {App, Plugin} from "vue";
+import {ReadableGlobalContext, ServiceKey, createMVVM, DIContainer} from "vue-mvvm";
+
 import {ServiceTestHarness, TestBase} from "@test/utils/harness";
+import {UserServiceMock} from "@test/mocks/standalone/user.service";
+import {MetadataServiceMock} from "@test/mocks/standalone/metadata.service";
+
+import {TestConfig} from "@configs/test";
+
+import {UserDbService} from "@contracts/standalone/user.contract";
+import {MetadataDbService} from "@contracts/standalone/metadata.contract";
+
 
 class StandaloneTestHarness implements ServiceTestHarness {
+    private _container!: DIContainer;
+    private _config!: TestConfig;
+
+    public constructor() {
+    }
+
     setUp(): void | Promise<void> {
+        this._container = new DIContainer();
+        this._config = new TestConfig();
+
+        const plugin: Plugin = createMVVM(this._config, {
+            context: this._container
+        });
+
+        if (!plugin.install) {
+            throw new Error("Failed to setup MVVM context");
+        }
+
+        plugin.install(null as unknown as App);
+
+        this._config.mockService(UserDbService, () => new UserServiceMock());
+        this._config.mockService(MetadataDbService, ctx => new MetadataServiceMock(ctx));
     }
 
     tearDown(): void | Promise<void> {
     }
 
-    getService<T>(_key: unknown): T {
-        throw new Error("Method not implemented.");
+    getService<T>(key: ServiceKey<T>): T {
+        const ctx: ReadableGlobalContext = this._config.ctx;
+        return ctx.getService(key) as T;
     }
 }
 
