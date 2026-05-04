@@ -7,10 +7,11 @@ on:
     branches: [ main, master ]
 
 jobs:
-  build_targets:
-    name: Build ${{ matrix.target }}
+  app_unittest:
+    name: Test App (${{ matrix.target }})
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         target: ["standalone", "client"]
     steps:
@@ -37,8 +38,14 @@ jobs:
           export APPLICATION_TARGET="${{ matrix.target }}"
           npm run build
 
+      - name: Run Unit tests
+        run: |
+          cd app
+          export APPLICATION_TARGET="${{ matrix.target }}"
+          npm test
+
   server_unittest:
-    name: Server Unit Tests
+    name: Test Server
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

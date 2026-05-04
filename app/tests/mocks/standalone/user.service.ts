@@ -3,7 +3,7 @@ import {UserDbServiceImpl} from "@services/db/user.service";
 
 import {DatabaseWrapper} from "@test/mocks/standalone/db";
 
-export class UserServiceMock extends UserDbServiceImpl {
+export class UserDbServiceMock extends UserDbServiceImpl {
     private databases: Map<string, DatabaseWrapper> = new Map();
 
     public constructor() {
@@ -23,11 +23,11 @@ export class UserServiceMock extends UserDbServiceImpl {
         const session: DbSession = new DbSession(handler);
 
         await this.beginMigration(session);
-        await this.insertMigrationProfile(session);
+        // await this.insertMigrationProfile(session);
 
         return session;
     }
-
+    /*
     private async insertMigrationProfile(session: DbSession): Promise<void> {
         // language=SQLite
         await session.execute(`
@@ -37,4 +37,5 @@ export class UserServiceMock extends UserDbServiceImpl {
                     'aniworld-dark', 'en', 0, 0)
         `);
     }
+    */
 }

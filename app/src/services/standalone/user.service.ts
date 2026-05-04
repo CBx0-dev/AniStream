@@ -14,11 +14,9 @@ import {DbSession} from "@services/utils/db";
 
 import * as path from "@utils/path";
 
-import * as AppEnv from "@AppEnv";
-
 import {ProfileDbModel, ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model";
 
-class UserServiceImpl implements UserService {
+export class UserServiceImpl implements UserService {
     private static readonly SESSION_KEY: string = "active-profile";
 
     private readonly ctx: ReadableGlobalContext;
@@ -145,7 +143,7 @@ class UserServiceImpl implements UserService {
 
         // language=SQLite
         const result: QueryResult = await session.execute(
-            "INSERT INTO profile (uuid, name, background_color, eye, mouth, theme, lang, tos_accepted) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO profile (uuid, name, background_color, eye, mouth, theme, lang, tos_accepted, sync_catalog) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
             uuid,
             name,
             backgroundColor,

@@ -4,7 +4,7 @@ import {MetadataDbServiceImpl} from "@services/db/metadata.service";
 import {DatabaseWrapper} from "@test/mocks/standalone/db";
 import {ReadableGlobalContext} from "vue-mvvm";
 
-export class MetadataServiceMock extends MetadataDbServiceImpl {
+export class MetadataDbServiceMock extends MetadataDbServiceImpl {
     private databases: Map<string, DatabaseWrapper> = new Map();
 
     public constructor(ctx: ReadableGlobalContext) {

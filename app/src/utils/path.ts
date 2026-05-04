@@ -2,8 +2,6 @@ import * as path from "@tauri-apps/api/path";
 
 import * as AppEnv from "@AppEnv";
 
-console.log(import.meta.env);
-
 const PATH_SEPARATOR: string = AppEnv.isTesting
     ? require("path").sep
     : path.sep();

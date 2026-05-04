@@ -2,13 +2,15 @@ import {App, Plugin} from "vue";
 import {ReadableGlobalContext, ServiceKey, createMVVM, DIContainer} from "vue-mvvm";
 
 import {ServiceTestHarness, TestBase} from "@test/utils/harness";
-import {UserServiceMock} from "@test/mocks/standalone/user.service";
-import {MetadataServiceMock} from "@test/mocks/standalone/metadata.service";
+import {UserDbServiceMock} from "@test/mocks/standalone/user.service";
+import {MetadataDbServiceMock} from "@test/mocks/standalone/metadata.service";
+import {UserServiceMock} from "@test/mocks/user.service";
 
 import {TestConfig} from "@configs/test";
 
 import {UserDbService} from "@contracts/standalone/user.contract";
 import {MetadataDbService} from "@contracts/standalone/metadata.contract";
+import {UserService} from "@contracts/user.contract";
 
 
 class StandaloneTestHarness implements ServiceTestHarness {
@@ -32,8 +34,9 @@ class StandaloneTestHarness implements ServiceTestHarness {
 
         plugin.install(null as unknown as App);
 
-        this._config.mockService(UserDbService, () => new UserServiceMock());
-        this._config.mockService(MetadataDbService, ctx => new MetadataServiceMock(ctx));
+        this._config.mockService(UserDbService, () => new UserDbServiceMock());
+        this._config.mockService(MetadataDbService, ctx => new MetadataDbServiceMock(ctx));
+        this._config.mockService(UserService, ctx => new UserServiceMock(ctx));
     }
 
     tearDown(): void | Promise<void> {

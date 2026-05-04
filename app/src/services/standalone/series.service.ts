@@ -111,7 +111,7 @@ class SeriesServiceImpl extends DbServiceBase implements SeriesService {
                      JOIN season AS se ON se.series_id = s.series_id
                      JOIN episode AS e ON e.season_id = se.season_id
                      LEFT JOIN watchtime AS wt ON wt.episode_id = e.episode_id
-                AND wt.tenant_id = 'c5e8c854-bdbf-42d3-930c-8385aa6bf308'
+                AND wt.tenant_id = ?
             WHERE se.season_number > 0
             GROUP BY s.series_id
             HAVING
