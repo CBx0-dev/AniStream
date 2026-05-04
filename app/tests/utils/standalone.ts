@@ -14,18 +14,18 @@ import {UserService} from "@contracts/user.contract";
 
 
 class StandaloneTestHarness implements ServiceTestHarness {
-    private _container!: DIContainer;
-    private _config!: TestConfig;
+    private container!: DIContainer;
+    private config!: TestConfig;
 
     public constructor() {
     }
 
     setUp(): void | Promise<void> {
-        this._container = new DIContainer();
-        this._config = new TestConfig();
+        this.container = new DIContainer();
+        this.config = new TestConfig();
 
-        const plugin: Plugin = createMVVM(this._config, {
-            context: this._container
+        const plugin: Plugin = createMVVM(this.config, {
+            context: this.container
         });
 
         if (!plugin.install) {
@@ -34,17 +34,17 @@ class StandaloneTestHarness implements ServiceTestHarness {
 
         plugin.install(null as unknown as App);
 
-        this._config.mockService(UserDbService, () => new UserDbServiceMock());
-        this._config.mockService(MetadataDbService, ctx => new MetadataDbServiceMock(ctx));
-        this._config.mockService(UserService, ctx => new UserServiceMock(ctx));
+        this.config.mockService(UserDbService, () => new UserDbServiceMock());
+        this.config.mockService(MetadataDbService, ctx => new MetadataDbServiceMock(ctx));
+        this.config.mockService(UserService, ctx => new UserServiceMock(ctx));
     }
 
     tearDown(): void | Promise<void> {
     }
 
     getService<T>(key: ServiceKey<T>): T {
-        const ctx: ReadableGlobalContext = this._config.ctx;
-        return ctx.getService(key) as T;
+        const ctx: ReadableGlobalContext = this.config.ctx;
+        return ctx.getService<T>(key);
     }
 }
 
