@@ -37,7 +37,6 @@ export class TestConfig extends BaseConfig {
             throw new Error("Context not initialized");
         }
 
-        // @ts-expect-error
         this._ctx.mockService(key, factory);
     }
 
