@@ -30,7 +30,6 @@ class UserTests extends TestBase {
     private async getProfileByUUID() {
         const john: ProfileModel = await this.userService.createProfile("john", "fff", "eyes1" as any, "mouth1" as any, "dark", "en");
         await this.userService.createProfile("jane", "000", "eyes2" as any, "mouth2" as any, "light", "de");
-
         const profileByUuid: ProfileModel | null = await this.userService.getProfileByUUID(john.uuid);
 
         expect(profileByUuid).not.toBeNull();

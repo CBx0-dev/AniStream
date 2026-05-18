@@ -187,16 +187,6 @@ export class UserServiceImpl implements UserService {
         );
     }
 
-    public getAvatarSvg(backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth): string {
-        const result: dicebear.Result = dicebear.createAvatar(botttsNeutral, {
-            backgroundColor: [backgroundColor],
-            eyes: [eye],
-            mouth: [mouth]
-        });
-
-        return result.toDataUri()
-    }
-
     public async deleteProfile(profile: ProfileModel): Promise<void> {
         const session: DbSession = await this.getDatabase();
 
@@ -205,6 +195,16 @@ export class UserServiceImpl implements UserService {
             "DELETE FROM profile WHERE uuid = ?",
             profile.uuid
         );
+    }
+
+    public getAvatarSvg(backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth): string {
+        const result: dicebear.Result = dicebear.createAvatar(botttsNeutral, {
+            backgroundColor: [backgroundColor],
+            eyes: [eye],
+            mouth: [mouth]
+        });
+
+        return result.toDataUri();
     }
 
     public getAvatarSvgOfProfile(profile: ProfileModel): string {

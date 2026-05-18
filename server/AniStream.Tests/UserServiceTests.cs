@@ -44,10 +44,25 @@ public sealed class UserServiceTests : TestBase
         await _userService.CreateProfile(johnGuid.ToString(), "john", "fff", "eye-1", "mouth-1", "dark", "en", true, false);
         await _userService.CreateProfile(janeGuid.ToString(), "jane", "000", "eye-2", "mouth-2", "light", "de", true, true);
 
-        ProfileModel? profileByName = await _userService.GetProfile("jane");
+        ProfileModel? profileByName = await _userService.GetProfileByUsername("jane");
 
         Assert.NotNull(profileByName);
-        Assert.Equal("jane", profileByName!.Name);
+        Assert.Equal("jane", profileByName.Name);
+    }
+
+
+    [Fact]
+    public async Task GetProfileByUuid()
+    {
+        Guid johnGuid = Guid.NewGuid();
+        Guid janeGuid = Guid.NewGuid();
+        await _userService.CreateProfile(johnGuid.ToString(), "john", "fff", "eye-1", "mouth-1", "dark", "en", true, false);
+        await _userService.CreateProfile(janeGuid.ToString(), "jane", "000", "eye-2", "mouth-2", "light", "de", true, true);
+
+        ProfileModel? profileByUuid = await _userService.GetProfile(janeGuid.ToString());
+
+        Assert.NotNull(profileByUuid);
+        Assert.Equal(janeGuid.ToString(), profileByUuid.Uuid);
     }
 
     [Fact]
@@ -59,7 +74,7 @@ public sealed class UserServiceTests : TestBase
         ProfileModel? profileById = await _userService.GetProfile(john.ProfileId);
 
         Assert.NotNull(profileById);
-        Assert.Equal("john", profileById!.Name);
+        Assert.Equal("john", profileById.Name);
     }
 
     [Fact]

@@ -1,5 +1,8 @@
 import {ReadableGlobalContext} from "vue-mvvm";
 
+import * as dicebear from "@dicebear/core";
+import {botttsNeutral} from "@dicebear/collection";
+
 import {ApiServiceBase} from "@services/utils/api";
 import {ServiceDeclaration} from "@services/declaration";
 
@@ -7,7 +10,9 @@ import {UserService} from "@contracts/user.contract";
 import {SupportedLocals} from "@contracts/i18n.contract";
 import {SettingsService} from "@contracts/settings.contract";
 
-import {ProfileModel, ProfileEye, ProfileMouth} from "@models/profile.model";
+import {ProfileCreateModel, ProfileDbModel, ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model";
+
+import * as http from "@utils/http";
 
 export class UserServiceImpl extends ApiServiceBase implements UserService {
     private static readonly SESSION_KEY: string = "active-profile";
@@ -56,36 +61,113 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
         throw new Error("Method not implemented.");
     }
 
-    public getProfiles(): Promise<ProfileModel[]> {
-        throw new Error("Method not implemented.");
+    public async getProfiles(): Promise<ProfileModel[]> {
+        const rows: ProfileDbModel[] = await this.get<ProfileDbModel[]>(["api", "profiles"]);
+
+        return rows.map(row => ProfileModel(
+            row.profile_id,
+            row.uuid,
+            row.name,
+            row.background_color,
+            row.eye,
+            row.mouth,
+            row.theme,
+            row.lang,
+            row.tos_accepted,
+            row.sync_catalog
+        ));
     }
 
-    public getProfileByUUID(uuid: string): Promise<ProfileModel | null> {
-        throw new Error("Method not implemented.");
+    public async getProfileByUUID(uuid: string): Promise<ProfileModel | null> {
+        try {
+            const row: ProfileDbModel = await this.get<ProfileDbModel>(["api", "profiles", uuid, "uuid"]);
+
+            return ProfileModel(
+                row.profile_id,
+                row.uuid,
+                row.name,
+                row.background_color,
+                row.eye,
+                row.mouth,
+                row.theme,
+                row.lang,
+                row.tos_accepted,
+                row.sync_catalog
+            );
+        } catch (e) {
+            console.log(e);
+            if (e instanceof http.HTTPError && e.status == 404) {
+                return null;
+            }
+            throw e;
+        }
     }
 
     public requiresProfileSetup(): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
 
-    public createProfile(name: string, backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth, theme: string, local: SupportedLocals): Promise<ProfileModel> {
+    public async createProfile(
+        name: string,
+        backgroundColor: string,
+        eye: ProfileEye,
+        mouth: ProfileMouth,
+        theme: string,
+        local: SupportedLocals
+    ): Promise<ProfileModel> {
+        const row: ProfileDbModel = await this.post<ProfileDbModel, ProfileCreateModel>(["api", "profiles"], {
+            name,
+            background_color: backgroundColor,
+            eye,
+            mouth,
+            theme,
+            lang: local
+        });
+
+        return ProfileModel(
+            row.profile_id,
+            row.uuid,
+            row.name,
+            row.background_color,
+            row.eye,
+            row.mouth,
+            row.theme,
+            row.lang,
+            row.tos_accepted,
+            row.sync_catalog
+        );
+    }
+
+    public updateProfile(
+        _profileId: number,
+        _name: string,
+        _backgroundColor: string,
+        _eye: ProfileEye,
+        _mouth: ProfileMouth,
+        _theme: string,
+        _local: SupportedLocals,
+        _tosAccepted: boolean,
+        _syncCatalog: boolean
+    ): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
-    public updateProfile(profileId: number, name: string, backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth, theme: string, local: SupportedLocals, tosAccepted: boolean, syncCatalog: boolean): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-
-    public deleteProfile(profile: ProfileModel): Promise<void> {
+    public deleteProfile(_profile: ProfileModel): Promise<void> {
         throw new Error("Method not implemented.");
     }
 
     public getAvatarSvg(backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth): string {
-        throw new Error("Method not implemented.");
+        const result: dicebear.Result = dicebear.createAvatar(botttsNeutral, {
+            backgroundColor: [backgroundColor],
+            eyes: [eye],
+            mouth: [mouth]
+        });
+
+        return result.toDataUri();
     }
 
     public getAvatarSvgOfProfile(profile: ProfileModel): string {
-        throw new Error("Method not implemented.");
+        return this.getAvatarSvg(profile.background_color, profile.eye, profile.mouth);
     }
 
     private async loadCache(): Promise<boolean> {

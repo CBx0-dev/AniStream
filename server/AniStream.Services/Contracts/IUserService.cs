@@ -20,7 +20,9 @@ public interface IUserService
 
     public Task<ProfileModel[]> GetProfiles();
 
-    public Task<ProfileModel?> GetProfile(string username);
+    public Task<ProfileModel> GetProfileByUsername(string username);
+
+    public Task<ProfileModel?> GetProfile(string uuid);
 
     public Task<ProfileModel?> GetProfile(int profileId);
 }

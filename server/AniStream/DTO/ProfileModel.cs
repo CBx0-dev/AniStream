@@ -23,6 +23,21 @@ public sealed class ProfileModel
     public required bool SyncCatalog { get; set; }
 }
 
+public sealed class ProfileCreateModel
+{
+    public required string Name { get; set; }
+
+    public required string BackgroundColor { get; set; }
+
+    public required string Eye { get; set; }
+
+    public required string Mouth { get; set; }
+
+    public required string Theme { get; set; }
+
+    public required string Lang { get; set; }
+}
+
 internal static class ProfileModelHelper
 {
     public static ProfileModel ToDTO(this Models.ProfileModel model)
@@ -42,3 +57,4 @@ internal static class ProfileModelHelper
         };
     }
 }
+

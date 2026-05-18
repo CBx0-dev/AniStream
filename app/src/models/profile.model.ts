@@ -24,6 +24,18 @@ export interface ProfileModel extends Omit<ProfileDbModel, "tos_accepted" | "syn
     clone(): ProfileModel;
 }
 
+/**
+ * Used for API only
+ */
+export interface ProfileCreateModel {
+    name: string;
+    background_color: string;
+    eye: ProfileEye;
+    mouth: ProfileMouth;
+    theme: string;
+    lang: SupportedLocals;
+}
+
 export function ProfileModel(
     uuid: string,
     name: string,

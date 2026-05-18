@@ -49,11 +49,19 @@ public class UserServiceImpl : IUserService
         return db.Profiles.ToArray();
     }
 
-    public async Task<ProfileModel?> GetProfile(string username)
+    public async Task<ProfileModel> GetProfileByUsername(string username)
     {
         await using ProfileDbContext db = await _dbFactory.GetContext();
 
         IQueryable<ProfileModel> query = from profile in db.Profiles where profile.Name == username select profile;
+        return await query.FirstOrDefaultAsync();
+    }
+
+    public async Task<ProfileModel?> GetProfile(string uuid)
+    {
+        await using ProfileDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<ProfileModel> query = from profile in db.Profiles where profile.Uuid == uuid select profile;
         return await query.FirstOrDefaultAsync();
     }
 
