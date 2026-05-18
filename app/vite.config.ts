@@ -131,6 +131,9 @@ export default defineConfig(async (): Promise<UserConfig> => {
         },
         optimizeDeps: {
             exclude: ["better-sqlite3"]
+        },
+        test: {
+            globalSetup: "./tests/vitest.global-setup.ts"
         }
     }
 });

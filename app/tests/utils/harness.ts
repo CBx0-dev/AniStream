@@ -1,12 +1,12 @@
-import {describe, test} from "vitest";
+import {describe, test, TestContext} from "vitest";
 import {syncio} from "vue-mvvm";
 
 import {ProviderService} from "@contracts/provider.contract";
 
 export interface ServiceTestHarness {
-    setUp(): void | Promise<void>;
+    setUp(ctx: TestContext): void | Promise<void>;
 
-    tearDown(): void | Promise<void>;
+    tearDown(ctx: TestContext): void | Promise<void>;
 
     getService<T>(key: unknown): T;
 }
@@ -33,8 +33,8 @@ export abstract class TestBase {
         this.harness = TestBase.harnessFactory();
     }
 
-    public async setUp(): Promise<void> {
-        await syncio.ensureSync(this.harness.setUp());
+    public async setUp(ctx: TestContext): Promise<void> {
+        await syncio.ensureSync(this.harness.setUp(ctx));
 
         if (this.setProvider) {
             const service: ProviderService = this.harness.getService(ProviderService);
@@ -42,8 +42,8 @@ export abstract class TestBase {
         }
     }
 
-    public async tearDown(): Promise<void> {
-        await syncio.ensureSync(this.harness.tearDown());
+    public async tearDown(ctx: TestContext): Promise<void> {
+        await syncio.ensureSync(this.harness.tearDown(ctx));
     }
 
     public abstract getTests(): TestDefinition[];
@@ -57,16 +57,16 @@ export abstract class TestBase {
 
         describe(`${testType.name}`, () => {
             for (const [name, method] of discoveryInstance.getTests()) {
-                test(name, async () => {
+                test(name, async (ctx) => {
                     const testInstance = new testType();
 
                     const boundMethod = method.bind(testInstance);
 
                     try {
-                        await testInstance.setUp();
+                        await testInstance.setUp(ctx);
                         await boundMethod();
                     } finally {
-                        await testInstance.tearDown();
+                        await testInstance.tearDown(ctx);
                     }
                 });
             }

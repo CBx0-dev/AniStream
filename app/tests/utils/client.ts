@@ -2,16 +2,23 @@ import {App, Plugin} from "vue";
 import {ReadableGlobalContext, ServiceKey, createMVVM, DIContainer} from "vue-mvvm";
 
 import {ServiceTestHarness, TestBase} from "@test/utils/harness";
+import {ApiServiceMock} from "@test/mocks/client/api.service";
 import {UserServiceMock} from "@test/mocks/user.service";
 
 import {TestConfig} from "@configs/test";
+
+import {ApiService} from "@contracts/client/api.contract";
 import {UserService} from "@contracts/user.contract";
+
+import {ApiServiceImpl} from "@services/api/api.service";
+import {TestContext} from "vitest";
+
 
 class ClientTestHarness implements ServiceTestHarness {
     private container!: DIContainer;
     private config!: TestConfig;
 
-    setUp(): void | Promise<void> {
+    setUp(ctx: TestContext): void | Promise<void> {
         this.container = new DIContainer();
         this.config = new TestConfig();
 
@@ -25,7 +32,10 @@ class ClientTestHarness implements ServiceTestHarness {
 
         plugin.install(null as unknown as App);
 
+        this.config.mockService(ApiService, ctx => new ApiServiceMock(ctx));
         this.config.mockService(UserService, ctx => new UserServiceMock(ctx));
+
+        ApiServiceImpl.HEADERS.push(["Testing-ID", ctx.task.id]);
     }
 
     tearDown(): void | Promise<void> {
