@@ -18,7 +18,7 @@ public sealed class ProfileDbContext : DbContext
     public DbSet<ProfileModel> Profiles { get; set; }
 }
 
-public sealed class ProfileDbContextFactory : DbContextFactory<ProfileDbContext>
+internal sealed class ProfileDbContextFactory : DbContextFactory<ProfileDbContext>
 {
     private readonly string _connectionString;
 

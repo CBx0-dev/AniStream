@@ -1,14 +1,21 @@
-using AniStream.API.Controllers;
 using AniStream.API.Middelware;
 using AniStream.API.Serivces;
 using AniStream.API.Utils;
 using AniStream.Contracts;
 using AniStream.Services;
 using AniStream.Utils;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
+
+#if TESTING_ENABLED
+using AniStream.Integration;
+using Microsoft.AspNetCore.Authentication;
+
+#else
+using Microsoft.AspNetCore.Authentication.Cookies;
+using AniStream.API.Controllers;
+#endif
 
 namespace AniStream.API;
 
@@ -21,11 +28,12 @@ public static class Program
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCasePolicy();
-            });
+            .AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCasePolicy(); });
         builder.Services.Configure<MvcOptions>(options => { options.ModelMetadataDetailsProviders.Add(new EmptyStringEnabledDisplayMetadataProvider()); });
+#if TESTING_ENABLED
+        builder.Services.AddAuthentication("Test")
+            .AddScheme<AuthenticationSchemeOptions, TestingAuthHandler>("Test", _ => { });
+#else
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
@@ -47,6 +55,7 @@ public static class Program
                     return Task.CompletedTask;
                 };
             });
+#endif
         builder.Services.AddAuthorization();
         builder.Services.AddOpenApi(options =>
         {
@@ -69,7 +78,7 @@ public static class Program
                 if (schema.Properties is null)
                 {
                     return Task.CompletedTask;
-                }   
+                }
 
                 Dictionary<string, OpenApiSchema> updated = new Dictionary<string, OpenApiSchema>();
 
@@ -85,10 +94,18 @@ public static class Program
         });
         builder.Services.AddEndpointsApiExplorer();
         SetupDependencyInjection(builder);
-        // TODO setup EFCore integration
+#if TESTING_ENABLED
+        builder.AddTestingMode(new AutoLoader.Options
+        {
+            MigrationPath = AppConfig.CurrentConfig.MigrationPath
+        });
+#endif
 
         WebApplication app = builder.Build();
 
+#if TESTING_ENABLED
+        app.UseMiddleware<TestingMiddleware>();
+#endif
         app.UseMiddleware<ProviderMiddelware>();
 
         if (app.Environment.IsProduction())
