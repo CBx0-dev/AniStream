@@ -29,6 +29,8 @@ public sealed class MetadataDbContext : DbContext
     public DbSet<ListModel> Lists { get; set; }
 
     public DbSet<ListToSeriesModel> ListsToSeries { get; set; }
+
+    public DbSet<WatchTimeModel> WatchTimes { get; set; }
 }
 
 internal sealed class MetadataDbContextFactory : DbContextFactory<MetadataDbContext>
@@ -36,7 +38,8 @@ internal sealed class MetadataDbContextFactory : DbContextFactory<MetadataDbCont
     private readonly string _connectionString;
     private readonly IProviderService _providerService;
 
-    public MetadataDbContextFactory(string dbType, string migrationFolder, string connectionString, IProviderService providerService) : base(dbType, migrationFolder, "metadata")
+    public MetadataDbContextFactory(string dbType, string migrationFolder, string connectionString, IProviderService providerService) : base(dbType,
+        migrationFolder, "metadata")
     {
         _connectionString = connectionString;
         _providerService = providerService;
