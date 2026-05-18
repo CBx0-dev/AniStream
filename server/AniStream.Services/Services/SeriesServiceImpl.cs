@@ -8,11 +8,13 @@ namespace AniStream.Services;
 
 public sealed class SeriesSerivceImpl : ISeriesService
 {
-    private DbContextFactory<MetadataDbContext> _dbFactory;
+    private readonly DbContextFactory<MetadataDbContext> _dbFactory;
+    private readonly ICredentialsService _credentialsService;
 
-    public SeriesSerivceImpl(DbContextFactory<MetadataDbContext> dbFactory)
+    public SeriesSerivceImpl(DbContextFactory<MetadataDbContext> dbFactory, ICredentialsService credentialsService)
     {
         _dbFactory = dbFactory;
+        _credentialsService = credentialsService;
     }
 
     public async Task<SeriesModel> CreateSeries(string guid, string title, string description, string? previewImage)
@@ -79,8 +81,64 @@ public sealed class SeriesSerivceImpl : ISeriesService
             .ToArray();
     }
 
-    public Task<SeriesModel[]> GetStartedSeries()
+    public async Task<SeriesModel[]> GetStartedSeries()
     {
-        throw new NotImplementedException();
+        string tenantId = await _credentialsService.GetCurrentUuid();
+
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<SeriesModel> query = db.Series
+            .Join(
+                db.Seasons.Where(se => se.SeasonNumber > 0),
+                s => s.SeriesId,
+                se => se.SeriesId,
+                (s, se) => new
+                {
+                    s,
+                    se
+                })
+            .Join(
+                db.Episodes,
+                x => x.se.SeasonId,
+                e => e.SeasonId,
+                (x, e) => new
+                {
+                    x.s,
+                    x.se,
+                    e
+                })
+            .GroupJoin(
+                db.WatchTimes.Where(wt => wt.TenantId == tenantId),
+                x => x.e.EpisodeId,
+                wt => wt.EpisodeId,
+                (x, wt) => new
+                {
+                    x.s,
+                    x.e,
+                    wt
+                })
+            .SelectMany(
+                x => x.wt.DefaultIfEmpty(),
+                (x, wt) => new
+                {
+                    x.s,
+                    x.e,
+                    wt
+                })
+            .GroupBy(x => x.s)
+            .Where(g =>
+                g.Max(x => x.wt != null
+                    ? x.wt.PercentageWatched
+                    : 0
+                ) >
+                0 &&
+                g.Min(x => x.wt != null
+                    ? x.wt.PercentageWatched
+                    : 0
+                ) <=
+                80)
+            .Select(g => g.Key);
+
+        return query.ToArray();
     }
 }
