@@ -35,7 +35,7 @@ public sealed class GenreServiceTests : TestBase
         GenreModel? mainGenre = await _genreService.GetMainGenreOfSeries(series.SeriesId);
 
         Assert.NotNull(mainGenre);
-        Assert.Equal(genre.GenreId, mainGenre!.GenreId);
+        Assert.Equal(genre.GenreId, mainGenre.GenreId);
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public sealed class GenreServiceTests : TestBase
         GenreModel? byId = await _genreService.GetGenre(genre.GenreId);
 
         Assert.NotNull(byId);
-        Assert.Equal(genre.GenreId, byId!.GenreId);
+        Assert.Equal(genre.GenreId, byId.GenreId);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public sealed class GenreServiceTests : TestBase
         GenreModel? byKey = await _genreService.GetGenre(genre.Key);
 
         Assert.NotNull(byKey);
-        Assert.Equal(genre.Key, byKey!.Key);
+        Assert.Equal(genre.Key, byKey.Key);
     }
 
     [Fact]

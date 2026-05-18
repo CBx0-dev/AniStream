@@ -36,7 +36,7 @@ public sealed class ListServiceTests : TestBase
         ListModel? list = await _listService.GetList(created.ListId);
 
         Assert.NotNull(list);
-        Assert.Equal(created.ListId, list!.ListId);
+        Assert.Equal(created.ListId, list.ListId);
         Assert.Equal("watchlist", list.Name);
     }
 

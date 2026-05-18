@@ -33,7 +33,7 @@ public sealed class SeriesServiceTests : TestBase
         SeriesModel? series = await _seriesService.GetSeries(created.SeriesId);
 
         Assert.NotNull(series);
-        Assert.Equal(created.SeriesId, series!.SeriesId);
+        Assert.Equal(created.SeriesId, series.SeriesId);
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public sealed class SeriesServiceTests : TestBase
         SeriesModel? series = await _seriesService.GetSeries(created.Guid);
 
         Assert.NotNull(series);
-        Assert.Equal(created.SeriesId, series!.SeriesId);
+        Assert.Equal(created.SeriesId, series.SeriesId);
     }
 
     [Fact]

@@ -40,7 +40,7 @@ public sealed class EpisodeServiceTests : TestBase
         EpisodeModel? loaded = await _episodeService.GetEpisode(episode.EpisodeId);
 
         Assert.NotNull(loaded);
-        Assert.Equal(episode.EpisodeId, loaded!.EpisodeId);
+        Assert.Equal(episode.EpisodeId, loaded.EpisodeId);
     }
 
     [Fact]
