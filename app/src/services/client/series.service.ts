@@ -10,6 +10,8 @@ import {SeriesCreateModel, SeriesDbModel, SeriesModel} from "@/models/series.mod
 
 import {DefaultProvider} from "@providers/default";
 import {HTTPError} from "@utils/http";
+import * as AppEnv from "@AppEnv";
+import {UnsupportedPlatformError} from "@utils/error";
 
 interface SeriesFilterModel {
     limit: number;
@@ -47,6 +49,10 @@ class SeriesServiceImpl extends ApiServiceBase implements SeriesService {
     }
 
     public async insertSeries(guid: string, title: string, description: string, previewImage: string | null): Promise<SeriesModel> {
+        if (!AppEnv.isTesting) {
+            throw new UnsupportedPlatformError("SeriesServiceImpl.insertSeries");
+        }
+
         const provider: DefaultProvider = await this.providerService.getProvider();
 
         const series: SeriesDbModel = await this.post<SeriesDbModel, SeriesCreateModel>(["api", provider.uniqueKey, "series"], {

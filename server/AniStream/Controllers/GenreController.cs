@@ -27,6 +27,7 @@ public sealed class GenreController : ApiControllerBase
         return genres.Select(genre => genre.ToDTO()).ToArray();
     }
 
+#if TESTING_ENABLED
     [HttpPost]
     public async Task<ActionResult<GenreModel>> CreateGenre([FromBody] GenreCreateModel data)
     {
@@ -34,6 +35,7 @@ public sealed class GenreController : ApiControllerBase
 
         return genre.ToDTO();
     }
+#endif
 
     [HttpGet("{genreId}")]
     public async Task<ActionResult<GenreModel>> GetGenre(int genreId)
@@ -59,6 +61,7 @@ public sealed class GenreController : ApiControllerBase
         return Ok(genre.ToDTO());
     }
 
+#if TESTING_ENABLED
     [HttpPost("series")]
     public async Task<ActionResult> CreateGenreToSeries([FromBody] GenreToSeriesCreateModel data)
     {
@@ -73,6 +76,7 @@ public sealed class GenreController : ApiControllerBase
 
         return genres.Select(genre => genre.ToDTO()).ToArray();
     }
+#endif
 
     [HttpGet("series/{seriesId}/main")]
     public async Task<ActionResult<GenreModel>> GetMainGenreOfSeries(int seriesId)

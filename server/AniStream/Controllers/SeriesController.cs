@@ -18,6 +18,7 @@ public class SeriesController : ApiControllerBase
         _seriesService = seriesService;
     }
 
+#if TESTING_ENABLED
     [HttpPost]
     public async Task<SeriesModel> CreateSeries([FromBody] SeriesCreateModel data)
     {
@@ -30,6 +31,7 @@ public class SeriesController : ApiControllerBase
 
         return series.ToDTO();
     }
+#endif
 
     [HttpGet("{seriesId}")]
     public async Task<ActionResult<SeriesModel>> GetSeries(int seriesId)

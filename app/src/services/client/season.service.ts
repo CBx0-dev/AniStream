@@ -11,6 +11,9 @@ import {SeasonCreateModel, SeasonDbModel, SeasonModel} from "@models/season.mode
 import {DefaultProvider} from "@providers/default";
 
 import {HTTPError} from "@utils/http";
+import {UnsupportedPlatformError} from "@utils/error";
+
+import * as AppEnv from "@AppEnv";
 
 class SeasonServiceImpl extends ApiServiceBase implements SeasonService {
     private readonly providerService: ProviderService;
@@ -58,6 +61,10 @@ class SeasonServiceImpl extends ApiServiceBase implements SeasonService {
     }
 
     public async insertSeason(seriesId: number, seasonNumber: number): Promise<SeasonModel> {
+        if (!AppEnv.isTesting) {
+            throw new UnsupportedPlatformError("SeasonServiceImpl.insertSeason");
+        }
+
         const provider: DefaultProvider = await this.providerService.getProvider();
 
         const season: SeasonDbModel = await this.post<SeasonDbModel, SeasonCreateModel>(["api", provider.uniqueKey, "seasons"], {

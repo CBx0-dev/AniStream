@@ -13,6 +13,9 @@ import {SettingsService} from "@contracts/settings.contract";
 import {ProfileCreateModel, ProfileDbModel, ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model";
 
 import * as http from "@utils/http";
+import {UnsupportedPlatformError} from "@utils/error";
+
+import * as AppEnv from "@AppEnv";
 
 export class UserServiceImpl extends ApiServiceBase implements UserService {
     private static readonly SESSION_KEY: string = "active-profile";
@@ -115,6 +118,10 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
         theme: string,
         local: SupportedLocals
     ): Promise<ProfileModel> {
+        if (!AppEnv.isTesting) {
+            throw new UnsupportedPlatformError("UserServiceImpl.createProfile");
+        }
+
         const row: ProfileDbModel = await this.post<ProfileDbModel, ProfileCreateModel>(["api", "profiles"], {
             name,
             background_color: backgroundColor,

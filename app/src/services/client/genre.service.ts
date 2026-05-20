@@ -12,6 +12,9 @@ import {SeriesModel} from "@models/series.model";
 import {DefaultProvider} from "@providers/default";
 
 import {HTTPError} from "@utils/http";
+import {UnsupportedPlatformError} from "@utils/error";
+
+import *  as AppEnv from "@AppEnv";
 
 class GenreServiceImpl extends ApiServiceBase implements GenreService {
     private readonly providerService: ProviderService;
@@ -40,6 +43,10 @@ class GenreServiceImpl extends ApiServiceBase implements GenreService {
     }
 
     public async insertGenre(key: string): Promise<GenreModel> {
+        if (!AppEnv.isTesting) {
+            throw new UnsupportedPlatformError("GenreServiceImpl.insertGenre");
+        }
+
         const provider: DefaultProvider = await this.providerService.getProvider();
 
         const genre: GenreDbModel = await this.post<GenreDbModel, GenreCreateModel>(["api", provider.uniqueKey, "genres"], {
@@ -50,6 +57,10 @@ class GenreServiceImpl extends ApiServiceBase implements GenreService {
     }
 
     public async insertGenreToSeries(genre: GenreModel, series: SeriesModel, mainGenre: boolean): Promise<void> {
+        if (!AppEnv.isTesting) {
+            throw new UnsupportedPlatformError("GenreServiceImpl.insertGenreToSeries");
+        }
+
         const provider: DefaultProvider = await this.providerService.getProvider();
 
         await this.post<{}, GenreToSeriesModel>(["api", provider.uniqueKey, "genres", "series"], {

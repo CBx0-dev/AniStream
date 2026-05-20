@@ -19,7 +19,6 @@ public sealed class ProfileController : ApiControllerBase
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<ActionResult<ProfileModel[]>> GetProfiles()
     {
         Models.ProfileModel[] profiles = await _userService.GetProfiles();
@@ -28,7 +27,6 @@ public sealed class ProfileController : ApiControllerBase
     }
 
     [HttpGet("{profileId}")]
-    [Authorize]
     public async Task<ActionResult<ProfileModel>> GetProfile(int profileId)
     {
         Models.ProfileModel? profile = await _userService.GetProfile(profileId);
@@ -41,7 +39,6 @@ public sealed class ProfileController : ApiControllerBase
     }
 
     [HttpGet("{uuid}/uuid")]
-    [Authorize]
     public async Task<ActionResult<ProfileModel>> GetProfile(string uuid)
     {
         Models.ProfileModel? profile = await _userService.GetProfile(uuid);
@@ -53,8 +50,8 @@ public sealed class ProfileController : ApiControllerBase
         return Ok(profile.ToDTO());
     }
 
+#if TESTING_ENABLED
     [HttpPost]
-    [Authorize]
     public async Task<ActionResult<ProfileModel>> CreateProfile([FromBody] ProfileCreateModel data)
     {
         string uuid = Guid.NewGuid().ToString();
@@ -73,4 +70,5 @@ public sealed class ProfileController : ApiControllerBase
 
         return profileModel.ToDTO();
     }
+#endif
 }
