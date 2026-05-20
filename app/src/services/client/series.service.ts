@@ -6,7 +6,7 @@ import {ServiceDeclaration} from "@services/declaration";
 import {SeriesService} from "@contracts/series.contract";
 import {ProviderService} from "@contracts/provider.contract";
 
-import {SeriesDbModel, SeriesModel} from "@/models/series.model";
+import {SeriesCreateModel, SeriesDbModel, SeriesModel} from "@/models/series.model";
 
 import {DefaultProvider} from "@providers/default";
 import {HTTPError} from "@utils/http";
@@ -46,14 +46,29 @@ class SeriesServiceImpl extends ApiServiceBase implements SeriesService {
         }
     }
 
-    public async insertSeries(_guid: string, _title: string, _description: string, _previewImage: string | null): Promise<SeriesModel> {
-        throw new Error("Method not implemented.");
+    public async insertSeries(guid: string, title: string, description: string, previewImage: string | null): Promise<SeriesModel> {
+        const provider: DefaultProvider = await this.providerService.getProvider();
+
+        const series: SeriesDbModel = await this.post<SeriesDbModel, SeriesCreateModel>(["api", provider.uniqueKey, "series"], {
+            guid,
+            title,
+            description,
+            preview_image: previewImage
+        });
+
+        return SeriesModel(
+            series.series_id,
+            series.guid,
+            series.title,
+            series.description,
+            series.preview_image
+        );
     }
 
     public async getSeriesChunk(offset: number, limit: number): Promise<SeriesModel[]> {
         const provider: DefaultProvider = await this.providerService.getProvider();
 
-        const series: SeriesDbModel[] = await this.post<SeriesDbModel[], SeriesFilterModel>(["api", provider.uniqueKey, "series"], {
+        const series: SeriesDbModel[] = await this.post<SeriesDbModel[], SeriesFilterModel>(["api", provider.uniqueKey, "series", "chunk"], {
             offset: offset,
             limit: limit,
             genre_ids: null,
@@ -72,7 +87,7 @@ class SeriesServiceImpl extends ApiServiceBase implements SeriesService {
     public async getFilteredSeriesChunk(offset: number, limit: number, searchText: string, genresIds: number[]): Promise<SeriesModel[]> {
         const provider: DefaultProvider = await this.providerService.getProvider();
 
-        const series: SeriesDbModel[] = await this.post<SeriesDbModel[], SeriesFilterModel>(["api", provider.uniqueKey, "series"], {
+        const series: SeriesDbModel[] = await this.post<SeriesDbModel[], SeriesFilterModel>(["api", provider.uniqueKey, "series", "chunk"], {
             offset: offset,
             limit: limit,
             genre_ids: genresIds,

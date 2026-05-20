@@ -6,9 +6,9 @@ namespace AniStream.API.Serivces;
 public sealed class CredentialsService : ICredentialsService
 {
     private readonly IUserService _userService;
-    private readonly HttpContext _context;
+    private readonly IHttpContextAccessor  _context;
 
-    public CredentialsService(IUserService userService, HttpContext context)
+    public CredentialsService(IUserService userService, IHttpContextAccessor  context)
     {
         _userService = userService;
         _context = context;
@@ -28,7 +28,7 @@ public sealed class CredentialsService : ICredentialsService
 
     public Task<string> GetCurrentUuid()
     {
-        string? guid = _context.User.Identity?.Name ?? null;
+        string? guid = _context.HttpContext?.User.Identity?.Name ?? null;
         if (guid is null)
         {
             return Task.FromException<string>(new Exception("Trying to access user in a non-authorized context"));

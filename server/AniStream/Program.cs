@@ -92,6 +92,7 @@ public static class Program
                 return Task.CompletedTask;
             });
         });
+        builder.Services.AddHttpContextAccessor();
         builder.Services.AddEndpointsApiExplorer();
         SetupDependencyInjection(builder);
 #if TESTING_ENABLED

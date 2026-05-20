@@ -1,9 +1,16 @@
 namespace AniStream.API.DTO;
 
-public class SeasonModel
+public sealed class SeasonModel
 {
     public required int SeasonId { get; set; }
 
+    public required int SeriesId { get; set; }
+
+    public required int SeasonNumber { get; set; }
+}
+
+public sealed class SeasonCreateModel
+{
     public required int SeriesId { get; set; }
 
     public required int SeasonNumber { get; set; }

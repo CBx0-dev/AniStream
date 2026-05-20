@@ -8,7 +8,7 @@ export interface GenreService {
 
     insertGenre(key: string): Promise<GenreModel>;
 
-    insertGenreToSeries(genre: GenreModel, series: SeriesModel, main_genre: boolean): Promise<void>;
+    insertGenreToSeries(genre: GenreModel, series: SeriesModel, mainGenre: boolean): Promise<void>;
 
     getGenres(): Promise<GenreModel[]>;
 

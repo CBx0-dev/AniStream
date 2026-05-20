@@ -5,6 +5,14 @@ namespace AniStream.API.Utils;
 
 public abstract class ApiControllerBase : ControllerBase
 {
+    public ObjectResult Ok(string message)
+    {
+        return Ok(new
+        {
+            message
+        });
+    }
+
     protected ObjectResult Unauthorized(string message)
     {
         return Problem(

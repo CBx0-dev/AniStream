@@ -12,43 +12,53 @@ namespace AniStream.API.Controllers;
 public sealed class ListController : ApiControllerBase
 {
     private readonly IListService _listService;
+    private readonly ICredentialsService _credentialsService;
 
-    public ListController(IListService listService)
+    public ListController(IListService listService, ICredentialsService credentialsService)
     {
         _listService = listService;
+        _credentialsService = credentialsService;
     }
 
     [HttpGet]
     public async Task<ListModel[]> GetLists()
     {
+        string tenantId = await _credentialsService.GetCurrentUuid();
+
         Models.ListModel[] lists = await _listService.GetLists();
 
-        return lists.Select(list => list.ToDTO()).ToArray();
+        return lists.Select(list => list.ToDTO(tenantId)).ToArray();
     }
 
     [HttpPost]
     public async Task<ListModel> CreateList([FromBody] ListCreateModel data)
     {
+        string tenantId = await _credentialsService.GetCurrentUuid();
+
         Models.ListModel list = await _listService.CreateList(data.Name);
 
-        return list.ToDTO();
+        return list.ToDTO(tenantId);
     }
 
     [HttpGet("{listId}")]
     public async Task<ActionResult<ListModel>> GetList(int listId)
     {
+        string tenantId = await _credentialsService.GetCurrentUuid();
+
         Models.ListModel? list = await _listService.GetList(listId);
         if (list is null)
         {
             return NotFound($"List with ID '{listId}' not found");
         }
 
-        return Ok(list.ToDTO());
+        return Ok(list.ToDTO(tenantId));
     }
 
     [HttpPut("{listId}")]
     public async Task<ActionResult<ListModel>> UpdateList(int listId, [FromBody] ListUpdateModel data)
     {
+        string tenantId = await _credentialsService.GetCurrentUuid();
+
         Models.ListModel? list = await _listService.GetList(listId);
         if (list is null)
         {
@@ -57,7 +67,7 @@ public sealed class ListController : ApiControllerBase
 
         await _listService.UpdateList(list, data.Name);
 
-        return Ok(list.ToDTO());
+        return Ok(list.ToDTO(tenantId));
     }
 
     [HttpDelete("{listId}")]
@@ -70,15 +80,16 @@ public sealed class ListController : ApiControllerBase
         }
 
         await _listService.DeleteList(list);
-        return Ok();
+        return Ok("List deleted");
     }
 
     [HttpGet("series/{seriesId}")]
     public async Task<ListModel[]> GetListsOfSeries(int seriesId)
     {
+        string tenantId = await _credentialsService.GetCurrentUuid();
         Models.ListModel[] lists = await _listService.GetListsOfSeries(seriesId);
 
-        return lists.Select(list => list.ToDTO()).ToArray();
+        return lists.Select(list => list.ToDTO(tenantId)).ToArray();
     }
 
     [HttpGet("{listId}/series")]
@@ -105,7 +116,7 @@ public sealed class ListController : ApiControllerBase
         }
 
         await _listService.AddSeriesToList(list, seriesId);
-        return Ok();
+        return Ok("Series added to list");
     }
 
     [HttpDelete("{listId}/series/{seriesId}")]
@@ -118,7 +129,7 @@ public sealed class ListController : ApiControllerBase
         }
 
         await _listService.RemoveSeriesFromList(list, seriesId);
-        return Ok();
+        return Ok("Series removed from list");
     }
 
     [HttpGet("{listId}/preview")]

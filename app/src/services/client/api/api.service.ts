@@ -17,7 +17,22 @@ export class ApiServiceImpl implements ApiService {
         return await http.get(url).json<Response>();
     }
 
-    public async post<Response extends object, Body extends object | string>(def: PathParameter, body: Body): Promise<Response> {
+    public async post<Response extends object, Body extends object | string | null>(def: PathParameter, body: Body): Promise<Response> {
+        let data: string | undefined;
+
+        if (body == null) {
+            data = undefined;
+        } else if (typeof body == "object") {
+            data = JSON.stringify(body);
+        } else {
+            data = body;
+        }
+
+        const url: string = this.buildURL(def);
+        return await http.post(url, data).json<Response>();
+    }
+
+    public async put<Response extends object, Body extends object | string>(def: PathParameter, body: Body): Promise<Response> {
         let data: string;
 
         if (typeof body == "object") {
@@ -27,7 +42,12 @@ export class ApiServiceImpl implements ApiService {
         }
 
         const url: string = this.buildURL(def);
-        return await http.post(url, data).json<Response>();
+        return await http.put(url, data).json<Response>();
+    }
+
+    public async delete<Response extends object>(def: PathParameter): Promise<Response> {
+        const url: string = this.buildURL(def);
+        return await http.delete$(url).json<Response>();
     }
 
     protected buildURL(def: PathParameter): string {

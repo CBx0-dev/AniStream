@@ -18,19 +18,17 @@ public class SeriesController : ApiControllerBase
         _seriesService = seriesService;
     }
 
-    [HttpGet]
-    public async Task<ActionResult<SeriesModel[]>> GetSeriesByIds([FromQuery] int[] seriesIds)
-    {
-        Models.SeriesModel[] series = await _seriesService.GetSeriesByIds(seriesIds);
-
-        return series.Select(series => series.ToDTO()).ToArray();
-    }
-
     [HttpPost]
-    public async Task<SeriesModel[]> GetSeriesChunk([FromBody] SeriesFilterModel options)
+    public async Task<SeriesModel> CreateSeries([FromBody] SeriesCreateModel data)
     {
-        Models.SeriesModel[] series = await _seriesService.GetSeriesChunk(options.Offset, options.Limit, options.SearchText, options.GenreIds);
-        return series.Select(series => series.ToDTO()).ToArray();
+        Models.SeriesModel series = await _seriesService.CreateSeries(
+            data.Guid,
+            data.Title,
+            data.Description,
+            data.PreviewImage
+        );
+
+        return series.ToDTO();
     }
 
     [HttpGet("{seriesId}")]
@@ -43,6 +41,21 @@ public class SeriesController : ApiControllerBase
         }
 
         return series.ToDTO();
+    }
+
+    [HttpPost("chunk")]
+    public async Task<SeriesModel[]> GetSeriesChunk([FromBody] SeriesFilterModel options)
+    {
+        Models.SeriesModel[] series = await _seriesService.GetSeriesChunk(options.Offset, options.Limit, options.SearchText, options.GenreIds);
+        return series.Select(series => series.ToDTO()).ToArray();
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<SeriesModel[]>> GetSeriesByIds([FromQuery] int[] seriesIds)
+    {
+        Models.SeriesModel[] series = await _seriesService.GetSeriesByIds(seriesIds);
+
+        return series.Select(series => series.ToDTO()).ToArray();
     }
 
     [HttpGet("guid/{guid}")]

@@ -16,7 +16,6 @@ public static class TestingExtensions
         AutoLoader.Options options
     )
     {
-        builder.Services.AddHttpContextAccessor();
         builder.Services.AddSingleton<TestingSessionStore>();
 
         builder.Services.Replace(ServiceDescriptor.Scoped<DbContextFactory<MetadataDbContext>>(sp =>

@@ -8,6 +8,10 @@ export interface ListModel extends ListDbModel {
     clone(): ListModel;
 }
 
+export interface ListCreateModel {
+    name: string;
+}
+
 export function ListModel(
     name: string,
     tenant_id: string

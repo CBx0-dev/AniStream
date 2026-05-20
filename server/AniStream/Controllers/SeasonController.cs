@@ -18,6 +18,14 @@ public class SeasonController : ApiControllerBase
         _seasonService = seasonService;
     }
 
+    [HttpPost]
+    public async Task<ActionResult<SeasonModel>> CreateSeason([FromBody] SeasonCreateModel data)
+    {
+        Models.SeasonModel season = await _seasonService.CreateSeason(data.SeriesId, data.SeasonNumber);
+
+        return Ok(season.ToDTO());
+    }
+
     [HttpGet("{seasonId}")]
     public async Task<ActionResult<SeasonModel>> GetSeason(int seasonId)
     {

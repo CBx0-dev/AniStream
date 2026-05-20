@@ -13,6 +13,28 @@ public sealed class SeriesModel
     public required string? PreviewImage { get; set; }
 }
 
+public sealed class SeriesFilterModel
+{
+    public required int Offset { get; set; }
+
+    public required int Limit { get; set; }
+
+    public required string? SearchText { get; set; }
+
+    public required int[]? GenreIds { get; set; }
+}
+
+public sealed class SeriesCreateModel
+{
+    public required string Guid { get; set; }
+
+    public required string Title { get; set; }
+
+    public required string Description { get; set; }
+
+    public required string? PreviewImage { get; set; }
+}
+
 internal static class SeriesModelHelper
 {
     public static SeriesModel ToDTO(this Models.SeriesModel model)

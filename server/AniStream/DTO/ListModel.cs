@@ -19,7 +19,7 @@ public sealed class ListUpdateModel
 
 internal static class ListModelHelper
 {
-    public static ListModel ToDTO(this Models.ListModel model)
+    public static ListModel ToDTO(this Models.ListModel model, string tenantId)
     {
         return new ListModel
         {

@@ -12,6 +12,22 @@ export interface GenreModel extends GenreDbModel {
     clone(): GenreModel;
 }
 
+/**
+ * Used for API only
+ */
+export interface GenreCreateModel {
+    key: string;
+}
+
+/**
+ * Used for API only
+ */
+export interface GenreToSeriesModel {
+    genre_id: number;
+    series_id: number;
+    main_genre: boolean;
+}
+
 export function GenreModel(key: string): GenreModel;
 export function GenreModel(genre_id: number, key: string): GenreModel;
 

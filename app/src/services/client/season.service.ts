@@ -6,7 +6,7 @@ import {ServiceDeclaration} from "@services/declaration";
 import {SeasonService} from "@contracts/season.contract";
 import {ProviderService} from "@contracts/provider.contract";
 
-import {SeasonDbModel, SeasonModel} from "@models/season.model";
+import {SeasonCreateModel, SeasonDbModel, SeasonModel} from "@models/season.model";
 
 import {DefaultProvider} from "@providers/default";
 
@@ -57,8 +57,19 @@ class SeasonServiceImpl extends ApiServiceBase implements SeasonService {
         ));
     }
 
-    public insertSeason(_seriesId: number, _seasonNumber: number): Promise<SeasonModel> {
-        throw new Error("Method not implemented.");
+    public async insertSeason(seriesId: number, seasonNumber: number): Promise<SeasonModel> {
+        const provider: DefaultProvider = await this.providerService.getProvider();
+
+        const season: SeasonDbModel = await this.post<SeasonDbModel, SeasonCreateModel>(["api", provider.uniqueKey, "seasons"], {
+            series_id: seriesId,
+            season_number: seasonNumber
+        });
+
+        return SeasonModel(
+            season.season_id,
+            season.series_id,
+            season.season_number
+        );
     }
 }
 

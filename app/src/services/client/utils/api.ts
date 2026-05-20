@@ -15,8 +15,15 @@ export class ApiServiceBase {
         return this.apiService.get<Response>(def);
     }
 
-    protected async post<Response extends object, Body extends object | string>(def: PathParameter, body: Body): Promise<Response> {
+    protected async post<Response extends object, Body extends object | string | null>(def: PathParameter, body: Body): Promise<Response> {
         return this.apiService.post<Response, Body>(def, body);
     }
 
+    protected async put<Response extends object, Body extends object | string>(def: PathParameter, body: Body): Promise<Response> {
+        return this.apiService.put<Response, Body>(def, body);
+    }
+
+    protected async delete<Response extends object>(def: PathParameter): Promise<Response> {
+        return this.apiService.delete<Response>(def);
+    }
 }

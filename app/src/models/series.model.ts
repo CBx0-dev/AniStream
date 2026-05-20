@@ -18,6 +18,16 @@ export interface SeriesModel extends SeriesDbModel {
     clone(): SeriesModel;
 }
 
+/**
+ * Used for API only
+ */
+export interface SeriesCreateModel {
+    guid: string;
+    title: string;
+    description: string;
+    preview_image: string | null;
+}
+
 export function SeriesModel(guid: string, title: string, description: string, preview_image: string | null): SeriesModel;
 export function SeriesModel(series_id: number, guid: string, title: string, description: string, preview_image: string | null): SeriesModel;
 export function SeriesModel(...args: unknown[]): SeriesModel {

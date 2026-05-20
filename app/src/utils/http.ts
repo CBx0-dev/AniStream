@@ -103,6 +103,21 @@ export function post(url: string, body: RequestInit["body"], headers: [string, s
     }));
 }
 
+export function put(url: string,  body: RequestInit["body"], headers: [string,  string][] = []): HTTPResponse {
+    return new HTTPResponse(fetch(url, {
+        method: "PUT",
+        body: body,
+        headers: headers
+    }));
+}
+
+export function delete$(url: string, headers: [string,  string][] = []): HTTPResponse {
+    return new HTTPResponse(fetch(url, {
+        method: "DELETE",
+        headers: headers
+    }));
+}
+
 export async function head(url: string, headers: [string, string][], followRedirect: boolean = true): Promise<Response> {
     const response: Response = await fetch(url, {
         method: "HEAD",

@@ -13,6 +13,14 @@ export interface SeasonModel extends SeasonDbModel {
     clone(): SeasonModel;
 }
 
+/**
+ * Used for API only
+ */
+export interface SeasonCreateModel {
+    series_id: number;
+    season_number: number;
+}
+
 export function SeasonModel(series_id: number, season_number: number): SeasonModel;
 export function SeasonModel(season_id: number, series_id: number, season_number: number): SeasonModel;
 
