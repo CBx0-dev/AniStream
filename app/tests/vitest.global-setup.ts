@@ -13,6 +13,10 @@ function resolveDotnet(): string {
 }
 
 export async function setup(): Promise<void> {
+    if (process.env["APPLICATION_TARGET"] != "client") {
+        return;
+    }
+
     if (await waitForPort(5000, 2, 1000)) {
         return;
     }
