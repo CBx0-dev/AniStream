@@ -11,7 +11,6 @@ using Scalar.AspNetCore;
 #if TESTING_ENABLED
 using AniStream.Integration;
 using Microsoft.AspNetCore.Authentication;
-
 #else
 using Microsoft.AspNetCore.Authentication.Cookies;
 using AniStream.API.Controllers;
@@ -28,8 +27,8 @@ public static class Program
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddControllers()
-            .AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCasePolicy(); });
-        builder.Services.Configure<MvcOptions>(options => { options.ModelMetadataDetailsProviders.Add(new EmptyStringEnabledDisplayMetadataProvider()); });
+            .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCasePolicy());
+        builder.Services.Configure<MvcOptions>(options => options.ModelMetadataDetailsProviders.Add(new EmptyStringEnabledDisplayMetadataProvider()));
 #if TESTING_ENABLED
         builder.Services.AddAuthentication("Test")
             .AddScheme<AuthenticationSchemeOptions, TestingAuthHandler>("Test", _ => { });
@@ -82,7 +81,7 @@ public static class Program
 
                 Dictionary<string, OpenApiSchema> updated = new Dictionary<string, OpenApiSchema>();
 
-                foreach (var (key, propSchema) in schema.Properties)
+                foreach ((string? key, OpenApiSchema? propSchema) in schema.Properties)
                 {
                     string snake = SnakeCaseConvention.ToSnakeCase(key);
                     updated[snake] = propSchema;
@@ -117,8 +116,8 @@ public static class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapOpenApi();
         app.MapControllers();
+        app.MapOpenApi();
         app.MapScalarApiReference(options => { options.Title = "AniStream API"; });
 
         app.Run();
