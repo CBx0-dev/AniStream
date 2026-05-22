@@ -24,6 +24,11 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'app/package-lock.json'
 
+      - name: Setup ASP.NET Core
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '9.0.x'
+
       - name: Install dependencies
         run: |
           cd app
