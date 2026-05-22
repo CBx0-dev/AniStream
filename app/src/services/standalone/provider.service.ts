@@ -1,7 +1,6 @@
 import {ReadableGlobalContext} from "vue-mvvm";
 
 import {ProviderService} from "@contracts/provider.contract";
-import {MetadataDbService} from "@contracts/standalone/metadata.contract";
 
 import {ServiceDeclaration} from "@services/declaration";
 import {DbSession} from "@services/utils/db";
@@ -13,11 +12,14 @@ import {StoProvider} from "@providers/sto";
 import {ProfileModel} from "@models/profile.model";
 
 import * as AppEnv from "@AppEnv";
+import {DbService} from "@contracts/standalone/db.contract";
 
 class ProviderServiceImpl implements ProviderService {
     private static readonly SESSION_KEY: string = "active-provider";
 
-    private provider: DefaultProvider | null = null;
+    private readonly dbService: DbService;
+
+    private provider: DefaultProvider | null;
 
     public readonly ANIWORLD: AniWorldProvider;
     public readonly STO: StoProvider;
@@ -27,10 +29,12 @@ class ProviderServiceImpl implements ProviderService {
     }
 
     public constructor(ctx: ReadableGlobalContext) {
-        let dbService: MetadataDbService = ctx.getService(MetadataDbService);
+        this.dbService = ctx.getService(DbService);
 
-        this.ANIWORLD = new AniWorldProvider(dbService);
-        this.STO = new StoProvider(dbService);
+        this.provider = null;
+
+        this.ANIWORLD = new AniWorldProvider();
+        this.STO = new StoProvider();
 
         this.provider = null;
     }
@@ -47,14 +51,9 @@ class ProviderServiceImpl implements ProviderService {
         throw "No provider set and no provider was registered in the cache";
     }
 
-    public async getDatabase(): Promise<DbSession> {
-        const provider: DefaultProvider = await this.getProvider();
-        return await provider.getDatabase();
-    }
-
     public async setProvider(provider: DefaultProvider): Promise<void> {
         if (this.provider) {
-            await this.provider.closeDatabase();
+            await this.dbService.closeDatabase(this.provider);
         }
         this.provider = provider;
 
@@ -65,13 +64,13 @@ class ProviderServiceImpl implements ProviderService {
 
     public async deleteProfile(profile: ProfileModel): Promise<void> {
         for (const provider of this.ALL_PROVIDERS) {
-            const db: DbSession = await provider.getDatabase();
+            const db: DbSession = await this.dbService.getDatabase(provider);
             // language=SQLite
             await db.execute("DELETE FROM watchlist WHERE tenant_id = ?", profile.uuid);
             // language=SQLite
             await db.execute("DELETE FROM watchtime WHERE tenant_id = ?", profile.uuid);
 
-            await provider.closeDatabase();
+            await this.dbService.closeDatabase(provider);
         }
     }
 

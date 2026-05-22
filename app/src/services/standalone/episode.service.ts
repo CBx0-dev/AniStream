@@ -15,7 +15,7 @@ class EpisodeServiceImpl extends DbServiceBase implements EpisodeService {
     }
 
     public async getEpisode(episodeId: number): Promise<EpisodeModel | null> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase();
 
         const rows: EpisodeDbModel[] = await session.query<EpisodeDbModel[]>("SELECT * FROM episode WHERE episode_id = ?;", episodeId);
 
@@ -34,7 +34,7 @@ class EpisodeServiceImpl extends DbServiceBase implements EpisodeService {
     }
 
     public async getEpisodes(seasonId: number): Promise<EpisodeModel[]> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const rows: EpisodeDbModel[] = await session.query<EpisodeDbModel[]>("SELECT * FROM episode WHERE season_id = ?;", seasonId);
 
@@ -54,7 +54,7 @@ class EpisodeServiceImpl extends DbServiceBase implements EpisodeService {
         english_title: string,
         description: string
     ): Promise<EpisodeModel> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const result: QueryResult = await session.execute(
             "INSERT INTO episode (season_id, episode_number, german_title, english_title, description) VALUES (?, ?, ?, ?, ?);",
@@ -74,7 +74,7 @@ class EpisodeServiceImpl extends DbServiceBase implements EpisodeService {
         english_title: string,
         description: string
     ): Promise<void> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         await session.execute(
             "UPDATE episode SET german_title = ?, english_title = ?, description = ? WHERE episode_id = ?;",

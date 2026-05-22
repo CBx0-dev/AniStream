@@ -1,6 +1,3 @@
-import {DbSession} from "@services/utils/db";
-
-import {MetadataDbService} from "@contracts/standalone/metadata.contract";
 import {Provider} from "@contracts/fetch.contract";
 
 import {SeriesFetchModel, SeriesModel} from "@models/series.model";
@@ -38,33 +35,13 @@ export abstract class DefaultProvider {
 
     public abstract get catalogURL(): string;
 
-    private readonly service: MetadataDbService;
-    private session: DbSession | null;
-
-    protected constructor(service: MetadataDbService) {
-        this.service = service;
-        this.session = null;
+    protected constructor() {
     }
 
-    public async getDatabase(): Promise<DbSession> {
-        if (this.session) {
-            return this.session;
-        }
-
+    public async getDatabaseFile(): Promise<string> {
         const dataDir: string = await this.getStorageLocation();
-        const dbFile: string = path.join(dataDir, "metadata.db");
 
-        this.session = await this.service.openDB(dbFile, this.uniqueKey);
-        return this.session!;
-    }
-
-    public async closeDatabase(): Promise<void> {
-        if (!this.session) {
-            return;
-        }
-
-        await this.session.close();
-        this.session = null;
+        return path.join(dataDir, "metadata.db");
     }
 
     public abstract streamURL(guid: string): string;

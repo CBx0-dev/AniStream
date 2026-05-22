@@ -16,7 +16,7 @@ class SeasonServiceImpl extends DbServiceBase implements SeasonService {
     }
 
     public async requiresSync(seriesId: number): Promise<boolean> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const [{count}] = await session.query<[{
             count: number
@@ -26,7 +26,7 @@ class SeasonServiceImpl extends DbServiceBase implements SeasonService {
     }
 
     public async getSeason(seasonId: number): Promise<SeasonModel | null> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const rows: SeasonDbModel[] = await session.query<SeasonDbModel[]>("SELECT * FROM season WHERE season_id = ?;", seasonId);
         if (rows.length == 0) {
@@ -37,7 +37,7 @@ class SeasonServiceImpl extends DbServiceBase implements SeasonService {
     }
 
     public async getSeasons(seriesId: number): Promise<SeasonModel[]> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const seasons: SeasonDbModel[] = await session.query<SeasonDbModel[]>("SELECT * FROM season WHERE series_id = ? ORDER BY season_number;", seriesId);
 
@@ -45,7 +45,7 @@ class SeasonServiceImpl extends DbServiceBase implements SeasonService {
     }
 
     public async insertSeason(seriesId: number, seasonNumber: number): Promise<SeasonModel> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const result: QueryResult = await session.execute("INSERT INTO season (series_id, season_number) VALUES (?, ?);", seriesId, seasonNumber);
 

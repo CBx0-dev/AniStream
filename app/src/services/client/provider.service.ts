@@ -1,15 +1,16 @@
-import {ReadableGlobalContext} from "vue-mvvm";
-
 import {ProfileModel} from "@models/profile.model";
 
 import {DefaultProvider} from "@providers/default";
 import {AniWorldProvider} from "@providers/aniworld";
 import {StoProvider} from "@providers/sto";
 
+import {ServiceDeclaration} from "@services/declaration";
+
 import {ProviderService} from "@contracts/provider.contract";
 
+import {UnsupportedPlatformError} from "@utils/error";
+
 import * as AppEnv from "@AppEnv";
-import {ServiceDeclaration} from "@services/declaration";
 
 export class ProviderServiceImpl implements ProviderService {
     private static readonly SESSION_KEY: string = "active-provider";
@@ -23,7 +24,7 @@ export class ProviderServiceImpl implements ProviderService {
         return [this.ANIWORLD, this.STO];
     }
 
-    public constructor(ctx: ReadableGlobalContext) {
+    public constructor() {
         this.ANIWORLD = new AniWorldProvider();
         this.STO = new StoProvider();
 
@@ -42,10 +43,6 @@ export class ProviderServiceImpl implements ProviderService {
         throw "No provider set and no provider was registered in the cache";
     }
 
-    public async getDatabase(): Promise<DbSession> {
-        throw new Error("Method not implemented.");
-    }
-
     public async setProvider(provider: DefaultProvider): Promise<void> {
         this.provider = provider;
 
@@ -54,8 +51,8 @@ export class ProviderServiceImpl implements ProviderService {
         }
     }
 
-    public async deleteProfile(profile: ProfileModel): Promise<void> {
-
+    public async deleteProfile(_profile: ProfileModel): Promise<void> {
+        throw new UnsupportedPlatformError("ProviderServiceImpl.deleteProfile");
     }
 
     private getProviderFromUniqueKey(key: string): DefaultProvider | null {

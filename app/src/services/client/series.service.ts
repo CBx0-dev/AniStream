@@ -6,12 +6,14 @@ import {ServiceDeclaration} from "@services/declaration";
 import {SeriesService} from "@contracts/series.contract";
 import {ProviderService} from "@contracts/provider.contract";
 
-import {SeriesCreateModel, SeriesDbModel, SeriesModel} from "@/models/series.model";
+import {SeriesCreateModel, SeriesDbModel, SeriesModel} from "@models/series.model";
 
 import {DefaultProvider} from "@providers/default";
+
 import {HTTPError} from "@utils/http";
-import * as AppEnv from "@AppEnv";
 import {UnsupportedPlatformError} from "@utils/error";
+
+import * as AppEnv from "@AppEnv";
 
 interface SeriesFilterModel {
     limit: number;

@@ -18,6 +18,26 @@ export interface EpisodeModel extends EpisodeDbModel {
     clone(): EpisodeModel;
 }
 
+/**
+ * Used for API only
+ */
+export interface EpisodeCreateModel {
+    season_id: number;
+    episode_number: number;
+    german_title: string;
+    english_title: string;
+    description: string;
+}
+
+/**
+ * Used for API only
+ */
+export interface EpisodeUpdateModel {
+    german_title: string;
+    english_title: string;
+    description: string;
+}
+
 export function EpisodeModel(
     episode_id: number,
     season_id: number,

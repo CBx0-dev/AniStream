@@ -1,7 +1,5 @@
 import * as fs from "@tauri-apps/plugin-fs";
 
-import {MetadataDbService} from "@contracts/standalone/metadata.contract";
-
 import {StoFetcher} from "@providers/sto/fetcher";
 import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";
 
@@ -24,8 +22,8 @@ export class StoProvider extends DefaultProvider {
         return `${this.baseURL}/serien-alphabet`;
     }
 
-    public constructor(service: MetadataDbService) {
-        super(service);
+    public constructor() {
+        super();
 
         this.fetcher = null;
     }

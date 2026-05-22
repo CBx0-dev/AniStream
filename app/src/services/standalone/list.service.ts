@@ -23,7 +23,7 @@ class ListServiceImpl extends DbServiceBase implements ListService {
 
     public async getLists(): Promise<ListModel[]> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         const rows: ListDbModel[] = await session.query(
@@ -40,7 +40,7 @@ class ListServiceImpl extends DbServiceBase implements ListService {
 
     public async getListsOfSeries(seriesId: number): Promise<ListModel[]> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         const rows: ListDbModel[] = await session.query(`
@@ -58,7 +58,7 @@ class ListServiceImpl extends DbServiceBase implements ListService {
     }
 
     public async getList(listId: number): Promise<ListModel | null> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         const rows: ListDbModel[] = await session.query(
@@ -79,7 +79,7 @@ class ListServiceImpl extends DbServiceBase implements ListService {
 
     public async createList(name: string): Promise<ListModel> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         const result: QueryResult = await session.execute(
@@ -96,7 +96,7 @@ class ListServiceImpl extends DbServiceBase implements ListService {
     }
 
     public async updateList(listId: number, name: string): Promise<void> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         await session.execute(
@@ -107,7 +107,7 @@ class ListServiceImpl extends DbServiceBase implements ListService {
     }
 
     public async deleteList(listId: number): Promise<void> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         await session.execute(
@@ -117,7 +117,7 @@ class ListServiceImpl extends DbServiceBase implements ListService {
     }
 
     public async getSeries(listId: number): Promise<SeriesModel[]> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         const rows: SeriesDbModel[] = await session.query(`
@@ -137,21 +137,21 @@ class ListServiceImpl extends DbServiceBase implements ListService {
     }
 
     public async addSeriesToList(seriesId: number, listId: number): Promise<void> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         await session.execute("INSERT INTO list_to_series (list_id, series_id) VALUES (?, ?)", listId, seriesId);
     }
 
     public async removeSeriesFromList(seriesId:number, listId:number): Promise<void> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         await session.execute("DELETE FROM list_to_series WHERE list_id = ? AND series_id = ?", listId, seriesId);
     }
 
     public async getPreviewHashes(listId: number): Promise<string[]> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         const rows: Array<{ preview_image: string }> = await session.query(`

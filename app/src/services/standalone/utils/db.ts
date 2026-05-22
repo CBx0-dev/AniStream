@@ -2,13 +2,24 @@ import Database, {QueryResult} from "@tauri-apps/plugin-sql";
 
 import {ReadableGlobalContext} from "vue-mvvm";
 
+import {DbService} from "@contracts/standalone/db.contract";
 import {ProviderService} from "@contracts/provider.contract";
 
+import {DefaultProvider} from "@providers/default";
+
 export class DbServiceBase {
-    protected readonly provider: ProviderService;
+    private readonly dbService: DbService;
+    private readonly providerService: ProviderService;
 
     protected constructor(ctx: ReadableGlobalContext) {
-        this.provider = ctx.getService(ProviderService);
+        this.dbService = ctx.getService(DbService);
+        this.providerService = ctx.getService(ProviderService);
+    }
+
+    protected async getDatabase(): Promise<DbSession> {
+        const provider: DefaultProvider = await this.providerService.getProvider();
+
+        return await this.dbService.getDatabase(provider);
     }
 }
 

@@ -21,7 +21,7 @@ class SeriesServiceImpl extends DbServiceBase implements SeriesService {
     }
 
     public async requiresSync(): Promise<boolean> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const [{count}] = await session.query<[{
             count: number
@@ -30,13 +30,13 @@ class SeriesServiceImpl extends DbServiceBase implements SeriesService {
     }
 
     public async getStreams(): Promise<SeriesModel[]> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         return session.query<SeriesModel[]>("");
     }
 
     public async existByGUID(guid: string): Promise<boolean> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const [{count}] = await session.query<[{
             count: number
@@ -46,7 +46,7 @@ class SeriesServiceImpl extends DbServiceBase implements SeriesService {
     }
 
     public async insertSeries(guid: string, title: string, description: string, preview_image: string | null): Promise<SeriesModel> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         let result: QueryResult = await session.execute("INSERT INTO series (guid, title, description, preview_image) VALUES (?, ?, ?, ?)", guid, title, description, preview_image);
 
@@ -54,7 +54,7 @@ class SeriesServiceImpl extends DbServiceBase implements SeriesService {
     }
 
     public async getSeriesChunk(offset: number, limit: number): Promise<SeriesModel[]> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         let rows: SeriesDbModel[] = await session.query<SeriesDbModel[]>("SELECT * FROM series ORDER BY title LIMIT ? OFFSET ? ;", limit, offset);
 
@@ -82,14 +82,14 @@ class SeriesServiceImpl extends DbServiceBase implements SeriesService {
             filters.push(`(${genreFilter.join(" OR ")})`);
         }
 
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const rows: SeriesDbModel[] = await session.query<SeriesDbModel[]>(`SELECT DISTINCT s.* FROM series AS s INNER JOIN genre_to_series AS gs ON s.series_id = gs.series_id WHERE true AND ${filters.join(" AND ")} ORDER BY s.title LIMIT ? OFFSET ?`, ...params, limit, offset);
         return rows.map(row => SeriesModel(row.series_id, row.guid, row.title, row.description, row.preview_image));
     }
 
     public async getSeries(seriesId: number): Promise<SeriesModel | null> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const rows: SeriesDbModel[] = await session.query<SeriesDbModel[]>(`SELECT * FROM series WHERE series_id = ? LIMIT 1`, seriesId);
 
@@ -102,7 +102,7 @@ class SeriesServiceImpl extends DbServiceBase implements SeriesService {
 
     public async getStartedSeries(): Promise<SeriesModel[]> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         const rows: SeriesDbModel[] = await session.query<SeriesDbModel[]>(`
@@ -129,7 +129,7 @@ class SeriesServiceImpl extends DbServiceBase implements SeriesService {
             return [];
         }
 
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const rows: SeriesDbModel[] = await session.query<SeriesDbModel[]>("SELECT * FROM series WHERE series_id = ?" + (" OR series_id = ?".repeat(seriesIds.length - 1)), ...seriesIds);
         return rows.map(row => SeriesModel(row.series_id, row.guid, row.title, row.description, row.preview_image));

@@ -22,7 +22,7 @@ class WatchtimeServiceImpl extends DbServiceBase implements WatchtimeService {
 
     public async getWatchtimeOfEpisode(episodeId: number): Promise<WatchtimeModel | null> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         const rows: WatchtimeDbModel[] = await session.query<WatchtimeDbModel[]>("SELECT * FROM watchtime WHERE episode_id = ? AND tenant_id = ?", episodeId, profile.uuid);
@@ -41,7 +41,7 @@ class WatchtimeServiceImpl extends DbServiceBase implements WatchtimeService {
 
     public async getWatchtimesOfSeries(seriesId: number): Promise<WatchtimeModel[]> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         const rows: WatchtimeDbModel[] = await session.query<WatchtimeDbModel[]>(
@@ -61,7 +61,7 @@ class WatchtimeServiceImpl extends DbServiceBase implements WatchtimeService {
 
     public async getTotalWatchProgression(seriesId: number): Promise<number> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         const [{total_episodes, finished_episodes}] = await session.query<[{
@@ -89,7 +89,7 @@ class WatchtimeServiceImpl extends DbServiceBase implements WatchtimeService {
 
     public async createWatchtimeOfEpisode(episodeId: number, percentageWatched: number, stoppedTime: number): Promise<WatchtimeModel> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         const result: QueryResult = await session.execute(
@@ -110,7 +110,7 @@ class WatchtimeServiceImpl extends DbServiceBase implements WatchtimeService {
     }
 
     public async updateWatchtime(watchtimeId: number, percentageWatched: number, stoppedTime: number): Promise<void> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         await session.execute(
@@ -123,7 +123,7 @@ class WatchtimeServiceImpl extends DbServiceBase implements WatchtimeService {
 
     public async updateWatchtimeWithEpisode(episodeId: number, percentageWatched: number, stoppedTime: number): Promise<void> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         await session.execute(
@@ -137,7 +137,7 @@ class WatchtimeServiceImpl extends DbServiceBase implements WatchtimeService {
 
     public async updateWatchtimesOfSeason(seasonId: number, percentageWatched: number, stoppedTime: number): Promise<void> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         await session.execute(`
@@ -151,7 +151,7 @@ class WatchtimeServiceImpl extends DbServiceBase implements WatchtimeService {
 
     public async updateWatchtimesOfSeries(seriesId: number, percentageWatched: number, stoppedTime: number): Promise<void> {
         const profile: ProfileModel = await this.userService.getActiveProfile();
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         // language=SQLite
         await session.execute(`

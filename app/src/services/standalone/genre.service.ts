@@ -16,7 +16,7 @@ class GenreServiceImpl extends DbServiceBase implements GenreService {
     }
 
     public async getGenreByKey(key: string): Promise<GenreModel | null> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const rows: GenreDbModel[] = await session.query<GenreDbModel[]>("SELECT * FROM genre WHERE key = ? LIMIT 1;", key);
         if (rows.length == 0) {
@@ -27,7 +27,7 @@ class GenreServiceImpl extends DbServiceBase implements GenreService {
     }
 
     public async insertGenre(key: string): Promise<GenreModel> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const result: QueryResult = await session.execute("INSERT INTO genre (key) VALUES (?)", key);
 
@@ -43,20 +43,20 @@ class GenreServiceImpl extends DbServiceBase implements GenreService {
             throw "Genre is not tracked, you have to insert it first";
         }
 
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         await session.execute("INSERT INTO genre_to_series (genre_id, series_id, main_genre) VALUES (?, ?, ?)", genre.genre_id, series.series_id, main_genre);
     }
 
     public async getGenres(): Promise<GenreModel[]> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const rows: GenreDbModel[] = await session.query<GenreDbModel[]>("SELECT * FROM genre ORDER BY key");
         return rows.map(row => GenreModel(row.genre_id, row.key));
     }
 
     public async getMainGenreOfSeries(seriesId: number): Promise<GenreModel | null> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const rows: GenreDbModel[] = await session.query<GenreDbModel[]>("SELECT g.* FROM genre_to_series AS gs LEFT JOIN genre AS g ON gs.genre_id = g.genre_id WHERE gs.series_id = ? AND gs.main_genre = 'true' LIMIT 1;", seriesId);
         if (rows.length == 0) {
@@ -67,7 +67,7 @@ class GenreServiceImpl extends DbServiceBase implements GenreService {
     }
 
     public async getNonMainGenresOfSeries(seriesId: number): Promise<GenreModel[]> {
-        const session: DbSession = await this.provider.getDatabase();
+        const session: DbSession = await this.getDatabase()
 
         const rows: GenreDbModel[] = await session.query<GenreDbModel[]>("SELECT g.* FROM genre_to_series AS gs LEFT JOIN genre AS g ON gs.genre_id = g.genre_id WHERE gs.series_id = ? AND gs.main_genre = 'false';", seriesId);
         return rows.map(row => GenreModel(row.genre_id, row.key));

@@ -1,4 +1,4 @@
-import {Ref} from "vue";
+import {Ref, readonly, ref} from "vue";
 import {ReadableGlobalContext} from "vue-mvvm";
 
 import {ServiceDeclaration} from "@services/declaration";
@@ -7,39 +7,48 @@ import {I18nService, SupportedLocals} from "@contracts/i18n.contract";
 import {SettingsService} from "@contracts/settings.contract";
 import {UserService} from "@contracts/user.contract";
 
+import {UnsupportedPlatformError} from "@utils/error";
+
 import {ProfileModel} from "@models/profile.model";
 
 export class SettingsServiceImpl implements SettingsService {
+    private static readonly HEALTHZ_KEY: string = "healthz";
+
+    private _healthz: Ref<string> = ref("");
+
     private readonly i18nService: I18nService;
     private readonly userService: UserService;
 
     public get ignoreVersion(): Readonly<Ref<string, string>> {
-        throw new Error("Method not implemented.");
+        return readonly(ref("0.0.0"));
     }
 
     public set ignoreVersion(_v: Readonly<Ref<string, string>>) {
-        throw new Error("Method not implemented.");
+        throw new UnsupportedPlatformError("set SettingsServiceImpl.ignoreVersion");
     }
 
     public get updatesActive(): Readonly<Ref<boolean, boolean>> {
-        throw new Error("Method not implemented.");
+        return readonly(ref(false));
     }
 
     public set updatesActive(_v: Readonly<Ref<boolean, boolean>>) {
-        throw new Error("Method not implemented.");
+        throw new UnsupportedPlatformError("set SettingsServiceImpl.updatesActive");
     }
 
     public get healthz(): Readonly<Ref<string, string>> {
-        throw new Error("Method not implemented.");
+        return readonly(this._healthz);
     }
 
-    public set healthz(_v: Readonly<Ref<string, string>>) {
-        throw new Error("Method not implemented.");
+    public set healthz(v: string) {
+        this._healthz.value = v;
+        localStorage.setItem(SettingsServiceImpl.HEALTHZ_KEY, v);
     }
 
     public constructor(ctx: ReadableGlobalContext) {
         this.i18nService = ctx.getService(I18nService);
         this.userService = ctx.getService(UserService);
+
+        this.healthz = this.loadFromStorage(SettingsServiceImpl.HEALTHZ_KEY, "https://www.google.com/generate_204");
     }
 
     public async setTheme(theme: string): Promise<void> {
