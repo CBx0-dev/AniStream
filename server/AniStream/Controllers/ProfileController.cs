@@ -38,6 +38,29 @@ public sealed class ProfileController : ApiControllerBase
         return Ok(profile.ToDTO());
     }
 
+    [HttpPut("{profileId}")]
+    public async Task<ActionResult<ProfileModel>> UpdateProfile(int profileId, [FromBody] ProfileUpdateModel data)
+    {
+        Models.ProfileModel? profile = await _userService.GetProfile(profileId);
+        if (profile is null)
+        {
+            return NotFound($"Profile with ID '{profileId}' not found");
+        }
+
+        await _userService.UpdateProfile(
+            profile,
+            data.Name,
+            data.BackgroundColor,
+            data.Eye,
+            data.Mouth,
+            data.Theme,
+            data.Lang,
+            data.TosAccepted
+        );
+
+        return Ok(profile.ToDTO());
+    }
+
     [HttpGet("{uuid}/uuid")]
     public async Task<ActionResult<ProfileModel>> GetProfile(string uuid)
     {
@@ -46,6 +69,29 @@ public sealed class ProfileController : ApiControllerBase
         {
             return NotFound($"Profile with UUID '{uuid}' not found");
         }
+
+        return Ok(profile.ToDTO());
+    }
+
+    [HttpPut("{uuid}/uuid")]
+    public async Task<ActionResult<ProfileModel>> UpdateProfile(string uuid, [FromBody] ProfileUpdateModel data)
+    {
+        Models.ProfileModel? profile = await _userService.GetProfile(uuid);
+        if (profile is null)
+        {
+            return NotFound($"Profile with UUID '{uuid}' not found");
+        }
+
+        await _userService.UpdateProfile(
+            profile,
+            data.Name,
+            data.BackgroundColor,
+            data.Eye,
+            data.Mouth,
+            data.Theme,
+            data.Lang,
+            data.TosAccepted
+        );
 
         return Ok(profile.ToDTO());
     }

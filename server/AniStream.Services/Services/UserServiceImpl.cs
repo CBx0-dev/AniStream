@@ -72,4 +72,95 @@ public class UserServiceImpl : IUserService
         IQueryable<ProfileModel> query = from profile in db.Profiles where profile.ProfileId == profileId select profile;
         return await query.FirstOrDefaultAsync();
     }
+
+    public async Task<ProfileModel> UpdateProfile(
+        int profileId,
+        string? name = null,
+        string? backgroundColor = null,
+        string? eye = null,
+        string? mouth = null,
+        string? theme = null,
+        string? lang = null,
+        bool? tosAccepted = null,
+        bool? syncCatalog = null
+    )
+    {
+        ProfileModel? profile = await GetProfile(profileId);
+        if (profile is null)
+        {
+            throw new ArgumentException($"Profile with ID '{profileId}' not found", nameof(profileId));
+        }
+
+        return await UpdateProfile(
+            profile,
+            name,
+            backgroundColor,
+            eye,
+            mouth,
+            theme,
+            lang,
+            tosAccepted,
+            syncCatalog
+        );
+    }
+
+    public async Task<ProfileModel> UpdateProfile(
+        ProfileModel profile,
+        string? name = null,
+        string? backgroundColor = null,
+        string? eye = null,
+        string? mouth = null,
+        string? theme = null,
+        string? lang = null,
+        bool? tosAccepted = null,
+        bool? syncCatalog = null
+    )
+    {
+        await using ProfileDbContext db = await _dbFactory.GetContext();
+
+        if (name is not null)
+        {
+            profile.Name = name;
+        }
+
+        if (backgroundColor is not null)
+        {
+            profile.BackgroundColor = backgroundColor;
+        }
+
+        if (eye is not null)
+        {
+            profile.Eye = eye;
+        }
+
+        if (mouth is not null)
+        {
+            profile.Mouth = mouth;
+        }
+
+        if (theme is not null)
+        {
+            profile.Theme = theme;
+        }
+
+        if (lang is not null)
+        {
+            profile.Lang = lang;
+        }
+
+        if (tosAccepted is not null)
+        {
+            profile.TosAccepted = (bool)tosAccepted;
+        }
+
+        if (syncCatalog is not null)
+        {
+            profile.SyncCatalog = (bool)syncCatalog;
+        }
+
+        db.Profiles.Update(profile);
+        await db.SaveChangesAsync();
+
+        return profile;
+    }
 }

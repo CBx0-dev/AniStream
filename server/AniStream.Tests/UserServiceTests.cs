@@ -82,4 +82,30 @@ public sealed class UserServiceTests : TestBase
     {
         await Assert.ThrowsAsync<NotImplementedException>(() => _userService.GetActiveProfile());
     }
+
+    [Fact]
+    public async Task UpdateProfileById()
+    {
+        Guid johnGuid = Guid.NewGuid();
+        ProfileModel john = await _userService.CreateProfile(johnGuid.ToString(), "john", "fff", "eye-1", "mouth-1", "dark", "en", true, false);
+
+        ProfileModel updated = await _userService.UpdateProfile(john.ProfileId, name: "johnny", theme: "light");
+
+        Assert.Equal("johnny", updated.Name);
+        Assert.Equal("light", updated.Theme);
+        Assert.Equal("fff", updated.BackgroundColor); // Should remain unchanged
+    }
+
+    [Fact]
+    public async Task UpdateProfileByModel()
+    {
+        Guid johnGuid = Guid.NewGuid();
+        ProfileModel john = await _userService.CreateProfile(johnGuid.ToString(), "john", "fff", "eye-1", "mouth-1", "dark", "en", true, false);
+
+        ProfileModel updated = await _userService.UpdateProfile(john, name: "johnny", theme: "light");
+
+        Assert.Equal("johnny", updated.Name);
+        Assert.Equal("light", updated.Theme);
+        Assert.Equal("fff", updated.BackgroundColor); // Should remain unchanged
+    }
 }

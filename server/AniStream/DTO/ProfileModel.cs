@@ -38,6 +38,23 @@ public sealed class ProfileCreateModel
     public required string Lang { get; set; }
 }
 
+public sealed class ProfileUpdateModel
+{
+    public required string? Name { get; set; }
+
+    public required string? BackgroundColor { get; set; }
+
+    public required string? Eye { get; set; }
+
+    public required string? Mouth { get; set; }
+
+    public required string? Theme { get; set; }
+
+    public required string? Lang { get; set; }
+
+    public required bool? TosAccepted { get; set; }
+}
+
 internal static class ProfileModelHelper
 {
     public static ProfileModel ToDTO(this Models.ProfileModel model)

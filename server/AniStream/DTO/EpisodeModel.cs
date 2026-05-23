@@ -30,11 +30,11 @@ public sealed class EpisodeCreateModel
 
 public sealed class EpisodeUpdateModel
 {
-    public required string GermanTitle { get; set; }
+    public required string? GermanTitle { get; set; }
 
-    public required string EnglishTitle { get; set; }
+    public required string? EnglishTitle { get; set; }
 
-    public required string Description { get; set; }
+    public required string? Description { get; set; }
 }
 
 internal static class EpisodeModelHelper

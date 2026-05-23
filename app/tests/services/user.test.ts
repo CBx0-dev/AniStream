@@ -62,6 +62,20 @@ class UserTests extends TestBase {
         expect(active).not.toBeNull();
     }
 
+    private async updateProfile() {
+        const john: ProfileModel = await this.userService.createProfile("john", "fff", "eyes1" as any, "mouth1" as any, "dark", "en");
+
+        await this.userService.updateProfile(john.profile_id, "johnny", "000", "eyes2" as any, "mouth2" as any, "light", "de", true, true);
+
+        const profiles = await this.userService.getProfiles();
+        const updated = profiles.find(p => p.profile_id == john.profile_id);
+
+        expect(updated).not.toBeUndefined();
+        expect(updated!.name).toBe("johnny");
+        expect(updated!.background_color).toBe("000");
+        expect(updated!.theme).toBe("light");
+    }
+
     public getTests(): TestDefinition[] {
         return [
             ["CreateProfile", this.createProfile],
@@ -69,7 +83,8 @@ class UserTests extends TestBase {
             ["GetProfileByUUID", this.getProfileByUUID],
             ["GetProfileByName", this.getProfileByName],
             ["GetProfileById", this.getProfileById],
-            ["GetActiveProfile", this.getActiveProfile]
+            ["GetActiveProfile", this.getActiveProfile],
+            ["UpdateProfile", this.updateProfile]
         ];
     }
 }

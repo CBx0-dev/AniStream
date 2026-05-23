@@ -36,6 +36,19 @@ export interface ProfileCreateModel {
     lang: SupportedLocals;
 }
 
+/**
+ * Used for API only
+ */
+export interface ProfileUpdateModel {
+    name: string;
+    background_color: string;
+    eye: ProfileEye;
+    mouth: ProfileMouth;
+    theme: string;
+    lang: SupportedLocals;
+    tos_accepted: boolean;
+}
+
 export function ProfileModel(
     uuid: string,
     name: string,

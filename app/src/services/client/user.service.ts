@@ -10,7 +10,14 @@ import {UserService} from "@contracts/user.contract";
 import {SupportedLocals} from "@contracts/i18n.contract";
 import {SettingsService} from "@contracts/settings.contract";
 
-import {ProfileCreateModel, ProfileDbModel, ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model";
+import {
+    ProfileCreateModel,
+    ProfileDbModel,
+    ProfileEye,
+    ProfileModel,
+    ProfileMouth,
+    ProfileUpdateModel
+} from "@models/profile.model";
 
 import * as http from "@utils/http";
 import {UnsupportedPlatformError} from "@utils/error";
@@ -61,7 +68,7 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
     }
 
     public getMigrationProfile(): Promise<ProfileModel> {
-        throw new Error("Method not implemented.");
+        throw new UnsupportedPlatformError("UserServiceImpl.getMigrationProfile");
     }
 
     public async getProfiles(): Promise<ProfileModel[]> {
@@ -106,8 +113,8 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
         }
     }
 
-    public requiresProfileSetup(): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    public async requiresProfileSetup(): Promise<boolean> {
+        return false;
     }
 
     public async createProfile(
@@ -145,22 +152,30 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
         );
     }
 
-    public updateProfile(
-        _profileId: number,
-        _name: string,
-        _backgroundColor: string,
-        _eye: ProfileEye,
-        _mouth: ProfileMouth,
-        _theme: string,
-        _local: SupportedLocals,
-        _tosAccepted: boolean,
+    public async updateProfile(
+        profileId: number,
+        name: string,
+        backgroundColor: string,
+        eye: ProfileEye,
+        mouth: ProfileMouth,
+        theme: string,
+        local: SupportedLocals,
+        tosAccepted: boolean,
         _syncCatalog: boolean
     ): Promise<void> {
-        throw new Error("Method not implemented.");
+        await this.put<object, ProfileUpdateModel>(["api", "profiles", profileId], {
+            name,
+            background_color: backgroundColor,
+            eye,
+            mouth,
+            theme,
+            lang: local,
+            tos_accepted: tosAccepted
+        });
     }
 
     public deleteProfile(_profile: ProfileModel): Promise<void> {
-        throw new Error("Method not implemented.");
+        throw new UnsupportedPlatformError("UserServiceImpl.deleteProfile");
     }
 
     public getAvatarSvg(backgroundColor: string, eye: ProfileEye, mouth: ProfileMouth): string {

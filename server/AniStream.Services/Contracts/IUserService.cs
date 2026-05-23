@@ -25,4 +25,28 @@ public interface IUserService
     public Task<ProfileModel?> GetProfile(string uuid);
 
     public Task<ProfileModel?> GetProfile(int profileId);
+
+    public Task<ProfileModel> UpdateProfile(
+        int profileId,
+        string? name = null,
+        string? backgroundColor = null,
+        string? eye = null,
+        string? mouth = null,
+        string? theme = null,
+        string? lang = null,
+        bool? tosAccepted = null,
+        bool? syncCatalog = null
+    );
+
+    public Task<ProfileModel> UpdateProfile(
+        ProfileModel profile,
+        string? name = null,
+        string? backgroundColor = null,
+        string? eye = null,
+        string? mouth = null,
+        string? theme = null,
+        string? lang = null,
+        bool? tosAccepted = null,
+        bool? syncCatalog = null
+    );
 }
