@@ -4,6 +4,7 @@ using AniStream.API.Utils;
 using AniStream.Contracts;
 using AniStream.Services;
 using AniStream.Utils;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
@@ -26,9 +27,17 @@ public static class Program
 
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddHttpLogging(options =>
+        {
+            options.LoggingFields = HttpLoggingFields.RequestMethod |
+                                    HttpLoggingFields.RequestPath |
+                                    HttpLoggingFields.ResponseStatusCode |
+                                    HttpLoggingFields.Duration;
+        });
         builder.Services.AddControllers()
             .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCasePolicy());
         builder.Services.Configure<MvcOptions>(options => options.ModelMetadataDetailsProviders.Add(new EmptyStringEnabledDisplayMetadataProvider()));
+
 #if TESTING_ENABLED
         builder.Services.AddAuthentication("Test")
             .AddScheme<AuthenticationSchemeOptions, TestingAuthHandler>("Test", _ => { });
@@ -55,6 +64,7 @@ public static class Program
                 };
             });
 #endif
+
         builder.Services.AddAuthorization();
         builder.Services.AddOpenApi(options =>
         {
@@ -94,6 +104,7 @@ public static class Program
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddEndpointsApiExplorer();
         SetupDependencyInjection(builder);
+
 #if TESTING_ENABLED
         builder.AddTestingMode(new AutoLoader.Options
         {
@@ -102,6 +113,8 @@ public static class Program
 #endif
 
         WebApplication app = builder.Build();
+
+        app.UseHttpLogging();
 
 #if TESTING_ENABLED
         app.UseMiddleware<TestingMiddleware>();
