@@ -16,8 +16,7 @@ public sealed partial class SnakeCaseConvention : IModelFinalizingConvention
 
             foreach (IConventionProperty property in entity.GetProperties())
             {
-                string columnName = property.GetColumnName();
-                property.SetColumnName(ToSnakeCase(columnName));
+                property.SetColumnName(ToSnakeCase(property.Name));
             }
         }
     }
@@ -29,7 +28,10 @@ public sealed partial class SnakeCaseConvention : IModelFinalizingConvention
             return input;
         }
 
-        return SnakeCaseRegex().Replace(input, "$1_$2").ToLowerInvariant();
+        return SnakeCaseRegex()
+            .Replace(input, "$1_$2")
+            .ToLowerInvariant()
+            .Replace("__", "_");
     }
 
     [GeneratedRegex("([a-z0-9])([A-Z])")]
