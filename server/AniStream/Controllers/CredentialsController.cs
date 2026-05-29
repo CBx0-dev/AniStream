@@ -26,7 +26,7 @@ public sealed class CredentialsController : ApiControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel credentials)
     {
-        Models.ProfileModel? profile = await _credentialsService.ValidateCredentials(credentials.Username, credentials.Password);
+        Models.ProfileModel? profile = await _credentialsService.ValidateCredentials(credentials.Uuid, credentials.Password);
         if (profile is null)
         {
             return Unauthorized("Credentials are wrong");
@@ -40,7 +40,7 @@ public sealed class CredentialsController : ApiControllerBase
         ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-        return Ok();
+        return Ok("Login successful");
     }
 
     [HttpGet("logout")]
@@ -48,6 +48,6 @@ public sealed class CredentialsController : ApiControllerBase
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync();
-        return Ok();
+        return Ok("Logout successful");
     }
 }

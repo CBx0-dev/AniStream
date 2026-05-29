@@ -17,6 +17,8 @@ import {UserService} from "@contracts/user.contract";
 
 import {ProfileModel} from "@models/profile.model";
 
+import * as AppEnv from "@AppEnv";
+
 export class ProviderViewModel extends ViewModel {
     public static readonly component: Component = ProviderView;
     public static readonly route: RouteAdapter = {
@@ -83,6 +85,9 @@ export class ProviderViewModel extends ViewModel {
     }
 
     public onProfileBtn(): void {
+        if (AppEnv.isClientMode) {
+            this.userService.logout();
+        }
         this.routerService.navigateBack();
     }
 }

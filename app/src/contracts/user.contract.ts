@@ -5,6 +5,10 @@ import type {ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model
 import type {SupportedLocals} from "@contracts/i18n.contract";
 
 export interface UserService {
+    authenticate(profile: ProfileModel, password: string): Promise<boolean>;
+
+    logout(): Promise<void>;
+
     getActiveProfile(): Promise<ProfileModel>;
 
     setActiveProfile(profile: ProfileModel): Promise<void>;

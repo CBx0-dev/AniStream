@@ -24,6 +24,11 @@ import {UnsupportedPlatformError} from "@utils/error";
 
 import * as AppEnv from "@AppEnv";
 
+interface LoginModel {
+    uuid: string;
+    password: string;
+}
+
 export class UserServiceImpl extends ApiServiceBase implements UserService {
     private static readonly SESSION_KEY: string = "active-profile";
 
@@ -35,6 +40,27 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
         super(ctx);
 
         this.ctx = ctx;
+    }
+
+    public async authenticate(profile: ProfileModel, password: string): Promise<boolean> {
+        try {
+            await this.post<object, LoginModel>(["api", "credentials", "login"], {
+                uuid: profile.uuid,
+                password
+            });
+
+            return true;
+        } catch (e) {
+            if (e instanceof http.HTTPError && e.status == 401) {
+                return false;
+            }
+
+            throw e;
+        }
+    }
+
+    public async logout(): Promise<void> {
+        await this.get(["api", "credentials", "logout"]);
     }
 
     public async getActiveProfile(): Promise<ProfileModel> {

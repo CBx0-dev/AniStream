@@ -13,8 +13,7 @@ import {ServiceDeclaration} from "@services/declaration";
 import {DbSession} from "@services/utils/db";
 
 import * as path from "@utils/path";
-
-import {ProfileDbModel, ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model";
+import {UnsupportedPlatformError} from "@utils/error";
 
 export class UserServiceImpl implements UserService {
     private static readonly SESSION_KEY: string = "active-profile";
@@ -31,6 +30,14 @@ export class UserServiceImpl implements UserService {
 
         this._session = null;
         this.dbService = ctx.getService(UserDbService);
+    }
+
+    public async authenticate(_profile: ProfileModel, _password: string): Promise<boolean> {
+        throw new UnsupportedPlatformError("UserServiceImpl.authenticate");
+    }
+
+    public async logout(): Promise<void> {
+        throw new UnsupportedPlatformError("UserServiceImpl.logout");
     }
 
     public async getActiveProfile(): Promise<ProfileModel> {

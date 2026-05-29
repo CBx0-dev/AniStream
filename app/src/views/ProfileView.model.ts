@@ -11,6 +11,8 @@ import type {ProfileModel} from "@models/profile.model";
 
 import {ProfileSetupControlModel} from "@controls/ProfileSetupControl.model";
 
+import * as AppEnv from "@AppEnv";
+
 export class ProfileViewModel extends ViewModel {
     public static readonly component: Component = ProfileView;
     public static readonly route: RouteAdapter = {
@@ -56,7 +58,17 @@ export class ProfileViewModel extends ViewModel {
     }
 
     public async onProfileItem(profile: ProfileModel): Promise<void> {
+        if (AppEnv.isClientMode) {
+            // TODO display dialog for pin input
+
+            if (!await this.userService.authenticate(profile, "")) {
+                // TODO display error message in pin input
+                throw "Not implemented";
+            }
+        }
+
         await this.userService.setActiveProfile(profile);
+
         await this.routerService.navigateTo(ProviderViewModel);
     }
 
