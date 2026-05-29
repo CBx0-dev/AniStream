@@ -31,8 +31,8 @@ class SeriesServiceImpl extends ApiServiceBase implements SeriesService {
         this.providerService = ctx.getService(ProviderService);
     }
 
-    public requiresSync(): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    public async requiresSync(): Promise<boolean> {
+        return false;
     }
 
     public async existByGUID(guid: string): Promise<boolean> {
