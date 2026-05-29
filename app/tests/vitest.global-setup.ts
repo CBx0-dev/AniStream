@@ -17,7 +17,7 @@ export async function setup(): Promise<void> {
         return;
     }
 
-    if (await waitForPort(5000, 2, 1000)) {
+    if (await waitForPort(5000, 60, 1000)) {
         return;
     }
 
