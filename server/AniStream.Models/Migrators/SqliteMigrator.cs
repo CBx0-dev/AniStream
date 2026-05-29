@@ -18,8 +18,12 @@ public sealed class SqliteMigrator : DbMigrator
             return 0;
         }
 
-        int version = await context.Database.SqlQuery<int>($"PRAGMA user_version;").SingleAsync();
-        return version;
+        await foreach (int version in context.Database.SqlQuery<int>($"PRAGMA user_version").AsAsyncEnumerable())
+        {
+            return version;
+        }
+
+        throw new InvalidOperationException("Failed to retrieve database version");
     }
 
     public override async Task Migrate(DbContext context, int fromVersion)
