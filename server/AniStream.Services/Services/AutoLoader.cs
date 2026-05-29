@@ -36,11 +36,16 @@ public sealed class AutoLoader
         services.AddScoped<ISeriesService, SeriesSerivceImpl>();
         services.AddScoped<ISeasonService, SeasonServiceImpl>();
         services.AddScoped<IEpisodeService, EpisodeServiceImpl>();
+        services.AddScoped<IResourceService, ResourceServiceImpl>();
+
+        ResourceServiceImpl.AssetsPath = options.AssetsPath;
     }
 
     public struct Options
     {
         public string DatabaseDriver;
+
+        public string AssetsPath;
 
         public string MigrationPath;
 

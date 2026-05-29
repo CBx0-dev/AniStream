@@ -8,6 +8,7 @@ public sealed class AppConfig
     public readonly string DatabaseDriver;
     public readonly string DatabaseMetadataConnectionString;
     public readonly string DatabaseProfileConnectionString;
+    public readonly string AssetsPath;
 
     private AppConfig()
     {
@@ -15,6 +16,7 @@ public sealed class AppConfig
         DatabaseDriver = GetEnvironmentVariable("DATABASE_DRIVER");
         DatabaseMetadataConnectionString = GetEnvironmentVariable("DATABASE_METADATA_CONNECTION_STRING");
         DatabaseProfileConnectionString = GetEnvironmentVariable("DATABASE_PROFILE_CONNECTION_STRING");
+        AssetsPath = GetEnvironmentVariable("ASSETS_PATH");
     }
 
     private string GetEnvironmentVariable(string name)
@@ -31,5 +33,6 @@ public sealed class AppConfig
     {
         CurrentConfig = new AppConfig();
         Console.WriteLine($"Migration path: '{CurrentConfig.MigrationPath}'");
+        Console.WriteLine($"Assets path: '{CurrentConfig.AssetsPath}'");
     }
 }

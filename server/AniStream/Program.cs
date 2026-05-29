@@ -147,7 +147,8 @@ public static class Program
             DatabaseDriver = AppConfig.CurrentConfig.DatabaseDriver,
             MigrationPath = AppConfig.CurrentConfig.MigrationPath,
             DatabaseMetadataConnectionString = AppConfig.CurrentConfig.DatabaseMetadataConnectionString,
-            DatabaseProfileConnectionString = AppConfig.CurrentConfig.DatabaseProfileConnectionString
+            DatabaseProfileConnectionString = AppConfig.CurrentConfig.DatabaseProfileConnectionString,
+            AssetsPath = AppConfig.CurrentConfig.AssetsPath
         });
     }
 }
