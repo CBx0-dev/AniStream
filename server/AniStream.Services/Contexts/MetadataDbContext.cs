@@ -31,6 +31,8 @@ public sealed class MetadataDbContext : DbContext
     public DbSet<ListToSeriesModel> ListsToSeries { get; set; }
 
     public DbSet<WatchTimeModel> WatchTimes { get; set; }
+
+    public DbSet<WatchListModel> WatchLists { get; set; }
 }
 
 internal sealed class MetadataDbContextFactory : DbContextFactory<MetadataDbContext>

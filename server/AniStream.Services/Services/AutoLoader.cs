@@ -37,6 +37,7 @@ public sealed class AutoLoader
         services.AddScoped<ISeasonService, SeasonServiceImpl>();
         services.AddScoped<IEpisodeService, EpisodeServiceImpl>();
         services.AddScoped<IResourceService, ResourceServiceImpl>();
+        services.AddScoped<IWatchListService, WatchListServiceImpl>();
 
         ResourceServiceImpl.AssetsPath = options.AssetsPath;
     }
