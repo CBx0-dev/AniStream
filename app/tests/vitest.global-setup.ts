@@ -17,10 +17,6 @@ export async function setup(): Promise<void> {
         return;
     }
 
-    if (await waitForPort(5000, 60, 1000)) {
-        return;
-    }
-
     const dotnetPath: string = resolveDotnet();
 
     console.log(`__dirname: ${__dirname}`);
@@ -37,7 +33,7 @@ export async function setup(): Promise<void> {
         stdio: "inherit"
     });
 
-    if (!await waitForPort(5000)) {
+    if (!await waitForPort(5000, 60, 1000)) {
         throw `Port 5000 never opened`;
     }
 }
