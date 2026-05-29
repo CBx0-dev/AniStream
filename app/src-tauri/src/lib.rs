@@ -64,6 +64,16 @@ pub fn run() {
                 .set_focus();
         }));
     }
+    #[cfg(debug_assertions)]
+    {
+        builder = builder.setup(|app| {
+            let _ = app
+                .get_webview_window("main")
+                .expect("no main window")
+                .open_devtools();
+            Ok(())
+        });
+    }
 
     builder.invoke_handler(tauri::generate_handler![report_issue])
         .run(tauri::generate_context!())
