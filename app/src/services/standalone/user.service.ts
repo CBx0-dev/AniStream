@@ -12,6 +12,8 @@ import {UserDbService} from "@contracts/standalone/user.contract";
 import {ServiceDeclaration} from "@services/declaration";
 import {DbSession} from "@services/utils/db";
 
+import {ProfileDbModel, ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model";
+
 import * as path from "@utils/path";
 import {UnsupportedPlatformError} from "@utils/error";
 
@@ -88,8 +90,8 @@ export class UserServiceImpl implements UserService {
             rows[0].mouth,
             rows[0].theme,
             rows[0].lang,
-            rows[0].tos_accepted,
-            rows[0].sync_catalog
+            rows[0].tos_accepted == 1,
+            rows[0].sync_catalog == 1
         );
     }
 
@@ -106,8 +108,8 @@ export class UserServiceImpl implements UserService {
             row.mouth,
             row.theme,
             row.lang,
-            row.tos_accepted,
-            row.sync_catalog
+            row.tos_accepted == 1,
+            row.sync_catalog == 1
         ));
     }
 
@@ -129,8 +131,8 @@ export class UserServiceImpl implements UserService {
             rows[0].mouth,
             rows[0].theme,
             rows[0].lang,
-            rows[0].tos_accepted,
-            rows[0].sync_catalog
+            rows[0].tos_accepted == 1,
+            rows[0].sync_catalog == 1
         );
     }
 
@@ -158,8 +160,8 @@ export class UserServiceImpl implements UserService {
             mouth,
             theme,
             local,
-            "false",
-            "false"
+            0,
+            0
         );
 
         return ProfileModel(
@@ -171,8 +173,8 @@ export class UserServiceImpl implements UserService {
             mouth,
             "aniworld-light",
             "en",
-            "false",
-            "false"
+            false,
+            false
         );
     }
 
@@ -188,8 +190,8 @@ export class UserServiceImpl implements UserService {
             mouth,
             theme,
             local,
-            tosAccepted ? "true" : "false",
-            syncCatalog ? "true" : "false",
+            tosAccepted ? 1 : 0,
+            syncCatalog ? 1 : 0,
             profileId
         );
     }

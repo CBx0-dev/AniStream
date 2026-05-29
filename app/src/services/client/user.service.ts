@@ -11,8 +11,8 @@ import {SupportedLocals} from "@contracts/i18n.contract";
 import {SettingsService} from "@contracts/settings.contract";
 
 import {
+    ProfileApiModel,
     ProfileCreateModel,
-    ProfileDbModel,
     ProfileEye,
     ProfileModel,
     ProfileMouth,
@@ -98,7 +98,7 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
     }
 
     public async getProfiles(): Promise<ProfileModel[]> {
-        const rows: ProfileDbModel[] = await this.get<ProfileDbModel[]>(["api", "profiles"]);
+        const rows: ProfileApiModel[] = await this.get<ProfileApiModel[]>(["api", "profiles"]);
 
         return rows.map(row => ProfileModel(
             row.profile_id,
@@ -116,7 +116,7 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
 
     public async getProfileByUUID(uuid: string): Promise<ProfileModel | null> {
         try {
-            const row: ProfileDbModel = await this.get<ProfileDbModel>(["api", "profiles", uuid, "uuid"]);
+            const row: ProfileApiModel = await this.get<ProfileApiModel>(["api", "profiles", uuid, "uuid"]);
 
             return ProfileModel(
                 row.profile_id,
@@ -155,7 +155,7 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
             throw new UnsupportedPlatformError("UserServiceImpl.createProfile");
         }
 
-        const row: ProfileDbModel = await this.post<ProfileDbModel, ProfileCreateModel>(["api", "profiles"], {
+        const row: ProfileApiModel = await this.post<ProfileApiModel, ProfileCreateModel>(["api", "profiles"], {
             name,
             background_color: backgroundColor,
             eye,

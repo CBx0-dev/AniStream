@@ -14,14 +14,22 @@ export interface ProfileDbModel {
     mouth: ProfileMouth;
     theme: string;
     lang: SupportedLocals;
-    tos_accepted: string;
-    sync_catalog: string;
+    tos_accepted: number;
+    sync_catalog: number;
 }
 
 export interface ProfileModel extends Omit<ProfileDbModel, "tos_accepted" | "sync_catalog"> {
     tos_accepted: boolean;
     sync_catalog: boolean;
     clone(): ProfileModel;
+}
+
+/**
+ * Used for API only
+ */
+export interface ProfileApiModel extends Omit<ProfileDbModel, "tos_accepted" | "sync_catalog"> {
+    tos_accepted: boolean;
+    sync_catalog: boolean;
 }
 
 /**
@@ -57,8 +65,8 @@ export function ProfileModel(
     mouth: ProfileMouth,
     theme: string,
     lang: SupportedLocals,
-    tosAccepted: string,
-    syncCatalog: string
+    tosAccepted: boolean,
+    syncCatalog: boolean
 ): ProfileModel;
 export function ProfileModel(
     profile_id: number,
@@ -69,8 +77,8 @@ export function ProfileModel(
     mouth: ProfileMouth,
     theme: string,
     lang: SupportedLocals,
-    tosAccepted: string,
-    syncCatalog: string
+    tosAccepted: boolean,
+    syncCatalog: boolean
 ): ProfileModel;
 
 export function ProfileModel(...args: unknown[]): ProfileModel {
@@ -78,7 +86,7 @@ export function ProfileModel(...args: unknown[]): ProfileModel {
         args.unshift(0);
     }
 
-    return _ProfileModel(...args as [number, string, string, string, ProfileEye, ProfileMouth, string, SupportedLocals, string, string]);
+    return _ProfileModel(...args as [number, string, string, string, ProfileEye, ProfileMouth, string, SupportedLocals, boolean, boolean]);
 }
 
 function _ProfileModel(
@@ -90,8 +98,8 @@ function _ProfileModel(
     mouth: ProfileMouth,
     theme: string,
     lang: SupportedLocals,
-    tosAccepted: string,
-    syncCatalog: string,
+    tosAccepted: boolean,
+    syncCatalog: boolean,
 ): ProfileModel {
     const obj: ProfileModel = {
         profile_id: profile_id,
@@ -102,8 +110,8 @@ function _ProfileModel(
         mouth: mouth,
         theme: theme,
         lang: lang,
-        tos_accepted: tosAccepted == "true",
-        sync_catalog: syncCatalog == "true",
+        tos_accepted: tosAccepted,
+        sync_catalog: syncCatalog,
         clone: clone,
     };
 

@@ -7,6 +7,7 @@ import {DbSession, DbVersion, DbVersionConstructor} from "@services/utils/db";
 
 import sql1 from "../../../../../migration/standalone/profile/1.sql?raw";
 import sql2 from "../../../../../migration/standalone/profile/2.sql?raw";
+import sql3 from "../../../../../migration/standalone/profile/3.sql?raw";
 
 export class UserDbServiceImpl implements UserDbService {
     public constructor() {
@@ -85,11 +86,23 @@ class DbVersion2 implements UserDbVersion {
     }
 }
 
+class DbVersion3 implements UserDbVersion {
+    public previousVersion: UserDbVersionConstructor = DbVersion2;
+    public version: number = 3;
+
+    public constructor() {
+    }
+
+    public async migrate(session: DbSession): Promise<void> {
+        await session.execute(sql3);
+    }
+}
+
 // ================================================================================================================== //
 //                                                   END MIGRATION                                                    //
 // ================================================================================================================== //
 
-const LATEST_VERSION: Exclude<UserDbVersionConstructor, null> = DbVersion2;
+const LATEST_VERSION: Exclude<UserDbVersionConstructor, null> = DbVersion3;
 
 export default {
     key: UserDbService,

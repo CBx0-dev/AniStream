@@ -15,6 +15,7 @@ import sql1 from "../../../../../migration/standalone/metadata/1.sql?raw";
 import sql2 from "../../../../../migration/standalone/metadata/2.sql?raw";
 import sql3 from "../../../../../migration/standalone/metadata/3.sql?raw";
 import sql4 from "../../../../../migration/standalone/metadata/4.sql?raw";
+import sql5 from "../../../../../migration/standalone/metadata/5.sql?raw";
 
 export class MetadataDbServiceImpl implements MetadataDbService {
     private readonly userService: UserService;
@@ -119,11 +120,20 @@ class DbVersion4 implements MetadataDbVersion {
     }
 }
 
+class DbVersion5 implements MetadataDbVersion {
+    public previousVersion: MetadataDbVersionConstructor = DbVersion4;
+    public version: number = 4;
+
+    public async migrate(session: DbSession, _userService: UserService, _provider: string): Promise<void> {
+        await session.execute(sql5);
+    }
+}
+
 // ================================================================================================================== //
 //                                                   END MIGRATION                                                    //
 // ================================================================================================================== //
 
-const LATEST_VERSION: Exclude<MetadataDbVersionConstructor, null> = DbVersion4;
+const LATEST_VERSION: Exclude<MetadataDbVersionConstructor, null> = DbVersion5;
 
 export default {
     key: MetadataDbService,

@@ -12,8 +12,8 @@ export class UserServiceMock extends UserServiceImpl {
             "bite",
             "aniworld-dark",
             "en",
-            "true",
-            "false"
+            true,
+            false
         );
     }
 
@@ -27,8 +27,8 @@ export class UserServiceMock extends UserServiceImpl {
             "bite",
             "aniworld-dark",
             "en",
-            "true",
-            "false"
+            true,
+            false
         );
     }
 
@@ -42,9 +42,8 @@ export class UserServiceMock extends UserServiceImpl {
             "bite",
             "aniworld-dark",
             "en",
-            "true",
-            "false"
+            true,
+            false
         );
-
     }
 }
