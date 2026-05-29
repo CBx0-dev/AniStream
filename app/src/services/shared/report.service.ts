@@ -70,8 +70,21 @@ class ReportServiceImpl implements ReportService {
 
     private async generateMarkdown(title: string, stack: string, userMessage: string): Promise<string> {
         const settings: SettingsService = this.ctx.getService(SettingsService);
-        const theme: string = await settings.getTheme();
-        const local: string = await settings.getLocal();
+
+        let theme: string;
+        let local: string;
+
+        try {
+            theme = await settings.getTheme();
+        } catch {
+            theme = "Unknown";
+        }
+
+        try {
+            local = await settings.getLocal();
+        } catch {
+            local = "Unknown";
+        }
 
         return `## Fatal Error: ${this.sanitizeForMarkdown(title)}
 

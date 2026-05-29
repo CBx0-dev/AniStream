@@ -27,8 +27,8 @@ export class ReportControlModel extends DialogControl implements Action<ReportRe
     public title: string = this.ref("");
     public errorStack: string = this.ref("");
     public message: string = this.ref("");
-    public lang: string = this.ref("en");
-    public theme: string = this.ref("aniworld-light");
+    public lang: string = this.ref("Unknown");
+    public theme: string = this.ref("Unknown");
 
     public readonly version: string = this.computed(() => packageJSON.version);
     public readonly platform: string = this.computed(() => `${getPlatform()} ${getArch()}`);
@@ -49,8 +49,13 @@ export class ReportControlModel extends DialogControl implements Action<ReportRe
     }
 
     protected async mounted(): Promise<void> {
-        this.lang = await this.settingsService.getLocal();
-        this.theme = await this.settingsService.getTheme();
+        try {
+            this.lang = await this.settingsService.getLocal();
+        } catch {}
+
+        try {
+            this.theme = await this.settingsService.getTheme();
+        } catch {}
     }
 
     public onOpen(): void {
