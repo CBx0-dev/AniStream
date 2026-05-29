@@ -1,9 +1,14 @@
+<script lang="ts">
+const IMAGE_CACHE: Map<string, [string, Blob]> = new Map<string, [string, Blob]>();
+</script>
+
 <script setup lang="ts">
 import {convertFileSrc} from "@tauri-apps/api/core";
 
 import {computed, ComputedRef, ref, Ref, watch} from "vue";
 
 import * as path from "@utils/path";
+import * as http from "@utils/http";
 
 const props = defineProps<{
     providerFolder: string | null;
@@ -21,14 +26,31 @@ watch(props, buildURL, {
     immediate: true
 });
 
-function buildURL() {
+async function buildURL() {
     loaded.value = false;
     if (!props.providerFolder || !props.hash) {
         url.value = null;
         return;
     }
 
-    url.value = convertFileSrc(path.join(props.providerFolder, props.hash));
+    if (!props.providerFolder.startsWith("http")) {
+        url.value = convertFileSrc(path.join(props.providerFolder, props.hash));
+        return;
+    }
+
+    const remoteUrl: string = props.providerFolder + props.hash;
+
+    let cache: [string, Blob] | undefined = IMAGE_CACHE.get(remoteUrl);
+
+    if (!cache) {
+        const image: Blob = await http.get(remoteUrl).blob();
+        const localUrl: string = URL.createObjectURL(image);
+
+        cache = [localUrl, image];
+        IMAGE_CACHE.set(remoteUrl, cache);
+    }
+
+    url.value = cache[0];
 }
 
 function onLoaded() {
@@ -41,7 +63,7 @@ function onLoaded() {
         v-bind="$attrs"
         v-if="!url || !loaded"
         :style="styleString"
-        class="skeleton" />
+        class="skeleton"/>
     <img
         v-bind="$attrs"
         v-show="url && loaded"

@@ -74,6 +74,10 @@ class HTTPResponse {
         return new Uint8Array(await this.arrayBuffer());
     }
 
+    public async blob(): Promise<Blob> {
+        return (await this.getResponse()).blob();
+    }
+
     public async wait(): Promise<void> {
         await this.getResponse();
     }

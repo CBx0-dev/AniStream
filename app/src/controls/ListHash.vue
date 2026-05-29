@@ -1,9 +1,14 @@
+<script lang="ts">
+const IMAGE_CACHE: Map<string, [string, Blob]> = new Map<string, [string, Blob]>();
+</script>
+
 <script setup lang="ts">
 import {convertFileSrc} from "@tauri-apps/api/core";
 
 import {computed, ComputedRef, Ref, ref, watch} from "vue";
 
 import * as path from "@utils/path";
+import * as http from "@utils/http";
 
 const props = defineProps<{
     providerFolder: string | null;
@@ -62,14 +67,32 @@ watch(props, buildURL, {
     immediate: true
 });
 
-function buildURL() {
+async function buildURL() {
     loadCounter.value = 0;
     if (!props.providerFolder || !props.hashes || props.hashes.length == 0) {
         urls.value = [];
         return;
     }
 
-    urls.value = props.hashes.map(hash => convertFileSrc(path.join(props.providerFolder!, hash)));
+    urls.value = await Promise.all(props.hashes.map(async hash => {
+        if (!props.providerFolder!.startsWith("http")) {
+            return convertFileSrc(path.join(props.providerFolder!, hash));
+        }
+
+        const remoteUrl: string = props.providerFolder! + hash;
+
+        let cache: [string, Blob] | undefined = IMAGE_CACHE.get(remoteUrl);
+
+        if (!cache) {
+            const image: Blob = await http.get(remoteUrl).blob();
+            const localUrl: string = URL.createObjectURL(image);
+
+            cache = [localUrl, image];
+            IMAGE_CACHE.set(remoteUrl, cache);
+        }
+
+        return cache[0];
+    }));
 }
 
 function onLoaded() {

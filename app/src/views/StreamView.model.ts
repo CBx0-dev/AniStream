@@ -13,13 +13,13 @@ import {EpisodeModel} from "@models/episode.model";
 import {GenreModel} from "@models/genre.model";
 import {WatchtimeModel} from "@models/watchtime.model";
 
-import {ProviderService} from "@contracts/provider.contract";
 import {I18nService} from "@contracts/i18n.contract";
 import {GenreService} from "@contracts/genre.contract";
 import {SeriesService} from "@contracts/series.contract";
 import {SeasonService} from "@contracts/season.contract";
 import {EpisodeService} from "@contracts/episode.contract";
 import {WatchtimeService} from "@contracts/watchtime.contract";
+import {ResourceService} from "@contracts/resource.contract";
 
 import I18n from "@utils/i18n";
 
@@ -34,7 +34,8 @@ export class StreamViewModel extends ViewModel {
 
     private readonly routerService: RouterService;
     private readonly alertService: AlertService;
-    private readonly providerService: ProviderService;
+
+    private readonly resourceService: ResourceService;
     private readonly i18nService: I18nService;
     private readonly genreService: GenreService;
     private readonly seriesService: SeriesService;
@@ -68,7 +69,8 @@ export class StreamViewModel extends ViewModel {
 
         this.routerService = this.ctx.getService(RouterService);
         this.alertService = this.ctx.getService(AlertService);
-        this.providerService = this.ctx.getService(ProviderService);
+
+        this.resourceService = this.ctx.getService(ResourceService);
         this.i18nService = this.ctx.getService(I18nService);
         this.genreService = this.ctx.getService(GenreService);
         this.seriesService = this.ctx.getService(SeriesService);
@@ -96,7 +98,7 @@ export class StreamViewModel extends ViewModel {
             return;
         }
 
-        this.providerFolder = await (await this.providerService.getProvider()).getStorageLocation();
+        this.providerFolder = await this.resourceService.getResourceLocation();
 
         this.genres.push(...await this.genreService.getNonMainGenresOfSeries(this.series.series_id));
         this.mainGenre = await this.genreService.getMainGenreOfSeries(this.series.series_id);

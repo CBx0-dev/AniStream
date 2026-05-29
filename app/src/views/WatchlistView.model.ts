@@ -7,16 +7,15 @@ import WatchlistView from "@views/WatchlistView.vue";
 
 import {DetailControlModel} from "@controls/DetailControl.model";
 
-import {ProviderService} from "@contracts/provider.contract";
 import {SeriesService} from "@contracts/series.contract";
 import {WatchlistService} from "@contracts/watchlist.contract";
 import {ListService} from "@contracts/list.contract";
 import {I18nService} from "@contracts/i18n.contract";
+import {ResourceService} from "@contracts/resource.contract";
 
 import {SeriesModel} from "@models/series.model";
 import {ListModel} from "@models/list.model";
 
-import {DefaultProvider} from "@providers/default";
 import {ListViewModel} from "@views/ListView.model";
 
 import I18n from "@utils/i18n";
@@ -30,7 +29,7 @@ export class WatchlistViewModel extends ViewModel {
     private readonly routerService: RouterService;
     private readonly dialogService: DialogService;
 
-    private readonly providerService: ProviderService;
+    private readonly resourceService: ResourceService;
     private readonly seriesService: SeriesService;
     private readonly watchlistService: WatchlistService;
     private readonly listService: ListService;
@@ -49,7 +48,7 @@ export class WatchlistViewModel extends ViewModel {
         this.routerService = this.ctx.getService(RouterService);
         this.dialogService = this.ctx.getService(DialogService);
 
-        this.providerService = this.ctx.getService(ProviderService);
+        this.resourceService = this.ctx.getService(ResourceService);
         this.seriesService = this.ctx.getService(SeriesService);
         this.watchlistService = this.ctx.getService(WatchlistService);
         this.listService = this.ctx.getService(ListService);
@@ -57,8 +56,7 @@ export class WatchlistViewModel extends ViewModel {
     }
 
     protected async mounted(): Promise<void> {
-        const provider: DefaultProvider = await this.providerService.getProvider();
-        this.providerFolder = await provider.getStorageLocation();
+        this.providerFolder = await this.resourceService.getResourceLocation();
 
         this.startedSeries = await this.seriesService.getStartedSeries();
 

@@ -16,6 +16,7 @@ import {I18nService} from "@contracts/i18n.contract";
 import {ProviderService} from "@contracts/provider.contract";
 import {GenreService} from "@contracts/genre.contract";
 import {SettingsService} from "@contracts/settings.contract";
+import {ResourceService} from "@contracts/resource.contract";
 
 import {SeriesModel} from "@models/series.model";
 import {GenreModel} from "@models/genre.model";
@@ -36,6 +37,7 @@ export class StreamsViewModel extends ViewModel {
     private readonly dialogService: DialogService;
     private readonly toastService: ToastService;
 
+    private readonly resourceService: ResourceService;
     private readonly providerService: ProviderService;
     private readonly fetchService: FetchService;
     private readonly i18nService: I18nService;
@@ -63,6 +65,7 @@ export class StreamsViewModel extends ViewModel {
         this.dialogService = this.ctx.getService(DialogService);
         this.toastService = this.ctx.getService(ToastService);
 
+        this.resourceService = this.ctx.getService(ResourceService);
         this.providerService = this.ctx.getService(ProviderService);
         this.fetchService = this.ctx.getService(FetchService);
         this.i18nService = this.ctx.getService(I18nService);
@@ -93,8 +96,7 @@ export class StreamsViewModel extends ViewModel {
     }
 
     public async mounted(): Promise<void> {
-        const provider: DefaultProvider = await this.providerService.getProvider();
-        this.providerFolder = await provider.getStorageLocation();
+        this.providerFolder = await this.resourceService.getResourceLocation();
 
         this.series.clear();
         const intersectionLine: HTMLElement | null = document.getElementById("intersectionLine");

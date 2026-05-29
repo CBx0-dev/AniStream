@@ -9,13 +9,11 @@ import ListView from "@views/ListView.vue";
 import {DetailControlModel} from "@controls/DetailControl.model";
 
 import {ListService} from "@contracts/list.contract";
-import {ProviderService} from "@contracts/provider.contract";
 import {I18nService} from "@contracts/i18n.contract";
+import {ResourceService} from "@contracts/resource.contract";
 
 import {ListModel} from "@models/list.model";
 import {SeriesModel} from "@models/series.model";
-
-import {DefaultProvider} from "@providers/default";
 
 import I18n from "@utils/i18n";
 
@@ -28,13 +26,13 @@ export class ListViewModel extends ViewModel {
         }
     } satisfies RouteAdapter;
 
-    private routerService: RouterService;
-    private dialogService: DialogService;
-    private alertService: AlertService;
+    private readonly routerService: RouterService;
+    private readonly dialogService: DialogService;
+    private readonly alertService: AlertService;
 
-    private providerService: ProviderService;
-    private listService: ListService;
-    private i18nService: I18nService;
+    private readonly resourceService: ResourceService;
+    private readonly listService: ListService;
+    private readonly i18nService: I18nService;
 
     private list: ListModel | null = this.ref(null);
 
@@ -60,14 +58,13 @@ export class ListViewModel extends ViewModel {
         this.dialogService = this.ctx.getService(DialogService);
         this.alertService = this.ctx.getService(AlertService);
 
-        this.providerService = this.ctx.getService(ProviderService);
+        this.resourceService = this.ctx.getService(ResourceService);
         this.listService = this.ctx.getService(ListService);
         this.i18nService = this.ctx.getService(I18nService);
     }
 
     protected async mounted(): Promise<void> {
-        const provider: DefaultProvider = await this.providerService.getProvider();
-        this.providerFolder = await provider.getStorageLocation();
+        this.providerFolder = await this.resourceService.getResourceLocation();
 
         const listId: number = this.routerService.params.getIntegerOrThrow("id");
 
