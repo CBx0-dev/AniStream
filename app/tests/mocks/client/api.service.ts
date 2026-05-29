@@ -36,10 +36,7 @@ export class ApiServiceMock extends ApiServiceImpl {
         const res: globalThis.Response = await fetch(url, {
             method: "POST",
             body: data,
-            headers: [
-                ["Content-Type", "application/json"],
-                ...ApiServiceImpl.HEADERS
-            ]
+            headers: ApiServiceImpl.HEADERS
         });
 
         if (!res.ok) {
@@ -63,10 +60,7 @@ export class ApiServiceMock extends ApiServiceImpl {
         const res: globalThis.Response = await fetch(url, {
             method: "PUT",
             body: data,
-            headers: [
-                ["Content-Type", "application/json"],
-                ...ApiServiceImpl.HEADERS
-            ]
+            headers: ApiServiceImpl.HEADERS
         });
 
         if (!res.ok) {
@@ -81,10 +75,7 @@ export class ApiServiceMock extends ApiServiceImpl {
 
         const res: globalThis.Response = await fetch(url, {
             method: "DELETE",
-            headers: [
-                ["Content-Type", "application/json"],
-                ...ApiServiceImpl.HEADERS
-            ]
+            headers: ApiServiceImpl.HEADERS
         });
 
         if (!res.ok) {

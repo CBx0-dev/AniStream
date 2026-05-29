@@ -7,14 +7,14 @@ import {ServiceDeclaration} from "@services/declaration";
 import * as http from "@utils/http";
 
 export class ApiServiceImpl implements ApiService {
-    public static HEADERS: [string, string][] = [];
+    public static HEADERS: [string, string][] = [["Content-Type", "application/json"]];
 
     public constructor(_ctx: ReadableGlobalContext) {
     }
 
     public async get<Response extends object>(def: PathParameter): Promise<Response> {
         const url: string = this.buildURL(def);
-        return await http.get(url).json<Response>();
+        return await http.get(url, ApiServiceImpl.HEADERS).json<Response>();
     }
 
     public async post<Response extends object, Body extends object | string | null>(def: PathParameter, body: Body): Promise<Response> {
@@ -29,7 +29,7 @@ export class ApiServiceImpl implements ApiService {
         }
 
         const url: string = this.buildURL(def);
-        return await http.post(url, data).json<Response>();
+        return await http.post(url, data, ApiServiceImpl.HEADERS).json<Response>();
     }
 
     public async put<Response extends object, Body extends object | string>(def: PathParameter, body: Body): Promise<Response> {
@@ -42,12 +42,12 @@ export class ApiServiceImpl implements ApiService {
         }
 
         const url: string = this.buildURL(def);
-        return await http.put(url, data).json<Response>();
+        return await http.put(url, data, ApiServiceImpl.HEADERS).json<Response>();
     }
 
     public async delete<Response extends object>(def: PathParameter): Promise<Response> {
         const url: string = this.buildURL(def);
-        return await http.delete$(url).json<Response>();
+        return await http.delete$(url, ApiServiceImpl.HEADERS).json<Response>();
     }
 
     protected buildURL(def: PathParameter): string {
