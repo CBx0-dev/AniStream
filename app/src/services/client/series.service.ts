@@ -98,7 +98,7 @@ class SeriesServiceImpl extends ApiServiceBase implements SeriesService {
         const series: SeriesDbModel[] = await this.post<SeriesDbModel[], SeriesFilterModel>(["api", provider.uniqueKey, "series", "chunk"], {
             offset: offset,
             limit: limit,
-            genre_ids: genresIds,
+            genre_ids: genresIds.length > 0 ? genresIds : null,
             search_text: searchText
         });
 
