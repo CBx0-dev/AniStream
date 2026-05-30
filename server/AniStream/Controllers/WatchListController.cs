@@ -1,13 +1,14 @@
-﻿using AniStream.Contracts;
+﻿using AniStream.API.Utils;
+using AniStream.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AniStream.API.Controllers;
 
-[Route("api/{provider}watchlist")]
+[Route("api/{provider}/watchlist")]
 [ApiController]
 [Authorize]
-public sealed class WatchListController : ControllerBase
+public sealed class WatchListController : ApiControllerBase
 {
     private readonly IWatchListService _watchListService;
 
