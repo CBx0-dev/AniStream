@@ -2,6 +2,7 @@
 using AniStream.Contracts;
 using AniStream.Models;
 using AniStream.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace AniStream.Services;
 
@@ -24,7 +25,7 @@ public sealed class WatchListServiceImpl : IWatchListService
         IQueryable<int> query = from watchlist in db.WatchLists
             where watchlist.TenantId == tenantId
             select watchlist.SeriesId;
-        return query.ToArray();
+        return await query.ToArrayAsync();
     }
 
     public async Task<bool> IsSeriesOnList(int seriesId)
@@ -35,7 +36,7 @@ public sealed class WatchListServiceImpl : IWatchListService
         IQueryable<int> query = from watchlist in db.WatchLists
             where watchlist.TenantId == tenantId && watchlist.SeriesId == seriesId
             select watchlist.SeriesId;
-        return query.Any();
+        return await query.AnyAsync();
     }
 
     public async Task AddSeries(int seriesId)
