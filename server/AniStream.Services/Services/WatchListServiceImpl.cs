@@ -18,9 +18,12 @@ public sealed class WatchListServiceImpl : IWatchListService
 
     public async Task<int[]> GetSeriesIds()
     {
+        string tenantId = await _credentialsService.GetCurrentUuid();
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
-        IQueryable<int> query = from watchlist in db.WatchLists select watchlist.SeriesId;
+        IQueryable<int> query = from watchlist in db.WatchLists
+            where watchlist.TenantId == tenantId
+            select watchlist.SeriesId;
         return query.ToArray();
     }
 
