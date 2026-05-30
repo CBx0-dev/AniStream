@@ -214,6 +214,31 @@ public sealed class ListServiceTests : TestBase
         Assert.Equal("ABCDEFG", images[0]);
     }
 
+    [Fact]
+    public async Task GetPreviewImagesMax4()
+    {
+        ListModel list = await _listService.CreateList("watchlist");
+
+        SeriesModel series1 = await _seriesService.CreateSeries("series-1", "Series 1", "", "a");
+        SeriesModel series2 = await _seriesService.CreateSeries("series-2", "Series 2", "", "b");
+        SeriesModel series3 = await _seriesService.CreateSeries("series-3", "Series 3", "", "c");
+        SeriesModel series4 = await _seriesService.CreateSeries("series-4", "Series 4", "", "d");
+        SeriesModel series5 = await _seriesService.CreateSeries("series-5", "Series 5", "", "e");
+
+        await _listService.AddSeriesToList(list, series1.SeriesId);
+        await _listService.AddSeriesToList(list, series2.SeriesId);
+        await _listService.AddSeriesToList(list, series3.SeriesId);
+        await _listService.AddSeriesToList(list, series4.SeriesId);
+        await _listService.AddSeriesToList(list, series5.SeriesId);
+
+        string[] previewImages = await _listService.GetPreviewImages(list);
+        Assert.Equal(4, previewImages.Length);
+        Assert.Contains(series1.PreviewImage, previewImages);
+        Assert.Contains(series2.PreviewImage, previewImages);
+        Assert.Contains(series3.PreviewImage, previewImages);
+        Assert.Contains(series4.PreviewImage, previewImages);
+    }
+
     private async Task CreateSeries()
     {
         SeriesModel series = await _seriesService.CreateSeries(Guid.NewGuid().ToString(), "Title", "Desc", "ABCDEFG");

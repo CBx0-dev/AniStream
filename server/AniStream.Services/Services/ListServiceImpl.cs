@@ -198,6 +198,6 @@ public sealed class ListServiceImpl : IListService
             where listToSeries.ListId == list.ListId
             select series.PreviewImage;
 
-        return await query.ToArrayAsync();
+        return await query.Take(4).ToArrayAsync();
     }
 }
