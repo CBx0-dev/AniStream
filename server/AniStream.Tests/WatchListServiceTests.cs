@@ -39,7 +39,7 @@ public sealed class WatchListServiceTests : TestBase
     }
 
     [Fact]
-    public async Task GetSeriesIdsFromWatchList()
+    public async Task GetSeriesIds()
     {
         SeriesModel series1 = await _seriesService.CreateSeries("series-1", "Series 1", "", null);
         SeriesModel series2 = await _seriesService.CreateSeries("series-2", "Series 2", "", null);
