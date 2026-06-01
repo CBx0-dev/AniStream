@@ -84,7 +84,7 @@ class WatchtimeServiceImpl extends DbServiceBase implements WatchtimeService {
             return 0;
         }
 
-        return finished_episodes / total_episodes;
+        return Math.round(100.0 * finished_episodes / total_episodes);
     }
 
     public async createWatchtimeOfEpisode(episodeId: number, percentageWatched: number, stoppedTime: number): Promise<WatchtimeModel> {
