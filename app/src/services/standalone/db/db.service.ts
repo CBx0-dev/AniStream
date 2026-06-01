@@ -22,7 +22,7 @@ class DbServiceImpl implements DbService {
 
     public async getDatabase(provider: DefaultProvider): Promise<DbSession> {
        let session: DbSession | undefined = this.sessions.get(provider.uniqueKey);
-        if (!session) {
+        if (!session || session.closed) {
             const dbFile: string = await provider.getDatabaseFile();
 
             session = await this.metadataDbService.openDB(dbFile, provider.uniqueKey);

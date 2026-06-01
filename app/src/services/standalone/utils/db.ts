@@ -25,16 +25,20 @@ export class DbServiceBase {
 
 export class DbSession {
     private readonly handler: Database;
-    private closed: boolean;
+    private _closed: boolean;
+
+    public get closed(): boolean {
+        return this._closed;
+    }
 
     public constructor(handler: Database) {
         this.handler = handler;
-        this.closed = false;
+        this._closed = false;
     }
 
 
     public async query<T>(query: string, ...params: any[]): Promise<T> {
-        if (this.closed) {
+        if (this._closed) {
             throw "No DB Handler was initialized";
         }
 
@@ -42,7 +46,7 @@ export class DbSession {
     }
 
     public async execute(query: string, ...params: any[]): Promise<QueryResult> {
-        if (this.closed) {
+        if (this._closed) {
             throw "No DB Handler was initialized";
         }
 
@@ -62,7 +66,7 @@ export class DbSession {
     }
 
     public async close(): Promise<void> {
-        this.closed = true;
+        this._closed = true;
         await this.handler.close(this.handler.path);
     }
 }
