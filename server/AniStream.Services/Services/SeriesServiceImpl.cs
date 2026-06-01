@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using AniStream.Contexts;
 using AniStream.Contracts;
 using AniStream.Models;
@@ -141,5 +140,14 @@ public sealed class SeriesServiceImpl : ISeriesService
             .Select(g => g.Key);
 
         return query.ToArray();
+    }
+
+    public async Task<bool> RequiresSync(int seriesId)
+    {
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<int> query = from series in db.Series join season in db.Seasons on series.SeriesId equals season.SeriesId select season.SeasonId;
+
+        return await query.CountAsync() == 0;
     }
 }

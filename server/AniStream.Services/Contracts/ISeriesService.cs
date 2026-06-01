@@ -25,4 +25,6 @@ public interface ISeriesService
     public Task<SeriesModel[]> GetStartedSeries();
 
     public Task<SeriesModel[]> GetSeriesByIds(int[] seriesIds);
+
+    public Task<bool> RequiresSync(int seriesId);
 }

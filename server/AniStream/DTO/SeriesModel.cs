@@ -35,6 +35,12 @@ public sealed class SeriesCreateModel
     public required string? PreviewImage { get; set; }
 }
 
+public sealed class SeriesSyncModel
+{
+    public required bool RequiresSync { get; set; }
+    public required bool IsSyncing { get; set; }
+}
+
 internal static class SeriesModelHelper
 {
     public static SeriesModel ToDTO(this Models.SeriesModel model)

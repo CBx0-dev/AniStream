@@ -28,6 +28,14 @@ export interface SeriesCreateModel {
     preview_image: string | null;
 }
 
+/**
+ * Used for API only
+ */
+export interface SeriesSyncModel {
+    requires_sync: boolean;
+    is_syncing: boolean;
+}
+
 export function SeriesModel(guid: string, title: string, description: string, preview_image: string | null): SeriesModel;
 export function SeriesModel(series_id: number, guid: string, title: string, description: string, preview_image: string | null): SeriesModel;
 export function SeriesModel(...args: unknown[]): SeriesModel {

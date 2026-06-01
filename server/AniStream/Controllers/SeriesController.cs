@@ -45,6 +45,18 @@ public class SeriesController : ApiControllerBase
         return series.ToDTO();
     }
 
+    [HttpGet("{seriesId}/sync")]
+    public async Task<ActionResult<SeriesSyncModel>> GetSeriesSync(int seriesId)
+    {
+        bool requiresSync = await _seriesService.RequiresSync(seriesId);
+
+        return Ok(new SeriesSyncModel
+        {
+            RequiresSync = requiresSync,
+            IsSyncing = false
+        });
+    }
+
     [HttpPost("chunk")]
     public async Task<SeriesModel[]> GetSeriesChunk([FromBody] SeriesFilterModel options)
     {

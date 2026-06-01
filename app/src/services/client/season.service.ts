@@ -7,6 +7,7 @@ import {SeasonService} from "@contracts/season.contract";
 import {ProviderService} from "@contracts/provider.contract";
 
 import {SeasonCreateModel, SeasonDbModel, SeasonModel} from "@models/season.model";
+import {SeriesSyncModel} from "@models/series.model";
 
 import {DefaultProvider} from "@providers/default";
 
@@ -24,8 +25,11 @@ class SeasonServiceImpl extends ApiServiceBase implements SeasonService {
         this.providerService = ctx.getService(ProviderService);
     }
 
-    public requiresSync(_seriesId: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    public async requiresSync(seriesId: number): Promise<boolean> {
+        const provider: DefaultProvider = await this.providerService.getProvider();
+
+        const model: SeriesSyncModel = await this.get<SeriesSyncModel>(["api", provider.uniqueKey, "series", seriesId, "sync"]);
+        return model.requires_sync;
     }
 
     public async getSeason(seasonId: number): Promise<SeasonModel | null> {
