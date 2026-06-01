@@ -3,6 +3,7 @@ using AniStream.API.Serivces;
 using AniStream.API.Utils;
 using AniStream.Contracts;
 using AniStream.Services;
+using AniStream.Shared;
 using AniStream.Utils;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;

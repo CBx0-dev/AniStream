@@ -1,4 +1,4 @@
-﻿namespace AniStream.API;
+﻿namespace AniStream.Shared;
 
 public sealed class AppConfig
 {

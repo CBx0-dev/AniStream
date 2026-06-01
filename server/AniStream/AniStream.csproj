@@ -12,6 +12,7 @@
         <PackageReference Include="Scalar.AspNetCore" Version="2.14.1"/>
 
         <ProjectReference Include="../AniStream.Services/AniStream.Services.csproj"/>
+        <ProjectReference Include="../AniStream.Shared/AniStream.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Test'">
