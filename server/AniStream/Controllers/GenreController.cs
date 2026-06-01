@@ -68,6 +68,7 @@ public sealed class GenreController : ApiControllerBase
         await _genreService.CreateGenreToSeries(data.GenreId, data.SeriesId, data.MainGenre);
         return Ok("Genre added to series");
     }
+#endif
 
     [HttpGet("series/{seriesId}")]
     public async Task<GenreModel[]> GetGenresOfSeries(int seriesId)
@@ -76,7 +77,6 @@ public sealed class GenreController : ApiControllerBase
 
         return genres.Select(genre => genre.ToDTO()).ToArray();
     }
-#endif
 
     [HttpGet("series/{seriesId}/main")]
     public async Task<ActionResult<GenreModel>> GetMainGenreOfSeries(int seriesId)
