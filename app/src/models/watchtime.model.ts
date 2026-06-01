@@ -10,6 +10,31 @@ export interface WatchtimeModel extends WatchtimeDbModel {
     clone(): WatchtimeModel;
 }
 
+
+/**
+ * Used for API only
+ */
+export interface TotalProgressionModel {
+    total_progression: number;
+}
+
+/**
+ * Used for API only
+ */
+export interface WatchtimeCreateModel {
+    episode_id: number;
+    percentage_watched: number;
+    stopped_time: number;
+}
+
+/**
+ * Used for API only
+ */
+export interface WatchtimeUpdateModel {
+    percentage_watched: number | null;
+    stopped_time: number | null;
+}
+
 export function WatchtimeModel(episode_id: number, percentage_watched: number, stopped_time: number, tenant_id: string): WatchtimeModel;
 export function WatchtimeModel(watchtime_id: number, episode_id: number, percentage_watched: number, stopped_time: number, tenant_id: string): WatchtimeModel;
 
