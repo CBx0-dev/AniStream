@@ -10,14 +10,14 @@ public sealed class WatchTimeModel
     public int WatchtimeId { get; set; }
     public int EpisodeId { get; set; }
     public int PercentageWatched { get; set; }
-    public int StoppedTime { get; set; }
+    public double StoppedTime { get; set; }
     public string TenantId { get; set; }
 
     public WatchTimeModel(
         int watchtimeId,
         int episodeId,
         int percentageWatched,
-        int stoppedTime,
+        double stoppedTime,
         string tenantId
     )
     {
@@ -31,7 +31,7 @@ public sealed class WatchTimeModel
     public WatchTimeModel(
         int episodeId,
         int percentageWatched,
-        int stoppedTime,
+        double stoppedTime,
         string tenantId
     ) : this(
         0,

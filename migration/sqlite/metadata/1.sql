@@ -17,9 +17,9 @@ CREATE TABLE genre
 
 CREATE TABLE genre_to_series
 (
-    genre_id           INTEGER NOT NULL,
-    series_id          INTEGER NOT NULL,
-    main_genre         BOOLEAN NOT NULL,
+    genre_id   INTEGER NOT NULL,
+    series_id  INTEGER NOT NULL,
+    main_genre BOOLEAN NOT NULL,
     PRIMARY KEY (genre_id, series_id),
     FOREIGN KEY (genre_id) REFERENCES genre (genre_id) ON DELETE RESTRICT,
     FOREIGN KEY (series_id) REFERENCES series (series_id) ON DELETE RESTRICT
@@ -69,9 +69,9 @@ CREATE TABLE watchlist
 CREATE TABLE watchtime
 (
     watchtime_id       INTEGER PRIMARY KEY AUTOINCREMENT,
-    episode_id         INTEGER NOT NULL,
-    percentage_watched INTEGER NOT NULL,
-    stopped_time       INTEGER NOT NULL,
-    tenant_id          TEXT    NOT NULL,
+    episode_id         INTEGER          NOT NULL,
+    percentage_watched INTEGER          NOT NULL,
+    stopped_time       DOUBLE PRECISION NOT NULL,
+    tenant_id          TEXT             NOT NULL,
     FOREIGN KEY (episode_id) REFERENCES episode (episode_id) ON DELETE CASCADE
 );
