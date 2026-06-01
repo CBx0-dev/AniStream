@@ -37,8 +37,8 @@ public sealed class EpisodeModel
     }
 
     public EpisodeModel(
-        int episodeNumber,
         int seasonId,
+        int episodeNumber,
         string germanTitle,
         string englishTitle,
         string description

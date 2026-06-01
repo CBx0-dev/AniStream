@@ -97,8 +97,8 @@ public sealed class SeriesServiceTests : TestBase
             db.Seasons.Add(seasonA);
             await db.SaveChangesAsync();
             
-            EpisodeModel epA1 = new EpisodeModel(1, seasonA.SeasonId, "A1", "A1", "");
-            EpisodeModel epA2 = new EpisodeModel(2, seasonA.SeasonId, "A2", "A2", "");
+            EpisodeModel epA1 = new EpisodeModel(seasonA.SeasonId, 1, "A1", "A1", "");
+            EpisodeModel epA2 = new EpisodeModel(seasonA.SeasonId, 2, "A2", "A2", "");
             db.Episodes.AddRange(epA1, epA2);
             await db.SaveChangesAsync();
 
@@ -109,8 +109,8 @@ public sealed class SeriesServiceTests : TestBase
             SeasonModel seasonB = new SeasonModel(seriesB.SeriesId, 1);
             db.Seasons.Add(seasonB);
             await db.SaveChangesAsync();
-            EpisodeModel epB1 = new EpisodeModel(1, seasonB.SeasonId, "B1", "B1", "");
-            EpisodeModel epB2 = new EpisodeModel(2, seasonB.SeasonId, "B2", "B2", "");
+            EpisodeModel epB1 = new EpisodeModel(seasonB.SeasonId, 1, "B1", "B1", "");
+            EpisodeModel epB2 = new EpisodeModel(seasonB.SeasonId, 2, "B2", "B2", "");
             db.Episodes.AddRange(epB1, epB2);
             await db.SaveChangesAsync();
 
@@ -121,7 +121,7 @@ public sealed class SeriesServiceTests : TestBase
             SeasonModel seasonC = new SeasonModel(seriesC.SeriesId, 1);
             db.Seasons.Add(seasonC);
             await db.SaveChangesAsync();
-            EpisodeModel epC1 = new EpisodeModel(1, seasonC.SeasonId, "C1", "C1", "");
+            EpisodeModel epC1 = new EpisodeModel(seasonC.SeasonId, 1, "C1", "C1", "");
             db.Episodes.Add(epC1);
             await db.SaveChangesAsync();
 
@@ -132,7 +132,7 @@ public sealed class SeriesServiceTests : TestBase
             SeasonModel seasonD = new SeasonModel(seriesD.SeriesId, 0);
             db.Seasons.Add(seasonD);
             await db.SaveChangesAsync();
-            EpisodeModel epD1 = new EpisodeModel(1, seasonD.SeasonId, "D1", "D1", "");
+            EpisodeModel epD1 = new EpisodeModel(seasonD.SeasonId, 1, "D1", "D1", "");
             db.Episodes.Add(epD1);
             await db.SaveChangesAsync();
 
