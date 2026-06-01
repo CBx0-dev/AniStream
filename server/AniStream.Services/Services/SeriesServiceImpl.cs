@@ -3,15 +3,16 @@ using AniStream.Contexts;
 using AniStream.Contracts;
 using AniStream.Models;
 using AniStream.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace AniStream.Services;
 
-public sealed class SeriesSerivceImpl : ISeriesService
+public sealed class SeriesServiceImpl : ISeriesService
 {
     private readonly DbContextFactory<MetadataDbContext> _dbFactory;
     private readonly ICredentialsService _credentialsService;
 
-    public SeriesSerivceImpl(DbContextFactory<MetadataDbContext> dbFactory, ICredentialsService credentialsService)
+    public SeriesServiceImpl(DbContextFactory<MetadataDbContext> dbFactory, ICredentialsService credentialsService)
     {
         _dbFactory = dbFactory;
         _credentialsService = credentialsService;

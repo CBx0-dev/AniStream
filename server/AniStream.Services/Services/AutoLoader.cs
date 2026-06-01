@@ -33,7 +33,7 @@ public sealed class AutoLoader
         services.AddScoped<IUserService, UserServiceImpl>();
         services.AddScoped<IListService, ListServiceImpl>();
         services.AddScoped<IGenreService, GenreServiceImpl>();
-        services.AddScoped<ISeriesService, SeriesSerivceImpl>();
+        services.AddScoped<ISeriesService, SeriesServiceImpl>();
         services.AddScoped<ISeasonService, SeasonServiceImpl>();
         services.AddScoped<IEpisodeService, EpisodeServiceImpl>();
         services.AddScoped<IResourceService, ResourceServiceImpl>();
