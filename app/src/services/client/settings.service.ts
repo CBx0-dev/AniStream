@@ -11,6 +11,8 @@ import {UnsupportedPlatformError} from "@utils/error";
 
 import {ProfileModel} from "@models/profile.model";
 
+import * as AppEnv from "@AppEnv";
+
 export class SettingsServiceImpl implements SettingsService {
     private static readonly HEALTHZ_KEY: string = "healthz";
 
@@ -47,6 +49,10 @@ export class SettingsServiceImpl implements SettingsService {
     public constructor(ctx: ReadableGlobalContext) {
         this.i18nService = ctx.getService(I18nService);
         this.userService = ctx.getService(UserService);
+
+        if (AppEnv.isTesting) {
+            return;
+        }
 
         this.healthz = this.loadFromStorage(SettingsServiceImpl.HEALTHZ_KEY, "https://www.google.com/generate_204");
     }

@@ -9,6 +9,8 @@ import {ServiceDeclaration} from "@services/declaration";
 
 import {ProfileModel} from "@models/profile.model";
 
+import * as AppEnv from "@AppEnv";
+
 class SettingsServiceImpl implements SettingsService {
     private static readonly IGNORE_VERSION_KEY: string = "ignore-version";
     private static readonly UPDATES_ACTIVE_KEY: string = "updates-active";
@@ -51,6 +53,10 @@ class SettingsServiceImpl implements SettingsService {
     public constructor(ctx: ReadableGlobalContext) {
         this.i18nService = ctx.getService(I18nService);
         this.userService = ctx.getService(UserService);
+
+        if (AppEnv.isTesting) {
+            return;
+        }
 
         this.ignoreVersion = this.loadFromStorage(SettingsServiceImpl.IGNORE_VERSION_KEY, "0.0.0");
         this.updatesActive = this.loadFromStorage(SettingsServiceImpl.UPDATES_ACTIVE_KEY, "true") == "true";

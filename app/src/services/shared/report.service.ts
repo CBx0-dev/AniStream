@@ -11,6 +11,8 @@ import {ServiceDeclaration} from "@services/declaration";
 
 import {ReportControlModel, ReportResult} from "@controls/ReportControl.model";
 
+import * as AppEnv from "@AppEnv";
+
 import * as packageJSON from "@/../package.json";
 
 class ReportServiceImpl implements ReportService {
@@ -18,6 +20,10 @@ class ReportServiceImpl implements ReportService {
 
     public constructor(ctx: ReadableGlobalContext) {
         this.ctx = ctx;
+
+        if (AppEnv.isTesting) {
+            return;
+        }
 
         window.addEventListener("unhandledrejection", async ev => {
             await this.handleFatalError(ev.reason || "Unhandled Rejection");
