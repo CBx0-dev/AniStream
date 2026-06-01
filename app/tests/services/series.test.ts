@@ -37,14 +37,6 @@ class SeriesTests extends TestBase {
     private async getSeriesByGuid() {
         const created: SeriesModel = await this.seriesService.insertSeries("g-a", "Alpha Show", "", null);
 
-        // In JS contract we don't have GetSeries(guid), we only have getSeries(number)
-        // However, we have existByGUID(guid).
-        // Let's check if the .NET test actually uses GUID.
-        // C# had: GetSeries(created.Guid)
-        // Our contract only has getSeries(seriesId: number)
-        // I will stick to what the contract offers or see if there is another way.
-        // Actually, the contract might be incomplete compared to .NET, but I should only use what's there.
-        
         const exists: boolean = await this.seriesService.existByGUID(created.guid);
         expect(exists).toBe(true);
     }
