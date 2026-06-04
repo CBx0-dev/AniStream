@@ -49,7 +49,7 @@ public class UserServiceImpl : IUserService
         return db.Profiles.ToArray();
     }
 
-    public async Task<ProfileModel> GetProfileByUsername(string username)
+    public async Task<ProfileModel?> GetProfileByUsername(string username)
     {
         await using ProfileDbContext db = await _dbFactory.GetContext();
 

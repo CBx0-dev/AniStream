@@ -1,6 +1,6 @@
 namespace AniStream.Worker;
 
-public class Worker : BackgroundService
+internal sealed class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
 

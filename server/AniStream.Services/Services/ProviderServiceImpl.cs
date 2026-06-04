@@ -26,4 +26,10 @@ public sealed class ProviderServiceImpl : IProviderService
 
         _providerName = providerName;
     }
+
+    public string[] GetProviders()
+    {
+        // TODO maybe resolve dynamic
+        return ["sto", "aniworld"];
+    }
 }

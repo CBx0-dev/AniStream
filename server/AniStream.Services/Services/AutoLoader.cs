@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AniStream.Services;
 
-public sealed class AutoLoader
+public static class AutoLoader
 {
     public static void LoadServices(IServiceCollection services, Options options)
     {
@@ -17,9 +17,10 @@ public sealed class AutoLoader
             )
         );
 
-        services.AddScoped<DbContextFactory<MetadataDbContext>>(sp => {
+        services.AddScoped<DbContextFactory<MetadataDbContext>>(sp =>
+        {
             IProviderService providerService = sp.GetRequiredService<IProviderService>();
-            
+
             return new MetadataDbContextFactory(
                 options.DatabaseDriver,
                 options.MigrationPath,
@@ -39,6 +40,7 @@ public sealed class AutoLoader
         services.AddScoped<IResourceService, ResourceServiceImpl>();
         services.AddScoped<IWatchListService, WatchListServiceImpl>();
         services.AddScoped<IWatchTimeService, WatchTimeServiceImpl>();
+        services.AddScoped<ISyncService, SyncServiceImpl>();
 
         ResourceServiceImpl.AssetsPath = options.AssetsPath;
     }

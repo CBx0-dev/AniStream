@@ -1,3 +1,5 @@
+using AniStream.Models;
+
 namespace AniStream.API.DTO;
 
 public sealed class SeriesModel
@@ -38,7 +40,7 @@ public sealed class SeriesCreateModel
 public sealed class SeriesSyncModel
 {
     public required bool RequiresSync { get; set; }
-    public required bool IsSyncing { get; set; }
+    public required SyncJobStatus? Status { get; set; }
 }
 
 internal static class SeriesModelHelper

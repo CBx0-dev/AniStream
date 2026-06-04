@@ -11,15 +11,15 @@ public sealed class ResourceServiceImpl : IResourceService
     public ResourceServiceImpl(IProviderService providerService)
     {
         _providerService = providerService;
-
-        if (AssetsPath is null)
-        {
-            throw new InvalidOperationException("Assets path is not set.");
-        }
     }
 
     public Stream? GetResource(string hash)
     {
+        if (AssetsPath is null)
+        {
+            throw new InvalidOperationException("Assets path is not set.");
+        }
+
         string provider = _providerService.GetActiveProvider();
 
         string path = Path.Combine(AssetsPath, provider, hash);

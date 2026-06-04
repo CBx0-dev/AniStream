@@ -75,3 +75,14 @@ CREATE TABLE watchtime
     tenant_id          TEXT             NOT NULL,
     FOREIGN KEY (episode_id) REFERENCES episode (episode_id) ON DELETE CASCADE
 );
+
+CREATE TABLE sync_job
+(
+    sync_job_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    series_id   INTEGER  NOT NULL,
+    status      INTEGER  NOT NULL,
+    started     DATETIME NOT NULL,
+    completed   DATETIME,
+    error       TEXT,
+    FOREIGN KEY (series_id) REFERENCES series (series_id) ON DELETE CASCADE
+);

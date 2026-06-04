@@ -11,11 +11,13 @@ namespace AniStream.API.Controllers;
 [Authorize]
 public class SeriesController : ApiControllerBase
 {
-    private ISeriesService _seriesService;
+    private readonly ISeriesService _seriesService;
+    private readonly ISyncService _syncService;
 
-    public SeriesController(ISeriesService seriesService)
+    public SeriesController(ISeriesService seriesService, ISyncService syncService)
     {
         _seriesService = seriesService;
+        _syncService = syncService;
     }
 
 #if TESTING_ENABLED
@@ -46,15 +48,35 @@ public class SeriesController : ApiControllerBase
     }
 
     [HttpGet("{seriesId}/sync")]
-    public async Task<ActionResult<SeriesSyncModel>> GetSeriesSync(int seriesId)
+    public async Task<IActionResult> GetSeriesSync(int seriesId)
     {
+        Models.SeriesModel? series = await _seriesService.GetSeries(seriesId);
+        if (series is null)
+        {
+            return NotFound($"Series with ID '{seriesId}' not found");
+        }
+
         bool requiresSync = await _seriesService.RequiresSync(seriesId);
+        Models.SyncJobModel? job = await _syncService.GetSyncJobBySeries(series);
 
         return Ok(new SeriesSyncModel
         {
             RequiresSync = requiresSync,
-            IsSyncing = false
+            Status = job?.Status ?? null
         });
+    }
+
+    [HttpPost("{seriesId}/sync")]
+    public async Task<ActionResult<SeriesSyncModel>> SyncSeries(int seriesId)
+    {
+        Models.SeriesModel? series = await _seriesService.GetSeries(seriesId);
+        if (series is null)
+        {
+            return NotFound($"Series with ID '{seriesId}' not found");
+        }
+
+        await _syncService.RequestSync(series);
+        return Ok("Sync successfully queued");
     }
 
     [HttpPost("chunk")]
