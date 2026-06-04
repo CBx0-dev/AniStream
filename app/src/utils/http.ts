@@ -1,4 +1,13 @@
-import {fetch} from "@tauri-apps/plugin-http";
+import * as AppEnv from "@AppEnv";
+
+let fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+
+if (AppEnv.isWorkerMode) {
+    fetch = globalThis.fetch;
+} else {
+    const tauri = await import("@tauri-apps/plugin-http");
+    fetch = tauri.fetch;
+}
 
 export class HTTPError extends Error {
     public readonly response: Response;
@@ -107,7 +116,7 @@ export function post(url: string, body: RequestInit["body"], headers: [string, s
     }));
 }
 
-export function put(url: string,  body: RequestInit["body"], headers: [string,  string][] = []): HTTPResponse {
+export function put(url: string, body: RequestInit["body"], headers: [string, string][] = []): HTTPResponse {
     return new HTTPResponse(fetch(url, {
         method: "PUT",
         body: body,
@@ -115,7 +124,7 @@ export function put(url: string,  body: RequestInit["body"], headers: [string,  
     }));
 }
 
-export function delete$(url: string, headers: [string,  string][] = []): HTTPResponse {
+export function delete$(url: string, headers: [string, string][] = []): HTTPResponse {
     return new HTTPResponse(fetch(url, {
         method: "DELETE",
         headers: headers

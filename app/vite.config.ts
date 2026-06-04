@@ -1,9 +1,10 @@
 import * as path from "path";
+import * as fs from "fs";
 
-import {defineConfig, PluginOption, UserConfig} from "vite";
+import {BuildEnvironmentOptions, ConfigEnv, defineConfig, PluginOption, UserConfig} from "vite";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
-import * as fs from "node:fs";
+import {app} from "@tauri-apps/api";
 
 const host: string = process.env.TAURI_DEV_HOST;
 
@@ -78,13 +79,49 @@ function virtualServiceLoader(applicationTarget: string): PluginOption {
     }
 }
 
+function activePlugins(applicationTarget: string): PluginOption[] {
+    if (applicationTarget == "worker") {
+        return [dynamicServiceResolver(applicationTarget)]
+    }
+
+    return [vue(), tailwindcss(), dynamicServiceResolver(applicationTarget), virtualServiceLoader(applicationTarget)];
+}
+
+function buildEnv(applicationTarget: string): BuildEnvironmentOptions {
+    if (applicationTarget != "worker") {
+        return {};
+    }
+
+    return {
+        lib: {
+            entry: path.resolve(__dirname, "src", "worker.ts"),
+            formats: ["es"],
+            fileName: () => "worker.js"
+        },
+        assetsDir: "",
+        cssCodeSplit: false,
+        rolldownOptions: {
+            input: {
+                main: path.resolve(__dirname, "src", "worker.ts")
+            },
+            output: {
+                inlineDynamicImports: true
+            }
+        }
+    };
+}
+
 // https://vite.dev/config/
-export default defineConfig(async (): Promise<UserConfig> => {
+export default defineConfig(async (env: ConfigEnv): Promise<UserConfig> => {
     const APPLICATION_TARGET: string = process.env.APPLICATION_TARGET || "standalone";
     console.log(`ℹ️  Application Target: ${APPLICATION_TARGET}`);
 
+    if (env.command == "serve" && APPLICATION_TARGET == "worker") {
+        throw "Worker can only be build and not served";
+    }
+
     return {
-        plugins: [vue(), tailwindcss(), dynamicServiceResolver(APPLICATION_TARGET), virtualServiceLoader(APPLICATION_TARGET)],
+        plugins: activePlugins(APPLICATION_TARGET),
         root: __dirname,
 
         resolve: {
@@ -104,6 +141,8 @@ export default defineConfig(async (): Promise<UserConfig> => {
                 "@test": path.join(__dirname, "tests")
             }
         },
+
+        build: buildEnv(APPLICATION_TARGET),
 
         // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
         //

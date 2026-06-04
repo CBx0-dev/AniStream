@@ -2,7 +2,7 @@ import * as path from "@tauri-apps/api/path";
 
 import * as AppEnv from "@AppEnv";
 
-const PATH_SEPARATOR: string = AppEnv.isTesting
+const PATH_SEPARATOR: string = AppEnv.isTesting || AppEnv.isWorkerMode
     ? require("path").sep
     : path.sep();
 

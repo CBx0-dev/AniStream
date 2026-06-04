@@ -22,6 +22,7 @@
     "@tauri-apps/plugin-sql": "^2.3.1",
     "@tauri-apps/plugin-updater": "^2.10.0",
     "hls.js": "^1.6.15",
+    "linkedom": "^0.18.12",
     "vitest": "^4.1.5",
     "vue": "^3.5.13",
     "vue-mvvm": "^0.9.0",
