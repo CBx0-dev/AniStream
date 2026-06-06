@@ -14,7 +14,42 @@ export async function appDataDir(): Promise<string> {
     return await path.appDataDir();
 }
 
+export function isAbsolutePath(part: string): boolean {
+    if (AppEnv.isWindows) {
+        // C:\..., D:\..., or \\server\share
+        return /^[a-zA-Z]:\\/.test(part) || part.startsWith("\\\\");
+    }
+
+    // Unix-like systems
+    return part.startsWith("/");
+}
+
+export function extractRoot(part: string): string | null {
+    if (AppEnv.isWindows) {
+        if (part.startsWith("\\\\")) {
+            return "\\\\";
+        }
+        
+        if (/^[a-zA-Z]:\\/.test(part)) {
+            return part.slice(0, 3);
+        } 
+        
+        return null;
+    }
+    
+    if (part.startsWith("/")) {
+        return "/";
+    }
+    
+    return null;
+}
+
 export function join(...paths: string[]): string {
+    if (paths.length == 0) {
+        return "";
+    }
+    
+    const rootParts: string | null = extractRoot(paths[0]);
     const splitRegex: RegExp = new RegExp(`\\${PATH_SEPARATOR}`, "g");
     const parts: string[] = paths.map(part => part.split(splitRegex)).flat();
 
@@ -35,5 +70,5 @@ export function join(...paths: string[]): string {
         resultParts.push(part);
     }
 
-    return resultParts.join(PATH_SEPARATOR);
+    return (rootParts ?? "") + resultParts.join(PATH_SEPARATOR);
 }
