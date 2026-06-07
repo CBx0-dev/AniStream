@@ -3,7 +3,7 @@ import * as path from "@tauri-apps/api/path";
 import * as AppEnv from "@AppEnv";
 
 const PATH_SEPARATOR: string = AppEnv.isTesting || AppEnv.isWorkerMode
-    ? require("path").sep
+    ? require("node:path").sep
     : path.sep();
 
 export async function appDataDir(): Promise<string> {
