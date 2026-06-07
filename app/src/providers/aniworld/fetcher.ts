@@ -1,5 +1,3 @@
-import * as fs from "@tauri-apps/plugin-fs";
-
 import {Provider} from "@contracts/fetch.contract";
 
 import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";
@@ -11,7 +9,6 @@ import {EpisodeFetchModel} from "@models/episode.model";
 
 import * as http from "@utils/http";
 import * as hash from "@utils/hash";
-import * as path from "@utils/path";
 
 export class AniWorldFetcher implements IInformationFetcher {
     private readonly provider: DefaultProvider;
@@ -45,7 +42,7 @@ export class AniWorldFetcher implements IInformationFetcher {
         return guids;
     }
 
-    public async getSeries(guid: string): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[]]> {
+    public async getSeries(guid: string): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[], previewImage: Uint8Array | null]> {
         const html: string = await http.get(this.provider.streamURL(guid)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
 
@@ -64,15 +61,12 @@ export class AniWorldFetcher implements IInformationFetcher {
 
         const previewImageElement: HTMLImageElement | null = informationPanel.querySelector(".seriesCoverBox img");
 
-        let previewImage: string | null = null;
+        let previewImageHash: string | null = null;
+        let previewImage: Uint8Array | null = null;
         if (previewImageElement && previewImageElement.hasAttribute("data-src")) {
             const url: string = previewImageElement.getAttribute("data-src")!.substring(1);
-            const binary: Uint8Array = await http.get(`${this.provider.baseURL}/${url}`).uint8Array();
-            previewImage = hash.fnv1a(guid);
-
-            const storageLocation: string = await this.provider.getStorageLocation();
-            const filePath: string = path.join(storageLocation, previewImage);
-            await fs.writeFile(filePath, binary);
+            previewImage = await http.get(`${this.provider.baseURL}/${url}`).uint8Array();
+            previewImageHash = hash.fnv1a(guid);
         }
 
         const genres: GenreFetchModel[] = [];
@@ -93,8 +87,8 @@ export class AniWorldFetcher implements IInformationFetcher {
             genres.push({key: genre, main: genre == mainGenreKey});
         }
 
-        const model: SeriesModel = SeriesModel(guid, title, description, previewImage);
-        return [model, genres]
+        const model: SeriesModel = SeriesModel(guid, title, description, previewImageHash);
+        return [model, genres, previewImage]
     }
 
     public async getSeasons(series: SeriesModel): Promise<SeasonFetchModel[]> {
@@ -142,7 +136,7 @@ export class AniWorldFetcher implements IInformationFetcher {
         }
 
         const episodes: EpisodeFetchModel[] = [];
-        for (const row of tableBody.rows) {
+        for (const row of tableBody.children) {
             if (!row.hasAttribute("data-episode-season-id")) {
                 continue;
             }

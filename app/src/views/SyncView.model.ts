@@ -4,6 +4,7 @@ import {RouteAdapter, RouterService} from "vue-mvvm/router";
 
 import SyncView from "@views/SyncView.vue";
 
+import {ResourceService} from "@contracts/resource.contract";
 import {SeriesService} from "@contracts/series.contract";
 import {FetchService} from "@contracts/fetch.contract";
 import {GenreService} from "@contracts/genre.contract";
@@ -25,6 +26,8 @@ export class SyncViewModel extends ViewModel {
     }
 
     private readonly routerService: RouterService;
+
+    private readonly resourceService: ResourceService;
     private readonly settingsService: SettingsService;
     private readonly fetchService: FetchService;
     private readonly seriesService: SeriesService;
@@ -44,6 +47,8 @@ export class SyncViewModel extends ViewModel {
         super();
 
         this.routerService = this.ctx.getService(RouterService);
+
+        this.resourceService = this.ctx.getService(ResourceService);
         this.settingsService = this.ctx.getService(SettingsService);
         this.fetchService = this.ctx.getService(FetchService);
         this.seriesService = this.ctx.getService(SeriesService);
@@ -87,16 +92,25 @@ export class SyncViewModel extends ViewModel {
 
             try {
                 if (!await this.seriesService.existByGUID(guid)) {
-                    const [fetchedSeries, fetchedGenres] = await this.fetchService.getSeries(guid);
+                    const [fetchedSeries, fetchedGenres, previewImage] = await this.fetchService.getSeries(guid);
                     const series: SeriesModel = await this.seriesService.insertSeries(fetchedSeries.guid, fetchedSeries.title, fetchedSeries.description, fetchedSeries.preview_image);
-                    await Promise.all(fetchedGenres.map(fetchedGenre => (async () => {
-                        let genre: GenreModel | null = await this.genreService.getGenreByKey(fetchedGenre.key);
-                        if (!genre) {
-                            genre = await this.genreService.insertGenre(fetchedGenre.key);
-                        }
+                    await Promise.all([
+                        ...fetchedGenres.map(fetchedGenre => (async () => {
+                            let genre: GenreModel | null = await this.genreService.getGenreByKey(fetchedGenre.key);
+                            if (!genre) {
+                                genre = await this.genreService.insertGenre(fetchedGenre.key);
+                            }
 
-                        await this.genreService.insertGenreToSeries(genre, series, fetchedGenre.main)
-                    })()));
+                            await this.genreService.insertGenreToSeries(genre, series, fetchedGenre.main)
+                        })()),
+                        ((async () => {
+                            if (!fetchedSeries.preview_image || !previewImage) {
+                                return;
+                            }
+
+                            await this.resourceService.saveResource(fetchedSeries.preview_image, previewImage);
+                        })())
+                    ]);
                 }
             } catch (e) {
                 console.error(e);

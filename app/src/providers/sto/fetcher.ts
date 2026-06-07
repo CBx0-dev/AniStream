@@ -1,5 +1,3 @@
-import * as fs from "@tauri-apps/plugin-fs";
-
 import {Provider} from "@contracts/fetch.contract";
 
 import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";
@@ -11,7 +9,6 @@ import {EpisodeFetchModel} from "@models/episode.model";
 
 import * as http from "@utils/http";
 import * as hash from "@utils/hash";
-import * as path from "@utils/path";
 
 export class StoFetcher implements IInformationFetcher {
     private readonly provider: DefaultProvider;
@@ -47,7 +44,7 @@ export class StoFetcher implements IInformationFetcher {
         return guids;
     }
 
-    public async getSeries(guid: string): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[]]> {
+    public async getSeries(guid: string): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[], previewImage: Uint8Array | null]> {
         const html: string = await http.get(this.provider.streamURL(guid)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
 
@@ -61,7 +58,8 @@ export class StoFetcher implements IInformationFetcher {
         const description: string = descriptionElement?.innerText.trim() ?? "N/A";
         const previewImageElement: HTMLImageElement | null = document.querySelector("body > div.show-header-wrapper > div.container-fluid.px-2.px-md-3.px-lg-3.px-xl-4.position-relative > div.row.g-4.mb-2 > div.col-3.col-md-3.col-lg-2.d-none.d-md-block > picture > img")
 
-        let previewImage: string | null = null;
+        let previewImageHash: string | null = null;
+        let previewImage: Uint8Array | null = null;
         if (previewImageElement && previewImageElement.hasAttribute("data-src")) {
             let url: string = previewImageElement.getAttribute("data-src")!;
             if (!url.startsWith("http")) {
@@ -70,12 +68,8 @@ export class StoFetcher implements IInformationFetcher {
                 }
                 url = `${this.provider.baseURL}${url}`;
             }
-            const binary: Uint8Array = await http.get(url).uint8Array();
-            previewImage = hash.fnv1a(guid);
-
-            const storageLocation: string = await this.provider.getStorageLocation();
-            const filePath: string = path.join(storageLocation, previewImage);
-            await fs.writeFile(filePath, binary);
+            previewImage = await http.get(url).uint8Array();
+            previewImageHash = hash.fnv1a(guid);
         }
 
         const genres: GenreFetchModel[] = [];
@@ -89,8 +83,8 @@ export class StoFetcher implements IInformationFetcher {
             genres.push({key: genre, main: false});
         }
 
-        const model: SeriesModel = SeriesModel(guid, title, description, previewImage);
-        return [model, genres]
+        const model: SeriesModel = SeriesModel(guid, title, description, previewImageHash);
+        return [model, genres, previewImage]
     }
 
     public async getSeasons(series: SeriesModel): Promise<SeasonFetchModel[]> {
@@ -122,14 +116,18 @@ export class StoFetcher implements IInformationFetcher {
     public async getEpisodes(guid: string, seasonNumber: number): Promise<EpisodeFetchModel[]> {
         const html: string = await http.get(this.provider.seasonURL(guid, seasonNumber)).text();
         const document: Document = this.parser.parseFromString(html, "text/html");
-        const tableBody: HTMLTableSectionElement | null = document.querySelector(`table.episode-table`);
-
-        if (!tableBody) {
+        const table: HTMLTableElement | null = document.querySelector(`table.episode-table`);
+        if (!table) {
             throw "Failed to extract meta information: Failed to find episode table";
         }
-
+        
+        const tableBody: HTMLTableSectionElement | null = table.querySelector("tbody");
+        if (!tableBody) {
+            throw "Failed to extract meta information: Failed to find episode table body";
+        }
+        
         const episodes: EpisodeFetchModel[] = [];
-        for (const row of tableBody.rows) {
+        for (const row of tableBody.children) {
             if (!row.classList.contains("episode-row")) {
                 continue;
             }

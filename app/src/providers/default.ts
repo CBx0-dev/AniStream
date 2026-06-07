@@ -18,7 +18,7 @@ export enum EpisodeLanguage {
 export interface IInformationFetcher {
     getCatalog(): Promise<string[]>;
 
-    getSeries(guid: string): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[]]>;
+    getSeries(guid: string): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[], previewImage: Uint8Array | null]>;
 
     getSeasons(series: SeriesModel): Promise<SeasonFetchModel[]>;
 

@@ -27,7 +27,7 @@ class FetchServiceImpl implements FetchService {
         return await fetcher.getCatalog();
     }
 
-    public async getSeries(guid: string, provider: DefaultProvider | null = null): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[]]> {
+    public async getSeries(guid: string, provider: DefaultProvider | null = null): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[], previewImage: Uint8Array | null]> {
         provider ??= await this.providerService.getProvider();
         const fetcher: IInformationFetcher = provider.getFetcher();
 

@@ -16,7 +16,7 @@ export interface Provider {
 export interface FetchService {
     getCatalog(provider?: DefaultProvider | null): Promise<string[]>;
 
-    getSeries(guid: string, provider?: DefaultProvider | null): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[]]>;
+    getSeries(guid: string, provider?: DefaultProvider | null): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[], previewImage: Uint8Array | null]>;
 
     getSeasons(series: SeriesModel, provider?: DefaultProvider | null): Promise<SeasonFetchModel[]>;
 

@@ -16,7 +16,7 @@ class FetchServiceImpl implements FetchService {
         throw new UnsupportedPlatformError("FetchServiceImpl.getCatalog");
     }
 
-    getSeries(_guid: string, _provider?: DefaultProvider | null): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[]]> {
+    getSeries(_guid: string, _provider?: DefaultProvider | null): Promise<[model: SeriesFetchModel, genres: GenreFetchModel[], previewImage: Uint8Array | null]> {
         throw new UnsupportedPlatformError("FetchServiceImpl.getSeries");
     }
 
