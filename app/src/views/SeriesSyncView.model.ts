@@ -165,7 +165,7 @@ export class SeriesSyncViewModel extends ViewModel {
 
         this.isSyncing = true;
         this.syncProgress = 0;
-        let completed = 0;
+        let completed: number = 0;
 
         for (const season of this.selectedSeasons) {
             this.syncStatus = `Syncing Season ${season == 0 ? "Filme" : season}...`;
