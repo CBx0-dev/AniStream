@@ -126,7 +126,7 @@ public sealed class SyncServiceImpl : ISyncService
 
         if (finished is not null)
         {
-            syncJob.Finished = (DateTime)finished;
+            syncJob.Completed = (DateTime)finished;
         }
 
         if (error is not null)

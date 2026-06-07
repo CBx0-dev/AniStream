@@ -9,6 +9,7 @@ public sealed class AppConfig
     public readonly string DatabaseMetadataConnectionString;
     public readonly string DatabaseProfileConnectionString;
     public readonly string AssetsPath;
+    public readonly string SidecarPath;
 
     private AppConfig()
     {
@@ -17,6 +18,7 @@ public sealed class AppConfig
         DatabaseMetadataConnectionString = GetEnvironmentVariable("DATABASE_METADATA_CONNECTION_STRING");
         DatabaseProfileConnectionString = GetEnvironmentVariable("DATABASE_PROFILE_CONNECTION_STRING");
         AssetsPath = GetEnvironmentVariable("ASSETS_PATH");
+        SidecarPath = GetEnvironmentVariable("SIDECAR_PATH");
     }
 
     private string GetEnvironmentVariable(string name)
