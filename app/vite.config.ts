@@ -1,10 +1,9 @@
 import * as path from "path";
 import * as fs from "fs";
 
-import {BuildEnvironmentOptions, ConfigEnv, defineConfig, PluginOption, UserConfig} from "vite";
+import {BuildEnvironmentOptions, ConfigEnv, defineConfig, PluginOption, Rolldown, UserConfig, transformWithOxc} from "vite";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
-import {app} from "@tauri-apps/api";
 
 const host: string = process.env.TAURI_DEV_HOST;
 
@@ -64,9 +63,15 @@ function virtualServiceLoader(applicationTarget: string): PluginOption {
             if (id == resolvedVirtualModuleId) {
                 // language=TypeScript
                 return `
-                    const s1 = import.meta.glob("/src/services/${applicationTarget}/**/*.service.ts", {eager: true, import: "default"});
-                    const s2 = import.meta.glob("/src/services/shared/**/*.service.ts", {eager: true, import: "default"});
-                    
+                    const s1 = import.meta.glob("/src/services/${applicationTarget}/**/*.service.ts", {
+                        eager: true,
+                        import: "default"
+                    });
+                    const s2 = import.meta.glob("/src/services/shared/**/*.service.ts", {
+                        eager: true,
+                        import: "default"
+                    });
+
                     export const services = {
                         ...s2,
                         ...s1
@@ -79,12 +84,68 @@ function virtualServiceLoader(applicationTarget: string): PluginOption {
     }
 }
 
+function raiiTransformer(): PluginOption {
+    return {
+        name: "raii-transformer",
+        enforce: "post",
+        transform: {
+            filter: {
+                id: /.ts$/,
+            },
+            async handler(code: string, id: string): Promise<null | Rolldown.TransformResult> {
+               if (!code.includes("using ")) {
+                    return null;
+                }
+
+                const jsResult = await transformWithOxc(code, id, {
+                    sourceType: "module"
+                });
+                
+                const {transformAsync} = await import ("@babel/core");
+                const {default: resourceMgmt} = await import("@babel/plugin-proposal-explicit-resource-management");
+                
+                const result = await transformAsync(jsResult.code, {
+                    filename: id,
+                    babelrc: false,
+                    configFile: false,
+                    sourceMaps: true,
+                    inputSourceMap: {
+                        ...jsResult.map,
+                        file: id
+                    },
+                    plugins: [
+                        resourceMgmt
+                    ]
+                });
+
+                if (!result) {
+                    return null;
+                }
+
+                return {
+                    code: result.code,
+                    map: result.map
+                }
+            }
+        }
+    }
+}
+
 function activePlugins(applicationTarget: string): PluginOption[] {
     if (applicationTarget == "worker") {
-        return [dynamicServiceResolver(applicationTarget)]
+        return [
+            raiiTransformer(),
+            dynamicServiceResolver(applicationTarget)
+        ];
     }
 
-    return [vue(), tailwindcss(), dynamicServiceResolver(applicationTarget), virtualServiceLoader(applicationTarget)];
+    return [
+        vue(),
+        tailwindcss(),
+        raiiTransformer(),
+        dynamicServiceResolver(applicationTarget),
+        virtualServiceLoader(applicationTarget)
+    ];
 }
 
 function buildEnv(applicationTarget: string): BuildEnvironmentOptions {
@@ -101,11 +162,18 @@ function buildEnv(applicationTarget: string): BuildEnvironmentOptions {
         assetsDir: "",
         cssCodeSplit: false,
         rolldownOptions: {
+            external: [
+                /^node:.*/,
+                "commander",
+                "ora",
+                "chalk"
+            ],
             input: {
                 main: path.resolve(__dirname, "src", "worker.ts")
             },
             output: {
-                inlineDynamicImports: true
+                codeSplitting: false,
+                sourcemap: true,
             }
         }
     };
