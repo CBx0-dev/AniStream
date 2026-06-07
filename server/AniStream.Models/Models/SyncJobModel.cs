@@ -23,7 +23,7 @@ public sealed class SyncJobModel
 
     public DateTime Started { get; set; }
 
-    public DateTime? Finished { get; set; }
+    public DateTime? Completed { get; set; }
 
     public string? Error { get; set; }
 
@@ -32,7 +32,7 @@ public sealed class SyncJobModel
         int seriesId,
         SyncJobStatus status,
         DateTime started,
-        DateTime? finished,
+        DateTime? completed,
         string? error
     )
     {
@@ -40,7 +40,7 @@ public sealed class SyncJobModel
         SeriesId = seriesId;
         Status = status;
         Started = started;
-        Finished = finished;
+        Completed = completed;
         Error = error;
     }
 
@@ -48,14 +48,14 @@ public sealed class SyncJobModel
         int seriesId,
         SyncJobStatus status,
         DateTime started,
-        DateTime? finished,
+        DateTime? completed,
         string? error
     ) : this(
         0,
         seriesId,
         status,
         started,
-        finished,
+        completed,
         error
     )
     {
