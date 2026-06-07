@@ -29,7 +29,8 @@ export async function setup(): Promise<void> {
             DATABASE_METADATA_CONNECTION_STRING: "",
             DATABASE_PROFILE_CONNECTION_STRING: "",
             DATABASE_MIGRATION_PATH: path.join(__dirname, "..", "..", "migration"),
-            ASSETS_PATH: ""
+            ASSETS_PATH: "",
+            SIDECAR_PATH: ""
         },
         stdio: "inherit"
     });
