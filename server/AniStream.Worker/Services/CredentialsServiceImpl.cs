@@ -3,7 +3,7 @@ using AniStream.Models;
 
 namespace AniStream.Worker.Services;
 
-public sealed class CredentialsServiceImpl : ICredentialsService
+internal sealed class CredentialsServiceImpl : ICredentialsService
 {
     public Task<ProfileModel?> ValidateCredentials(string uuid, string password)
     {
