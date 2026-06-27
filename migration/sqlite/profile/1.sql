@@ -3,6 +3,8 @@ CREATE TABLE profile
     profile_id       INTEGER PRIMARY KEY AUTOINCREMENT,
     uuid             TEXT UNIQUE NOT NULL,
     name             TEXT        NOT NULL,
+    password         TEXT        NOT NULL,
+    password_salt    TEXT        NOT NULL,
     background_color TEXT        NOT NULL,
     eye              TEXT        NOT NULL,
     mouth            TEXT        NOT NULL,

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,10 @@ public sealed class ProfileModel
 
     public string Name { get; set; }
 
+    public string Password { get; set; }
+
+    public string PasswordSalt { get; set; }
+    
     public string BackgroundColor { get; set; }
 
     public string Eye { get; set; }
@@ -49,7 +54,7 @@ public sealed class ProfileModel
         Theme = theme;
         Lang = lang;
         TosAccepted = tosAccepted;
-        SyncCatalog = syncCatalog; 
+        SyncCatalog = syncCatalog;
     }
 
     public ProfileModel(
