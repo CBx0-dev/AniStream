@@ -2,7 +2,7 @@ import {QueryResult} from "@tauri-apps/plugin-sql";
 
 import {ReadableGlobalContext} from "vue-mvvm";
 
-import {SeasonService} from "@contracts/season.contract";
+import {SeasonService, SyncInformation} from "@contracts/season.contract";
 
 import {ServiceDeclaration} from "@services/declaration";
 import {DbServiceBase, DbSession} from "@services/utils/db";
@@ -15,14 +15,17 @@ class SeasonServiceImpl extends DbServiceBase implements SeasonService {
         super(ctx);
     }
 
-    public async requiresSync(seriesId: number): Promise<boolean> {
+    public async getSyncStatus(seriesId: number): Promise<SyncInformation> {
         const session: DbSession = await this.getDatabase()
 
         const [{count}] = await session.query<[{
             count: number
         }]>("SELECT count(season_id) AS count FROM season WHERE series_id = ?;", seriesId);
 
-        return count == 0;
+        return {
+            requiresSync: count == 0,
+            status: null
+        }
     }
 
     public async getSeason(seasonId: number): Promise<SeasonModel | null> {

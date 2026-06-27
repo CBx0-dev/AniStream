@@ -3,7 +3,7 @@ import {ReadableGlobalContext} from "vue-mvvm";
 import {ApiServiceBase} from "@services/utils/api";
 import {ServiceDeclaration} from "@services/declaration";
 
-import {SeasonService} from "@contracts/season.contract";
+import {SeasonService, SyncInformation} from "@contracts/season.contract";
 import {ProviderService} from "@contracts/provider.contract";
 
 import {SeasonCreateModel, SeasonDbModel, SeasonModel} from "@models/season.model";
@@ -25,11 +25,14 @@ class SeasonServiceImpl extends ApiServiceBase implements SeasonService {
         this.providerService = ctx.getService(ProviderService);
     }
 
-    public async requiresSync(seriesId: number): Promise<boolean> {
+    public async getSyncStatus(seriesId: number): Promise<SyncInformation> {
         const provider: DefaultProvider = await this.providerService.getProvider();
 
         const model: SeriesSyncModel = await this.get<SeriesSyncModel>(["api", provider.uniqueKey, "series", seriesId, "sync"]);
-        return model.requires_sync;
+        return {
+            requiresSync: model.requires_sync,
+            status: model.status
+        };
     }
 
     public async getSeason(seasonId: number): Promise<SeasonModel | null> {

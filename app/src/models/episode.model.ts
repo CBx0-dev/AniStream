@@ -1,3 +1,6 @@
+import {SyncStatus} from "@contracts/season.contract";
+import {EpisodeLanguage} from "@providers/default";
+
 export interface EpisodeFetchModel {
     episode_number: number;
     german_title: string;
@@ -36,6 +39,18 @@ export interface EpisodeUpdateModel {
     german_title: string;
     english_title: string;
     description: string;
+}
+
+/**
+ * Used for API only
+ */
+export interface EpisodeProviderModel {
+    status: SyncStatus;
+    providers: Array<{
+        name: string;
+        url: string;
+        language_code: EpisodeLanguage;
+    }>;
 }
 
 export function EpisodeModel(

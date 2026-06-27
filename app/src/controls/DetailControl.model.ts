@@ -13,7 +13,7 @@ import {GenreModel} from "@models/genre.model";
 
 import {GenreService} from "@contracts/genre.contract";
 import {I18nService} from "@contracts/i18n.contract";
-import {SeasonService} from "@contracts/season.contract";
+import {SeasonService, SyncInformation} from "@contracts/season.contract";
 import {WatchlistService} from "@contracts/watchlist.contract";
 import {WatchtimeService} from "@contracts/watchtime.contract";
 import {ListService} from "@contracts/list.contract";
@@ -103,7 +103,8 @@ export class DetailControlModel extends DialogControl {
 
     public async onWatchBtn(): Promise<void> {
         await this.closeDialog();
-        if (await this.seasonService.requiresSync(this.seriesId)) {
+        const status: SyncInformation = await this.seasonService.getSyncStatus(this.seriesId);
+        if (status.requiresSync) {
             await this.routerService.navigateTo(SeriesSyncViewModel, {
                 series_id: this.seriesId
             });

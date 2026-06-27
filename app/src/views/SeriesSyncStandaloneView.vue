@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import {useViewModel} from "vue-mvvm";
 
-import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
+import {SeriesSyncViewStandaloneModel} from "@views/SeriesSyncView.model";
 
 import LucideArrowLeft from "@icons/LucideArrowLeft.vue";
 
 import Text from "@controls/Text.vue";
 import I18n from "@utils/i18n";
 
-const vm: SeriesSyncViewModel = useViewModel(SeriesSyncViewModel);
+const vm: SeriesSyncViewStandaloneModel = useViewModel(SeriesSyncViewStandaloneModel);
 </script>
 
 <template>
@@ -35,7 +35,7 @@ const vm: SeriesSyncViewModel = useViewModel(SeriesSyncViewModel);
                     <div class="h-4 w-3/4 skeleton"></div>
                 </template>
                 <p v-else>
-                    <Text :target="I18n.SeriesSyncView.description" />
+                    <Text :target="I18n.SeriesSyncView.description"/>
                 </p>
             </div>
             <ul class="list">
@@ -51,7 +51,7 @@ const vm: SeriesSyncViewModel = useViewModel(SeriesSyncViewModel);
                         :class="{'opacity-50 pointer-events-none': vm.isSyncing}"
                         @click="vm.onAllAvailableRowClick">
                         <div class="list-col-grow cursor-default text-xs opacity-60 uppercase">
-                            <Text :target="I18n.SeriesSyncView.availableSeasons" />
+                            <Text :target="I18n.SeriesSyncView.availableSeasons"/>
                         </div>
                         <div>
                             <input type="checkbox"
@@ -67,10 +67,10 @@ const vm: SeriesSyncViewModel = useViewModel(SeriesSyncViewModel);
                         @click="vm.onRowClick(season.season_number, true, false)">
                         <div class="list-col-grow cursor-default">
                             <span v-if="season.season_number == 0">
-                                <Text :target="I18n.SeriesSyncView.movies" />
+                                <Text :target="I18n.SeriesSyncView.movies"/>
                             </span>
                             <span v-else>
-                                <Text :target="I18n.SeriesSyncView.season" />
+                                <Text :target="I18n.SeriesSyncView.season"/>
                                 {{ season.season_number }}
                             </span>
                         </div>
@@ -86,7 +86,7 @@ const vm: SeriesSyncViewModel = useViewModel(SeriesSyncViewModel);
                         :class="{'opacity-50 pointer-events-none': vm.isSyncing}"
                         @click="vm.onAllExistingRowClick">
                         <div class="list-col-grow cursor-default text-xs opacity-60 uppercase">
-                            <Text :target="I18n.SeriesSyncView.refreshSeasons" />
+                            <Text :target="I18n.SeriesSyncView.refreshSeasons"/>
                         </div>
                         <div>
                             <input type="checkbox"
@@ -102,10 +102,10 @@ const vm: SeriesSyncViewModel = useViewModel(SeriesSyncViewModel);
                         @click="vm.onRowClick(season.season_number, false, true)">
                         <div class="list-col-grow cursor-default">
                             <span v-if="season.season_number == 0">
-                                <Text :target="I18n.SeriesSyncView.movies" />
+                                <Text :target="I18n.SeriesSyncView.movies"/>
                             </span>
                             <span v-else>
-                                <Text :target="I18n.SeriesSyncView.season" />
+                                <Text :target="I18n.SeriesSyncView.season"/>
                                 {{ season.season_number }}
                             </span>
                         </div>
@@ -131,7 +131,7 @@ const vm: SeriesSyncViewModel = useViewModel(SeriesSyncViewModel);
                         :disabled="vm.isPreLoading || vm.isSyncing || vm.selectedSeasons.length == 0"
                         @click="vm.onStartSyncBtn">
                     <span v-if="!vm.isPreLoading">
-                        <Text :target="I18n.SeriesSyncView.startSync" />
+                        <Text :target="I18n.SeriesSyncView.startSync"/>
                     </span>
                 </button>
             </div>

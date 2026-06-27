@@ -7,5 +7,9 @@
     "refreshSeasons": "Bestehende Staffeln aktualisieren",
     "movies": "Filme",
     "season": "Staffel",
-    "startSync": "Sync starten"
+    "startSync": "Sync starten",
+    "resync": "Erneut synchronisieren",
+    "upToDate": "Alles ist auf dem neuesten Stand. Du kannst trotzdem eine erneute Synchronisierung starten, um die neuesten Inhalte zu laden.",
+    "queued": "Eine Synchronisierung ist in der Warteschlange und startet in Kürze.",
+    "processing": "Eine Synchronisierung läuft derzeit."
 }

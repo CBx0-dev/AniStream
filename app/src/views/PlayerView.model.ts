@@ -9,7 +9,7 @@ import {EpisodeModel} from "@models/episode.model";
 import {SeasonModel} from "@models/season.model";
 
 import {SeriesService} from "@contracts/series.contract";
-import {SeasonService} from "@contracts/season.contract";
+import {SeasonService, SyncStatus} from "@contracts/season.contract";
 import {EpisodeService} from "@contracts/episode.contract";
 import {FetchService, Provider} from "@contracts/fetch.contract";
 import {I18nService} from "@contracts/i18n.contract";
@@ -192,9 +192,16 @@ export class PlayerViewModel extends ViewModel {
         this.providerLoading = true;
         this.providers.clear();
 
-        const providers: Provider[] = await this.fetchService.getProviders(this.series.guid, this.season.season_number, this.episode.episode_number);
-        this.providers.push(...providers.groupTo2D(provider => provider.language));
-
+        while (true) {
+            const [status, providers] = await this.fetchService.getProviders(this.series, this.season, this.episode);
+            if (status == SyncStatus.Completed) {
+                this.providers.push(...providers.groupTo2D(provider => provider.language));
+                break;
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+        
         this.providerLoading = false;
     }
 }

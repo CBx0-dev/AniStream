@@ -132,7 +132,7 @@ export class SettingsServiceImpl implements SettingsService {
     }
 
     public async getImageVariant(name: string, extension: string): Promise<string> {
-        return `${name}/${await this.getTheme()}.${extension}`;
+        return `/${name}/${await this.getTheme()}.${extension}`;
     }
 
     public async loadProfileSettings(): Promise<void> {

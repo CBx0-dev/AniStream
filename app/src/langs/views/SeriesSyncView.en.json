@@ -7,5 +7,9 @@
     "refreshSeasons": "Refresh existing seasons",
     "movies": "Movies",
     "season": "Season",
-    "startSync": "Start sync"
+    "startSync": "Start sync",
+    "resync": "Resync",
+    "upToDate": "Everything is up to date. You can still trigger a resync to fetch the latest content.",
+    "queued": "A sync is queued and will start shortly.",
+    "processing": "A sync is currently in progress."
 }

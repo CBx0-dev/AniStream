@@ -1,3 +1,5 @@
+import {SyncStatus} from "@contracts/season.contract";
+
 export interface SeriesFetchModel {
     series_id: number;
     guid: string;
@@ -33,7 +35,7 @@ export interface SeriesCreateModel {
  */
 export interface SeriesSyncModel {
     requires_sync: boolean;
-    is_syncing: boolean;
+    status: SyncStatus | null;
 }
 
 export function SeriesModel(guid: string, title: string, description: string, preview_image: string | null): SeriesModel;

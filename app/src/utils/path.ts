@@ -49,7 +49,7 @@ export function join(...paths: string[]): string {
         return "";
     }
     
-    const rootParts: string | null = extractRoot(paths[0]);
+    const rootParts: string | null = !AppEnv.isWindows ? extractRoot(paths[0]) : null;
     const splitRegex: RegExp = new RegExp(`\\${PATH_SEPARATOR}`, "g");
     const parts: string[] = paths.map(part => part.split(splitRegex)).flat();
 

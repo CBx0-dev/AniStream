@@ -8,7 +8,7 @@ import {SettingsViewModel} from "@views/SettingsView.model";
 import {StreamsViewModel} from "@views/StreamsView.model";
 import {SyncViewModel} from "@views/SyncView.model";
 import {WatchlistViewModel} from "@views/WatchlistView.model";
-import {SeriesSyncViewModel} from "@views/SeriesSyncView.model";
+import {SeriesSyncViewStandaloneModel, SeriesSyncViewClientModel} from "@views/SeriesSyncView.model";
 import {StreamViewModel} from "@views/StreamView.model";
 import {PlayerViewModel} from "@views/PlayerView.model";
 import {ProfileViewModel} from "@views/ProfileView.model";
@@ -22,6 +22,12 @@ import {ProgressToastModel} from "@controls/ProgressToast.model";
 import {ReportService} from "@contracts/report.contract";
 import {SettingsService} from "@contracts/settings.contract";
 import {UpdateService} from "@contracts/update.contract";
+
+import * as AppEnv from "@AppEnv";
+
+const SeriesSyncViewModel = AppEnv.isStandaloneMode
+    ? SeriesSyncViewStandaloneModel
+    : SeriesSyncViewClientModel;
 
 export class AppConfig extends BaseConfig {
     private app: App;

@@ -11,8 +11,10 @@ import LucideX from "@icons/LucideX.vue";
 
 import I18n from "@utils/i18n";
 
-import Text from "@/controls/Text.vue";
+import Text from "@controls/Text.vue";
 import ImageHash from "@controls/ImageHash.vue";
+
+import * as AppEnv from "@AppEnv";
 
 const vm: StreamsViewModel = useViewModel(StreamsViewModel);
 </script>
@@ -27,7 +29,7 @@ const vm: StreamsViewModel = useViewModel(StreamsViewModel);
                         <Text :target="I18n.StreamsView.navbar.back"/>
                     </button>
                     <div class="join">
-                        <button class="join-item btn btn-soft" @click="vm.onSyncBtn">
+                        <button v-if="AppEnv.isStandaloneMode" class="join-item btn btn-soft" @click="vm.onSyncBtn">
                             <LucideCloudSync/>
                             <Text :target="I18n.StreamsView.navbar.sync"/>
                         </button>

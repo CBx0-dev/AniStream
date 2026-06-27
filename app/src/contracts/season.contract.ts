@@ -2,8 +2,20 @@ import {ServiceKey} from "vue-mvvm";
 
 import type {SeasonModel} from "@models/season.model";
 
+export type SyncInformation = {
+    requiresSync: boolean;
+    status: SyncStatus | null;
+}
+
+export const enum SyncStatus {
+    Queued,
+    Processing,
+    Completed,
+    Failed
+}
+
 export interface SeasonService {
-    requiresSync(seriesId: number): Promise<boolean>;
+    getSyncStatus(seriesId: number): Promise<SyncInformation>;
 
     getSeason(seasonId: number): Promise<SeasonModel | null>;
 

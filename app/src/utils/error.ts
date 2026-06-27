@@ -1,5 +1,5 @@
 export class UnsupportedPlatformError extends Error {
-    public readonly name: string = 'UnsupportedPlatformError';
+    public readonly name: string = "UnsupportedPlatformError";
 
     public constructor(name: string, message?: string) {
         const defaultMessage: string = `The function or method "${name}" is not supported on the current platform.`;
@@ -7,6 +7,23 @@ export class UnsupportedPlatformError extends Error {
         super(message ?? defaultMessage);
 
         Object.setPrototypeOf(this, UnsupportedPlatformError.prototype);
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor);
+        }
+    }
+}
+
+export class NotImplementedError extends Error {
+    public readonly name: string = "NotImplementedError";
+
+
+    public constructor(name: string, message?: string) {
+        const defaultMessage: string = `The function or method "${name}" is not implemented.`;
+
+        super(message ?? defaultMessage);
+
+        Object.setPrototypeOf(this, NotImplementedError.prototype);
 
         if (Error.captureStackTrace) {
             Error.captureStackTrace(this, this.constructor);

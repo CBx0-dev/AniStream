@@ -8,10 +8,12 @@ import {ServiceDeclaration} from "@services/declaration";
 
 import {SeriesFetchModel, SeriesModel} from "@models/series.model";
 import {GenreFetchModel} from "@models/genre.model";
-import {SeasonFetchModel} from "@models/season.model";
-import {EpisodeFetchModel} from "@models/episode.model";
+import {SeasonFetchModel, type SeasonModel} from "@models/season.model";
+import {EpisodeFetchModel, type EpisodeModel} from "@models/episode.model";
 
 import {DefaultProvider, IInformationFetcher} from "@providers/default";
+import {UnsupportedPlatformError} from "@utils/error";
+import {SyncStatus} from "@contracts/season.contract";
 
 class FetchServiceImpl implements FetchService {
     private readonly providerService: ProviderService;
@@ -48,11 +50,15 @@ class FetchServiceImpl implements FetchService {
         return await fetcher.getEpisodes(guid, seasonNumber);
     }
 
-    public async getProviders(guid: string, seasonNumber: number, episodeNumber: number, provider: DefaultProvider | null = null): Promise<Provider[]> {
+    public async getProviders(series: SeriesModel, season: SeasonModel, episode: EpisodeModel, provider: DefaultProvider | null = null): Promise<[SyncStatus, Provider[]]> {
         provider ??= await this.providerService.getProvider();
         const fetcher: IInformationFetcher = provider.getFetcher();
 
-        return await fetcher.fetchProviders(guid, seasonNumber, episodeNumber);
+        return [SyncStatus.Completed, await fetcher.fetchProviders(series.guid, season.season_number, episode.episode_number)];
+    }
+    
+    public async startRemoteSyncing(_seriesId: number, _provider?: DefaultProvider | null): Promise<void> {
+        throw new UnsupportedPlatformError("FetchServiceImpl.startRemoteSyncing");
     }
 }
 

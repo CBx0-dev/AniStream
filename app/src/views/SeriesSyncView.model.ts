@@ -2,11 +2,12 @@ import {Component} from "vue";
 import {ViewModel} from "vue-mvvm";
 import {RouteAdapter, RouterService} from "vue-mvvm/router";
 
-import SeriesSyncView from "@views/SeriesSyncView.vue";
+import SeriesSyncStandaloneView from "@views/SeriesSyncStandaloneView.vue";
+import SeriesSyncClientView from "@views/SeriesSyncClientView.vue";
 import {StreamViewModel} from "@views/StreamView.model";
 
 import {SeriesService} from "@contracts/series.contract";
-import {SeasonService} from "@contracts/season.contract";
+import {SeasonService, SyncInformation, SyncStatus} from "@contracts/season.contract";
 import {FetchService} from "@contracts/fetch.contract";
 import {EpisodeService} from "@contracts/episode.contract";
 
@@ -14,14 +15,23 @@ import {SeriesModel} from "@models/series.model";
 import {SeasonFetchModel, SeasonModel} from "@models/season.model";
 import {EpisodeFetchModel, EpisodeModel} from "@models/episode.model";
 
+import {NotImplementedError} from "@utils/error";
+
 export class SeriesSyncViewModel extends ViewModel {
-    public static readonly component: Component = SeriesSyncView;
     public static readonly route = {
         path: "/streams/:series_id/sync",
         params: {
             series_id: "integer"
         }
     } satisfies RouteAdapter;
+
+    public static get component(): Component {
+        throw new NotImplementedError("get SeriesSyncViewModel.component");
+    }
+}
+
+export class SeriesSyncViewStandaloneModel extends SeriesSyncViewModel {
+    public static readonly component: Component = SeriesSyncStandaloneView;
 
     private readonly routerService: RouterService;
     private readonly fetchService: FetchService;
@@ -224,5 +234,89 @@ export class SeriesSyncViewModel extends ViewModel {
                 episode.description
             );
         }
+    }
+}
+
+export class SeriesSyncViewClientModel extends SeriesSyncViewModel {
+    public static readonly component: Component = SeriesSyncClientView;
+
+    private readonly routerService: RouterService;
+
+    private readonly fetchService: FetchService;
+    private readonly seriesService: SeriesService;
+    private readonly seasonService: SeasonService;
+
+    private refreshInterval: NodeJS.Timeout | null = null;
+    
+    private series: SeriesModel | null = this.ref(null);
+    private syncInformation: SyncInformation | null = this.ref(null);
+
+    public isPreLoading: boolean = this.ref(true);
+
+    public requiresSync: boolean = this.computed(() => !!this.syncInformation && this.syncInformation.requiresSync);
+    public isQueued: boolean = this.computed(() => this.syncInformation?.status === SyncStatus.Queued);
+    public isProcessing: boolean = this.computed(() => this.syncInformation?.status === SyncStatus.Processing);
+    
+    public canSync: boolean = this.computed(() => !this.isQueued && !this.isProcessing);
+    
+    public constructor() {
+        super();
+
+        this.routerService = this.ctx.getService(RouterService);
+
+        this.fetchService = this.ctx.getService(FetchService);
+        this.seriesService = this.ctx.getService(SeriesService);
+        this.seasonService = this.ctx.getService(SeasonService);
+
+        this.series = null;
+    }
+
+    protected async mounted(): Promise<void> {
+        this.isPreLoading = true;
+
+        let seriesId: number | null = this.routerService.params.getIntegerOrDefault("series_id");
+        if (!seriesId) {
+            this.routerService.navigateBack();
+            return;
+        }
+
+        this.series = await this.seriesService.getSeries(seriesId);
+        if (!this.series) {
+            this.routerService.navigateBack();
+            return;
+        }
+
+        this.syncInformation = await this.seasonService.getSyncStatus(seriesId);
+
+        this.isPreLoading = false;
+        
+        if (!this.refreshInterval) {
+            this.refreshInterval = setInterval(async () => {
+                if (!this.series) {
+                    return;
+                }
+                this.syncInformation = await this.seasonService.getSyncStatus(this.series.series_id)
+            }, 10_000);
+            
+        }
+    }
+    
+    protected async unmounted() {
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);   
+            this.refreshInterval = null;        
+        }
+    }
+
+    public onBackBtn(): void {
+        this.routerService.navigateBack();
+    }
+
+    public async onSyncRequestBtn(): Promise<void> {
+        if (!this.series) {
+            return;
+        }
+        await this.fetchService.startRemoteSyncing(this.series.series_id);
+        this.syncInformation = await this.seasonService.getSyncStatus(this.series.series_id);
     }
 }
