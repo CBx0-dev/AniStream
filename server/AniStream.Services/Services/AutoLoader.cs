@@ -40,8 +40,9 @@ public static class AutoLoader
         services.AddScoped<IResourceService, ResourceServiceImpl>();
         services.AddScoped<IWatchListService, WatchListServiceImpl>();
         services.AddScoped<IWatchTimeService, WatchTimeServiceImpl>();
-        services.AddScoped<ISyncService, SyncServiceImpl>();
-
+        services.AddScoped<ISeriesSyncService, SeriesSyncServiceImpl>();
+        services.AddScoped<IProviderSyncService, ProviderSyncServiceImpl>();
+        
         ResourceServiceImpl.AssetsPath = options.AssetsPath;
     }
 

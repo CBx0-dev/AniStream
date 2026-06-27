@@ -4,39 +4,37 @@ using AniStream.Worker.Jobs;
 
 namespace AniStream.Worker;
 
-internal sealed class SeriesSyncWorker : BackgroundService
+internal sealed class SeriesSyncWorker : ScopedBackgroundService
 {
     private static readonly TimeSpan PollInterval = TimeSpan.FromSeconds(10);
 
     private readonly ILogger<SeriesSyncWorker> _logger;
     private readonly IProviderService _providerService;
-    private readonly ISyncService _syncService;
+    private readonly ISeriesSyncService _syncService;
 
     private readonly SeriesSyncJob _job;
 
-    public SeriesSyncWorker(
-        ILogger<SeriesSyncWorker> logger,
-        IProviderService providerService,
-        ISyncService syncService,
-        ISeriesService seriesService,
-        ISeasonService seasonService,
-        IEpisodeService episodeService
-    )
+    public SeriesSyncWorker(IServiceScopeFactory scopeFactory) : base(scopeFactory)
     {
-        _logger = logger;
-        _providerService = providerService;
-        _syncService = syncService;
+        _logger = GetRequiredService<ILogger<SeriesSyncWorker>>();
+        _providerService = GetRequiredService<IProviderService>();
+        _syncService = GetRequiredService<ISeriesSyncService>();
 
-        _job = new SeriesSyncJob(providerService, seriesService, seasonService, episodeService);
+        ILoggerFactory loggerFactory = GetRequiredService<ILoggerFactory>();
+        ISeriesService seriesService = GetRequiredService<ISeriesService>();
+        ISeasonService seasonService = GetRequiredService<ISeasonService>();
+        IEpisodeService episodeService = GetRequiredService<IEpisodeService>();
+
+        _job = new SeriesSyncJob(loggerFactory, _providerService, seriesService, seasonService, episodeService);
     }
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Sync worker started");
+        _logger.LogInformation("Series sync worker started");
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            _logger.LogInformation("Sync worker running at: {Time}", DateTimeOffset.Now);
+            _logger.LogInformation("Series sync worker running at: {Time}", DateTimeOffset.Now);
 
             try
             {
@@ -47,7 +45,7 @@ internal sealed class SeriesSyncWorker : BackgroundService
                 _logger.LogError(e, "Error during sync pickup");
             }
 
-            _logger.LogInformation("Sync worker completed run at: {Time}", DateTimeOffset.Now);
+            _logger.LogInformation("Series sync worker completed run at: {Time}", DateTimeOffset.Now);
             await Task.Delay(PollInterval, cancellationToken);
         }
     }
@@ -63,7 +61,7 @@ internal sealed class SeriesSyncWorker : BackgroundService
 
             _providerService.SetActiveProvider(provider);
 
-            SyncJobModel[] jobs = await _syncService.GetSyncJobs(SyncJobStatus.Queued);
+            SyncSeriesJobModel[] jobs = await _syncService.GetSyncJobs(SyncJobStatus.Queued);
             if (jobs.Length == 0)
             {
                 continue;
@@ -71,15 +69,15 @@ internal sealed class SeriesSyncWorker : BackgroundService
 
             _logger.LogInformation("Found {Count} queued jobs for provider {Provider}", jobs.Length, provider);
 
-            CancellationScope<SyncJobModel> scope = new CancellationScope<SyncJobModel>(await _syncService.GetSyncJobs(SyncJobStatus.Queued), async jobs =>
+            CancellationScope<SyncSeriesJobModel> scope = new CancellationScope<SyncSeriesJobModel>(jobs, async jobs =>
             {
-                foreach (SyncJobModel job in jobs.Where(job => job.Status == SyncJobStatus.Processing))
+                foreach (SyncSeriesJobModel job in jobs.Where(job => job.Status == SyncJobStatus.Processing))
                 {
                     await _syncService.UpdateSyncJob(job, SyncJobStatus.Queued);
                 }
             }, cancellationToken);
 
-            foreach (SyncJobModel job in jobs)
+            foreach (SyncSeriesJobModel job in jobs)
             {
                 if (await scope.IsCancelledAsync())
                 {
@@ -89,7 +87,7 @@ internal sealed class SeriesSyncWorker : BackgroundService
                 await _syncService.UpdateSyncJob(job, SyncJobStatus.Processing);
             }
 
-            foreach (SyncJobModel job in jobs)
+            foreach (SyncSeriesJobModel job in jobs)
             {
                 if (await scope.IsCancelledAsync())
                 {
@@ -115,7 +113,7 @@ internal sealed class SeriesSyncWorker : BackgroundService
 
                     string message = string.Join("\n", messages);
 
-                    _logger.LogError(e, "Sync failed for job {job}", job.SyncJobId);
+                    _logger.LogError(e, "Series sync failed for job {Job}", job.SyncSeriesJobId);
                     await _syncService.UpdateSyncJob(job, SyncJobStatus.Failed, DateTime.UtcNow, message);
                 }
             }

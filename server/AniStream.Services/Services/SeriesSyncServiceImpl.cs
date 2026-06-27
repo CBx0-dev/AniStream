@@ -6,27 +6,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AniStream.Services;
 
-public sealed class SyncServiceImpl : ISyncService
+public sealed class SeriesSyncServiceImpl : ISeriesSyncService
 {
     private readonly DbContextFactory<MetadataDbContext> _dbFactory;
     private readonly ISeriesService _seriesService;
 
-    public SyncServiceImpl(DbContextFactory<MetadataDbContext> dbFactory, ISeriesService seriesService)
+    public SeriesSyncServiceImpl(DbContextFactory<MetadataDbContext> dbFactory, ISeriesService seriesService)
     {
         _dbFactory = dbFactory;
         _seriesService = seriesService;
     }
 
-    public async Task<SyncJobModel?> GetSyncJob(int syncJobId)
+    public async Task<SyncSeriesJobModel?> GetSyncJob(int syncSeriesJobId)
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
-        IQueryable<SyncJobModel> query = from job in db.SyncJobs where job.SyncJobId == syncJobId select job;
+        IQueryable<SyncSeriesJobModel> query = from job in db.SyncSeriesJobs where job.SyncSeriesJobId == syncSeriesJobId select job;
 
         return await query.FirstOrDefaultAsync();
     }
 
-    public async Task<SyncJobModel?> GetSyncJobBySeries(int seriesId)
+    public async Task<SyncSeriesJobModel?> GetSyncJobBySeries(int seriesId)
     {
         SeriesModel? series = await _seriesService.GetSeries(seriesId);
         if (series is null)
@@ -37,12 +37,13 @@ public sealed class SyncServiceImpl : ISyncService
         return await GetSyncJobBySeries(series);
     }
 
-    public async Task<SyncJobModel?> GetSyncJobBySeries(SeriesModel series)
+    public async Task<SyncSeriesJobModel?> GetSyncJobBySeries(SeriesModel series)
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
-        IQueryable<SyncJobModel> query = from job in db.SyncJobs
+        IQueryable<SyncSeriesJobModel> query = from job in db.SyncSeriesJobs
             where job.SeriesId == series.SeriesId
+            orderby job.SyncSeriesJobId descending
             select job;
 
         return await query.FirstOrDefaultAsync();
@@ -63,9 +64,9 @@ public sealed class SyncServiceImpl : ISyncService
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
-        SyncJobModel job = new SyncJobModel(series.SeriesId, SyncJobStatus.Queued, DateTime.UtcNow, null, null);
+        SyncSeriesJobModel job = new SyncSeriesJobModel(series.SeriesId, SyncJobStatus.Queued, DateTime.UtcNow, null, null);
 
-        db.SyncJobs.Add(job);
+        db.SyncSeriesJobs.Add(job);
         await db.SaveChangesAsync();
     }
 
@@ -84,38 +85,48 @@ public sealed class SyncServiceImpl : ISyncService
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
-        IQueryable<SyncJobModel> jobs = from job in db.SyncJobs
+        IQueryable<SyncSeriesJobModel> query = from job in db.SyncSeriesJobs
             where job.SeriesId == series.SeriesId &&
                   job.Status != SyncJobStatus.Completed &&
                   job.Status != SyncJobStatus.Failed
             select job;
 
-        return await jobs.AnyAsync();
+        return await query.AnyAsync();
     }
 
-    public async Task<SyncJobModel[]> GetSyncJobs(SyncJobStatus status)
+    public async Task<SyncSeriesJobModel[]> GetSyncJobs(SyncJobStatus status)
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
-        IQueryable<SyncJobModel> jobs = from job in db.SyncJobs
+        IQueryable<SyncSeriesJobModel> query = from job in db.SyncSeriesJobs
             where job.Status == status
             select job;
 
-        return await jobs.ToArrayAsync();
+        return await query.ToArrayAsync();
     }
 
-    public async Task<SyncJobModel> UpdateSyncJob(int syncJobId, SyncJobStatus? status = null, DateTime? finished = null, string? error = null)
+    public async Task<SyncSeriesJobModel> UpdateSyncJob(
+        int syncSeriesJobId,
+        SyncJobStatus? status = null,
+        DateTime? finished = null,
+        string? error = null
+    )
     {
-        SyncJobModel? syncJob = await GetSyncJob(syncJobId);
-        if (syncJob is null)
+        SyncSeriesJobModel? job = await GetSyncJob(syncSeriesJobId);
+        if (job is null)
         {
-            throw new ArgumentException($"SyncJob with ID '{syncJobId}' not found", nameof(syncJobId));
+            throw new ArgumentException($"SyncJob with ID '{syncSeriesJobId}' not found", nameof(syncSeriesJobId));
         }
 
-        return await UpdateSyncJob(syncJob, status, finished, error);
+        return await UpdateSyncJob(job, status, finished, error);
     }
 
-    public async Task<SyncJobModel> UpdateSyncJob(SyncJobModel syncJob, SyncJobStatus? status = null, DateTime? finished = null, string? error = null)
+    public async Task<SyncSeriesJobModel> UpdateSyncJob(
+        SyncSeriesJobModel syncJob,
+        SyncJobStatus? status = null,
+        DateTime? finished = null,
+        string? error = null
+    )
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
@@ -134,7 +145,7 @@ public sealed class SyncServiceImpl : ISyncService
             syncJob.Error = error;
         }
 
-        db.SyncJobs.Update(syncJob);
+        db.SyncSeriesJobs.Update(syncJob);
         await db.SaveChangesAsync();
 
         return syncJob;

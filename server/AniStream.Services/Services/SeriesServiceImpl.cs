@@ -146,8 +146,11 @@ public sealed class SeriesServiceImpl : ISeriesService
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
-        IQueryable<int> query = from series in db.Series join season in db.Seasons on series.SeriesId equals season.SeriesId select season.SeasonId;
+        IQueryable<int> query = from series in db.Series
+            join season in db.Seasons on series.SeriesId equals season.SeriesId
+            where series.SeriesId == seriesId
+            select season.SeasonId;
 
-        return await query.CountAsync() == 0;
+        return !await query.AnyAsync();
     }
 }

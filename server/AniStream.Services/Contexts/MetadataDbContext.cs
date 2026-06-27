@@ -34,7 +34,11 @@ public sealed class MetadataDbContext : DbContext
 
     public DbSet<WatchListModel> WatchLists { get; set; }
 
-    public DbSet<SyncJobModel> SyncJobs { get; set; }
+    public DbSet<SyncSeriesJobModel> SyncSeriesJobs { get; set; }
+
+    public DbSet<SyncProviderJobModel> SyncProviderJobs { get; set; }
+
+    public DbSet<SyncProviderJobResultModel> SyncProviderJobResults { get; set; }
 }
 
 internal sealed class MetadataDbContextFactory : DbContextFactory<MetadataDbContext>

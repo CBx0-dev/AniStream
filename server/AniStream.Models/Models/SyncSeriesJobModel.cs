@@ -3,19 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AniStream.Models;
 
-public enum SyncJobStatus
+[Table("sync_series_job")]
+[PrimaryKey(nameof(SyncSeriesJobId))]
+public sealed class SyncSeriesJobModel
 {
-    Queued,
-    Processing,
-    Completed,
-    Failed
-}
-
-[Table("sync_job")]
-[PrimaryKey(nameof(SyncJobId))]
-public sealed class SyncJobModel
-{
-    public int SyncJobId { get; set; }
+    public int SyncSeriesJobId { get; set; }
 
     public int SeriesId { get; set; }
 
@@ -27,8 +19,8 @@ public sealed class SyncJobModel
 
     public string? Error { get; set; }
 
-    public SyncJobModel(
-        int syncJobId,
+    public SyncSeriesJobModel(
+        int syncSeriesJobId,
         int seriesId,
         SyncJobStatus status,
         DateTime started,
@@ -36,7 +28,7 @@ public sealed class SyncJobModel
         string? error
     )
     {
-        SyncJobId = syncJobId;
+        SyncSeriesJobId = syncSeriesJobId;
         SeriesId = seriesId;
         Status = status;
         Started = started;
@@ -44,7 +36,7 @@ public sealed class SyncJobModel
         Error = error;
     }
 
-    public SyncJobModel(
+    public SyncSeriesJobModel(
         int seriesId,
         SyncJobStatus status,
         DateTime started,

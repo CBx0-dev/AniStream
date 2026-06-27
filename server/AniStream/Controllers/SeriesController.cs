@@ -12,9 +12,9 @@ namespace AniStream.API.Controllers;
 public class SeriesController : ApiControllerBase
 {
     private readonly ISeriesService _seriesService;
-    private readonly ISyncService _syncService;
+    private readonly ISeriesSyncService _syncService;
 
-    public SeriesController(ISeriesService seriesService, ISyncService syncService)
+    public SeriesController(ISeriesService seriesService, ISeriesSyncService syncService)
     {
         _seriesService = seriesService;
         _syncService = syncService;
@@ -57,7 +57,7 @@ public class SeriesController : ApiControllerBase
         }
 
         bool requiresSync = await _seriesService.RequiresSync(seriesId);
-        Models.SyncJobModel? job = await _syncService.GetSyncJobBySeries(series);
+        Models.SyncSeriesJobModel? job = await _syncService.GetSyncJobBySeries(series);
 
         return Ok(new SeriesSyncModel
         {

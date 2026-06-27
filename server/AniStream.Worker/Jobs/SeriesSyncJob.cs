@@ -15,6 +15,7 @@ internal sealed class SeriesSyncJob
     private readonly WorkerClient _worker;
 
     public SeriesSyncJob(
+        ILoggerFactory loggerFactory,
         IProviderService providerService,
         ISeriesService seriesService,
         ISeasonService seasonService,
@@ -26,10 +27,10 @@ internal sealed class SeriesSyncJob
         _seasonService = seasonService;
         _episodeService = episodeService;
 
-        _worker = new WorkerClient(AppConfig.CurrentConfig.SidecarPath);;
+        _worker = new WorkerClient(loggerFactory.CreateLogger<WorkerClient>(), AppConfig.CurrentConfig.SidecarPath);
     }
 
-    public async Task SyncSeriesAsync(SyncJobModel job)
+    public async Task SyncSeriesAsync(SyncSeriesJobModel job)
     {
         SeriesModel? series = await _seriesService.GetSeries(job.SeriesId);
 
