@@ -76,13 +76,35 @@ CREATE TABLE watchtime
     FOREIGN KEY (episode_id) REFERENCES episode (episode_id) ON DELETE CASCADE
 );
 
-CREATE TABLE sync_job
+CREATE TABLE sync_series_job
 (
-    sync_job_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    series_id   INTEGER  NOT NULL,
-    status      INTEGER  NOT NULL,
-    started     DATETIME NOT NULL,
-    completed   DATETIME,
-    error       TEXT,
+    sync_series_job_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    series_id          INTEGER  NOT NULL,
+    status             INTEGER  NOT NULL,
+    started            DATETIME NOT NULL,
+    completed          DATETIME,
+    error              TEXT,
     FOREIGN KEY (series_id) REFERENCES series (series_id) ON DELETE CASCADE
+);
+
+CREATE TABLE sync_provider_job
+(
+    sync_provider_job_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    episode_id           INTEGER  NOT NULL,
+    status               INTEGER  NOT NULL,
+    started              DATETIME NOT NULL,
+    completed            DATETIME,
+    error                TEXT,
+    expires              DATETIME,
+    FOREIGN KEY (episode_id) REFERENCES episode (episode_id) ON DELETE CASCADE
+);
+
+CREATE TABLE sync_provider_job_result
+(
+    sync_provider_job_result_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sync_provider_job_id        INTEGER NOT NULL,
+    provider                    TEXT    NOT NULL,
+    url                         TEXT    NOT NULL,
+    language_code               INTEGER NOT NULL,
+    FOREIGN KEY (sync_provider_job_id) REFERENCES sync_provider_job (sync_provider_job_id) ON DELETE CASCADE
 );
