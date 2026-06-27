@@ -1,5 +1,6 @@
 import {Component, nextTick} from "vue";
 import {ActionResult, ViewModel} from "vue-mvvm";
+import {DialogService} from "vue-mvvm/dialog";
 import {RouteAdapter, RouterService} from "vue-mvvm/router";
 
 import ProfileView from "@views/ProfileView.vue";
@@ -10,6 +11,7 @@ import {UserService} from "@contracts/user.contract";
 import type {ProfileModel} from "@models/profile.model";
 
 import {ProfileSetupControlModel} from "@controls/ProfileSetupControl.model";
+import {PinDialogModel} from "@controls/PinDialog.model";
 
 import * as AppEnv from "@AppEnv";
 
@@ -20,6 +22,8 @@ export class ProfileViewModel extends ViewModel {
     }
 
     private readonly routerService: RouterService;
+    private readonly dialogService: DialogService;
+
     private readonly userService: UserService;
 
     private readonly profileSetupControl: ProfileSetupControlModel | null;
@@ -32,6 +36,8 @@ export class ProfileViewModel extends ViewModel {
         super();
 
         this.routerService = this.ctx.getService(RouterService);
+        this.dialogService = this.ctx.getService(DialogService);
+
         this.userService = this.ctx.getService(UserService);
 
         this.profileSetupControl = this.getUserControl("profile-setup-control");
@@ -59,11 +65,13 @@ export class ProfileViewModel extends ViewModel {
 
     public async onProfileItem(profile: ProfileModel): Promise<void> {
         if (AppEnv.isClientMode) {
-            // TODO display dialog for pin input
+            using dialog: PinDialogModel = this.dialogService.initDialog(PinDialogModel, profile);
+            await dialog.openDialog();
 
-            if (!await this.userService.authenticate(profile, "")) {
-                // TODO display error message in pin input
-                throw "Not implemented";
+            const result: ActionResult<void> = await this.runAction(dialog);
+
+            if (!result.success) {
+                return;
             }
         }
 

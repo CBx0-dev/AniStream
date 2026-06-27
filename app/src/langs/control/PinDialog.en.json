@@ -1,0 +1,6 @@
+{
+    "$lang": "en",
+    "$group": "PinDialog",
+    "title": "Enter PIN",
+    "wrong": "The entered pin was wrong"
+}
