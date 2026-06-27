@@ -38,7 +38,7 @@ export interface ProfileApiModel extends Omit<ProfileDbModel, "tos_accepted" | "
 export interface ProfileCreateModel {
     name: string;
     password: string;
-    passwordSalt: string;
+    password_salt: string;
     background_color: string;
     eye: ProfileEye;
     mouth: ProfileMouth;
