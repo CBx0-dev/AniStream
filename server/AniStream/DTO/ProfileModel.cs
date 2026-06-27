@@ -27,6 +27,10 @@ public sealed class ProfileCreateModel
 {
     public required string Name { get; set; }
 
+    public required string Password { get; set; }
+    
+    public required string PasswordSalt { get; set; }
+    
     public required string BackgroundColor { get; set; }
 
     public required string Eye { get; set; }

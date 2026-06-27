@@ -157,6 +157,8 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
 
         const row: ProfileApiModel = await this.post<ProfileApiModel, ProfileCreateModel>(["api", "profiles"], {
             name,
+            password: "",
+            passwordSalt: "",
             background_color: backgroundColor,
             eye,
             mouth,

@@ -107,6 +107,8 @@ public sealed class ProfileController : ApiControllerBase
         Models.ProfileModel profileModel = await _userService.CreateProfile(
             uuid,
             data.Name,
+            data.Password,
+            data.PasswordSalt,
             data.BackgroundColor,
             data.Eye,
             data.Mouth,
