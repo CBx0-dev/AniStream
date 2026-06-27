@@ -70,7 +70,7 @@ internal sealed class ProviderFetchModel
     [JsonPropertyName("language")]
     public LanguageCode Language { get; set; }
 
-    [JsonPropertyName("embedded_url")]
+    [JsonPropertyName("embeddedURL")]
     public string EmbeddedUrl { get; set; }
 
     internal enum LanguageCode

@@ -12,10 +12,12 @@ internal sealed class WorkerClient
         PropertyNameCaseInsensitive = true
     };
 
+    private readonly ILogger _logger;
     private readonly string _executable;
 
-    public WorkerClient(string sidecarFolder)
+    public WorkerClient(ILogger logger, string sidecarFolder)
     {
+        _logger = logger;
         _executable = Path.Combine(sidecarFolder, WorkerExecutable);
         if (!File.Exists(_executable))
         {
@@ -32,11 +34,13 @@ internal sealed class WorkerClient
     public Task<EpisodeFetchModel[]> EpisodesAsync(string provider, string guid, int seasonNumber) =>
         ExecuteAsync<EpisodeFetchModel[]>("episodes", guid, seasonNumber.ToString(), "-p", provider, "-o", "json");
 
-    public Task ProvidersAsync(string provider, string guid, int seasonNumber, int episodeNumber) =>
+    public Task<ProviderFetchModel[]> ProvidersAsync(string provider, string guid, int seasonNumber, int episodeNumber) =>
         ExecuteAsync<ProviderFetchModel[]>("providers", guid, seasonNumber.ToString(), episodeNumber.ToString(), "-p", provider, "-o", "json");
 
     private async Task<T> ExecuteAsync<T>(params string[] args)
     {
+        _logger.LogInformation("Invoke Sidecar '{Executable}' with '{Arguments}'", WorkerExecutable, string.Join(" ", args));
+        
         ProcessStartInfo info = new ProcessStartInfo(_executable, args)
         {
             RedirectStandardOutput = true,

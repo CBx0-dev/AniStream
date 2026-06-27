@@ -6,14 +6,14 @@ internal sealed class CancellationScope<T>
     private readonly Func<T[], Task> _callback;
     private readonly CancellationToken _cancellationToken;
 
-    private  bool _executedCallback;
+    private bool _executedCallback;
 
     public CancellationScope(T[] snapshot, Func<T[], Task> callback, CancellationToken cancellationToken)
     {
         _snapshot = snapshot;
         _callback = callback;
         _cancellationToken = cancellationToken;
-        
+
         _executedCallback = false;
     }
 
@@ -24,8 +24,12 @@ internal sealed class CancellationScope<T>
             return false;
         }
 
+        if (_executedCallback)
+        {
+            return true;
+        }
+
         _executedCallback = true;
-        
         await _callback(_snapshot);
         return true;
     }
