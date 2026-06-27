@@ -46,9 +46,7 @@ jobs:
 
       - name: Build Backend
         if: ${{ matrix.target == 'client' }}
-        run: |
-          cd server
-          dotnet build -c Test
+        run: dotnet build ./AniStream.slnx -c Test
 
       - name: Run Unit tests
         run: |
