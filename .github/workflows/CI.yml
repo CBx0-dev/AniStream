@@ -25,6 +25,7 @@ jobs:
           cache-dependency-path: 'app/package-lock.json'
 
       - name: Setup ASP.NET Core
+        if: ${{ matrix.target == 'client' }}
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '9.0.x'
@@ -37,11 +38,17 @@ jobs:
       - name: Run I18n generator
         run: node app/i18n.gen.cjs
 
-      - name: Build
+      - name: Build Frontend
         run: |
           cd app
           export APPLICATION_TARGET="${{ matrix.target }}"
           npm run build
+
+      - name: Build Backend
+        if: ${{ matrix.target == 'client' }}
+        run: |
+          cd server
+          dotnet build -c Test
 
       - name: Run Unit tests
         run: |
