@@ -1,4 +1,6 @@
-﻿namespace AniStream.API.DTO;
+﻿using AniStream.Models;
+
+namespace AniStream.API.DTO;
 
 public sealed class EpisodeModel
 {
@@ -13,6 +15,22 @@ public sealed class EpisodeModel
     public required string EnglishTitle { get; set; }
 
     public required string Description { get; set; }
+}
+
+public sealed class EpisodeSyncModel
+{
+    public required SyncJobStatus? Status { get; set; }
+
+    public required EpisodeProviderModel[] Providers { get; set; }
+}
+
+public sealed class EpisodeProviderModel
+{
+    public required string Name { get; set; }
+    
+    public required string Url { get; set; }
+    
+    public required int LanguageCode { get; set; }
 }
 
 public sealed class EpisodeCreateModel

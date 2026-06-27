@@ -12,7 +12,9 @@ internal static class Program
         AppConfig.Initialize();
         
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+        
         builder.Services.AddHostedService<SeriesSyncWorker>();
+        builder.Services.AddHostedService<ProviderSyncWorker>();
 
         SetupDependencyInjection(builder);
         
