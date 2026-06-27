@@ -18,6 +18,8 @@ public class UserServiceImpl : IUserService
     public async Task<ProfileModel> CreateProfile(
         string uuid,
         string name,
+        string password,
+        string passwordSalt,
         string backgroundColor,
         string eye,
         string mouth,
@@ -29,7 +31,7 @@ public class UserServiceImpl : IUserService
     {
         await using ProfileDbContext db = await _dbFactory.GetContext();
 
-        ProfileModel profile = new ProfileModel(uuid, name, backgroundColor, eye, mouth, theme, lang, tosAccepted, syncCatalog);
+        ProfileModel profile = new ProfileModel(uuid, name, password, passwordSalt, backgroundColor, eye, mouth, theme, lang, tosAccepted, syncCatalog);
 
         db.Profiles.Add(profile);
         await db.SaveChangesAsync();

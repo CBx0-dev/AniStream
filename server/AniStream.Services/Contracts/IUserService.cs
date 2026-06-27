@@ -7,6 +7,8 @@ public interface IUserService
     public Task<ProfileModel> CreateProfile(
         string uuid,
         string name,
+        string password,
+        string passwordSalt,
         string backgroundColor,
         string eye,
         string mouth,

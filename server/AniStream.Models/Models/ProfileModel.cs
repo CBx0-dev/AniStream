@@ -36,6 +36,8 @@ public sealed class ProfileModel
         int profileId,
         string uuid,
         string name,
+        string password,
+        string passwordSalt,
         string backgroundColor,
         string eye,
         string mouth,
@@ -48,6 +50,8 @@ public sealed class ProfileModel
         ProfileId = profileId;
         Uuid = uuid;
         Name = name;
+        Password = password;
+        PasswordSalt = passwordSalt;
         BackgroundColor = backgroundColor;
         Eye = eye;
         Mouth = mouth;
@@ -60,6 +64,8 @@ public sealed class ProfileModel
     public ProfileModel(
         string uuid,
         string name,
+        string password,
+        string passwordSalt,
         string backgroundColor,
         string eye,
         string mouth,
@@ -71,6 +77,8 @@ public sealed class ProfileModel
         0,
         uuid,
         name,
+        password,
+        passwordSalt,
         backgroundColor,
         eye,
         mouth,
