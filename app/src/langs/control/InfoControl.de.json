@@ -5,6 +5,7 @@
     "application": {
         "title": "Anwendung",
         "version": "Version",
+        "config": "Anwendungsconfig",
         "platform": "Plattform"
     },
     "storage": {

@@ -7,34 +7,38 @@ import {I18nService, SupportedLocals} from "@contracts/i18n.contract";
 import {SettingsService} from "@contracts/settings.contract";
 import {UserService} from "@contracts/user.contract";
 
-import {UnsupportedPlatformError} from "@utils/error";
-
 import {ProfileModel} from "@models/profile.model";
 
 import * as AppEnv from "@AppEnv";
 
 export class SettingsServiceImpl implements SettingsService {
+    private static readonly IGNORE_VERSION_KEY: string = "ignore-version";
+    private static readonly UPDATES_ACTIVE_KEY: string = "updates-active";
     private static readonly HEALTHZ_KEY: string = "healthz";
 
+    private _ignoreVersion: Ref<string> = ref("");
+    private _updatesActive: Ref<boolean> = ref(false);
     private _healthz: Ref<string> = ref("");
 
     private readonly i18nService: I18nService;
     private readonly userService: UserService;
 
-    public get ignoreVersion(): Readonly<Ref<string, string>> {
-        return readonly(ref("0.0.0"));
+    public get ignoreVersion(): Readonly<Ref<string>> {
+        return readonly(this._ignoreVersion);
     }
 
-    public set ignoreVersion(_v: Readonly<Ref<string, string>>) {
-        throw new UnsupportedPlatformError("set SettingsServiceImpl.ignoreVersion");
+    public set ignoreVersion(v: string) {
+        this._ignoreVersion.value = v;
+        localStorage.setItem(SettingsServiceImpl.IGNORE_VERSION_KEY, v);
     }
 
-    public get updatesActive(): Readonly<Ref<boolean, boolean>> {
-        return readonly(ref(false));
+    public get updatesActive(): Readonly<Ref<boolean>> {
+        return readonly(this._updatesActive);
     }
 
-    public set updatesActive(_v: Readonly<Ref<boolean, boolean>>) {
-        throw new UnsupportedPlatformError("set SettingsServiceImpl.updatesActive");
+    public set updatesActive(v: boolean) {
+        this._updatesActive.value = v;
+        localStorage.setItem(SettingsServiceImpl.UPDATES_ACTIVE_KEY, v ? "true" : "false");
     }
 
     public get healthz(): Readonly<Ref<string, string>> {
@@ -54,7 +58,12 @@ export class SettingsServiceImpl implements SettingsService {
             return;
         }
 
+        this.ignoreVersion = this.loadFromStorage(SettingsServiceImpl.IGNORE_VERSION_KEY, "0.0.0");
+        this.updatesActive = this.loadFromStorage(SettingsServiceImpl.UPDATES_ACTIVE_KEY, "true") == "true";
         this.healthz = this.loadFromStorage(SettingsServiceImpl.HEALTHZ_KEY, "https://www.google.com/generate_204");
+
+        this.setThemeSession(this.getDefaultTheme());
+        this.setLocalSession(this.getDefaultLocal());
     }
 
     public async setTheme(theme: string): Promise<void> {

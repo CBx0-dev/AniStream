@@ -7,23 +7,26 @@ import {ProviderService} from "@contracts/provider.contract";
 
 import * as path from "@utils/path";
 
+import * as AppEnv from "@AppEnv";
+
 import * as packageJSON from "@/../package.json";
 
 export class InfoControlModel extends UserControl {
     private readonly providerService: ProviderService;
 
-    public version: string = this.computed(() => packageJSON.version);
-    public platform: string = this.computed(() => `${getPlatform()} ${getArch()}`);
+    public readonly version: string = this.computed(() => packageJSON.version);
+    public readonly platform: string = this.computed(() => `${getPlatform()} ${getArch()}`);
+    public readonly config: string = this.computed(() => AppEnv.modeName);
     public aniworldMetadataUsage: number = this.ref(0);
-    public aniworldMetadataUsagePercentage: number = this.computed(() => this.aniworldMetadataUsage / this.totalUsage * 100);
+    public readonly aniworldMetadataUsagePercentage: number = this.computed(() => this.aniworldMetadataUsage / this.totalUsage * 100);
     public aniworldAssetsUsage: number = this.ref(0)
-    public aniworldAssetsUsagePercentage: number = this.computed(() => this.aniworldAssetsUsage / this.totalUsage * 100);
+    public readonly aniworldAssetsUsagePercentage: number = this.computed(() => this.aniworldAssetsUsage / this.totalUsage * 100);
     public stoMetadataUsage: number = this.ref(0);
-    public stoMetadataUsagePercentage: number = this.computed(() => this.stoMetadataUsage / this.totalUsage * 100);
+    public readonly stoMetadataUsagePercentage: number = this.computed(() => this.stoMetadataUsage / this.totalUsage * 100);
     public stoAssetsUsage: number = this.ref(0);
-    public stoAssetsUsagePercentage: number = this.computed(() => this.stoAssetsUsage / this.totalUsage * 100);
+    public readonly stoAssetsUsagePercentage: number = this.computed(() => this.stoAssetsUsage / this.totalUsage * 100);
 
-    public totalUsage: number = this.computed(() => this.aniworldMetadataUsage + this.aniworldAssetsUsage + this.stoMetadataUsage + this.stoAssetsUsage)
+    public readonly totalUsage: number = this.computed(() => this.aniworldMetadataUsage + this.aniworldAssetsUsage + this.stoMetadataUsage + this.stoAssetsUsage)
 
     public constructor() {
         super();
@@ -32,10 +35,33 @@ export class InfoControlModel extends UserControl {
     }
 
     public async mounted(): Promise<void> {
-        this.analyzeSpaceUsage()
+        if (AppEnv.isStandaloneMode) {
+            this.analyzeSpaceUsage()
+        }
     }
 
-    public async analyzeSpaceUsage(): Promise<void> {
+    public formatBytes(bytes: number, postPoints: number = 2): string {
+        if (!Number.isFinite(bytes)) {
+            return "N/A";
+        }
+
+        const units: string[] = ["B", "KB", "MB", "GB"];
+
+
+        let value: number = Math.abs(bytes);
+        let index: number = 0;
+
+        while (value >= 1000 && index < units.length - 1) {
+            value /= 1000;
+            index++;
+        }
+
+        const rounded: number = this.round(value, postPoints);
+
+        return `${rounded} ${units[index]}`;
+    }
+
+    private async analyzeSpaceUsage(): Promise<void> {
         this.aniworldMetadataUsage = 0;
         this.aniworldAssetsUsage = 0;
         this.stoAssetsUsage = 0;
@@ -64,30 +90,9 @@ export class InfoControlModel extends UserControl {
         await Promise.allSettled([aniworldWalker, stoWalker]);
     }
 
-    public round(value: number, postPoints: number): number {
+    private round(value: number, postPoints: number): number {
         const factor: number = Math.pow(10, postPoints);
         return Math.round(value * factor) / factor;
-    }
-
-    public formatBytes(bytes: number, postPoints: number = 2): string {
-        if (!Number.isFinite(bytes)) {
-            return "N/A";
-        }
-
-        const units: string[] = ["B", "KB", "MB", "GB"];
-
-
-        let value: number = Math.abs(bytes);
-        let index: number = 0;
-
-        while (value >= 1000 && index < units.length - 1) {
-            value /= 1000;
-            index++;
-        }
-
-        const rounded: number = this.round(value, postPoints);
-
-        return `${rounded} ${units[index]}`;
     }
 
     private async walkTree(startFolder: string, cb: (entry: fs.DirEntry, stat: fs.FileInfo) => Promise<void>): Promise<void> {

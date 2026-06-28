@@ -3,17 +3,22 @@ import * as os from "@tauri-apps/plugin-os";
 type OSPlatforms = NodeJS.Platform | os.Platform;
 
 
-
 export const isTesting: boolean = import.meta.env.MODE === "test";
 export const isDev: boolean = import.meta.env.MODE === "development";
 export const isProd: boolean = !isTesting && !isDev;
-
 
 
 export const isClientMode: boolean = APPLICATION_TARGET == "client";
 export const isStandaloneMode: boolean = APPLICATION_TARGET == "standalone";
 export const isWorkerMode: boolean = APPLICATION_TARGET == "worker";
 
+export const modeName: string = isClientMode
+    ? "client"
+    : isStandaloneMode
+        ? "standalone"
+        : isWorkerMode
+            ? "worker"
+            : "?";
 
 
 export const PLATFORM: OSPlatforms = isTesting || isWorkerMode

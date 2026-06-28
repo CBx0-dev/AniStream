@@ -8,6 +8,8 @@ import I18n from "@/utils/i18n";
 
 import Text from "@controls/Text.vue";
 
+import * as AppEnv from "@AppEnv";
+
 import tos from "@/../../ToS.txt?raw";
 import disclaimer from "@/../../LegalDisclaimer.txt?raw";
 
@@ -39,74 +41,81 @@ const vm: InfoControlModel = useUserControl(InfoControlModel);
                 </span>
                 <span>v{{ vm.version }}</span>
                 <span class="font-medium">
+                    <Text :target="I18n.InfoControl.application.config"/>
+                </span>
+                <span>{{ vm.config }}</span>
+                <span class="font-medium">
                     <Text :target="I18n.InfoControl.application.platform"/>
                 </span>
                 <span>{{ vm.platform }}</span>
             </div>
         </section>
-        <div class="divider"></div>
-        <section class="space-y-4">
-            <h2 class="text-sm font-semibold uppercase opacity-60">
-                <Text :target="I18n.InfoControl.storage.title"/>
-            </h2>
-            <div class="flex w-full bg-base-200 border border-base-300 rounded-lg h-3 overflow-clip">
-                <div data-theme="aniworld-light" class="bg-primary h-full"
-                     :style="`width: ${vm.aniworldAssetsUsagePercentage}%`"
-                     :title="I18n.InfoControl.storage.aniworld[1].join(' ') + ' ' + I18n.InfoControl.storage.assets[1].join(' ')"></div>
-                <div data-theme="aniworld-light" class="bg-secondary h-full"
-                     :style="`width: ${vm.aniworldMetadataUsagePercentage}%`"
-                     :title="I18n.InfoControl.storage.aniworld[1].join(' ') + ' ' + I18n.InfoControl.storage.metadata[1].join(' ')"></div>
-                <div data-theme="sto-light" class="bg-primary h-full" :style="`width: ${vm.stoAssetsUsagePercentage}%`"
-                     :title="I18n.InfoControl.storage.sto[1].join(' ') + ' ' + I18n.InfoControl.storage.assets[1].join(' ')"></div>
-                <div data-theme="sto-light" class="bg-secondary h-full"
-                     :style="`width: ${vm.stoMetadataUsagePercentage}%`"
-                     :title="I18n.InfoControl.storage.sto[1].join(' ') + ' ' + I18n.InfoControl.storage.metadata[1].join(' ')"></div>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="space-y-2">
-                    <h3 class="text-xs font-bold uppercase flex items-center gap-2">
-                        <div data-theme="aniworld-light" class="w-2 h-2 rounded-full bg-primary"></div>
-                        <Text :target="I18n.InfoControl.storage.aniworld"/>
-                    </h3>
-                    <div class="flex justify-between text-sm">
+        <template v-if="AppEnv.isStandaloneMode">
+            <div class="divider"></div>
+            <section class="space-y-4">
+                <h2 class="text-sm font-semibold uppercase opacity-60">
+                    <Text :target="I18n.InfoControl.storage.title"/>
+                </h2>
+                <div class="flex w-full bg-base-200 border border-base-300 rounded-lg h-3 overflow-clip">
+                    <div data-theme="aniworld-light" class="bg-primary h-full"
+                         :style="`width: ${vm.aniworldAssetsUsagePercentage}%`"
+                         :title="I18n.InfoControl.storage.aniworld[1].join(' ') + ' ' + I18n.InfoControl.storage.assets[1].join(' ')"></div>
+                    <div data-theme="aniworld-light" class="bg-secondary h-full"
+                         :style="`width: ${vm.aniworldMetadataUsagePercentage}%`"
+                         :title="I18n.InfoControl.storage.aniworld[1].join(' ') + ' ' + I18n.InfoControl.storage.metadata[1].join(' ')"></div>
+                    <div data-theme="sto-light" class="bg-primary h-full"
+                         :style="`width: ${vm.stoAssetsUsagePercentage}%`"
+                         :title="I18n.InfoControl.storage.sto[1].join(' ') + ' ' + I18n.InfoControl.storage.assets[1].join(' ')"></div>
+                    <div data-theme="sto-light" class="bg-secondary h-full"
+                         :style="`width: ${vm.stoMetadataUsagePercentage}%`"
+                         :title="I18n.InfoControl.storage.sto[1].join(' ') + ' ' + I18n.InfoControl.storage.metadata[1].join(' ')"></div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-bold uppercase flex items-center gap-2">
+                            <div data-theme="aniworld-light" class="w-2 h-2 rounded-full bg-primary"></div>
+                            <Text :target="I18n.InfoControl.storage.aniworld"/>
+                        </h3>
+                        <div class="flex justify-between text-sm">
                         <span class="opacity-70">
                             <Text :target="I18n.InfoControl.storage.assets"/>
                         </span>
-                        <span class="font-medium">{{ vm.formatBytes(vm.aniworldAssetsUsage) }}</span>
-                    </div>
-                    <div class="flex justify-between text-sm">
+                            <span class="font-medium">{{ vm.formatBytes(vm.aniworldAssetsUsage) }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
                         <span class="opacity-70">
                             <Text :target="I18n.InfoControl.storage.metadata"/>
                         </span>
-                        <span class="font-medium">{{ vm.formatBytes(vm.aniworldMetadataUsage) }}</span>
+                            <span class="font-medium">{{ vm.formatBytes(vm.aniworldMetadataUsage) }}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="space-y-2">
-                    <h3 class="text-xs font-bold uppercase flex items-center gap-2">
-                        <div data-theme="sto-light" class="w-2 h-2 rounded-full bg-primary"></div>
-                        <Text :target="I18n.InfoControl.storage.sto"/>
-                    </h3>
-                    <div class="flex justify-between text-sm">
+                    <div class="space-y-2">
+                        <h3 class="text-xs font-bold uppercase flex items-center gap-2">
+                            <div data-theme="sto-light" class="w-2 h-2 rounded-full bg-primary"></div>
+                            <Text :target="I18n.InfoControl.storage.sto"/>
+                        </h3>
+                        <div class="flex justify-between text-sm">
                         <span class="opacity-70">
                             <Text :target="I18n.InfoControl.storage.assets"/>
                         </span>
-                        <span class="font-medium">{{ vm.formatBytes(vm.stoAssetsUsage) }}</span>
-                    </div>
-                    <div class="flex justify-between text-sm">
+                            <span class="font-medium">{{ vm.formatBytes(vm.stoAssetsUsage) }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
                         <span class="opacity-70">
                             <Text :target="I18n.InfoControl.storage.metadata"/>
                         </span>
-                        <span class="font-medium">{{ vm.formatBytes(vm.stoMetadataUsage) }}</span>
+                            <span class="font-medium">{{ vm.formatBytes(vm.stoMetadataUsage) }}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="pt-2 border-t border-base-300 flex justify-between items-center">
+                <div class="pt-2 border-t border-base-300 flex justify-between items-center">
                 <span class="text-sm font-semibold">
                     <Text :target="I18n.InfoControl.storage.total"/>
                 </span>
-                <span class="text-lg font-bold text-primary">{{ vm.formatBytes(vm.totalUsage) }}</span>
-            </div>
-        </section>
+                    <span class="text-lg font-bold text-primary">{{ vm.formatBytes(vm.totalUsage) }}</span>
+                </div>
+            </section>
+        </template>
         <div class="divider"></div>
         <section class="space-y-2">
             <h2 class="text-sm font-semibold uppercase opacity-60">

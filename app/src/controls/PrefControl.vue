@@ -9,6 +9,8 @@ import Text from "@controls/Text.vue";
 import LucideEdit from "@icons/LucideEdit.vue";
 import LucideTrash from "@icons/LucideTrash.vue";
 
+import * as AppEnv from "@AppEnv";
+
 const vm: PrefControlModel = useUserControl(PrefControlModel);
 </script>
 
@@ -21,8 +23,10 @@ const vm: PrefControlModel = useUserControl(PrefControlModel);
                         class="w-24 rounded-2xl ring ring-primary ring-offset-base-100 ring-offset-4 overflow-hidden bg-base-200">
                         <img v-if="vm.avatarSvg" :src="vm.avatarSvg" alt="Avatar Preview"/>
                     </div>
-                    <button class="opacity-0 hover:opacity-100 focus:opacity-100 rounded-2xl duration-100 flex absolute size-24 justify-center items-center bg-base-200/70 cursor-pointer" @click="vm.onProfileBtn()">
-                        <LucideEdit class="size-8 text-primary" />
+                    <button
+                        class="opacity-0 hover:opacity-100 focus:opacity-100 rounded-2xl duration-100 flex absolute size-24 justify-center items-center bg-base-200/70 cursor-pointer"
+                        @click="vm.onProfileBtn()">
+                        <LucideEdit class="size-8 text-primary"/>
                     </button>
                 </div>
                 <div>
@@ -186,27 +190,29 @@ const vm: PrefControlModel = useUserControl(PrefControlModel);
             </div>
         </section>
 
-        <div class="divider"></div>
+        <template v-if="AppEnv.isStandaloneMode">
+            <div class="divider"></div>
 
-        <section class="grid grid-cols-[minmax(18rem,37rem)] justify-center gap-5">
-            <h2 class="text-sm font-semibold -mb-3 uppercase opacity-60">
-                <Text :target="I18n.PrefControl.sections.other"/>
-            </h2>
-            <label class="label">
-                <input
-                    type="checkbox"
-                    :checked="vm.autoSyncCatalog"
-                    class="toggle toggle-primary"
-                    @change="vm.onAutoSyncCatalogToggle()"/>
-                <Text :target="I18n.PrefControl.other.syncCatalog"/>
-            </label>
-        </section>
+            <section class="grid grid-cols-[minmax(18rem,37rem)] justify-center gap-5">
+                <h2 class="text-sm font-semibold -mb-3 uppercase opacity-60">
+                    <Text :target="I18n.PrefControl.sections.other"/>
+                </h2>
+                <label class="label">
+                    <input
+                        type="checkbox"
+                        :checked="vm.autoSyncCatalog"
+                        class="toggle toggle-primary"
+                        @change="vm.onAutoSyncCatalogToggle()"/>
+                    <Text :target="I18n.PrefControl.other.syncCatalog"/>
+                </label>
+            </section>
+        </template>
 
         <div class="divider"></div>
 
         <section class="grid grid-cols-[minmax(18rem,37rem)] justify-center gap-5">
             <button class="btn btn-error btn-soft w-fit ml-auto" @click="vm.onProfileDeleteBtn()">
-                <LucideTrash />
+                <LucideTrash/>
                 Delete Profile
             </button>
         </section>
