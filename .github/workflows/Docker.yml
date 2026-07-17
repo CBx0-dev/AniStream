@@ -17,21 +17,25 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.compute.outputs.tag }}
+      owner: ${{ steps.owner.outputs.lower }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Compute next docker build tag
+      - name: Lowercase repository owner
+        id: owner
+        run: echo "lower=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Compute next build number
         id: compute
         run: |
           git fetch --tags
           last=$(git tag -l 'docker-build-*' | sed 's/docker-build-//' | sort -n | tail -1)
           next=$(( ${last:-0} + 1 ))
-          tag="docker-build-${next}"
-          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
-          git tag "${tag}"
-          git push origin "${tag}"
+          echo "tag=${next}" >> "$GITHUB_OUTPUT"
+          git tag "docker-build-${next}"
+          git push origin "docker-build-${next}"
 
   build:
     needs: next-tag
@@ -63,8 +67,8 @@ jobs:
           file: ${{ matrix.dockerfile }}
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/anistream-${{ matrix.name }}:${{ needs.next-tag.outputs.tag }}
-            ghcr.io/${{ github.repository_owner }}/anistream-${{ matrix.name }}:${{ github.sha }}
-            ${{ inputs.push_latest && format('ghcr.io/{0}/anistream-{1}:latest', github.repository_owner, matrix.name) || '' }}
+            ghcr.io/${{ needs.next-tag.outputs.owner }}/anistream-${{ matrix.name }}:${{ needs.next-tag.outputs.tag }}
+            ghcr.io/${{ needs.next-tag.outputs.owner }}/anistream-${{ matrix.name }}:${{ github.sha }}
+            ${{ inputs.push_latest && format('ghcr.io/{0}/anistream-{1}:latest', needs.next-tag.outputs.owner, matrix.name) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
