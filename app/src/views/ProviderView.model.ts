@@ -88,6 +88,9 @@ export class ProviderViewModel extends ViewModel {
         if (AppEnv.isClientMode) {
             this.userService.logout();
         }
+
+        this.userService.setActiveProfile(null);
+
         this.routerService.navigateBack();
     }
 }

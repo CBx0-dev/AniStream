@@ -22,6 +22,9 @@ namespace AniStream.API;
 
 public static class Program
 {
+    public const string MinVersion = "1.3.0";
+    public const string MaxVersion = "1.3.0";
+    
     public static void Main(string[] args)
     {
         AppConfig.Initialize();

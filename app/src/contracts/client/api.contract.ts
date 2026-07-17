@@ -9,7 +9,6 @@ export interface RouteBuilder {
     query: Record<string, QueryTypes | QueryTypes[]>;
 }
 
-
 export interface ApiService {
     get<Response extends object>(def: PathParameter): Promise<Response>;
 
@@ -18,6 +17,8 @@ export interface ApiService {
     put<Response extends object, Body extends object | string>(def: PathParameter, body: Body): Promise<Response>;
 
     delete<Response extends object>(def: PathParameter): Promise<Response>;
+
+    checkApiInformation(url: string): Promise<string | null>;
 }
 
 export const ApiService: ServiceKey<ApiService> = new ServiceKey<ApiService>("api.service");

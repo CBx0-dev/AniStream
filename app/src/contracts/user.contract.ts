@@ -11,7 +11,7 @@ export interface UserService {
 
     getActiveProfile(): Promise<ProfileModel>;
 
-    setActiveProfile(profile: ProfileModel): Promise<void>;
+    setActiveProfile(profile: ProfileModel | null): Promise<void>;
 
     getActiveProfileOrDefault(): Promise<ProfileModel | null>;
 

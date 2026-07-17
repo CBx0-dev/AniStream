@@ -15,10 +15,12 @@ export class SettingsServiceImpl implements SettingsService {
     private static readonly IGNORE_VERSION_KEY: string = "ignore-version";
     private static readonly UPDATES_ACTIVE_KEY: string = "updates-active";
     private static readonly HEALTHZ_KEY: string = "healthz";
+    private static readonly SERVER_URL: string = "server-url";
 
     private _ignoreVersion: Ref<string> = ref("");
     private _updatesActive: Ref<boolean> = ref(false);
     private _healthz: Ref<string> = ref("");
+    private _serverUrl: Ref<string> = ref("");
 
     private readonly i18nService: I18nService;
     private readonly userService: UserService;
@@ -50,6 +52,15 @@ export class SettingsServiceImpl implements SettingsService {
         localStorage.setItem(SettingsServiceImpl.HEALTHZ_KEY, v);
     }
 
+    public get serverUrl(): Readonly<Ref<string>> {
+        return readonly(this._serverUrl);
+    }
+
+    public set serverUrl(v: string) {
+        this._serverUrl.value = v;
+        localStorage.setItem(SettingsServiceImpl.SERVER_URL, v);
+    }
+
     public constructor(ctx: ReadableGlobalContext) {
         this.i18nService = ctx.getService(I18nService);
         this.userService = ctx.getService(UserService);
@@ -61,6 +72,7 @@ export class SettingsServiceImpl implements SettingsService {
         this.ignoreVersion = this.loadFromStorage(SettingsServiceImpl.IGNORE_VERSION_KEY, "0.0.0");
         this.updatesActive = this.loadFromStorage(SettingsServiceImpl.UPDATES_ACTIVE_KEY, "true") == "true";
         this.healthz = this.loadFromStorage(SettingsServiceImpl.HEALTHZ_KEY, "https://www.google.com/generate_204");
+        this.serverUrl = this.loadFromStorage(SettingsServiceImpl.SERVER_URL, "");
 
         this.setThemeSession(this.getDefaultTheme());
         this.setLocalSession(this.getDefaultLocal());

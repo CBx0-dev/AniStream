@@ -16,6 +16,10 @@ export interface SettingsService {
 
     set healthz(v: string);
 
+    get serverUrl(): Readonly<Ref<string>>;
+
+    set serverUrl(v: string);
+
     setTheme(theme: string): Promise<void>;
 
     setThemeSession(theme: string): void;

@@ -1,0 +1,12 @@
+{
+    "$lang": "de",
+    "$group": "ClientSetupControl",
+    "title": "Willkommen bei AniStream",
+    "subtitle": "Gib eine Hosting-URL ein, um auf deine Filme oder deine Serie zuzugreifen.",
+    "open": "Öffnen",
+    "setupGuide": {
+        "pre": "Neu beim Self-Hosting? ",
+        "link": "Folge unserer Einrichtungsanleitung",
+        "post": " um deinen Backend-Server zum Laufen zu bringen."
+    }
+}

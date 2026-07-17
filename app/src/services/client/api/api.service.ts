@@ -1,15 +1,29 @@
 import {ReadableGlobalContext} from "vue-mvvm";
 
 import {ApiService, PathParameter} from "@contracts/client/api.contract";
+import {SettingsService} from "@contracts/settings.contract";
 
 import {ServiceDeclaration} from "@services/declaration";
 
+import {InformationModel} from "@models/information.model";
+
 import * as http from "@utils/http";
+import * as version from "@utils/version";
+import {InvalidOperationError} from "@utils/error";
+
+import {version as APP_VERSION} from "@/../package.json";
 
 export class ApiServiceImpl implements ApiService {
     public static HEADERS: [string, string][] = [["Content-Type", "application/json"]];
 
-    public constructor(_ctx: ReadableGlobalContext) {
+    private readonly ctx: ReadableGlobalContext;
+
+    private apiBase: string | null;
+
+    public constructor(ctx: ReadableGlobalContext) {
+        this.ctx = ctx;
+
+        this.apiBase = null;
     }
 
     public async get<Response extends object>(def: PathParameter): Promise<Response> {
@@ -50,10 +64,20 @@ export class ApiServiceImpl implements ApiService {
         return await http.delete$(url, ApiServiceImpl.HEADERS).json<Response>();
     }
 
-    protected buildURL(def: PathParameter): string {
+    public async checkApiInformation(url: string): Promise<string | null> {
+        const informationUrl: string = this.buildURL(["api", "information"], url);
+        const information: InformationModel = await http.get(informationUrl, ApiServiceImpl.HEADERS).json<InformationModel>();
+
+        if (!version.isVersionInRange(APP_VERSION, information.min_version, information.max_version)) {
+            return `Client is not compatible with the Server. Required ${information.min_version} >= version <= ${information.max_version}`;
+        }
+
+        return null;
+    }
+
+    protected buildURL(def: PathParameter, baseOverride: string | null = null): string {
         if (Array.isArray(def)) {
-            // TODO replace with dynamic domain config
-            const base: string = "http://localhost:5000";
+            const base: string = baseOverride ?? this.getApiUrl();
             const path: string = def.join("/");
             return `${base}/${path}`;
         }
@@ -65,6 +89,20 @@ export class ApiServiceImpl implements ApiService {
         ).join("&");
 
         return `${base}?${query}`;
+    }
+
+    private getApiUrl(): string {
+        if (this.apiBase) {
+            return this.apiBase;
+        }
+
+        const settingsService: SettingsService = this.ctx.getService(SettingsService);
+        const url: string = settingsService.serverUrl.value
+        if (!url) {
+            throw new InvalidOperationError("No API URL was configured");
+        }
+
+        return this.apiBase = url;
     }
 }
 

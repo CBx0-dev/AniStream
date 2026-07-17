@@ -9,6 +9,8 @@ import {ServiceDeclaration} from "@services/declaration";
 
 import {ProfileModel} from "@models/profile.model";
 
+import {UnsupportedPlatformError} from "@utils/error";
+
 import * as AppEnv from "@AppEnv";
 
 class SettingsServiceImpl implements SettingsService {
@@ -48,6 +50,14 @@ class SettingsServiceImpl implements SettingsService {
     public set healthz(v: string) {
         this._healthz.value = v;
         localStorage.setItem(SettingsServiceImpl.HEALTHZ_KEY, v);
+    }
+
+    public get serverUrl(): Readonly<Ref<string>> {
+        throw new UnsupportedPlatformError("get SettingsServiceImpl.serverUrl");
+    }
+
+    public set serverUrl(_v: string) {
+        throw new UnsupportedPlatformError("set SettingsServiceImpl.serverUrl");
     }
 
     public constructor(ctx: ReadableGlobalContext) {

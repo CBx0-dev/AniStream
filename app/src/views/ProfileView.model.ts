@@ -6,6 +6,7 @@ import {RouteAdapter, RouterService} from "vue-mvvm/router";
 import ProfileView from "@views/ProfileView.vue";
 import {ProviderViewModel} from "@views/ProviderView.model";
 
+import {SettingsService} from "@contracts/settings.contract";
 import {UserService} from "@contracts/user.contract";
 
 import type {ProfileModel} from "@models/profile.model";
@@ -24,12 +25,14 @@ export class ProfileViewModel extends ViewModel {
     private readonly routerService: RouterService;
     private readonly dialogService: DialogService;
 
+    private readonly settingService: SettingsService;
     private readonly userService: UserService;
 
     private readonly profileSetupControl: ProfileSetupControlModel | null;
 
     public isProfileSetupFormCancellable: boolean = this.ref(false);
     public showProfileSetupForm: boolean = this.ref(false);
+    public showUrlSetupForm: boolean = this.ref(false);
     public profiles: ProfileModel[] = this.ref([]);
 
     public constructor() {
@@ -38,13 +41,23 @@ export class ProfileViewModel extends ViewModel {
         this.routerService = this.ctx.getService(RouterService);
         this.dialogService = this.ctx.getService(DialogService);
 
+        this.settingService = this.ctx.getService(SettingsService);
         this.userService = this.ctx.getService(UserService);
 
         this.profileSetupControl = this.getUserControl("profile-setup-control");
     }
 
     protected async mounted(): Promise<void> {
-        this.showProfileSetupForm = await this.userService.requiresProfileSetup();
+        if (AppEnv.isStandaloneMode) {
+            this.showProfileSetupForm = await this.userService.requiresProfileSetup();
+        }
+
+        if (AppEnv.isClientMode) {
+            this.showUrlSetupForm = !this.settingService.serverUrl.value;
+            if (this.showUrlSetupForm) {
+                return;
+            }
+        }
 
         if (!this.showProfileSetupForm) {
             this.profiles = await this.userService.getProfiles();

@@ -51,8 +51,14 @@ export class UserServiceImpl implements UserService {
         throw "No active profile set and no profile was registered in the cache";
     }
 
-    public async setActiveProfile(profile: ProfileModel): Promise<void> {
+    public async setActiveProfile(profile: ProfileModel | null): Promise<void> {
         this.activeProfile = profile;
+
+        if (!profile) {
+            sessionStorage.removeItem(UserServiceImpl.SESSION_KEY);
+            return;
+        }
+
         sessionStorage.setItem(UserServiceImpl.SESSION_KEY, profile.uuid);
 
         // Lazy load to prevent circular dependency
