@@ -84,4 +84,8 @@ export class ApiServiceMock extends ApiServiceImpl {
 
         return await res.json();
     }
+
+    protected getApiUrl(): string {
+        return "http://localhost:5001";
+    }
 }

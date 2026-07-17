@@ -21,7 +21,7 @@ export async function setup(): Promise<void> {
 
     console.log(`__dirname: ${__dirname}`);
 
-    server = spawn(dotnetPath, ["run", "--project", "./AniStream/AniStream.csproj", "-c", "Test"], {
+    server = spawn(dotnetPath, ["run", "--project", "./AniStream/AniStream.csproj", "-c", "Test", "--", "--urls", "http://localhost:5001"], {
         cwd: path.join(__dirname, "..", "..", "server"),
         env: {
             ...process.env,
@@ -35,8 +35,8 @@ export async function setup(): Promise<void> {
         stdio: "inherit"
     });
 
-    if (!await waitForPort(5000, 60, 1000)) {
-        throw `Port 5000 never opened`;
+    if (!await waitForPort(5001, 60, 1000)) {
+        throw `Port 5001 never opened`;
     }
 }
 

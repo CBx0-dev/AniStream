@@ -91,7 +91,7 @@ export class ApiServiceImpl implements ApiService {
         return `${base}?${query}`;
     }
 
-    private getApiUrl(): string {
+    protected getApiUrl(): string {
         if (this.apiBase) {
             return this.apiBase;
         }
