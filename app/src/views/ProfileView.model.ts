@@ -63,6 +63,7 @@ export class ProfileViewModel extends ViewModel {
             this.profiles = await this.userService.getProfiles();
             return;
         }
+        
         this.isProfileSetupFormCancellable = false;
         await nextTick();
         if (this.profileSetupControl) {

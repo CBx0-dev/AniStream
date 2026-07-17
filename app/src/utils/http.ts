@@ -21,7 +21,7 @@ export class HTTPError extends Error {
         response: Response
     ) {
         super(message);
-        this.name = 'HTTPError';
+        this.name = "HTTPError";
 
         this.response = response;
         this.status = response.status;
