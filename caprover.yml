@@ -1,0 +1,55 @@
+captainVersion: 4
+services:
+  $$cap_appname-api:
+    image: ghcr.io/cbx0-dev/anistream-api:latest
+    ports:
+      - '8080:8080'
+    volumes:
+      - $$cap_appname-assets:/data/assets
+    restart: unless-stopped
+    environment:
+      SIDECAR_PATH: /app/sidecar
+      ASSETS_PATH: /data/assets
+      DATABASE_MIGRATION_PATH: /app/migration
+      DATABASE_DRIVER: $$cap_database_driver
+      DATABASE_METADATA_CONNECTION_STRING: $$cap_metadata_connection_string
+      DATABASE_PROFILE_CONNECTION_STRING: $$cap_profile_connection_string
+    caproverExtra:
+      containerHttpPort: '8080'
+
+  $$cap_appname-worker:
+    depends_on:
+      - $$cap_appname-api
+    image: ghcr.io/cbx0-dev/anistream-worker:latest
+    volumes:
+      - $$cap_appname-assets:/data/assets
+    restart: unless-stopped
+    environment:
+      SIDECAR_PATH: /app/sidecar
+      ASSETS_PATH: /data/assets
+      DATABASE_MIGRATION_PATH: /app/migration
+      DATABASE_DRIVER: $$cap_database_driver
+      DATABASE_METADATA_CONNECTION_STRING: $$cap_metadata_connection_string
+      DATABASE_PROFILE_CONNECTION_STRING: $$cap_profile_connection_string
+    caproverExtra:
+      notExposeAsWebApp: 'true'
+
+caproverOneClickApp:
+  variables:
+    - id: $$cap_database_driver
+      label: Database driver
+      validRegex: /.{1,}/
+    - id: $$cap_metadata_connection_string
+      label: Metadata database connection string
+      validRegex: /.{1,}/
+    - id: $$cap_profile_connection_string
+      label: Profile database connection string
+      validRegex: /.{1,}/
+  instructions:
+    start: >-
+      Deploys AniStream (API + worker) from GHCR images.
+    end: >
+      AniStream API is deployed as $$cap_appname-api.
+  displayName: AniStream
+  isOfficial: false
+  description: AniStream API + background worker, sharing a persistent assets volume.

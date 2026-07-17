@@ -1,0 +1,35 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - assets:/data/assets
+    environment:
+      SIDECAR_PATH: /app/sidecar
+      ASSETS_PATH: /data/assets
+      DATABASE_MIGRATION_PATH: /app/migration
+      DATABASE_DRIVER: ${DATABASE_DRIVER}
+      DATABASE_METADATA_CONNECTION_STRING: ${DATABASE_METADATA_CONNECTION_STRING}
+      DATABASE_PROFILE_CONNECTION_STRING: ${DATABASE_PROFILE_CONNECTION_STRING}
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: worker.Dockerfile
+    volumes:
+      - assets:/data/assets
+    environment:
+      SIDECAR_PATH: /app/sidecar
+      ASSETS_PATH: /data/assets
+      DATABASE_MIGRATION_PATH: /app/migration
+      DATABASE_DRIVER: ${DATABASE_DRIVER}
+      DATABASE_METADATA_CONNECTION_STRING: ${DATABASE_METADATA_CONNECTION_STRING}
+      DATABASE_PROFILE_CONNECTION_STRING: ${DATABASE_PROFILE_CONNECTION_STRING}
+    restart: unless-stopped
+
+volumes:
+  assets:
