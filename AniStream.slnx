@@ -1,0 +1,20 @@
+<Solution>
+    <Folder Name="/server/">
+        <Project Path="server/AniStream.Integration/AniStream.Integration.csproj"/>
+        <Project Path="server/AniStream.Models/AniStream.Models.csproj"/>
+        <Project Path="server/AniStream.Services/AniStream.Services.csproj"/>
+        <Project Path="server/AniStream.Shared/AniStream.Shared.csproj">
+            <BuildType Solution="Test|*" Project="Debug"/>
+        </Project>
+        <Project Path="server/AniStream.Tests/AniStream.Tests.csproj"/>
+        <Project Path="server/AniStream.Worker/AniStream.Worker.csproj">
+            <BuildType Solution="Test|*" Project="Debug"/>
+        </Project>
+        <Project Path="server/AniStream/AniStream.csproj"/>
+    </Folder>
+    <Configurations>
+        <BuildType Name="Test"/>
+        <BuildType Name="Debug"/>
+        <BuildType Name="Release"/>
+    </Configurations>
+</Solution>

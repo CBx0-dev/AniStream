@@ -1,0 +1,128 @@
+import {Component} from "vue";
+import {ViewModel} from "vue-mvvm";
+import {RouteAdapter, RouterService} from "vue-mvvm/router";
+
+import SyncView from "@views/SyncView.vue";
+
+import {ResourceService} from "@contracts/resource.contract";
+import {SeriesService} from "@contracts/series.contract";
+import {FetchService} from "@contracts/fetch.contract";
+import {GenreService} from "@contracts/genre.contract";
+import {SettingsService} from "@contracts/settings.contract";
+
+import {GenreModel} from "@models/genre.model";
+import {SeriesModel} from "@models/series.model";
+
+enum SyncViewModelPanel {
+    PREPARE,
+    SYNCING,
+    CONTINUE
+}
+
+export class SyncViewModel extends ViewModel {
+    public static readonly component: Component = SyncView;
+    public static readonly route: RouteAdapter = {
+        path: "/sync"
+    }
+
+    private readonly routerService: RouterService;
+
+    private readonly resourceService: ResourceService;
+    private readonly settingsService: SettingsService;
+    private readonly fetchService: FetchService;
+    private readonly seriesService: SeriesService;
+    private readonly genreService: GenreService;
+
+    private panel: SyncViewModelPanel = this.ref(SyncViewModelPanel.PREPARE);
+
+    public processed: number = this.ref(1);
+    public totalToProceed: number = this.ref(1);
+    public syncImage: string | null = this.ref(null);
+
+    public readonly isPreparing: boolean = this.computed(() => this.panel == SyncViewModelPanel.PREPARE);
+    public readonly isSyncing: boolean = this.computed(() => this.panel == SyncViewModelPanel.SYNCING);
+    public readonly isContinue: boolean = this.computed(() => this.panel == SyncViewModelPanel.CONTINUE);
+
+    public constructor() {
+        super();
+
+        this.routerService = this.ctx.getService(RouterService);
+
+        this.resourceService = this.ctx.getService(ResourceService);
+        this.settingsService = this.ctx.getService(SettingsService);
+        this.fetchService = this.ctx.getService(FetchService);
+        this.seriesService = this.ctx.getService(SeriesService);
+        this.genreService = this.ctx.getService(GenreService);
+    }
+
+    protected async mounted(): Promise<void> {
+        this.syncImage = await this.settingsService.getImageVariant("sync", "svg");
+    }
+
+    public onBackBtn(): void {
+        this.routerService.navigateBack();
+    }
+
+    public async onStartSyncingBtn(): Promise<void> {
+        this.processed = 1;
+        this.totalToProceed = 1;
+        this.panel = SyncViewModelPanel.SYNCING;
+
+        const guids: string[] = await this.fetchService.getCatalog();
+        this.totalToProceed = guids.length;
+
+        const workers: number = 4;
+        const stream: Generator<string> = this.guidStream(guids);
+
+        await Promise.all(Array.from({length: workers}, () => this.worker(stream)));
+
+        this.panel = SyncViewModelPanel.CONTINUE;
+    }
+
+    public onStartWatchingBtn(): void {
+        this.routerService.navigateBack();
+    }
+
+    private async worker(stream: Generator<string>): Promise<void> {
+        while (true) {
+            const {value: guid, done} = stream.next();
+            if (done || !guid) {
+                break;
+            }
+
+            try {
+                if (!await this.seriesService.existByGUID(guid)) {
+                    const [fetchedSeries, fetchedGenres, previewImage] = await this.fetchService.getSeries(guid);
+                    const series: SeriesModel = await this.seriesService.insertSeries(fetchedSeries.guid, fetchedSeries.title, fetchedSeries.description, fetchedSeries.preview_image);
+                    await Promise.all([
+                        ...fetchedGenres.map(fetchedGenre => (async () => {
+                            let genre: GenreModel | null = await this.genreService.getGenreByKey(fetchedGenre.key);
+                            if (!genre) {
+                                genre = await this.genreService.insertGenre(fetchedGenre.key);
+                            }
+
+                            await this.genreService.insertGenreToSeries(genre, series, fetchedGenre.main)
+                        })()),
+                        ((async () => {
+                            if (!fetchedSeries.preview_image || !previewImage) {
+                                return;
+                            }
+
+                            await this.resourceService.saveResource(fetchedSeries.preview_image, previewImage);
+                        })())
+                    ]);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+
+            this.processed++;
+        }
+    }
+
+    private* guidStream(guids: string[]): Generator<string> {
+        for (const guid of guids) {
+            yield guid;
+        }
+    }
+}
