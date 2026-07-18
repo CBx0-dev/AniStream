@@ -56,6 +56,13 @@ public sealed class SqliteMigrator : DbMigrator
     private bool CheckDbFileExists(DbContext context)
     {
         string dbFile = GetDatabaseFile(context);
+
+        string? dbFolder = Path.GetDirectoryName(dbFile);
+        if (dbFolder is not null && !Directory.Exists(dbFolder))
+        {
+            Directory.CreateDirectory(dbFolder);
+        }
+
         return File.Exists(dbFile);
     }
 
