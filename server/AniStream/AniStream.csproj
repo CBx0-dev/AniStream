@@ -24,14 +24,4 @@
     <PropertyGroup Condition="'$(Configuration)' == 'Test'">
         <DefineConstants>$(DefineConstants);TESTING_ENABLED</DefineConstants>
     </PropertyGroup>
-
-    <Target Name="CopySidecar" AfterTargets="Build">
-        <MSBuild Projects="../AniStream.Worker/AniStream.Worker.csproj" Targets="Build" Properties="Configuration=$(Configuration);Platform=$(Platform)" ContinueOnError="false" />
-        
-        <ItemGroup>
-            <SidecarFiles Include="../AniStream.Worker/bin/$(Configuration)/$(TargetFramework)/**/*" />
-        </ItemGroup>
-        
-        <Copy SourceFiles="@(SidecarFiles)" DestinationFolder="$(OutputPath)%(RecursiveDir)" />
-    </Target>
 </Project>

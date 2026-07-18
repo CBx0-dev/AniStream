@@ -6,7 +6,7 @@ on:
       push_latest:
         description: 'Also tag and push as latest'
         type: boolean
-        default: true
+        default: false
 
 permissions:
   contents: write
