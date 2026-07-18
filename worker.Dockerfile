@@ -13,6 +13,7 @@ RUN npm ci
 
 # Copy app source and build the worker bundle with Vite
 COPY app/ ./
+RUN node i18n.gen.cjs
 RUN APPLICATION_TARGET=worker npm run build
 
 # Compile the bundled worker.js into a standalone executable
