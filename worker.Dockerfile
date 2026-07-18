@@ -22,15 +22,15 @@ RUN bun build ./dist/worker.js --compile --outfile /sidecar/worker
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS dotnet-build
 WORKDIR /src
 
+COPY AniStream.slnx AniStream.slnx
 COPY server/AniStream.Models/AniStream.Models.csproj    server/AniStream.Models/
 COPY server/AniStream.Services/AniStream.Services.csproj server/AniStream.Services/
 COPY server/AniStream.Shared/AniStream.Shared.csproj     server/AniStream.Shared/
 COPY server/AniStream.Worker/AniStream.Worker.csproj     server/AniStream.Worker/
 
-RUN dotnet restore server/AniStream.Worker/AniStream.Worker.csproj
-
 COPY server/ server/
 
+RUN dotnet restore ./AniStream.slnx
 RUN dotnet publish server/AniStream.Worker/AniStream.Worker.csproj \
     -c Release -o /app/publish /p:UseAppHost=false
 
