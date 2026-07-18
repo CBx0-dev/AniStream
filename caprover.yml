@@ -1,9 +1,7 @@
 captainVersion: 4
 services:
-  $$cap_appname-api:
+  $$cap_appname:
     image: ghcr.io/cbx0-dev/anistream-api:latest
-    ports:
-      - '8080:8080'
     volumes:
       - $$cap_appname-assets:/data/assets
     restart: unless-stopped
@@ -19,7 +17,7 @@ services:
 
   $$cap_appname-worker:
     depends_on:
-      - $$cap_appname-api
+      - $$cap_appname
     image: ghcr.io/cbx0-dev/anistream-worker:latest
     volumes:
       - $$cap_appname-assets:/data/assets
@@ -33,23 +31,3 @@ services:
       DATABASE_PROFILE_CONNECTION_STRING: $$cap_profile_connection_string
     caproverExtra:
       notExposeAsWebApp: 'true'
-
-caproverOneClickApp:
-  variables:
-    - id: $$cap_database_driver
-      label: Database driver
-      validRegex: /.{1,}/
-    - id: $$cap_metadata_connection_string
-      label: Metadata database connection string
-      validRegex: /.{1,}/
-    - id: $$cap_profile_connection_string
-      label: Profile database connection string
-      validRegex: /.{1,}/
-  instructions:
-    start: >-
-      Deploys AniStream (API + worker) from GHCR images.
-    end: >
-      AniStream API is deployed as $$cap_appname-api.
-  displayName: AniStream
-  isOfficial: false
-  description: AniStream API + background worker, sharing a persistent assets volume.
