@@ -17,7 +17,7 @@ const vm: UpdatePanelModel = useUserControl(UpdatePanelModel);
             </div>
             <div class="space-y-1">
                 <h1 class="text-lg">Server Update available</h1>
-                <p class="text-primary">Version 2.4.1 is ready. You are on v2.3.8</p>
+                <p class="text-primary text-sm">Version 2.4.1 is ready. You are on v2.3.8</p>
             </div>
             <div class="flex-1"></div>
             <div class="my-auto">
