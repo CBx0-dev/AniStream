@@ -6,6 +6,7 @@
             "vite/client"
         ],
         "allowArbitraryExtensions": true,
+        "allowImportingTsExtensions": false,
         /* Linting */
         "noUnusedLocals": true,
         "noUnusedParameters": true,
@@ -17,6 +18,15 @@
             ],
             "@controls/*": [
                 "./src/controls/*"
+            ],
+            "@contracts/*": [
+                "./src/contracts/*"
+            ],
+            "@services/*": [
+                "./src/services/*"
+            ],
+            "@icons/*": [
+                "./src/icons/*"
             ]
         }
     },

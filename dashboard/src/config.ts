@@ -1,16 +1,23 @@
 import type {AppShell, WritableGlobalContext} from "vue-mvvm";
 
-import {DashboardViewModel} from "@views/DashboardView.model.ts";
+import {LoginViewModel} from "@views/LoginView.model";
+import {DashboardViewModel} from "@views/DashboardView.model";
+
+import {services} from "@services/loader";
 
 export class AppConfig implements AppShell {
     public router: AppShell.RouterConfig = {
         views: [
+            LoginViewModel,
             DashboardViewModel
         ]
     }
     
     
-    public configureServices(_ctx: WritableGlobalContext): void {
+    public configureServices(ctx: WritableGlobalContext): void {
+        for (const service of services) {
+            ctx.registerService(service.key, ctx => new service.ctor(ctx));
+        }
     }
     
 }

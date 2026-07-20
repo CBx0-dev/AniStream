@@ -9,7 +9,10 @@ export default defineConfig({
     resolve: {
         alias: {
             "@views": path.join(__dirname, "src", "views"),
-            "@controls": path.join(__dirname, "src", "controls")
+            "@controls": path.join(__dirname, "src", "controls"),
+            "@contracts": path.join(__dirname, "src", "contracts"),
+            "@services": path.join(__dirname, "src", "services"),
+            "@icons": path.join(__dirname, "src", "icons")
         }
     }
 });

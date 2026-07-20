@@ -7,8 +7,6 @@ import DashboardView from "@views/DashboardView.vue";
 export class DashboardViewModel extends ViewModel {
     public static readonly component: Component = DashboardView;
     public static readonly route: RouteAdapter = {
-        path: "/"
+        path: "/home"
     }
-    
-    
 }

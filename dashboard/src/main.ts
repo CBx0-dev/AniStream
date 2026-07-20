@@ -1,7 +1,7 @@
-import { createApp } from "vue";
+import {createApp} from "vue";
 import {MVVMApp, createMVVM} from "vue-mvvm";
 
-import {AppConfig} from "./config.ts";
+import {AppConfig} from "./config";
 import "./main.css";
 
 createApp(MVVMApp)
