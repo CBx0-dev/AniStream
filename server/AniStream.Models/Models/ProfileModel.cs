@@ -30,7 +30,9 @@ public sealed class ProfileModel
 
     public bool TosAccepted { get; set; }
 
-    public bool SyncCatalog { get; set; }
+    public bool DashboardUser { get; set; }
+    
+    public bool ClientUser { get; set; }
 
     public ProfileModel(
         int profileId,
@@ -44,7 +46,8 @@ public sealed class ProfileModel
         string theme,
         string lang,
         bool tosAccepted,
-        bool syncCatalog
+        bool dashboardUser,
+        bool clientUser
     )
     {
         ProfileId = profileId;
@@ -58,7 +61,8 @@ public sealed class ProfileModel
         Theme = theme;
         Lang = lang;
         TosAccepted = tosAccepted;
-        SyncCatalog = syncCatalog;
+        DashboardUser = dashboardUser;
+        ClientUser = clientUser;
     }
 
     public ProfileModel(
@@ -72,7 +76,8 @@ public sealed class ProfileModel
         string theme,
         string lang,
         bool tosAccepted,
-        bool syncCatalog
+        bool dashboardUser,
+        bool clientUser
     ) : this(
         0,
         uuid,
@@ -85,7 +90,8 @@ public sealed class ProfileModel
         theme,
         lang,
         tosAccepted,
-        syncCatalog
+        dashboardUser,
+        clientUser
     )
     {
     }

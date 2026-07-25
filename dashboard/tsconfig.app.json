@@ -19,14 +19,26 @@
             "@controls/*": [
                 "./src/controls/*"
             ],
+            "@components/*": [
+                "./src/components/*"
+            ],
             "@contracts/*": [
                 "./src/contracts/*"
             ],
             "@services/*": [
                 "./src/services/*"
             ],
+            "@models/*": [
+                "./src/models/*"
+            ],
             "@icons/*": [
                 "./src/icons/*"
+            ],
+            "@utils/*": [
+                "./src/utils/*"
+            ],
+            "@AppEnv": [
+                "./src/AppEnv.ts"
             ]
         }
     },

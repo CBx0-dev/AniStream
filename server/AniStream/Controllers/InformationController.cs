@@ -1,13 +1,41 @@
 ﻿using AniStream.API.DTO;
 using AniStream.API.Utils;
+using AniStream.Contracts;
+using AniStream.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AniStream.API.Controllers;
 
 [Route("api/information")]
 [ApiController]
+[Authorize(Roles = Roles.Dashboard + "," + Roles.Client)]
 public sealed class InformationController : ApiControllerBase
 {
+    private readonly IProviderService _providerService;
+    private readonly ISeriesService _seriesService;
+    private readonly ISeasonService _seasonService;
+    private readonly IEpisodeService _episodeService;
+    private readonly ISeriesSyncService _seriesSyncService;
+    private readonly IProviderSyncService _providerSyncService;
+
+    public InformationController(
+        IProviderService providerService,
+        ISeriesService seriesService,
+        ISeasonService seasonService,
+        IEpisodeService episodeService,
+        ISeriesSyncService seriesSyncService,
+        IProviderSyncService providerSyncService
+    )
+    {
+        _providerService = providerService;
+        _seriesService = seriesService;
+        _seasonService = seasonService;
+        _episodeService = episodeService;
+        _seriesSyncService = seriesSyncService;
+        _providerSyncService = providerSyncService;
+    }
+
     [HttpGet]
     public InformationModel GetInformation()
     {
@@ -16,5 +44,96 @@ public sealed class InformationController : ApiControllerBase
             MinVersion = Program.MinVersion,
             MaxVersion = Program.MaxVersion
         };
+    }
+
+    [HttpGet("audits")]
+    [Authorize(Roles = Roles.Dashboard)]
+    public async IAsyncEnumerable<AuditModel> GetAudits()
+    {
+        Dictionary<int, Models.SeriesModel?> seriesCache = new Dictionary<int, Models.SeriesModel?>();
+        Dictionary<int, Models.SeasonModel?> seasonCache = new Dictionary<int, Models.SeasonModel?>();
+        Dictionary<int, Models.EpisodeModel?> episodeCache = new Dictionary<int, Models.EpisodeModel?>();
+
+
+        foreach (string provider in _providerService.GetProviders())
+        {
+            _providerService.SetActiveProvider(provider);
+
+            foreach (SyncSeriesJobModel job in await _seriesSyncService.GetSyncJobs())
+            {
+                if (!seriesCache.TryGetValue(job.SeriesId, out Models.SeriesModel? series))
+                {
+                    series = await _seriesService.GetSeries(job.SeriesId);
+                    seriesCache[job.SeriesId] = series;
+                }
+
+                if (series is null)
+                {
+                    continue;
+                }
+
+                yield return new AuditModel
+                {
+                    JobId = job.SyncSeriesJobId,
+                    Kind = AuditKind.Series,
+                    JobName = $"Syncing series '{series.Title}'",
+                    Provider = provider,
+                    Status = job.Status,
+                    StartedAt = job.Started,
+                    FinishedAt = job.Completed,
+                    Error = job.Error,
+                    Expires = null
+                };
+            }
+
+            foreach (SyncProviderJobModel job in await _providerSyncService.GetSyncJobs())
+            {
+                if (!episodeCache.TryGetValue(job.EpisodeId, out Models.EpisodeModel? episode))
+                {
+                    episode = await _episodeService.GetEpisode(job.EpisodeId);
+                    episodeCache[job.EpisodeId] = episode;
+                }
+
+                if (episode is null)
+                {
+                    continue;
+                }
+
+                if (!seasonCache.TryGetValue(episode.SeasonId, out Models.SeasonModel? season))
+                {
+                    season = await _seasonService.GetSeason(episode.SeasonId);
+                    seasonCache[episode.SeasonId] = season;
+                }
+
+                if (season is null)
+                {
+                    continue;
+                }
+
+                if (seriesCache.TryGetValue(season.SeriesId, out Models.SeriesModel? series))
+                {
+                    series = await _seriesService.GetSeries(season.SeriesId);
+                    seriesCache[season.SeriesId] = series;
+                }
+
+                if (series is null)
+                {
+                    continue;
+                }
+
+                yield return new AuditModel
+                {
+                    JobId = job.SyncProviderJobId,
+                    Kind = AuditKind.Provider,
+                    JobName = $"Syncing providers '{series.Title}' S{season.SeasonNumber}E{episode.EpisodeNumber}",
+                    Provider = provider,
+                    Status = job.Status,
+                    StartedAt = job.Started,
+                    FinishedAt = job.Completed,
+                    Error = job.Error,
+                    Expires = job.Expires
+                };
+            }
+        }
     }
 }

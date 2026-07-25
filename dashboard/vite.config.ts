@@ -10,9 +10,13 @@ export default defineConfig({
         alias: {
             "@views": path.join(__dirname, "src", "views"),
             "@controls": path.join(__dirname, "src", "controls"),
+            "@components": path.join(__dirname, "src", "components"),
             "@contracts": path.join(__dirname, "src", "contracts"),
             "@services": path.join(__dirname, "src", "services"),
-            "@icons": path.join(__dirname, "src", "icons")
+            "@models": path.join(__dirname, "src", "models"),
+            "@icons": path.join(__dirname, "src", "icons"),
+            "@utils": path.join(__dirname, "src", "utils"),
+            "@AppEnv": path.join(__dirname, "src", "AppEnv.ts")
         }
     }
 });

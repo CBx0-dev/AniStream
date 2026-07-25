@@ -8,7 +8,7 @@ namespace AniStream.API.Controllers;
 
 [Route("api/{provider}/seasons")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = Roles.Client)]
 public class SeasonController : ApiControllerBase
 {
     private readonly ISeasonService _seasonService;

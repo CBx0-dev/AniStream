@@ -18,8 +18,10 @@ public interface IProviderSyncService
 
     public Task<bool> IsSyncing(EpisodeModel episode);
 
+    public Task<SyncProviderJobModel[]> GetSyncJobs();
+    
     public Task<SyncProviderJobModel[]> GetSyncJobs(SyncJobStatus status);
-
+    
     public Task<SyncProviderJobModel> UpdateSyncJob(
         int syncProviderJobId,
         SyncJobStatus? status = null,

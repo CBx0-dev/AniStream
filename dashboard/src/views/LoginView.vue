@@ -22,7 +22,7 @@ vm.onFocus.subscribe((index: number) => {
 
 <template>
     <div class="min-h-screen bg-base-200 flex items-center justify-center p-4">
-        <div class="card bg-base-100 shadow-sm w-full max-w-md">
+        <div class="card bg-base-100 shadow-sm w-full max-w-sm">
             <div class="card-body">
                 <div class="avatar justify-center">
                     <div class="bg-base-200 border border-base-300 p-3 rounded-full">
@@ -41,12 +41,12 @@ vm.onFocus.subscribe((index: number) => {
                             v-model="vm.username"
                             type="text"
                             placeholder="Username"
-                            class="input input-bordered input-lg w-full"
+                            class="input input-bordered w-full"
                             autofocus/>
                     </div>
 
                     <button
-                        class="btn btn-primary btn-lg w-full"
+                        class="btn btn-primary w-full"
                         :disabled="!vm.username"
                         @click="vm.onUsernameSubmitBtn()">
                         Continue
@@ -68,14 +68,14 @@ vm.onFocus.subscribe((index: number) => {
                             ref="inputs"
                             type="password"
                             :disabled="vm.isTrying"
-                            class="input w-12 h-12 text-center text-xl font-mono"
+                            class="input w-10 h-10 text-center text-lg font-mono"
                             v-model="vm.pin[index]"
                             @input="vm.onPinInput(index, $event)"
                             @keydown="vm.onPinKeyDown(index, $event)"
                             @paste="vm.onPinPaste($event)"/>
                     </div>
                     <button
-                        class="btn btn-primary btn-lg w-full"
+                        class="btn btn-primary w-full"
                         :disabled="vm.isTrying || vm.pin.length < 6"
                         @click="vm.onFullPinInput()">
                         <SvgSpinners180RingWithBg v-if="vm.isTrying" />

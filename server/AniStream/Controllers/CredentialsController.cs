@@ -36,6 +36,16 @@ public sealed class CredentialsController : ApiControllerBase
         {
             new Claim(ClaimTypes.Name, profile.Uuid),
         };
+
+        if (profile.DashboardUser)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, Roles.Dashboard));
+        }
+        if (profile.ClientUser)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, Roles.Client));
+        }
+        
         ClaimsIdentity identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         ClaimsPrincipal principal = new ClaimsPrincipal(identity);
 

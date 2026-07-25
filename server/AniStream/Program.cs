@@ -5,6 +5,7 @@ using AniStream.Contracts;
 using AniStream.Services;
 using AniStream.Shared;
 using AniStream.Utils;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -30,7 +31,7 @@ public static class Program
         AppConfig.Initialize();
 
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
+        
         builder.Services.AddHttpLogging(options =>
         {
             options.LoggingFields = HttpLoggingFields.RequestMethod |
@@ -38,6 +39,20 @@ public static class Program
                                     HttpLoggingFields.ResponseStatusCode |
                                     HttpLoggingFields.Duration;
         });
+        
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy
+                    .WithOrigins(
+                        "http://localhost:5173")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+            });
+        });
+        
         builder.Services.AddControllers()
             .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCasePolicy());
         builder.Services.Configure<MvcOptions>(options => options.ModelMetadataDetailsProviders.Add(new EmptyStringEnabledDisplayMetadataProvider()));
@@ -117,9 +132,9 @@ public static class Program
 #endif
 
         WebApplication app = builder.Build();
-
+        
         app.UseHttpLogging();
-
+        
 #if TESTING_ENABLED
         app.UseMiddleware<TestingMiddleware>();
 #endif
@@ -129,6 +144,8 @@ public static class Program
         {
             app.UseHttpsRedirection();
         }
+        
+        app.UseCors("AllowAll");
 
         app.UseAuthentication();
         app.UseAuthorization();

@@ -2,6 +2,8 @@ using AniStream.Contexts;
 using AniStream.Contracts;
 using AniStream.Models;
 using AniStream.Utils;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace AniStream.Services;
 
@@ -19,7 +21,8 @@ public class SeasonServiceImpl : ISeasonService
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
         IQueryable<SeasonModel> query = from season in db.Seasons where season.SeasonId == seasonId select season;
-        return query.FirstOrDefault();
+        
+        return await query.FirstOrDefaultAsync();
     }
 
     public async Task<SeasonModel[]> GetSeasons(int seriesId)
@@ -28,7 +31,7 @@ public class SeasonServiceImpl : ISeasonService
 
         IQueryable<SeasonModel> query = from season in db.Seasons where season.SeriesId == seriesId select season;
 
-        return query.ToArray();
+        return await query.ToArrayAsync();
     }
 
     public async Task<SeasonModel> CreateSeason(int seriesId, int seasonNumber)

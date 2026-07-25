@@ -8,7 +8,7 @@ namespace AniStream.API.Controllers;
 
 [Route("api/{provider}/watchtime")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = Roles.Client)]
 public sealed class WatchTimeController : ApiControllerBase
 {
     private readonly IWatchTimeService _watchTimeService;

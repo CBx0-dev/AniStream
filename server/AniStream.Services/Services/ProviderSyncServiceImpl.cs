@@ -93,6 +93,15 @@ public sealed class ProviderSyncServiceImpl : IProviderSyncService
         return await query.AnyAsync();
     }
 
+    public async Task<SyncProviderJobModel[]> GetSyncJobs()
+    {
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<SyncProviderJobModel> query = from job in db.SyncProviderJobs select job;
+
+        return await query.ToArrayAsync();
+    }
+
     public async Task<SyncProviderJobModel[]> GetSyncJobs(SyncJobStatus status)
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();

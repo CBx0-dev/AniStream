@@ -15,7 +15,8 @@ public interface IUserService
         string theme,
         string lang,
         bool tosAccepted,
-        bool syncCatalog
+        bool dashboardUser,
+        bool clientUser
     );
 
     public Task<ProfileModel> GetActiveProfile();
@@ -49,6 +50,7 @@ public interface IUserService
         string? theme = null,
         string? lang = null,
         bool? tosAccepted = null,
-        bool? syncCatalog = null
+        bool? dashboardUser = null,
+        bool? clientUser = null
     );
 }

@@ -26,12 +26,13 @@ public class UserServiceImpl : IUserService
         string theme,
         string lang,
         bool tosAccepted,
-        bool syncCatalog
+        bool dashboardUser,
+        bool clientUser
     )
     {
         await using ProfileDbContext db = await _dbFactory.GetContext();
 
-        ProfileModel profile = new ProfileModel(uuid, name, password, passwordSalt, backgroundColor, eye, mouth, theme, lang, tosAccepted, syncCatalog);
+        ProfileModel profile = new ProfileModel(uuid, name, password, passwordSalt, backgroundColor, eye, mouth, theme, lang, tosAccepted, dashboardUser, clientUser);
 
         db.Profiles.Add(profile);
         await db.SaveChangesAsync();
@@ -115,7 +116,8 @@ public class UserServiceImpl : IUserService
         string? theme = null,
         string? lang = null,
         bool? tosAccepted = null,
-        bool? syncCatalog = null
+        bool? dashboardUser = null,
+        bool? clientUser = null
     )
     {
         await using ProfileDbContext db = await _dbFactory.GetContext();
@@ -155,9 +157,14 @@ public class UserServiceImpl : IUserService
             profile.TosAccepted = (bool)tosAccepted;
         }
 
-        if (syncCatalog is not null)
+        if (dashboardUser is not null)
         {
-            profile.SyncCatalog = (bool)syncCatalog;
+            profile.DashboardUser = (bool)dashboardUser;
+        }
+
+        if (clientUser is not null)
+        {
+            profile.ClientUser = (bool)clientUser;
         }
 
         db.Profiles.Update(profile);

@@ -8,7 +8,7 @@ namespace AniStream.API.Controllers;
 
 [Route("/api/profiles")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = Roles.Dashboard + "," + Roles.Client)]
 public sealed class ProfileController : ApiControllerBase
 {
     private readonly IUserService _userService;

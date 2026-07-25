@@ -8,7 +8,7 @@ namespace AniStream.API.Controllers;
 
 [Route("api/{provider}/lists")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = Roles.Client)]
 public sealed class ListController : ApiControllerBase
 {
     private readonly IListService _listService;

@@ -105,6 +105,15 @@ public sealed class SeriesSyncServiceImpl : ISeriesSyncService
         return await query.ToArrayAsync();
     }
 
+    public async Task<SyncSeriesJobModel[]> GetSyncJobs()
+    {
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+        
+        IQueryable<SyncSeriesJobModel> query = from job in db.SyncSeriesJobs select job;
+        
+        return await query.ToArrayAsync();
+    }
+    
     public async Task<SyncSeriesJobModel> UpdateSyncJob(
         int syncSeriesJobId,
         SyncJobStatus? status = null,

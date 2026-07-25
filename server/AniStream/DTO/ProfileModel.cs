@@ -19,8 +19,6 @@ public sealed class ProfileModel
     public required string Lang { get; set; }
 
     public required bool TosAccepted { get; set; }
-
-    public required bool SyncCatalog { get; set; }
 }
 
 public sealed class ProfileCreateModel
@@ -73,8 +71,7 @@ internal static class ProfileModelHelper
             Mouth = model.Mouth,
             Theme = model.Theme,
             Lang = model.Lang,
-            TosAccepted = model.TosAccepted,
-            SyncCatalog = model.SyncCatalog
+            TosAccepted = model.TosAccepted
         };
     }
 }
