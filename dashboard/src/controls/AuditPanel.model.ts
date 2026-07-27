@@ -9,7 +9,7 @@ export class AuditPanelModel extends UserControl {
 
     private items: AuditModel[] = this.ref([]);
 
-    public readonly pageSize: number = 20;
+    public readonly pageSize: number = 15;
 
     public search: string = this.ref("");
     public statusFilter: AuditStatus | -1 = this.ref(-1);
@@ -48,10 +48,11 @@ export class AuditPanelModel extends UserControl {
         const start: number = (this.page - 1) * this.pageSize;
         return this.filtered.slice(start, start + this.pageSize);
     });
+    public readonly pagerItems: Array<number | "..."> = this.computed(() => this.calcPaginationRange());
     public readonly rangeStart: number = this.computed<number>(() => (this.filtered.length == 0 ? 0 : (this.page - 1) * this.pageSize + 1));
     public readonly rangeEnd: number = this.computed<number>(() => Math.min(this.page * this.pageSize, this.filtered.length));
     public readonly isEmpty: boolean = this.computed(() => this.items.length == 0);
-    
+
     public constructor() {
         super();
 
@@ -97,5 +98,48 @@ export class AuditPanelModel extends UserControl {
         this.items = items.sort((a, b) => !b.started_at ? -1 : a.started_at > b.started_at ? -1 : 1);
 
         this.refreshing = false;
+    }
+
+    private calcPaginationRange(): Array<number | "..."> {
+        const total: number = this.pageCount;
+        const current: number = this.page;
+        const siblingCount: number = 1;
+
+        const totalPageNumbers: number = siblingCount + 5;
+
+        if (totalPageNumbers >= total) {
+            return Array.from({length: total}, (_, i) => i + 1);
+        }
+
+        const leftSiblingIndex: number = Math.max(current - siblingCount, 1);
+        const rightSiblingIndex: number = Math.min(current + siblingCount, total);
+
+        const showLeftDots: boolean = leftSiblingIndex > 2;
+        const showRightDots: boolean = rightSiblingIndex < total - 2;
+
+        const firstPageIndex: number = 1;
+        const lastPageIndex: number = total;
+
+        if (!showLeftDots && showRightDots) {
+            const leftItemCount: number = 3 + 2 * siblingCount;
+            const leftRange: number[] = Array.from({length: leftItemCount}, (_, i) => i + 1);
+            return [...leftRange, "...", lastPageIndex];
+        }
+
+        if (showLeftDots && !showRightDots) {
+            const rightItemCount: number = 3 + 2 * siblingCount;
+            const rightRange: number[] = Array.from(
+                {length: rightItemCount},
+                (_, i) => total - rightItemCount + 1 + i
+            );
+            return [firstPageIndex, "...", ...rightRange];
+        }
+
+        const middleRange: number[] = Array.from(
+            {length: rightSiblingIndex - leftSiblingIndex + 1},
+            (_, i) => leftSiblingIndex + i
+        );
+
+        return [firstPageIndex, "...", ...middleRange, "...", lastPageIndex];
     }
 }

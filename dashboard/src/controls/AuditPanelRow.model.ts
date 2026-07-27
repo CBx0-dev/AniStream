@@ -35,7 +35,6 @@ export class AuditPanelRowModel extends UserControl {
     public readonly statusBadgeClasses: string = this.computed(() => {
         switch (this.model.status) {
             case AuditStatus.Queued:
-                return "badge-neutral";
             case AuditStatus.Processing:
                 return "badge-info";
             case AuditStatus.Completed:

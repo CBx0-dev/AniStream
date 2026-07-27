@@ -14,6 +14,7 @@ import LucideChevronRight from "@icons/LucideChevronRight.vue";
 import LucideChevronsLeft from "@icons/LucideChevronsLeft.vue";
 import LucideChevronsRight from "@icons/LucideChevronsRight.vue";
 import LucidePackageOpen from "@icons/LucidePackageOpen.vue";
+import LucideEllipsis from "@icons/LucideEllipsis.vue";
 
 const vm: AuditPanelModel = useUserControl(AuditPanelModel);
 </script>
@@ -106,7 +107,7 @@ const vm: AuditPanelModel = useUserControl(AuditPanelModel);
                 </thead>
                 <tbody>
                 <AuditPanelRow v-for="item of vm.paged"
-                               :key="`${item.kind}-${item.provider}-${item.job_id}`"
+                               :key="`${item.kind}-${item.provider}-${item.job_id}-${item.status}`"
                                :model="item"/>
                 <tr v-if="vm.isEmpty">
                     <td colspan="7">
@@ -145,12 +146,19 @@ const vm: AuditPanelModel = useUserControl(AuditPanelModel);
                         @click="vm.onPrevPageBtn()">
                     <LucideChevronLeft class="size-4"/>
                 </button>
-                <button v-for="p in vm.pageCount" :key="p"
-                        class="join-item btn btn-sm"
-                        :class="{'btn-active btn-primary': p == vm.page}"
-                        @click="vm.onPageBtn(p)">
-                    {{ p }}
-                </button>
+                <template v-for="(p, idx) in vm.pagerItems" :key="idx">
+                    <button v-if="typeof p == 'string'"
+                            class="join-item btn btn-sm pointer-events-none">
+                        <LucideEllipsis />
+                    </button>
+                    <button v-else
+                            class="join-item btn btn-sm"
+                            :class="{'btn-active btn-primary': p == vm.page}"
+                            @click="vm.onPageBtn(p)">
+                        {{ p }}
+                    </button>
+                </template>
+
                 <button class="join-item btn btn-sm"
                         :disabled="vm.page >= vm.pageCount"
                         @click="vm.onNextPageBtn()">

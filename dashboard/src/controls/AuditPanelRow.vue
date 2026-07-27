@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {reactive} from "vue";
 import {useUserControl} from "vue-mvvm";
 
 import {AuditPanelRowModel} from "@controls/AuditPanelRow.model";
@@ -13,7 +14,7 @@ const props = defineProps<{
     model: AuditModel;
 }>();
 
-const vm: AuditPanelRowModel = useUserControl(AuditPanelRowModel, props.model);
+const vm: AuditPanelRowModel = useUserControl(AuditPanelRowModel, reactive(props.model));
 </script>
 
 <template>
