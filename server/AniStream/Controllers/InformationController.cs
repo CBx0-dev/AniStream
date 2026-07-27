@@ -9,7 +9,7 @@ namespace AniStream.API.Controllers;
 
 [Route("api/information")]
 [ApiController]
-[Authorize(Roles = Roles.Dashboard + "," + Roles.Client)]
+[Authorize(Roles = Roles.Dashboard)]
 public sealed class InformationController : ApiControllerBase
 {
     private readonly IProviderService _providerService;
@@ -40,6 +40,7 @@ public sealed class InformationController : ApiControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public InformationModel GetInformation()
     {
         return new InformationModel
@@ -49,8 +50,22 @@ public sealed class InformationController : ApiControllerBase
         };
     }
 
+    [HttpGet("stats")]
+    public async Task<StatsModel> GetStats()
+    {
+        // TODO extract stats
+        return new StatsModel
+        {
+            TotalProfiles = 0,
+            TotalSeries = 0,
+            TotalWatched = 0,
+            DaysJobs = 0,
+            DaysJobCompleted = 0,
+            DaysJobFailed = 0
+        };
+    }
+
     [HttpGet("audits")]
-    [Authorize(Roles = Roles.Dashboard)]
     public async IAsyncEnumerable<AuditModel> GetAudits()
     {
         Dictionary<int, Models.SeriesModel?> seriesCache = new Dictionary<int, Models.SeriesModel?>();
