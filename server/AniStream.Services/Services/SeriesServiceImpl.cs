@@ -66,7 +66,7 @@ public sealed class SeriesServiceImpl : ISeriesService
 
         if (searchText is not null)
         {
-            query = query.Where(s => s.Title.Contains(searchText));
+            query = query.Where(s => s.Title.ToLower().Contains(searchText));
         }
 
         if (genreIds is not null)
