@@ -16,7 +16,8 @@ internal static class Program
         builder.Services.AddHostedService<CatalogSyncWorker>();
         builder.Services.AddHostedService<SeriesSyncWorker>();
         builder.Services.AddHostedService<ProviderSyncWorker>();
-
+        builder.Services.AddHostedService<MidnightSyncWorker>();
+        
         SetupDependencyInjection(builder);
 
         IHost host = builder.Build();
