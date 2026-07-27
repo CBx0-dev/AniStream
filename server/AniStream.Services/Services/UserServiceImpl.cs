@@ -32,7 +32,20 @@ public class UserServiceImpl : IUserService
     {
         await using ProfileDbContext db = await _dbFactory.GetContext();
 
-        ProfileModel profile = new ProfileModel(uuid, name, password, passwordSalt, backgroundColor, eye, mouth, theme, lang, tosAccepted, dashboardUser, clientUser);
+        ProfileModel profile = new ProfileModel(
+            uuid,
+            name,
+            password,
+            passwordSalt,
+            backgroundColor,
+            eye,
+            mouth,
+            theme,
+            lang,
+            tosAccepted,
+            dashboardUser,
+            clientUser
+        );
 
         db.Profiles.Add(profile);
         await db.SaveChangesAsync();
@@ -49,7 +62,18 @@ public class UserServiceImpl : IUserService
     {
         await using ProfileDbContext db = await _dbFactory.GetContext();
 
-        return db.Profiles.ToArray();
+        return await db.Profiles.ToArrayAsync();
+    }
+
+    public async Task<ProfileModel[]> GetPublicProfiles()
+    {
+        await using ProfileDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<ProfileModel> query = from profile in db.Profiles
+            where profile.ClientUser
+            select profile;
+
+        return await query.ToArrayAsync();
     }
 
     public async Task<ProfileModel?> GetProfileByUsername(string username)

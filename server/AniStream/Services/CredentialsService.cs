@@ -64,6 +64,8 @@ public sealed class CredentialsService : ICredentialsService
 
         byte[] computedHash = argon2.GetBytes(32);
 
+        Console.WriteLine(Convert.ToBase64String(computedHash));
+        
         return CryptographicOperations.FixedTimeEquals(computedHash, password);
     }
 }

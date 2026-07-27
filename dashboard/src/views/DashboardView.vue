@@ -4,6 +4,7 @@ import {useViewModel} from "vue-mvvm";
 import {DashboardViewModel} from "@views/DashboardView.model";
 
 import UpdatePanel from "@controls/UpdatePanel.vue";
+import SyncPanel from "@controls/SyncPanel.vue";
 import AuditPanel from "@controls/AuditPanel.vue";
 import ProfilePanel from "@controls/ProfilePanel.vue";
 
@@ -64,6 +65,8 @@ const vm: DashboardViewModel = useViewModel(DashboardViewModel);
             </div>
 
             <UpdatePanel/>
+
+            <SyncPanel/>
 
             <!-- Tabs -->
             <div role="tablist" class="tabs tabs-box bg-base-100 border border-base-300 w-fit p-1">

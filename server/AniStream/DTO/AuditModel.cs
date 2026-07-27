@@ -4,6 +4,7 @@ namespace AniStream.API.DTO;
 
 public enum AuditKind
 {
+    Catalog,
     Series,
     Provider
 }

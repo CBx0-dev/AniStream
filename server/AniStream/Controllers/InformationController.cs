@@ -16,6 +16,7 @@ public sealed class InformationController : ApiControllerBase
     private readonly ISeriesService _seriesService;
     private readonly ISeasonService _seasonService;
     private readonly IEpisodeService _episodeService;
+    private readonly ICatalogSyncService _catalogSyncService;
     private readonly ISeriesSyncService _seriesSyncService;
     private readonly IProviderSyncService _providerSyncService;
 
@@ -24,6 +25,7 @@ public sealed class InformationController : ApiControllerBase
         ISeriesService seriesService,
         ISeasonService seasonService,
         IEpisodeService episodeService,
+        ICatalogSyncService catalogSyncService,
         ISeriesSyncService seriesSyncService,
         IProviderSyncService providerSyncService
     )
@@ -32,6 +34,7 @@ public sealed class InformationController : ApiControllerBase
         _seriesService = seriesService;
         _seasonService = seasonService;
         _episodeService = episodeService;
+        _catalogSyncService = catalogSyncService;
         _seriesSyncService = seriesSyncService;
         _providerSyncService = providerSyncService;
     }
@@ -58,6 +61,22 @@ public sealed class InformationController : ApiControllerBase
         foreach (string provider in _providerService.GetProviders())
         {
             _providerService.SetActiveProvider(provider);
+
+            foreach (SyncCatalogJobModel job in await _catalogSyncService.GetSyncJobs())
+            {
+                yield return new AuditModel
+                {
+                    JobId = job.SyncCatalogJobId,
+                    Kind = AuditKind.Catalog,
+                    JobName = "Syncing catalog",
+                    Provider = provider,
+                    Status = job.Status,
+                    StartedAt = job.Started,
+                    FinishedAt = job.Completed,
+                    Error = job.Error,
+                    Expires = null
+                };
+            }
 
             foreach (SyncSeriesJobModel job in await _seriesSyncService.GetSyncJobs())
             {

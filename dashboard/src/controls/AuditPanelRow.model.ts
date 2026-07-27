@@ -13,6 +13,8 @@ export class AuditPanelRowModel extends UserControl {
 
     public readonly kind: string = this.computed(() => {
         switch (this.model.kind) {
+            case AuditKind.Catalog:
+                return "Catalog";
             case AuditKind.Series:
                 return "Series";
             case AuditKind.Provider:

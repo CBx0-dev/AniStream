@@ -50,8 +50,8 @@ export class AuditPanelModel extends UserControl {
     });
     public readonly rangeStart: number = this.computed<number>(() => (this.filtered.length == 0 ? 0 : (this.page - 1) * this.pageSize + 1));
     public readonly rangeEnd: number = this.computed<number>(() => Math.min(this.page * this.pageSize, this.filtered.length));
-
-
+    public readonly isEmpty: boolean = this.computed(() => this.items.length == 0);
+    
     public constructor() {
         super();
 

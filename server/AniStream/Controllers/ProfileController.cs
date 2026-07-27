@@ -19,13 +19,21 @@ public sealed class ProfileController : ApiControllerBase
     }
 
     [HttpGet]
-    [AllowAnonymous]
+    [Authorize(Roles = Roles.Dashboard)]
     public async Task<ActionResult<ProfileModel[]>> GetProfiles()
     {
-        // TODO implement GetProfilesPublic with Public DTO for stripped information
         Models.ProfileModel[] profiles = await _userService.GetProfiles();
 
         return profiles.Select(profile => profile.ToDTO()).ToArray();
+    }
+
+    [HttpGet("public")]
+    [AllowAnonymous]
+    public async Task<ActionResult<ProfilePublicModel[]>> GetProfilesPublic()
+    {
+        Models.ProfileModel[] profiles = await _userService.GetPublicProfiles();
+        
+        return profiles.Select(profile => profile.ToPublicDTO()).ToArray();
     }
 
     [HttpGet("{profileId}")]

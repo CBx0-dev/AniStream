@@ -13,6 +13,7 @@ import LucideChevronLeft from "@icons/LucideChevronLeft.vue";
 import LucideChevronRight from "@icons/LucideChevronRight.vue";
 import LucideChevronsLeft from "@icons/LucideChevronsLeft.vue";
 import LucideChevronsRight from "@icons/LucideChevronsRight.vue";
+import LucidePackageOpen from "@icons/LucidePackageOpen.vue";
 
 const vm: AuditPanelModel = useUserControl(AuditPanelModel);
 </script>
@@ -60,6 +61,12 @@ const vm: AuditPanelModel = useUserControl(AuditPanelModel);
                 </a>
                 <a role="tab"
                    class="tab"
+                   :class="{'tab-active': vm.kindFilter == AuditKind.Catalog}"
+                   @click="vm.kindFilter = AuditKind.Catalog">
+                    Catalog
+                </a>
+                <a role="tab"
+                   class="tab"
                    :class="{'tab-active': vm.kindFilter == AuditKind.Series}"
                    @click="vm.kindFilter = AuditKind.Series">
                     Series
@@ -101,7 +108,15 @@ const vm: AuditPanelModel = useUserControl(AuditPanelModel);
                 <AuditPanelRow v-for="item of vm.paged"
                                :key="`${item.kind}-${item.provider}-${item.job_id}`"
                                :model="item"/>
-                <tr v-if="vm.filtered.length == 0">
+                <tr v-if="vm.isEmpty">
+                    <td colspan="7">
+                        <div class="flex flex-col items-center gap-2 py-12 text-base-content/50">
+                            <LucidePackageOpen class="size-8 opacity-40" />
+                            <p>No jobs found</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr v-else-if="vm.filtered.length == 0">
                     <td colspan="7">
                         <div class="flex flex-col items-center gap-2 py-12 text-base-content/50">
                             <LucideSearch class="size-8 opacity-40"/>

@@ -27,8 +27,12 @@ internal sealed class WorkerClient
 
     public Task<string[]> CatalogAsync(string provider) => ExecuteAsync<string[]>("catalog", "-p", provider, "-o", "json");
 
-    public Task<SeriesFetchModel> SeriesAsync(string provider, string guid) => ExecuteAsync<SeriesFetchModel>("series", guid, "-p", provider, "-o", "json");
-
+    public Task<SeriesFetchModel> SeriesAsync(string provider, string guid) 
+        => ExecuteAsync<SeriesFetchModel>("series", guid, "-p", provider, "-o", "json");
+    
+    public Task<SeriesFetchModel> SeriesAsync(string provider, string guid, string saveFolder) 
+        => ExecuteAsync<SeriesFetchModel>("series", guid, "-p", provider, "-o", "json", "--save-preview", saveFolder);
+    
     public Task<SeasonFetchModel[]> SeasonsAsync(string provider, string guid) => ExecuteAsync<SeasonFetchModel[]>("seasons", guid, "-p", provider, "-o", "json");
 
     public Task<EpisodeFetchModel[]> EpisodesAsync(string provider, string guid, int seasonNumber) =>

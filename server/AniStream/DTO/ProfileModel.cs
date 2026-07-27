@@ -19,6 +19,25 @@ public sealed class ProfileModel
     public required string Lang { get; set; }
 
     public required bool TosAccepted { get; set; }
+    
+    public required bool DashboardUser { get; set; }
+    
+    public required bool ClientUser { get; set; }
+}
+
+public sealed class ProfilePublicModel
+{
+    public required int ProfileId { get; set; }
+
+    public required string Uuid { get; set; }
+
+    public required string Name { get; set; }
+
+    public required string BackgroundColor { get; set; }
+
+    public required string Eye { get; set; }
+
+    public required string Mouth { get; set; }
 }
 
 public sealed class ProfileCreateModel
@@ -71,7 +90,22 @@ internal static class ProfileModelHelper
             Mouth = model.Mouth,
             Theme = model.Theme,
             Lang = model.Lang,
-            TosAccepted = model.TosAccepted
+            TosAccepted = model.TosAccepted,
+            DashboardUser = model.DashboardUser,
+            ClientUser = model.ClientUser
+        };
+    }
+
+    public static ProfilePublicModel ToPublicDTO(this Models.ProfileModel model)
+    {
+        return new ProfilePublicModel
+        {
+            ProfileId = model.ProfileId,
+            Uuid = model.Uuid,
+            Name = model.Name,
+            BackgroundColor = model.BackgroundColor,
+            Eye = model.Eye,
+            Mouth = model.Mouth
         };
     }
 }

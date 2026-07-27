@@ -108,3 +108,12 @@ CREATE TABLE sync_provider_job_result
     language_code               INTEGER NOT NULL,
     FOREIGN KEY (sync_provider_job_id) REFERENCES sync_provider_job (sync_provider_job_id) ON DELETE CASCADE
 );
+
+CREATE TABLE sync_catalog_job
+(
+    sync_catalog_job_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    status              INTEGER  NOT NULL,
+    started             DATETIME NOT NULL,
+    completed           DATETIME,
+    error               TEXT
+);

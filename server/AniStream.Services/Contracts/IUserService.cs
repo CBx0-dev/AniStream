@@ -22,6 +22,8 @@ public interface IUserService
     public Task<ProfileModel> GetActiveProfile();
 
     public Task<ProfileModel[]> GetProfiles();
+    
+    public Task<ProfileModel[]> GetPublicProfiles();
 
     public Task<ProfileModel?> GetProfileByUsername(string username);
 
