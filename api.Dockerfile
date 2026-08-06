@@ -11,7 +11,6 @@ RUN npm ci
 # Copy dashboard source and build it with Vite
 COPY dashboard/ ./
 RUN npm run build
-RUN ls .
 
 # Stage 2: Build .NET API
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
@@ -26,8 +25,6 @@ COPY server/AniStream.Worker/AniStream.Worker.csproj server/AniStream.Worker/
 
 COPY server/ server/
 COPY --from=dashboard-build /build/dist/ server/AniStream/wwwroot
-RUN ls /server
-RUN ls /server/wwwroot
 
 RUN dotnet restore ./AniStream.slnx
 RUN dotnet publish server/AniStream/AniStream.csproj \
