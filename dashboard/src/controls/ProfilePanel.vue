@@ -12,7 +12,6 @@ import LucideShield from "@icons/LucideShield.vue";
 import LucideMonitor from "@icons/LucideMonitor.vue";
 import LucideCircleCheck from "@icons/LucideCircleCheck.vue";
 import LucideCircleX from "@icons/LucideCircleX.vue";
-import LucideLock from "@icons/LucideLock.vue";
 
 const vm: ProfilePanelModel = useUserControl(ProfilePanelModel);
 </script>
