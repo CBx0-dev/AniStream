@@ -9,11 +9,16 @@ public sealed class MockCredentialService : ICredentialsService
 
     public Task<ProfileModel?> ValidateCredentials(string username, string password)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
     }
 
     public Task<string> GetCurrentUuid()
     {
         return Task.FromResult(MOCK_UUID);
+    }
+
+    public void HashPassword(string password, out string hash, out string salt)
+    {
+        throw new NotSupportedException();
     }
 }

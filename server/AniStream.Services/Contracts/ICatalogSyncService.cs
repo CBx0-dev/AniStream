@@ -25,4 +25,6 @@ public interface ICatalogSyncService
         DateTime? finished = null,
         string? error = null
     );
+    
+    public Task<SyncJobStats> GetStats();
 }

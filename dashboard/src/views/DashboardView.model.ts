@@ -5,13 +5,13 @@ import {type RouteAdapter, RouterService} from "vue-mvvm/router";
 import DashboardView from "@views/DashboardView.vue";
 import {LoginViewModel} from "@views/LoginView.model";
 
-export type DashboardTab = "audit" | "profiles";
+import {InformationService} from "@contracts/information.service";
 
-interface OverviewStat {
-    label: string;
-    value: string;
-    hint: string;
-    tone: string;
+import type {StatsModel} from "@models/stats.model";
+
+export enum DashboardTab {
+    Audit,
+    Profiles
 }
 
 export class DashboardViewModel extends ViewModel {
@@ -22,24 +22,34 @@ export class DashboardViewModel extends ViewModel {
 
     private readonly routerService: RouterService;
 
-    public activeTab: DashboardTab = this.ref<DashboardTab>("audit");
+    private readonly informationService: InformationService;
 
-    // Static overview figures until the service layer is wired up.
-    public readonly stats: OverviewStat[] = this.readonly([
-        {label: "Active profiles", value: "6", hint: "3 with dashboard access", tone: "text-primary"},
-        {label: "Running jobs", value: "2", hint: "syncing right now", tone: "text-info"},
-        {label: "Completed today", value: "146", hint: "+18% vs. yesterday", tone: "text-success"},
-        {label: "Failed jobs", value: "3", hint: "needs attention", tone: "text-error"}
-    ]);
+    public activeTab: DashboardTab = this.ref<DashboardTab>(DashboardTab.Audit);
+
+    public totalProfiles: number = this.ref(0);
+    public totalSeries: number = this.ref(0);
+    public dayJobs: number = this.ref(0);
+    public dayJobsCompleted: number = this.ref(0);
+    public dayJobsFailed: number = this.ref(0);
+
+    public successRate: number = this.computed(() => this.dayJobsCompleted ? Math.round(this.dayJobsCompleted / this.dayJobsCompleted * 10000) / 100 : 100);
 
     public constructor() {
         super();
 
         this.routerService = this.ctx.getService(RouterService);
+
+        this.informationService = this.ctx.getService(InformationService);
     }
 
-    public setTab(tab: DashboardTab): void {
-        this.activeTab = tab;
+    protected async mounted(): Promise<void> {
+        const stats: StatsModel = await this.informationService.getStats();
+
+        this.totalProfiles = stats.total_profiles;
+        this.totalSeries = stats.total_series;
+        this.dayJobs = stats.day_jobs;
+        this.dayJobsCompleted = stats.day_jobs_completed;
+        this.dayJobsFailed = stats.day_jobs_failed;
     }
 
     public async logout(): Promise<void> {

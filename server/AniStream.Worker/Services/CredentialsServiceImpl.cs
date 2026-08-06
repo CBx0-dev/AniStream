@@ -14,4 +14,9 @@ internal sealed class CredentialsServiceImpl : ICredentialsService
     {
         throw new NotSupportedException();
     }
+    
+    public void HashPassword(string password, out string hash, out string salt)
+    {
+        throw new NotSupportedException();
+    }
 }

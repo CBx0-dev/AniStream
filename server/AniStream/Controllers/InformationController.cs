@@ -12,6 +12,7 @@ namespace AniStream.API.Controllers;
 [Authorize(Roles = Roles.Dashboard)]
 public sealed class InformationController : ApiControllerBase
 {
+    private readonly IUserService _userService;
     private readonly IProviderService _providerService;
     private readonly ISeriesService _seriesService;
     private readonly ISeasonService _seasonService;
@@ -21,6 +22,7 @@ public sealed class InformationController : ApiControllerBase
     private readonly IProviderSyncService _providerSyncService;
 
     public InformationController(
+        IUserService userService,
         IProviderService providerService,
         ISeriesService seriesService,
         ISeasonService seasonService,
@@ -30,6 +32,7 @@ public sealed class InformationController : ApiControllerBase
         IProviderSyncService providerSyncService
     )
     {
+        _userService = userService;
         _providerService = providerService;
         _seriesService = seriesService;
         _seasonService = seasonService;
@@ -53,15 +56,35 @@ public sealed class InformationController : ApiControllerBase
     [HttpGet("stats")]
     public async Task<StatsModel> GetStats()
     {
-        // TODO extract stats
+        int totalProfiles = await _userService.GetProfileCount();
+        int totalSeries = 0;
+        int dayJobs = 0;
+        int dayJobsCompleted = 0;
+        int dayJobsFailed = 0;
+
+
+        foreach (string provider in _providerService.GetProviders())
+        {
+            _providerService.SetActiveProvider(provider);
+
+            totalSeries += await _seriesService.GetSeriesCount();
+
+            SyncJobStats providerStats = await _providerSyncService.GetStats();
+            SyncJobStats seriesStats = await _seriesSyncService.GetStats();
+            SyncJobStats catalogStats = await _catalogSyncService.GetStats();
+
+            dayJobs += providerStats.Total + seriesStats.Total + catalogStats.Total;
+            dayJobsCompleted += providerStats.Completed + seriesStats.Completed + catalogStats.Completed;
+            dayJobsFailed += providerStats.Failed + seriesStats.Failed + catalogStats.Failed;
+        }
+
         return new StatsModel
         {
-            TotalProfiles = 0,
-            TotalSeries = 0,
-            TotalWatched = 0,
-            DaysJobs = 0,
-            DaysJobCompleted = 0,
-            DaysJobFailed = 0
+            TotalProfiles = totalProfiles,
+            TotalSeries = totalSeries,
+            DayJobs = dayJobs,
+            DayJobsCompleted = dayJobsCompleted,
+            DayJobsFailed = dayJobsFailed
         };
     }
 

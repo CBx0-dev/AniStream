@@ -41,4 +41,6 @@ public interface IProviderSyncService
     public Task CreateSyncResult(int syncProviderJobId, string provider, string url, int languageCode);
 
     public Task<SyncProviderJobResultModel[]> GetSyncResults(int episodeId);
+    
+    public Task<SyncJobStats> GetStats();
 }

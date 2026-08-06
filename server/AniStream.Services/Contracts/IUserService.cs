@@ -55,4 +55,6 @@ public interface IUserService
         bool? dashboardUser = null,
         bool? clientUser = null
     );
+
+    public Task<int> GetProfileCount();
 }

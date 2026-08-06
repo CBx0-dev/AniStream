@@ -13,11 +13,9 @@ public sealed class StatsModel
 
     public required int TotalSeries { get; set; }
 
-    public required int TotalWatched { get; set; }
+    public required int DayJobs { get; set; }
 
-    public required int DaysJobs { get; set; }
+    public required int DayJobsCompleted { get; set; }
 
-    public required int DaysJobCompleted { get; set; }
-
-    public required int DaysJobFailed { get; set; }
+    public required int DayJobsFailed { get; set; }
 }

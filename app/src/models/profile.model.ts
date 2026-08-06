@@ -38,12 +38,13 @@ export interface ProfileApiModel extends Omit<ProfileDbModel, "tos_accepted" | "
 export interface ProfileCreateModel {
     name: string;
     password: string;
-    password_salt: string;
     background_color: string;
     eye: ProfileEye;
     mouth: ProfileMouth;
     theme: string;
     lang: SupportedLocals;
+    clientUser: boolean;
+    dashboardUser: boolean;
 }
 
 /**
@@ -57,6 +58,8 @@ export interface ProfileUpdateModel {
     theme: string;
     lang: SupportedLocals;
     tos_accepted: boolean;
+    dashboard_user: false;
+    client_user: false;
 }
 
 export function ProfileModel(

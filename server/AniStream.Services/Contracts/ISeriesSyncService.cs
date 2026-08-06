@@ -35,4 +35,6 @@ public interface ISeriesSyncService
         DateTime? finished = null,
         string? error = null
     );
+
+    public Task<SyncJobStats> GetStats();
 }

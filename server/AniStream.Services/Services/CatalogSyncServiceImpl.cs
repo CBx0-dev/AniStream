@@ -31,7 +31,7 @@ public sealed class CatalogSyncServiceImpl : ICatalogSyncService
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
         SyncCatalogJobModel job = new SyncCatalogJobModel(SyncJobStatus.Queued, DateTime.UtcNow, null, null);
-        
+
         db.SyncCatalogJobs.Add(job);
         await db.SaveChangesAsync();
     }
@@ -95,10 +95,28 @@ public sealed class CatalogSyncServiceImpl : ICatalogSyncService
         {
             syncJob.Error = error;
         }
-        
+
         db.SyncCatalogJobs.Update(syncJob);
         await db.SaveChangesAsync();
 
         return syncJob;
+    }
+
+    public async Task<SyncJobStats> GetStats()
+    {
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<SyncJobStats> query = db.SyncCatalogJobs
+            .Where(job => job.Started >= DateTime.Today)
+            .GroupBy(_ => 1).Select(g => new SyncJobStats
+            {
+                Total = g.Count(),
+                Completed = g.Count(x => x.Status == SyncJobStatus.Completed),
+                Failed = g.Count(x => x.Status == SyncJobStatus.Failed)
+            });
+
+        SyncJobStats? stats = await query.SingleOrDefaultAsync();
+        
+        return stats ?? new SyncJobStats();
     }
 }

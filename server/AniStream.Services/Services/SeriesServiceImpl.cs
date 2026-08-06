@@ -66,7 +66,7 @@ public sealed class SeriesServiceImpl : ISeriesService
 
         if (searchText is not null)
         {
-            query = query.Where(s => s.Title.ToLower().Contains(searchText));
+            query = query.Where(s => s.Title.ToLower().Contains(searchText.ToLower()));
         }
 
         if (genreIds is not null)
@@ -152,5 +152,12 @@ public sealed class SeriesServiceImpl : ISeriesService
             select season.SeasonId;
 
         return !await query.AnyAsync();
+    }
+
+    public async Task<int> GetSeriesCount()
+    {
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+
+        return await db.Series.CountAsync();
     }
 }

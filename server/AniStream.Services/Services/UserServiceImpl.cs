@@ -196,4 +196,11 @@ public class UserServiceImpl : IUserService
 
         return profile;
     }
+
+    public async Task<int> GetProfileCount()
+    {
+        await using ProfileDbContext db = await _dbFactory.GetContext();
+
+        return await db.Profiles.CountAsync();
+    }
 }

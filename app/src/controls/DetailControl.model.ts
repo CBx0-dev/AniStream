@@ -10,6 +10,7 @@ import {StreamViewModel} from "@views/StreamView.model";
 
 import {SeriesModel} from "@models/series.model";
 import {GenreModel} from "@models/genre.model";
+import {ListModel} from "@models/list.model";
 
 import {GenreService} from "@contracts/genre.contract";
 import {I18nService} from "@contracts/i18n.contract";
@@ -19,7 +20,6 @@ import {WatchtimeService} from "@contracts/watchtime.contract";
 import {ListService} from "@contracts/list.contract";
 
 import I18n from "@utils/i18n";
-import {ListModel} from "@models/list.model";
 
 export class DetailControlModel extends DialogControl {
     public static readonly component: Component = DetailControl;

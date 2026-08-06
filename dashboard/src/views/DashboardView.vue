@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useViewModel} from "vue-mvvm";
 
-import {DashboardViewModel} from "@views/DashboardView.model";
+import {DashboardTab, DashboardViewModel} from "@views/DashboardView.model";
 
 import UpdatePanel from "@controls/UpdatePanel.vue";
 import SyncPanel from "@controls/SyncPanel.vue";
@@ -47,43 +47,45 @@ const vm: DashboardViewModel = useViewModel(DashboardViewModel);
                 </div>
             </div>
         </header>
-
         <main class="container mx-auto p-4 space-y-4">
             <div>
                 <h1 class="text-2xl font-bold">Overview</h1>
                 <p class="text-base-content/60">Monitor sync jobs and manage who can access AniStream.</p>
             </div>
-
-            <!-- Overview stats -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div v-for="stat in vm.stats" :key="stat.label"
-                     class="bg-base-100 border border-base-300 rounded-box p-4">
-                    <div class="text-sm text-base-content/60">{{ stat.label }}</div>
-                    <div class="text-3xl font-bold mt-1" :class="stat.tone">{{ stat.value }}</div>
-                    <div class="text-xs text-base-content/40 mt-1">{{ stat.hint }}</div>
+                <div class="bg-base-100 border border-base-300 rounded-box p-4">
+                    <div class="text-sm text-base-content/60">Total profiles</div>
+                    <div class="text-3xl font-bold mt-1 text-primary">{{ vm.totalProfiles }}</div>
+                </div>
+                <div class="bg-base-100 border border-base-300 rounded-box p-4">
+                    <div class="text-sm text-base-content/60">Total series</div>
+                    <div class="text-3xl font-bold mt-1 text-info">{{ vm.totalSeries }}</div>
+                </div>
+                <div class="bg-base-100 border border-base-300 rounded-box p-4">
+                    <div class="text-sm text-base-content/60">Total jobs today</div>
+                    <div class="text-3xl font-bold mt-1 text-info">{{ vm.dayJobs }}</div>
+                </div>
+                <div class="bg-base-100 border border-base-300 rounded-box p-4">
+                    <div class="text-sm text-base-content/60">Success rate today</div>
+                    <div class="text-3xl font-bold mt-1 text-success">{{ vm.successRate }} %</div>
                 </div>
             </div>
-
             <UpdatePanel/>
-
             <SyncPanel/>
-
-            <!-- Tabs -->
             <div role="tablist" class="tabs tabs-box bg-base-100 border border-base-300 w-fit p-1">
-                <a role="tab" class="tab gap-2" :class="{'tab-active': vm.activeTab === 'audit'}"
-                   @click="vm.setTab('audit')">
+                <a role="tab" class="tab gap-2" :class="{'tab-active': vm.activeTab == DashboardTab.Audit}"
+                   @click="vm.activeTab = DashboardTab.Audit">
                     <LucideListChecks class="size-4"/>
                     Audit log
                 </a>
-                <a role="tab" class="tab gap-2" :class="{'tab-active': vm.activeTab === 'profiles'}"
-                   @click="vm.setTab('profiles')">
+                <a role="tab" class="tab gap-2" :class="{'tab-active': vm.activeTab == DashboardTab.Profiles}"
+                   @click="vm.activeTab = DashboardTab.Profiles">
                     <LucideUsers class="size-4"/>
                     User profiles
                 </a>
             </div>
-
-            <AuditPanel v-show="vm.activeTab === 'audit'"/>
-            <ProfilePanel v-show="vm.activeTab === 'profiles'"/>
+            <AuditPanel v-show="vm.activeTab == DashboardTab.Audit"/>
+            <ProfilePanel v-show="vm.activeTab == DashboardTab.Profiles"/>
         </main>
     </div>
 </template>

@@ -143,6 +143,9 @@ public static class Program
         if (app.Environment.IsProduction())
         {
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            
+            app.MapFallbackToFile("index.html");
         }
         
         app.UseCors("AllowAll");
@@ -153,7 +156,7 @@ public static class Program
         app.MapControllers();
         app.MapOpenApi();
         app.MapScalarApiReference(options => { options.Title = "AniStream API"; });
-
+        
         app.Run();
     }
 

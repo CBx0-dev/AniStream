@@ -60,7 +60,8 @@ const vm: DetailControlModel = useDialogControl(DetailControlModel);
                     </div>
                     <div class="shrink-0 flex justify-end items-center gap-5">
                         <div class="tooltip w-full max-w-[150px] h-fit" data-tip="Watch progression">
-                            <progress class="progress progress-primary max-w-[150px]" :value="vm.watchProgression"
+                            <progress class="progress progress-primary max-w-[150px]"
+                                      :value="vm.watchProgression"
                                       max="100"/>
                         </div>
                         <div class="join">

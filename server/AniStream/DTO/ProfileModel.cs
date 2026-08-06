@@ -46,8 +46,6 @@ public sealed class ProfileCreateModel
 
     public required string Password { get; set; }
     
-    public required string PasswordSalt { get; set; }
-    
     public required string BackgroundColor { get; set; }
 
     public required string Eye { get; set; }
@@ -57,6 +55,10 @@ public sealed class ProfileCreateModel
     public required string Theme { get; set; }
 
     public required string Lang { get; set; }
+    
+    public required bool DashboardUser { get; set; }
+    
+    public required bool ClientUser { get; set; }
 }
 
 public sealed class ProfileUpdateModel
@@ -74,6 +76,10 @@ public sealed class ProfileUpdateModel
     public required string? Lang { get; set; }
 
     public required bool? TosAccepted { get; set; }
+    
+    public required bool? DashboardUser { get; set; }
+    
+    public required bool? ClientUser { get; set; }
 }
 
 internal static class ProfileModelHelper

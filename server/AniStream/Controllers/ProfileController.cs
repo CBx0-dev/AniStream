@@ -12,10 +12,12 @@ namespace AniStream.API.Controllers;
 public sealed class ProfileController : ApiControllerBase
 {
     private readonly IUserService _userService;
+    private readonly ICredentialsService _credentialService;
 
-    public ProfileController(IUserService userService)
+    public ProfileController(IUserService userService, ICredentialsService credentialService)
     {
         _userService = userService;
+        _credentialService = credentialService;
     }
 
     [HttpGet]
@@ -32,7 +34,7 @@ public sealed class ProfileController : ApiControllerBase
     public async Task<ActionResult<ProfilePublicModel[]>> GetProfilesPublic()
     {
         Models.ProfileModel[] profiles = await _userService.GetPublicProfiles();
-        
+
         return profiles.Select(profile => profile.ToPublicDTO()).ToArray();
     }
 
@@ -57,6 +59,15 @@ public sealed class ProfileController : ApiControllerBase
             return NotFound($"Profile with ID '{profileId}' not found");
         }
 
+        bool? dashboardUser = null;
+        bool? clientUser = null;
+
+        if (HttpContext.User.IsInRole(Roles.Dashboard))
+        {
+            dashboardUser = data.DashboardUser;
+            clientUser = data.ClientUser;
+        }
+
         await _userService.UpdateProfile(
             profile,
             data.Name,
@@ -65,7 +76,9 @@ public sealed class ProfileController : ApiControllerBase
             data.Mouth,
             data.Theme,
             data.Lang,
-            data.TosAccepted
+            data.TosAccepted,
+            dashboardUser,
+            clientUser
         );
 
         return Ok(profile.ToDTO());
@@ -106,27 +119,28 @@ public sealed class ProfileController : ApiControllerBase
         return Ok(profile.ToDTO());
     }
 
-#if TESTING_ENABLED
     [HttpPost]
+    [Authorize(Roles = Roles.Dashboard)]
     public async Task<ActionResult<ProfileModel>> CreateProfile([FromBody] ProfileCreateModel data)
     {
         string uuid = Guid.NewGuid().ToString();
+        _credentialService.HashPassword(data.Password, out string hash, out string salt);
 
         Models.ProfileModel profileModel = await _userService.CreateProfile(
             uuid,
             data.Name,
-            data.Password,
-            data.PasswordSalt,
+            hash,
+            salt,
             data.BackgroundColor,
             data.Eye,
             data.Mouth,
             data.Theme,
             data.Lang,
             false,
-            false
+            data.DashboardUser,
+            data.ClientUser
         );
 
         return profileModel.ToDTO();
     }
-#endif
 }

@@ -6,6 +6,7 @@ import {ApiService} from "@contracts/api.service";
 import type {ServiceDeclaration} from "@services/shared";
 
 import type {AuditModel} from "@models/audit.model";
+import type {StatsModel} from "@models/stats.model";
 
 class InformationServiceImpl implements InformationService {
     private readonly apiService: ApiService;
@@ -16,6 +17,10 @@ class InformationServiceImpl implements InformationService {
 
     public async getAudits(): Promise<AuditModel[]> {
         return await this.apiService.get<AuditModel[]>(["api", "information", "audits"]);
+    }
+
+    public async getStats(): Promise<StatsModel> {
+        return await this.apiService.get<StatsModel>(["api", "information", "stats"]);
     }
 }
 
