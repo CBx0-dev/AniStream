@@ -5,12 +5,15 @@
         "types": [
             "vite/client"
         ],
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
         "allowArbitraryExtensions": true,
         "allowImportingTsExtensions": false,
         /* Linting */
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "erasableSyntaxOnly": true,
         "noFallthroughCasesInSwitch": true,
         "paths": {
             "@views/*": [
