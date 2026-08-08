@@ -21,7 +21,9 @@ public sealed class TestingAuthHandler : AuthenticationHandler<AuthenticationSch
     {
         Claim[] claims =
         [
-            new Claim(ClaimTypes.Name, "TestUser")
+            new Claim(ClaimTypes.Name, "TestUser"),
+            new Claim(ClaimTypes.Role, "Dashboard"),
+            new Claim(ClaimTypes.Role, "Client"),
         ];
         ClaimsIdentity identity = new ClaimsIdentity(claims, Guid.NewGuid().ToString());
         ClaimsPrincipal principal = new ClaimsPrincipal(identity);
