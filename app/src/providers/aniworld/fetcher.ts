@@ -76,6 +76,7 @@ export class AniWorldFetcher implements IInformationFetcher {
         }
 
         let mainGenreKey: string = genreList.getAttribute("data-main-genre") ?? "";
+        const seenGenres: Set<string> = new Set<string>();
         for (let i: number = 0; i < genreList.children.length; i++) {
             const liElement: HTMLLIElement = genreList.children[i] as HTMLLIElement;
             const anchor: HTMLAnchorElement | null = liElement.children.item(0) as HTMLAnchorElement | null;
@@ -84,6 +85,10 @@ export class AniWorldFetcher implements IInformationFetcher {
             }
 
             const genre: string = anchor.href.split("/").at(-1);
+            if (seenGenres.has(genre)) {
+                continue;
+            }
+            seenGenres.add(genre);
             genres.push({key: genre, main: genre == mainGenreKey});
         }
 

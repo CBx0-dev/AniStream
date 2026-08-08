@@ -29,18 +29,18 @@ internal sealed class WorkerClient
     public Task<string[]> CatalogAsync(string provider) => ExecuteAsync<string[]>("catalog", "-p", provider, "-o", "json");
 
     public Task<SeriesFetchModel> SeriesAsync(string provider, string guid) 
-        => ExecuteAsync<SeriesFetchModel>("series", guid, "-p", provider, "-o", "json");
+        => ExecuteAsync<SeriesFetchModel>("series", "-p", provider, "-o", "json", "--", guid);
     
     public Task<SeriesFetchModel> SeriesAsync(string provider, string guid, string saveFolder) 
-        => ExecuteAsync<SeriesFetchModel>("series", guid, "-p", provider, "-o", "json", "--save-preview", saveFolder);
+        => ExecuteAsync<SeriesFetchModel>("series", "-p", provider, "-o", "json", "--save-preview", saveFolder, "--", guid);
     
-    public Task<SeasonFetchModel[]> SeasonsAsync(string provider, string guid) => ExecuteAsync<SeasonFetchModel[]>("seasons", guid, "-p", provider, "-o", "json");
+    public Task<SeasonFetchModel[]> SeasonsAsync(string provider, string guid) => ExecuteAsync<SeasonFetchModel[]>("seasons", "-p", provider, "-o", "json", "--", guid);
 
     public Task<EpisodeFetchModel[]> EpisodesAsync(string provider, string guid, int seasonNumber) =>
-        ExecuteAsync<EpisodeFetchModel[]>("episodes", guid, seasonNumber.ToString(), "-p", provider, "-o", "json");
+        ExecuteAsync<EpisodeFetchModel[]>("episodes", "-p", provider, "-o", "json", "--", guid, seasonNumber.ToString());
 
     public Task<ProviderFetchModel[]> ProvidersAsync(string provider, string guid, int seasonNumber, int episodeNumber) =>
-        ExecuteAsync<ProviderFetchModel[]>("providers", guid, seasonNumber.ToString(), episodeNumber.ToString(), "-p", provider, "-o", "json");
+        ExecuteAsync<ProviderFetchModel[]>("providers", "-p", provider, "-o", "json", "--", guid, seasonNumber.ToString(), episodeNumber.ToString());
 
     private async Task<T> ExecuteAsync<T>(params string[] args)
     {

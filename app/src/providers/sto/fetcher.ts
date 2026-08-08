@@ -77,9 +77,14 @@ export class StoFetcher implements IInformationFetcher {
         if (!genreList) {
             throw "Failed to extract genre list";
         }
-
+        const seenGenres: Set<string> = new Set<string>();
         for (let anchorElement of genreList.values()) {
             const genre: string = anchorElement.href.split("/").at(-1);
+            if (seenGenres.has(genre)) {
+                continue;
+            }
+            seenGenres.add(genre);
+
             genres.push({key: genre, main: false});
         }
 
