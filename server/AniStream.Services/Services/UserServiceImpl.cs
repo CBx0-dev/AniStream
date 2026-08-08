@@ -197,6 +197,25 @@ public class UserServiceImpl : IUserService
         return profile;
     }
 
+    public async Task DeleteProfile(int profileId)
+    {
+        ProfileModel? profile = await GetProfile(profileId);
+        if (profile is null)
+        {
+            throw new ArgumentException($"Profile with ID '{profileId}' not found", nameof(profileId));
+        }
+
+        await DeleteProfile(profile);
+    }
+
+    public async Task DeleteProfile(ProfileModel profile)
+    {
+        await using ProfileDbContext db = await _dbFactory.GetContext();
+
+        db.Profiles.Remove(profile);
+        await db.SaveChangesAsync();
+    }
+
     public async Task<int> GetProfileCount()
     {
         await using ProfileDbContext db = await _dbFactory.GetContext();

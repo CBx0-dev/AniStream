@@ -33,6 +33,8 @@ export interface ProfileService {
         dashboardUser: boolean,
         clientUser: boolean
     ): Promise<ProfileModel>;
+    
+    deleteProfile(profileId: number): Promise<void>;
 }
 
 export const ProfileService: ServiceKey<ProfileService> = new ServiceKey<ProfileService>("profile.service");

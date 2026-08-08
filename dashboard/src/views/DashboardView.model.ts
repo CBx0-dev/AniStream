@@ -6,6 +6,7 @@ import DashboardView from "@views/DashboardView.vue";
 import {LoginViewModel} from "@views/LoginView.model";
 
 import {InformationService} from "@contracts/information.service";
+import {ProfileService} from "@contracts/profile.service";
 
 import type {StatsModel} from "@models/stats.model";
 
@@ -21,9 +22,10 @@ export class DashboardViewModel extends ViewModel {
     }
 
     private readonly routerService: RouterService;
-
+    
     private readonly informationService: InformationService;
-
+    private readonly profileService: ProfileService;
+    
     public activeTab: DashboardTab = this.ref<DashboardTab>(DashboardTab.Audit);
 
     public totalProfiles: number = this.ref(0);
@@ -32,7 +34,7 @@ export class DashboardViewModel extends ViewModel {
     public dayJobsCompleted: number = this.ref(0);
     public dayJobsFailed: number = this.ref(0);
 
-    public successRate: number = this.computed(() => this.dayJobsCompleted ? Math.round(this.dayJobsCompleted / this.dayJobsCompleted * 10000) / 100 : 100);
+    public successRate: number = this.computed(() => this.dayJobs ? Math.round(this.dayJobsCompleted / this.dayJobs * 10000) / 100 : 100);
 
     public constructor() {
         super();
@@ -40,6 +42,7 @@ export class DashboardViewModel extends ViewModel {
         this.routerService = this.ctx.getService(RouterService);
 
         this.informationService = this.ctx.getService(InformationService);
+        this.profileService = this.ctx.getService(ProfileService);
     }
 
     protected async mounted(): Promise<void> {
@@ -53,6 +56,7 @@ export class DashboardViewModel extends ViewModel {
     }
 
     public async logout(): Promise<void> {
+        await this.profileService.logout();
         await this.routerService.navigateTo(LoginViewModel);
     }
 }

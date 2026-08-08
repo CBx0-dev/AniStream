@@ -96,6 +96,10 @@ class ProfileServiceImpl implements ProfileService {
             client_user: clientUser
         });
     }
+    
+    public async deleteProfile(profileId: number): Promise<void> {
+        await this.apiService.delete(["api", "profiles", profileId]);
+    }
 }
 
 export default {

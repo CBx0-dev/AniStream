@@ -83,6 +83,21 @@ public sealed class ProfileController : ApiControllerBase
 
         return Ok(profile.ToDTO());
     }
+    
+    [HttpDelete("{profileId}")]
+    [Authorize(Roles = Roles.Dashboard)]
+    public async Task<ActionResult> DeleteProfile(int profileId)
+    {
+        Models.ProfileModel? profile = await _userService.GetProfile(profileId);
+        if (profile is null)
+        {
+            return NotFound($"Profile with ID '{profileId}' not found");
+        }
+
+        
+        await _userService.DeleteProfile(profile);
+        return Ok();
+    }
 
     [HttpGet("{uuid}/uuid")]
     public async Task<ActionResult<ProfileModel>> GetProfile(string uuid)

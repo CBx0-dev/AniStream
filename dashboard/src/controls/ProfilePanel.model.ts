@@ -127,6 +127,6 @@ export class ProfilePanelModel extends UserControl {
     }
 
     public async onRemoveBtn(profile: ProfileModel): Promise<void> {
-        profile;
+        await this.profileService.deleteProfile(profile.profile_id);
     }
 }

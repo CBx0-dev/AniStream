@@ -56,5 +56,9 @@ public interface IUserService
         bool? clientUser = null
     );
 
+    public Task DeleteProfile(int profileId);
+    
+    public Task DeleteProfile(ProfileModel profile);
+    
     public Task<int> GetProfileCount();
 }
