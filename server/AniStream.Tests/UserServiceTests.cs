@@ -19,7 +19,7 @@ public sealed class UserServiceTests : TestBase
         Guid johnGuid = Guid.NewGuid();
         ProfileModel john = await _userService.CreateProfile(johnGuid.ToString(), "john", "", "","fff", "eye-1", "mouth-1", "dark", "en", true, false, false);
 
-        Assert.Equal(1, john.ProfileId);
+        Assert.Equal(2, john.ProfileId);
         Assert.Equal("john", john.Name);
     }
 
@@ -33,7 +33,7 @@ public sealed class UserServiceTests : TestBase
 
         ProfileModel[] profiles = await _userService.GetProfiles();
 
-        Assert.Equal(2, profiles.Length);
+        Assert.Equal(3, profiles.Length);
     }
 
     [Fact]
