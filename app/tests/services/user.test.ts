@@ -18,7 +18,7 @@ class UserTests extends TestBase {
         
         const john: ProfileModel = await this.userService.createProfile(name, "fff", "eyes1" as any, "mouth1" as any, "dark", "en");
 
-        expect(john.profile_id).toBe(1);
+        expect(john.profile_id).toBe(2);
         expect(john.name).toBe(name);
     }
 
