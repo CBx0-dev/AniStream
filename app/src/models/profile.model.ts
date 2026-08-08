@@ -43,8 +43,8 @@ export interface ProfileCreateModel {
     mouth: ProfileMouth;
     theme: string;
     lang: SupportedLocals;
-    clientUser: boolean;
-    dashboardUser: boolean;
+    client_user: boolean;
+    dashboard_user: boolean;
 }
 
 /**

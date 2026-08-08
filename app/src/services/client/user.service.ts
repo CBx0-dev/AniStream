@@ -169,8 +169,8 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
             mouth,
             theme,
             lang: local,
-            clientUser: true,
-            dashboardUser: true
+            client_user: true,
+            dashboard_user: true
         });
 
         return ProfileModel(
