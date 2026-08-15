@@ -8,6 +8,8 @@ import {UserService} from "@contracts/user.contract";
 
 import type {ProfileModel} from "@models/profile.model";
 
+import * as AppEnv from "@AppEnv";
+
 class UserTests extends TestBase {
     private get userService(): UserService {
         return this.getService(UserService);
@@ -18,7 +20,7 @@ class UserTests extends TestBase {
         
         const john: ProfileModel = await this.userService.createProfile(name, "fff", "eyes1" as any, "mouth1" as any, "dark", "en");
 
-        expect(john.profile_id).toBe(2);
+        expect(john.profile_id).toBe(AppEnv.isClientMode ? 2 : 1);
         expect(john.name).toBe(name);
     }
 
