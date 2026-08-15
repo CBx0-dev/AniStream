@@ -206,8 +206,8 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
             theme,
             lang: local,
             tos_accepted: tosAccepted,
-            dashboard_user: false,
-            client_user: false
+            dashboard_user: null,
+            client_user: null
         });
     }
 

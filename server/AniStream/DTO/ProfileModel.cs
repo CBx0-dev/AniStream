@@ -38,6 +38,10 @@ public sealed class ProfilePublicModel
     public required string Eye { get; set; }
 
     public required string Mouth { get; set; }
+
+    public required string Theme { get; set; }
+
+    public required string Lang { get; set; }
 }
 
 public sealed class ProfileCreateModel
@@ -111,7 +115,9 @@ internal static class ProfileModelHelper
             Name = model.Name,
             BackgroundColor = model.BackgroundColor,
             Eye = model.Eye,
-            Mouth = model.Mouth
+            Mouth = model.Mouth,
+            Theme = model.Theme,
+            Lang = model.Lang
         };
     }
 }

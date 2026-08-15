@@ -88,10 +88,13 @@ class UserTests extends TestBase {
         const profiles = await this.userService.getProfiles();
         const updated = profiles.find(p => p.profile_id == john.profile_id);
 
+        console.log(updated)
+
         expect(updated).not.toBeUndefined();
         expect(updated!.name).toBe(name2);
         expect(updated!.background_color).toBe("000");
         expect(updated!.theme).toBe("light");
+        expect(updated!.lang).toBe("de");
     }
 
     public getTests(): TestDefinition[] {
