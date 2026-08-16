@@ -51,15 +51,15 @@ export interface ProfileCreateModel {
  * Used for API only
  */
 export interface ProfileUpdateModel {
-    name: string;
-    background_color: string;
-    eye: ProfileEye;
-    mouth: ProfileMouth;
-    theme: string;
-    lang: SupportedLocals;
-    tos_accepted: boolean;
-    dashboard_user: false;
-    client_user: false;
+    name: string | null;
+    background_color: string | null;
+    eye: ProfileEye | null;
+    mouth: ProfileMouth | null;
+    theme: string | null;
+    lang: SupportedLocals | null;
+    tos_accepted: boolean | null;
+    dashboard_user: boolean | null;
+    client_user: boolean | null;
 }
 
 export function ProfileModel(
