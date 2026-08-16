@@ -105,6 +105,15 @@ public sealed class SeriesSyncServiceImpl : ISeriesSyncService
         return await query.ToArrayAsync();
     }
 
+    public async Task<SyncSeriesJobModel[]> GetSyncJobs()
+    {
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+        
+        IQueryable<SyncSeriesJobModel> query = from job in db.SyncSeriesJobs select job;
+        
+        return await query.ToArrayAsync();
+    }
+    
     public async Task<SyncSeriesJobModel> UpdateSyncJob(
         int syncSeriesJobId,
         SyncJobStatus? status = null,
@@ -149,5 +158,24 @@ public sealed class SeriesSyncServiceImpl : ISeriesSyncService
         await db.SaveChangesAsync();
 
         return syncJob;
+    }
+    
+    public async Task<SyncJobStats> GetStats()
+    {
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<SyncJobStats> query = db.SyncSeriesJobs
+            .Where(job => job.Started >= DateTime.Today)
+            .GroupBy(_ => 1).Select(g => new SyncJobStats
+            {
+                Total = g.Count(),
+                Completed = g.Count(x => x.Status == SyncJobStatus.Completed),
+                Failed = g.Count(x => x.Status == SyncJobStatus.Failed)
+            });
+        
+        
+        SyncJobStats? stats = await query.SingleOrDefaultAsync();
+        
+        return stats ?? new SyncJobStats();
     }
 }

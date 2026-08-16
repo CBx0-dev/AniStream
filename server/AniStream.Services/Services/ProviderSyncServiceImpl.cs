@@ -93,6 +93,15 @@ public sealed class ProviderSyncServiceImpl : IProviderSyncService
         return await query.AnyAsync();
     }
 
+    public async Task<SyncProviderJobModel[]> GetSyncJobs()
+    {
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<SyncProviderJobModel> query = from job in db.SyncProviderJobs select job;
+
+        return await query.ToArrayAsync();
+    }
+
     public async Task<SyncProviderJobModel[]> GetSyncJobs(SyncJobStatus status)
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();
@@ -195,5 +204,24 @@ public sealed class ProviderSyncServiceImpl : IProviderSyncService
             select result;
 
         return await query.ToArrayAsync();
+    }
+
+    public async Task<SyncJobStats> GetStats()
+    {
+        await using MetadataDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<SyncJobStats> query = db.SyncProviderJobs
+            .Where(job => job.Started >= DateTime.Today)
+            .GroupBy(_ => 1)
+            .Select(g => new SyncJobStats
+            {
+                Total = g.Count(),
+                Completed = g.Count(x => x.Status == SyncJobStatus.Completed),
+                Failed = g.Count(x => x.Status == SyncJobStatus.Failed)
+            });
+
+        SyncJobStats? stats = await query.SingleOrDefaultAsync();
+        
+        return stats ?? new SyncJobStats();
     }
 }

@@ -9,7 +9,7 @@ namespace AniStream.API.Controllers;
 
 [Route("api/{provider}/genres")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = Roles.Client)]
 public sealed class GenreController : ApiControllerBase
 {
     private readonly IGenreService _genreService;

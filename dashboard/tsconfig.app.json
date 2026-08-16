@@ -1,0 +1,53 @@
+{
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "compilerOptions": {
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+        "types": [
+            "vite/client"
+        ],
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "allowArbitraryExtensions": true,
+        "allowImportingTsExtensions": false,
+        /* Linting */
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "paths": {
+            "@views/*": [
+                "./src/views/*"
+            ],
+            "@controls/*": [
+                "./src/controls/*"
+            ],
+            "@components/*": [
+                "./src/components/*"
+            ],
+            "@contracts/*": [
+                "./src/contracts/*"
+            ],
+            "@services/*": [
+                "./src/services/*"
+            ],
+            "@models/*": [
+                "./src/models/*"
+            ],
+            "@icons/*": [
+                "./src/icons/*"
+            ],
+            "@utils/*": [
+                "./src/utils/*"
+            ],
+            "@AppEnv": [
+                "./src/AppEnv.ts"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue"
+    ]
+}

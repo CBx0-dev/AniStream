@@ -15,12 +15,15 @@ public interface IUserService
         string theme,
         string lang,
         bool tosAccepted,
-        bool syncCatalog
+        bool dashboardUser,
+        bool clientUser
     );
 
     public Task<ProfileModel> GetActiveProfile();
 
     public Task<ProfileModel[]> GetProfiles();
+    
+    public Task<ProfileModel[]> GetPublicProfiles();
 
     public Task<ProfileModel?> GetProfileByUsername(string username);
 
@@ -49,6 +52,13 @@ public interface IUserService
         string? theme = null,
         string? lang = null,
         bool? tosAccepted = null,
-        bool? syncCatalog = null
+        bool? dashboardUser = null,
+        bool? clientUser = null
     );
+
+    public Task DeleteProfile(int profileId);
+    
+    public Task DeleteProfile(ProfileModel profile);
+    
+    public Task<int> GetProfileCount();
 }

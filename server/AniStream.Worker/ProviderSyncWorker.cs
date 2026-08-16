@@ -98,7 +98,7 @@ public sealed class ProviderSyncWorker : ScopedBackgroundService
                 try
                 {
                     await _job.SyncEpisodeProviderAsync(job);
-                    await _syncService.UpdateSyncJob(job, SyncJobStatus.Completed, DateTime.UtcNow, DateTime.UtcNow.AddDays(1));
+                    await _syncService.UpdateSyncJob(job, SyncJobStatus.Completed, DateTime.UtcNow, DateTime.UtcNow.AddHours(1));
                 }
                 catch (Exception e)
                 {

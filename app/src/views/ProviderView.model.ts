@@ -84,12 +84,12 @@ export class ProviderViewModel extends ViewModel {
         await this.routerService.navigateTo(SettingsViewModel);
     }
 
-    public onProfileBtn(): void {
+    public async onProfileBtn(): Promise<void> {
         if (AppEnv.isClientMode) {
-            this.userService.logout();
+            await this.userService.logout();
         }
 
-        this.userService.setActiveProfile(null);
+        await this.userService.setActiveProfile(null);
 
         this.routerService.navigateBack();
     }

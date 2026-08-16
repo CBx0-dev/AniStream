@@ -10,14 +10,16 @@ internal static class Program
     public static async Task Main(string[] args)
     {
         AppConfig.Initialize();
-        
+
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
-        
+
+        builder.Services.AddHostedService<CatalogSyncWorker>();
         builder.Services.AddHostedService<SeriesSyncWorker>();
         builder.Services.AddHostedService<ProviderSyncWorker>();
-
-        SetupDependencyInjection(builder);
+        builder.Services.AddHostedService<MidnightSyncWorker>();
         
+        SetupDependencyInjection(builder);
+
         IHost host = builder.Build();
         await host.RunAsync();
     }

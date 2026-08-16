@@ -19,8 +19,29 @@ public sealed class ProfileModel
     public required string Lang { get; set; }
 
     public required bool TosAccepted { get; set; }
+    
+    public required bool DashboardUser { get; set; }
+    
+    public required bool ClientUser { get; set; }
+}
 
-    public required bool SyncCatalog { get; set; }
+public sealed class ProfilePublicModel
+{
+    public required int ProfileId { get; set; }
+
+    public required string Uuid { get; set; }
+
+    public required string Name { get; set; }
+
+    public required string BackgroundColor { get; set; }
+
+    public required string Eye { get; set; }
+
+    public required string Mouth { get; set; }
+
+    public required string Theme { get; set; }
+
+    public required string Lang { get; set; }
 }
 
 public sealed class ProfileCreateModel
@@ -28,8 +49,6 @@ public sealed class ProfileCreateModel
     public required string Name { get; set; }
 
     public required string Password { get; set; }
-    
-    public required string PasswordSalt { get; set; }
     
     public required string BackgroundColor { get; set; }
 
@@ -40,6 +59,10 @@ public sealed class ProfileCreateModel
     public required string Theme { get; set; }
 
     public required string Lang { get; set; }
+    
+    public required bool DashboardUser { get; set; }
+    
+    public required bool ClientUser { get; set; }
 }
 
 public sealed class ProfileUpdateModel
@@ -57,6 +80,10 @@ public sealed class ProfileUpdateModel
     public required string? Lang { get; set; }
 
     public required bool? TosAccepted { get; set; }
+    
+    public required bool? DashboardUser { get; set; }
+    
+    public required bool? ClientUser { get; set; }
 }
 
 internal static class ProfileModelHelper
@@ -74,7 +101,23 @@ internal static class ProfileModelHelper
             Theme = model.Theme,
             Lang = model.Lang,
             TosAccepted = model.TosAccepted,
-            SyncCatalog = model.SyncCatalog
+            DashboardUser = model.DashboardUser,
+            ClientUser = model.ClientUser
+        };
+    }
+
+    public static ProfilePublicModel ToPublicDTO(this Models.ProfileModel model)
+    {
+        return new ProfilePublicModel
+        {
+            ProfileId = model.ProfileId,
+            Uuid = model.Uuid,
+            Name = model.Name,
+            BackgroundColor = model.BackgroundColor,
+            Eye = model.Eye,
+            Mouth = model.Mouth,
+            Theme = model.Theme,
+            Lang = model.Lang
         };
     }
 }

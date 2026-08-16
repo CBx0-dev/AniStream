@@ -10,7 +10,7 @@ namespace AniStream.API.Controllers;
 
 [Route("api/{provider}/episodes")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = Roles.Client)]
 public sealed class EpisodeController : ApiControllerBase
 {
     private readonly IEpisodeService _episodeService;
@@ -88,7 +88,7 @@ public sealed class EpisodeController : ApiControllerBase
 
         SyncJobStatus? status = job?.Status ?? null;
 
-        if (results.Length == 0 && status != SyncJobStatus.Queued)
+        if (results.Length == 0 && status is not SyncJobStatus.Queued and not SyncJobStatus.Processing)
         {
             await _syncService.RequestSync(episode);
             status = SyncJobStatus.Queued;

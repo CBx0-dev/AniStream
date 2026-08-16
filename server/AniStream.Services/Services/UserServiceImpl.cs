@@ -26,12 +26,26 @@ public class UserServiceImpl : IUserService
         string theme,
         string lang,
         bool tosAccepted,
-        bool syncCatalog
+        bool dashboardUser,
+        bool clientUser
     )
     {
         await using ProfileDbContext db = await _dbFactory.GetContext();
 
-        ProfileModel profile = new ProfileModel(uuid, name, password, passwordSalt, backgroundColor, eye, mouth, theme, lang, tosAccepted, syncCatalog);
+        ProfileModel profile = new ProfileModel(
+            uuid,
+            name,
+            password,
+            passwordSalt,
+            backgroundColor,
+            eye,
+            mouth,
+            theme,
+            lang,
+            tosAccepted,
+            dashboardUser,
+            clientUser
+        );
 
         db.Profiles.Add(profile);
         await db.SaveChangesAsync();
@@ -48,7 +62,18 @@ public class UserServiceImpl : IUserService
     {
         await using ProfileDbContext db = await _dbFactory.GetContext();
 
-        return db.Profiles.ToArray();
+        return await db.Profiles.ToArrayAsync();
+    }
+
+    public async Task<ProfileModel[]> GetPublicProfiles()
+    {
+        await using ProfileDbContext db = await _dbFactory.GetContext();
+
+        IQueryable<ProfileModel> query = from profile in db.Profiles
+            where profile.ClientUser
+            select profile;
+
+        return await query.ToArrayAsync();
     }
 
     public async Task<ProfileModel?> GetProfileByUsername(string username)
@@ -115,7 +140,8 @@ public class UserServiceImpl : IUserService
         string? theme = null,
         string? lang = null,
         bool? tosAccepted = null,
-        bool? syncCatalog = null
+        bool? dashboardUser = null,
+        bool? clientUser = null
     )
     {
         await using ProfileDbContext db = await _dbFactory.GetContext();
@@ -155,14 +181,45 @@ public class UserServiceImpl : IUserService
             profile.TosAccepted = (bool)tosAccepted;
         }
 
-        if (syncCatalog is not null)
+        if (dashboardUser is not null)
         {
-            profile.SyncCatalog = (bool)syncCatalog;
+            profile.DashboardUser = (bool)dashboardUser;
+        }
+
+        if (clientUser is not null)
+        {
+            profile.ClientUser = (bool)clientUser;
         }
 
         db.Profiles.Update(profile);
         await db.SaveChangesAsync();
 
         return profile;
+    }
+
+    public async Task DeleteProfile(int profileId)
+    {
+        ProfileModel? profile = await GetProfile(profileId);
+        if (profile is null)
+        {
+            throw new ArgumentException($"Profile with ID '{profileId}' not found", nameof(profileId));
+        }
+
+        await DeleteProfile(profile);
+    }
+
+    public async Task DeleteProfile(ProfileModel profile)
+    {
+        await using ProfileDbContext db = await _dbFactory.GetContext();
+
+        db.Profiles.Remove(profile);
+        await db.SaveChangesAsync();
+    }
+
+    public async Task<int> GetProfileCount()
+    {
+        await using ProfileDbContext db = await _dbFactory.GetContext();
+
+        return await db.Profiles.CountAsync();
     }
 }

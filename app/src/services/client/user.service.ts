@@ -104,7 +104,7 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
     }
 
     public async getProfiles(): Promise<ProfileModel[]> {
-        const rows: ProfileApiModel[] = await this.get<ProfileApiModel[]>(["api", "profiles"]);
+        const rows: ProfileApiModel[] = await this.get<ProfileApiModel[]>(["api", "profiles", "public"]);
 
         return rows.map(row => ProfileModel(
             row.profile_id,
@@ -115,8 +115,8 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
             row.mouth,
             row.theme,
             row.lang,
-            row.tos_accepted,
-            row.sync_catalog
+            false,
+            false
         ));
     }
 
@@ -163,13 +163,14 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
 
         const row: ProfileApiModel = await this.post<ProfileApiModel, ProfileCreateModel>(["api", "profiles"], {
             name,
-            password: "",
-            password_salt: "",
+            password: "0000000",
             background_color: backgroundColor,
             eye,
             mouth,
             theme,
-            lang: local
+            lang: local,
+            client_user: true,
+            dashboard_user: true
         });
 
         return ProfileModel(
@@ -204,7 +205,9 @@ export class UserServiceImpl extends ApiServiceBase implements UserService {
             mouth,
             theme,
             lang: local,
-            tos_accepted: tosAccepted
+            tos_accepted: tosAccepted,
+            dashboard_user: null,
+            client_user: null
         });
     }
 

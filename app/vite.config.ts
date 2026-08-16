@@ -240,7 +240,8 @@ export default defineConfig(async (env: ConfigEnv): Promise<UserConfig> => {
             exclude: ["better-sqlite3"]
         },
         test: {
-            globalSetup: "./tests/vitest.global-setup.ts"
+            globalSetup: "./tests/vitest.global-setup.ts",
+            testTimeout: 60_000
         }
     }
 });

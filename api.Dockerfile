@@ -1,6 +1,18 @@
 # Build context: repository root
 
-# Stage 1: Build .NET API
+# Stage 1: Build dashbord
+FROM node:24-slim AS dashboard-build
+WORKDIR /build
+
+# Install Node dependencies with a clean install
+COPY dashboard/package.json dashboard/package-lock.json ./
+RUN npm ci
+
+# Copy dashboard source and build it with Vite
+COPY dashboard/ ./
+RUN npm run build
+
+# Stage 2: Build .NET API
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
@@ -12,6 +24,7 @@ COPY server/AniStream.Shared/AniStream.Shared.csproj server/AniStream.Shared/
 COPY server/AniStream.Worker/AniStream.Worker.csproj server/AniStream.Worker/
 
 COPY server/ server/
+COPY --from=dashboard-build /build/dist/ server/AniStream/wwwroot
 
 RUN dotnet restore ./AniStream.slnx
 RUN dotnet publish server/AniStream/AniStream.csproj \

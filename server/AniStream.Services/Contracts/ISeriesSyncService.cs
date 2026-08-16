@@ -19,6 +19,8 @@ public interface ISeriesSyncService
     public Task<bool> IsSyncing(SeriesModel series);
 
     public Task<SyncSeriesJobModel[]> GetSyncJobs(SyncJobStatus status);
+    
+    public Task<SyncSeriesJobModel[]> GetSyncJobs();
 
     public Task<SyncSeriesJobModel> UpdateSyncJob(
         int syncSeriesJobId,
@@ -33,4 +35,6 @@ public interface ISeriesSyncService
         DateTime? finished = null,
         string? error = null
     );
+
+    public Task<SyncJobStats> GetStats();
 }

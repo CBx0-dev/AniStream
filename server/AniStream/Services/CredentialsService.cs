@@ -19,7 +19,7 @@ public sealed class CredentialsService : ICredentialsService
 
     public async Task<ProfileModel?> ValidateCredentials(string uuid, string password)
     {
-        ProfileModel? profile = await _userService.GetProfile(uuid);
+        ProfileModel? profile = await _userService.GetProfile(uuid) ?? await _userService.GetProfileByUsername(uuid);
         if (profile is null)
         {
             return null;
@@ -44,13 +44,39 @@ public sealed class CredentialsService : ICredentialsService
         return Task.FromResult(guid);
     }
 
+    public void HashPassword(string password, out string hash, out string salt)
+    {
+        if (password.Length == 0)
+        {
+            throw new ArgumentException("Password cannot be empty");
+        }
+
+        byte[] saltBuffer = new byte[12];
+        Random.Shared.NextBytes(saltBuffer);
+
+        byte[] passwordBuffer = Encoding.UTF8.GetBytes(password);
+
+        Argon2id argon2 = new Argon2id(passwordBuffer)
+        {
+            Salt = saltBuffer,
+            DegreeOfParallelism = 4,
+            MemorySize = 1024 * 1024,
+            Iterations = 3
+        };
+
+        byte[] computedHash = argon2.GetBytes(32);
+
+        hash = Convert.ToBase64String(computedHash);
+        salt = Convert.ToBase64String(saltBuffer);
+    }
+
     private bool VerifyPassword(string input, string passwordB64, string saltB64)
     {
         if (input.Length == 0)
         {
             return false;
         }
-        
+
         byte[] salt = Convert.FromBase64String(saltB64);
         byte[] password = Convert.FromBase64String(passwordB64);
 

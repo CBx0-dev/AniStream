@@ -14,6 +14,8 @@ import type {ProfileModel} from "@models/profile.model";
 import {ProfileSetupControlModel} from "@controls/ProfileSetupControl.model";
 import {PinDialogModel} from "@controls/PinDialog.model";
 
+import {InvalidOperationError} from "@utils/error";
+
 import * as AppEnv from "@AppEnv";
 
 export class ProfileViewModel extends ViewModel {
@@ -63,7 +65,7 @@ export class ProfileViewModel extends ViewModel {
             this.profiles = await this.userService.getProfiles();
             return;
         }
-        
+
         this.isProfileSetupFormCancellable = false;
         await nextTick();
         if (this.profileSetupControl) {
@@ -77,7 +79,7 @@ export class ProfileViewModel extends ViewModel {
         }
     }
 
-    public async onProfileItem(profile: ProfileModel): Promise<void> {
+    public async onProfileBtn(profile: ProfileModel): Promise<void> {
         if (AppEnv.isClientMode) {
             using dialog: PinDialogModel = this.dialogService.initDialog(PinDialogModel, profile);
             await dialog.openDialog();
@@ -89,7 +91,11 @@ export class ProfileViewModel extends ViewModel {
             }
         }
 
-        await this.userService.setActiveProfile(profile);
+        const completeProfile: ProfileModel | null = await this.userService.getProfileByUUID(profile.uuid);
+        if (!completeProfile) {
+            throw new InvalidOperationError(`Profile '${profile.uuid}' should exists`);
+        }
+        await this.userService.setActiveProfile(completeProfile);
 
         await this.routerService.navigateTo(ProviderViewModel);
     }

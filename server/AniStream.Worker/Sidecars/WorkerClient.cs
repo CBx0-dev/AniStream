@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 
 namespace AniStream.Worker.Sidecars;
@@ -27,15 +28,19 @@ internal sealed class WorkerClient
 
     public Task<string[]> CatalogAsync(string provider) => ExecuteAsync<string[]>("catalog", "-p", provider, "-o", "json");
 
-    public Task<SeriesFetchModel> SeriesAsync(string provider, string guid) => ExecuteAsync<SeriesFetchModel>("series", guid, "-p", provider, "-o", "json");
-
-    public Task<SeasonFetchModel[]> SeasonsAsync(string provider, string guid) => ExecuteAsync<SeasonFetchModel[]>("seasons", guid, "-p", provider, "-o", "json");
+    public Task<SeriesFetchModel> SeriesAsync(string provider, string guid) 
+        => ExecuteAsync<SeriesFetchModel>("series", "-p", provider, "-o", "json", "--", guid);
+    
+    public Task<SeriesFetchModel> SeriesAsync(string provider, string guid, string saveFolder) 
+        => ExecuteAsync<SeriesFetchModel>("series", "-p", provider, "-o", "json", "--save-preview", saveFolder, "--", guid);
+    
+    public Task<SeasonFetchModel[]> SeasonsAsync(string provider, string guid) => ExecuteAsync<SeasonFetchModel[]>("seasons", "-p", provider, "-o", "json", "--", guid);
 
     public Task<EpisodeFetchModel[]> EpisodesAsync(string provider, string guid, int seasonNumber) =>
-        ExecuteAsync<EpisodeFetchModel[]>("episodes", guid, seasonNumber.ToString(), "-p", provider, "-o", "json");
+        ExecuteAsync<EpisodeFetchModel[]>("episodes", "-p", provider, "-o", "json", "--", guid, seasonNumber.ToString());
 
     public Task<ProviderFetchModel[]> ProvidersAsync(string provider, string guid, int seasonNumber, int episodeNumber) =>
-        ExecuteAsync<ProviderFetchModel[]>("providers", guid, seasonNumber.ToString(), episodeNumber.ToString(), "-p", provider, "-o", "json");
+        ExecuteAsync<ProviderFetchModel[]>("providers", "-p", provider, "-o", "json", "--", guid, seasonNumber.ToString(), episodeNumber.ToString());
 
     private async Task<T> ExecuteAsync<T>(params string[] args)
     {
@@ -46,7 +51,9 @@ internal sealed class WorkerClient
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             UseShellExecute = false,
-            CreateNoWindow = true
+            CreateNoWindow = true,
+            StandardOutputEncoding = Encoding.UTF8,
+            StandardErrorEncoding = Encoding.UTF8
         };
 
         using Process process = new Process

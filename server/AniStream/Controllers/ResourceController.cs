@@ -7,7 +7,7 @@ namespace AniStream.API.Controllers;
 
 [Route("api/{provider}/resources")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = Roles.Client)]
 public sealed class ResourceController : ApiControllerBase
 {
     private readonly IResourceService _resourceService;

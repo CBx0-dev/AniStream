@@ -17,9 +17,9 @@ public sealed class UserServiceTests : TestBase
     public async Task CreateProfile()
     {
         Guid johnGuid = Guid.NewGuid();
-        ProfileModel john = await _userService.CreateProfile(johnGuid.ToString(), "john", "", "","fff", "eye-1", "mouth-1", "dark", "en", true, false);
+        ProfileModel john = await _userService.CreateProfile(johnGuid.ToString(), "john", "", "","fff", "eye-1", "mouth-1", "dark", "en", true, false, false);
 
-        Assert.Equal(1, john.ProfileId);
+        Assert.Equal(2, john.ProfileId);
         Assert.Equal("john", john.Name);
     }
 
@@ -28,12 +28,12 @@ public sealed class UserServiceTests : TestBase
     {
         Guid johnGuid = Guid.NewGuid();
         Guid janeGuid = Guid.NewGuid();
-        await _userService.CreateProfile(johnGuid.ToString(), "john", "", "", "fff", "eye-1", "mouth-1", "dark", "en", true, false);
-        await _userService.CreateProfile(janeGuid.ToString(), "jane", "", "", "000", "eye-2", "mouth-2", "light", "de", true, true);
+        await _userService.CreateProfile(johnGuid.ToString(), "john", "", "", "fff", "eye-1", "mouth-1", "dark", "en", true, false, false);
+        await _userService.CreateProfile(janeGuid.ToString(), "jane", "", "", "000", "eye-2", "mouth-2", "light", "de", true, false, false);
 
         ProfileModel[] profiles = await _userService.GetProfiles();
 
-        Assert.Equal(2, profiles.Length);
+        Assert.Equal(3, profiles.Length);
     }
 
     [Fact]
@@ -41,8 +41,8 @@ public sealed class UserServiceTests : TestBase
     {
         Guid johnGuid = Guid.NewGuid();
         Guid janeGuid = Guid.NewGuid();
-        await _userService.CreateProfile(johnGuid.ToString(), "john", "", "", "fff", "eye-1", "mouth-1", "dark", "en", true, false);
-        await _userService.CreateProfile(janeGuid.ToString(), "jane", "", "", "000", "eye-2", "mouth-2", "light", "de", true, true);
+        await _userService.CreateProfile(johnGuid.ToString(), "john", "", "", "fff", "eye-1", "mouth-1", "dark", "en", true, false, false);
+        await _userService.CreateProfile(janeGuid.ToString(), "jane", "", "", "000", "eye-2", "mouth-2", "light", "de", true, false, false);
 
         ProfileModel? profileByName = await _userService.GetProfileByUsername("jane");
 
@@ -56,8 +56,8 @@ public sealed class UserServiceTests : TestBase
     {
         Guid johnGuid = Guid.NewGuid();
         Guid janeGuid = Guid.NewGuid();
-        await _userService.CreateProfile(johnGuid.ToString(), "john", "", "", "fff", "eye-1", "mouth-1", "dark", "en", true, false);
-        await _userService.CreateProfile(janeGuid.ToString(), "jane", "", "", "000", "eye-2", "mouth-2", "light", "de", true, true);
+        await _userService.CreateProfile(johnGuid.ToString(), "john", "", "", "fff", "eye-1", "mouth-1", "dark", "en", true, false, false);
+        await _userService.CreateProfile(janeGuid.ToString(), "jane", "", "", "000", "eye-2", "mouth-2", "light", "de", true, false, false);
 
         ProfileModel? profileByUuid = await _userService.GetProfile(janeGuid.ToString());
 
@@ -69,7 +69,7 @@ public sealed class UserServiceTests : TestBase
     public async Task GetProfileById()
     {
         Guid johnGuid = Guid.NewGuid();
-        ProfileModel john = await _userService.CreateProfile(johnGuid.ToString(), "john", "", "", "fff", "eye-1", "mouth-1", "dark", "en", true, false);
+        ProfileModel john = await _userService.CreateProfile(johnGuid.ToString(), "john", "", "", "fff", "eye-1", "mouth-1", "dark", "en", true, false, false);
 
         ProfileModel? profileById = await _userService.GetProfile(john.ProfileId);
 
@@ -87,7 +87,7 @@ public sealed class UserServiceTests : TestBase
     public async Task UpdateProfileById()
     {
         Guid johnGuid = Guid.NewGuid();
-        ProfileModel john = await _userService.CreateProfile(johnGuid.ToString(), "john", "", "", "fff", "eye-1", "mouth-1", "dark", "en", true, false);
+        ProfileModel john = await _userService.CreateProfile(johnGuid.ToString(), "john", "", "", "fff", "eye-1", "mouth-1", "dark", "en", true, false, false);
 
         ProfileModel updated = await _userService.UpdateProfile(john.ProfileId, name: "johnny", theme: "light");
 
@@ -100,7 +100,7 @@ public sealed class UserServiceTests : TestBase
     public async Task UpdateProfileByModel()
     {
         Guid johnGuid = Guid.NewGuid();
-        ProfileModel john = await _userService.CreateProfile(johnGuid.ToString(), "john", "", "", "fff", "eye-1", "mouth-1", "dark", "en", true, false);
+        ProfileModel john = await _userService.CreateProfile(johnGuid.ToString(), "john", "", "", "fff", "eye-1", "mouth-1", "dark", "en", true, false, false);
 
         ProfileModel updated = await _userService.UpdateProfile(john, name: "johnny", theme: "light");
 

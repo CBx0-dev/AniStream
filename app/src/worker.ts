@@ -1,3 +1,6 @@
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+
 import {type App, type Plugin} from "vue";
 import {createMVVM, DIContainer} from "vue-mvvm";
 
@@ -39,6 +42,10 @@ interface CliOptions {
     output: "text" | "json";
 }
 
+interface SeriesCliOptions {
+    savePreview: string | undefined;
+}
+
 class OutputHandler {
     private spinner: Ora | null = null;
     public readonly isJson: boolean = false;
@@ -78,7 +85,8 @@ class OutputHandler {
 
     result(data: unknown, textFormatter: () => void): void {
         if (this.isJson) {
-            console.log(JSON.stringify(data));
+            process.stdout.write(JSON.stringify(data));
+            process.stdout.write("\n");
         } else {
             textFormatter();
         }
@@ -86,7 +94,8 @@ class OutputHandler {
 
     error(message: string): void {
         if (this.isJson) {
-            console.error(JSON.stringify({error: message}));
+            process.stdout.write(JSON.stringify({error: message}));
+            process.stdout.write("\n");
         } else {
             console.error(chalk.red.bold("Error: ") + chalk.red(message));
         }
@@ -138,14 +147,20 @@ program
 
 program
     .command("series <guid>")
+    .option("--save-preview <path>")
     .description("Get series details")
-    .action(async (guid: string) => {
-        const options: CliOptions = program.opts();
-        const out: OutputHandler = new OutputHandler(options.output);
+    .action(async (guid: string, cliOptions: SeriesCliOptions) => {
+        const globalOptions: CliOptions = program.opts();
+        const out: OutputHandler = new OutputHandler(globalOptions.output);
         try {
-            const fetcher: IInformationFetcher = await getFetcher(options);
+            const fetcher: IInformationFetcher = await getFetcher(globalOptions);
             out.startSpinner(`Fetching series ${guid}...`);
-            const [model, genres] = await fetcher.getSeries(guid);
+            const [model, genres, previewImage] = await fetcher.getSeries(guid);
+
+            if (cliOptions.savePreview && model.preview_image && previewImage) {
+                await fs.writeFile(path.join(cliOptions.savePreview, model.preview_image), previewImage);
+            }
+
             out.stopSpinner(true, `Series ${guid} fetched`);
             out.result({series: model, genres}, () => {
                 out.log(chalk.green.bold(`\n${model.title}`));
