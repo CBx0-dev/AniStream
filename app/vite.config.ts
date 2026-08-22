@@ -2,10 +2,10 @@ import * as path from "path";
 import * as fs from "fs";
 
 import {BuildEnvironmentOptions, ConfigEnv, defineConfig, PluginOption, Rolldown, UserConfig, transformWithOxc} from "vite";
+import {type UserWorkspaceConfig as TestConfig} from "vitest/config";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
-
-const host: string = process.env.TAURI_DEV_HOST;
+import electron from "vite-plugin-electron";
 
 function dynamicServiceResolver(applicationTarget: string): PluginOption {
     const cache: Map<string, string | null> = new Map<string, string | null>();
@@ -134,15 +134,54 @@ function raiiTransformer(): PluginOption {
 function activePlugins(applicationTarget: string): PluginOption[] {
     if (applicationTarget == "worker") {
         return [
-            raiiTransformer(),
+            // raiiTransformer(),
             dynamicServiceResolver(applicationTarget)
         ];
     }
 
     return [
+        electron([
+            {
+                entry: "src/main.electron.ts",
+                onstart(options ) {
+                    options.startup();
+                },
+                vite: {
+                    define: {
+                        APPLICATION_TARGET: JSON.stringify(applicationTarget)
+                    },
+                    build: {
+                        outDir: "dist-electron",
+                        rolldownOptions: {
+                            external: ["electron", /node:.*/, "better-sqlite3"]
+                        }
+                    }
+                }
+            },
+            {
+                entry: "src/main.preload.ts",
+                onstart(options) {
+                    options.reload();
+                },
+                vite: {
+                    define: {
+                        APPLICATION_TARGET: JSON.stringify(applicationTarget)
+                    },
+                    build: {
+                        outDir: "dist-electron",
+                        rolldownOptions: {
+                            output: {
+                                format: "es",
+                                entryFileNames: "[name].mjs"
+                            }
+                        }
+                    }
+                }
+            }
+        ]),
         vue(),
         tailwindcss(),
-        raiiTransformer(),
+        // raiiTransformer(),
         dynamicServiceResolver(applicationTarget),
         virtualServiceLoader(applicationTarget)
     ];
@@ -180,7 +219,7 @@ function buildEnv(applicationTarget: string): BuildEnvironmentOptions {
 }
 
 // https://vite.dev/config/
-export default defineConfig(async (env: ConfigEnv): Promise<UserConfig> => {
+export default defineConfig(async (env: ConfigEnv): Promise<UserConfig & TestConfig> => {
     const APPLICATION_TARGET: string = process.env.APPLICATION_TARGET || "standalone";
     console.log(`ℹ️  Application Target: ${APPLICATION_TARGET}`);
 
@@ -191,7 +230,6 @@ export default defineConfig(async (env: ConfigEnv): Promise<UserConfig> => {
     return {
         plugins: activePlugins(APPLICATION_TARGET),
         root: __dirname,
-
         resolve: {
             alias: {
                 "@": path.join(__dirname, "src"),
@@ -205,34 +243,12 @@ export default defineConfig(async (env: ConfigEnv): Promise<UserConfig> => {
                 "@sources": path.join(__dirname, "src", "sources"),
                 "@contracts": path.join(__dirname, "src", "contracts"),
                 "@configs": path.join(__dirname, "src", "configs"),
+                "@ipc": path.join(__dirname, "src", "ipc"),
                 "@AppEnv": path.join(__dirname, "src", "AppEnv.ts"),
                 "@test": path.join(__dirname, "tests")
             }
         },
-
         build: buildEnv(APPLICATION_TARGET),
-
-        // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
-        //
-        // 1. prevent Vite from obscuring rust errors
-        clearScreen: false,
-        // 2. tauri expects a fixed port, fail if that port is not available
-        server: {
-            port: 1420,
-            strictPort: true,
-            host: host || false,
-            hmr: host
-                ? {
-                    protocol: "ws",
-                    host,
-                    port: 1421,
-                }
-                : undefined,
-            watch: {
-                // 3. tell Vite to ignore watching `src-tauri`
-                ignored: ["**/src-tauri/**", "**/src/langs/**"],
-            },
-        },
         define: {
             APPLICATION_TARGET: JSON.stringify(APPLICATION_TARGET)
         },
