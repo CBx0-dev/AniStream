@@ -7,7 +7,8 @@ import {convertFileSrc} from "@tauri-apps/api/core";
 
 import {computed, ComputedRef, ref, Ref, watch} from "vue";
 
-import * as path from "@utils/path";
+import * as path from "@ipc/path";
+
 import * as http from "@utils/http";
 
 const props = defineProps<{

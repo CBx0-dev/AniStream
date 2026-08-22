@@ -1,10 +1,7 @@
-import * as os from "@tauri-apps/plugin-os";
+import * as os from "@ipc/os";
 
-type OSPlatforms = NodeJS.Platform | os.Platform;
-
-
-export const isTesting: boolean = import.meta.env.MODE === "test";
-export const isDev: boolean = import.meta.env.MODE === "development";
+export const isTesting: boolean = import.meta.env.MODE == "test";
+export const isDev: boolean = import.meta.env.MODE == "development";
 export const isProd: boolean = !isTesting && !isDev;
 
 export const isClientMode: boolean = APPLICATION_TARGET == "client";
@@ -20,40 +17,36 @@ export const modeName: string = isClientMode
             : "?";
 
 
-export const PLATFORM: OSPlatforms = isTesting || isWorkerMode
+export const PLATFORM: os.Platform = isTesting || isWorkerMode
     ? require("node:os").platform()
-    : os.platform();
+    : os.platform;
 
-export const isWindows: boolean = PLATFORM === "windows" || PLATFORM === "win32" || PLATFORM === "cygwin";
+export const isWindows: boolean = PLATFORM == "win32" || PLATFORM == "cygwin";
 
-export const isLinux: boolean = PLATFORM === "linux";
+export const isLinux: boolean = PLATFORM == "linux";
 
-export const isAndroid: boolean = PLATFORM === "android";
+export const isAndroid: boolean = PLATFORM == "android";
 
-export const isMac: boolean = PLATFORM === "darwin" || PLATFORM === "macos";
+export const isMac: boolean = PLATFORM == "darwin";
 
-export const isIOS: boolean = PLATFORM === "ios";
-
-export const isApple: boolean = isMac || isIOS;
+export const isApple: boolean = isMac;
 
 export const isBSD: boolean =
-    PLATFORM === "freebsd" ||
-    PLATFORM === "openbsd" ||
-    PLATFORM === "netbsd" ||
-    PLATFORM === "dragonfly";
+    PLATFORM == "freebsd" ||
+    PLATFORM == "openbsd" ||
+    PLATFORM == "netbsd";
 
 export const isUnixLike: boolean =
     isLinux ||
     isAndroid ||
     isMac ||
     isBSD ||
-    PLATFORM === "sunos" ||
-    PLATFORM === "solaris" ||
-    PLATFORM === "aix" ||
-    PLATFORM === "haiku";
+    PLATFORM == "sunos" ||
+    PLATFORM == "aix" ||
+    PLATFORM == "haiku";
 
-export const isSolaris: boolean = PLATFORM === "sunos" || PLATFORM === "solaris";
+export const isSolaris: boolean = PLATFORM == "sunos";
 
-export const isAIX: boolean = PLATFORM === "aix";
+export const isAIX: boolean = PLATFORM == "aix";
 
-export const isHaiku: boolean = PLATFORM === "haiku";
+export const isHaiku: boolean = PLATFORM == "haiku";

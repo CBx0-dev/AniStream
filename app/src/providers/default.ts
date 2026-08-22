@@ -5,7 +5,7 @@ import {SeasonFetchModel} from "@models/season.model";
 import {EpisodeFetchModel} from "@models/episode.model";
 import {GenreFetchModel} from "@models/genre.model";
 
-import * as path from "@utils/path";
+import * as path from "@ipc/path";
 
 export enum EpisodeLanguage {
     DE_DUB,

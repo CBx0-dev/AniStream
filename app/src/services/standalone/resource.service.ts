@@ -9,7 +9,7 @@ import {ProviderService} from "@contracts/provider.contract";
 
 import {DefaultProvider} from "@providers/default";
 
-import * as path from "@utils/path";
+import * as path from "@ipc/path";
 
 class ResourceServiceImpl implements ResourceService {
     private readonly providerService: ProviderService;

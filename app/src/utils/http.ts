@@ -1,12 +1,12 @@
 import * as AppEnv from "@AppEnv";
 
-let fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+let fetch: (input: string | URL, init?: RequestInit) => Promise<Response>;
 
 if (AppEnv.isWorkerMode) {
     fetch = globalThis.fetch;
 } else {
-    const tauri = await import("@tauri-apps/plugin-http");
-    fetch = tauri.fetch;
+    const http = await import("@ipc/http");
+    fetch = http.fetch;
 }
 
 export class HTTPError extends Error {

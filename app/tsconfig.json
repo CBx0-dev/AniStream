@@ -35,6 +35,7 @@
             "@sources/*": ["./src/sources/*"],
             "@contracts/*": ["./src/contracts/*"],
             "@configs/*": ["./src/configs/*"],
+            "@ipc/*": ["./src/ipc/*"],
             "@AppEnv": ["./src/AppEnv.ts"],
             "@test/*": ["./tests/*"]
         }

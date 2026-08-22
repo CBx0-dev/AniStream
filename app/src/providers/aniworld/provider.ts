@@ -3,7 +3,7 @@ import * as fs from "@tauri-apps/plugin-fs";
 import {AniWorldFetcher} from "@providers/aniworld/fetcher";
 import {DefaultProvider, EpisodeLanguage, IInformationFetcher} from "@providers/default";
 
-import * as path from "@utils/path";
+import * as path from "@ipc/path";
 
 import * as AppEnv from "@AppEnv";
 

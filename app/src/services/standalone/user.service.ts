@@ -14,7 +14,8 @@ import {DbSession} from "@services/utils/db";
 
 import {ProfileDbModel, ProfileEye, ProfileModel, ProfileMouth} from "@models/profile.model";
 
-import * as path from "@utils/path";
+import * as path from "@ipc/path";
+
 import {UnsupportedPlatformError} from "@utils/error";
 
 export class UserServiceImpl implements UserService {

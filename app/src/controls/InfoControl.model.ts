@@ -5,7 +5,7 @@ import {UserControl} from "vue-mvvm";
 
 import {ProviderService} from "@contracts/provider.contract";
 
-import * as path from "@utils/path";
+import * as path from "@ipc/path";
 
 import * as AppEnv from "@AppEnv";
 
