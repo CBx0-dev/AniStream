@@ -14,5 +14,4 @@ export interface IPCResponse {
 
 export const REQUEST: string = "http:request";
 export const RESPONSE_JSON: string = "http:responseJSON";
-export const RESPONSE_BLOB: string = "http:responseBlob";
 export const RESPONSE_ARRAYBUFFER: string = "http:responseArrayBuffer";

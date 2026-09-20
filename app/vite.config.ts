@@ -143,8 +143,8 @@ function activePlugins(applicationTarget: string): PluginOption[] {
         electron([
             {
                 entry: "src/main.electron.ts",
-                onstart(options ) {
-                    options.startup();
+                async onstart(options ) {
+                    await options.startup();
                 },
                 vite: {
                     define: {
@@ -154,7 +154,8 @@ function activePlugins(applicationTarget: string): PluginOption[] {
                         outDir: "dist-electron",
                         rolldownOptions: {
                             external: ["electron", /node:.*/, "better-sqlite3"]
-                        }
+                        },
+                        sourcemap: true
                     }
                 }
             },
@@ -174,7 +175,8 @@ function activePlugins(applicationTarget: string): PluginOption[] {
                                 format: "es",
                                 entryFileNames: "[name].mjs"
                             }
-                        }
+                        },
+                        sourcemap: true
                     }
                 }
             }

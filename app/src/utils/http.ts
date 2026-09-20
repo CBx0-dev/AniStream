@@ -135,7 +135,7 @@ export async function head(url: string, headers: [string, string][], followRedir
     const response: Response = await fetch(url, {
         method: "HEAD",
         headers: headers,
-        redirect: followRedirect ? "follow" : undefined
+        redirect: followRedirect ? "follow" : "manual"
     });
 
     if (!response.ok) {

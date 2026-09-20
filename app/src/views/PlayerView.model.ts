@@ -38,7 +38,6 @@ export class PlayerViewModel extends ViewModel {
     private readonly fetchService: FetchService;
     private readonly i18nService: I18nService;
 
-
     private series: SeriesModel | null = this.ref(null);
     private season: SeasonModel | null = this.ref(null);
     private episode: EpisodeModel | null = this.ref(null);
@@ -199,7 +198,7 @@ export class PlayerViewModel extends ViewModel {
                 break;
             }
             
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 2000));
         }
         
         this.providerLoading = false;
