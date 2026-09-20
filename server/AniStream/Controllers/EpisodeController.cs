@@ -88,7 +88,7 @@ public sealed class EpisodeController : ApiControllerBase
 
         SyncJobStatus? status = job?.Status ?? null;
 
-        if (results.Length == 0 && status is not SyncJobStatus.Queued and not SyncJobStatus.Processing)
+        if (status is null or SyncJobStatus.Failed)
         {
             await _syncService.RequestSync(episode);
             status = SyncJobStatus.Queued;

@@ -41,11 +41,19 @@ public sealed class ProviderSyncServiceImpl : IProviderSyncService
     {
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
-        IQueryable<SyncProviderJobModel> query = from job in db.SyncProviderJobs
-            where job.EpisodeId == episode.EpisodeId
+        IQueryable<SyncProviderJobModel> query1 = from job in db.SyncProviderJobs
+            where job.EpisodeId == episode.EpisodeId &&
+                  job.Status != SyncJobStatus.Failed
+            orderby job.SyncProviderJobId descending
             select job;
 
-        return await query.FirstOrDefaultAsync();
+        SyncProviderJobModel? latestJob = await query1.FirstOrDefaultAsync();
+        if (latestJob?.Expires is null || latestJob.Expires.Value < DateTime.UtcNow)
+        {
+            return null;
+        }
+
+        return latestJob;
     }
 
     public async Task RequestSync(int episodeId)
