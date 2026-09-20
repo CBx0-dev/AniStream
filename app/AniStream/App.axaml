@@ -1,0 +1,14 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:themes="clr-namespace:ShadUI;assembly=ShadUI"
+             xmlns:local="using:AniStream"
+             x:Class="AniStream.App"
+             RequestedThemeVariant="Default">
+    <Application.Styles>
+        <themes:ShadTheme />
+    </Application.Styles>
+
+    <Application.DataTemplates>
+        <local:ViewLocator />
+    </Application.DataTemplates>
+</Application>
