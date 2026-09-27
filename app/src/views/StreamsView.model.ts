@@ -191,7 +191,7 @@ export class StreamsViewModel extends ViewModel {
 
         const guids: string[] = await this.fetchService.getCatalog(provider);
 
-        using toast: ProgressToastControl = await this.toastService.showProgress({
+        const toast: ProgressToastControl = await this.toastService.showProgress({
             type: "info",
             title: this.i18nService.get(I18n.StreamsView.toast.title),
             description: this.i18nService.get(I18n.StreamsView.toast.description),
@@ -219,5 +219,7 @@ export class StreamsViewModel extends ViewModel {
                 console.error(e);
             }
         }
+
+        await toast.destroy();
     }
 }

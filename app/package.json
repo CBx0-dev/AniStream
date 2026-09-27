@@ -11,8 +11,6 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@babel/core": "^7.29.7",
-    "@babel/plugin-proposal-explicit-resource-management": "^7.27.4",
     "@dicebear/collection": "^9.4.2",
     "@dicebear/core": "^9.4.2",
     "@tauri-apps/api": "^2",

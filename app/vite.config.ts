@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as fs from "fs";
 
-import {BuildEnvironmentOptions, ConfigEnv, defineConfig, PluginOption, Rolldown, UserConfig, transformWithOxc} from "vite";
+import {BuildEnvironmentOptions, ConfigEnv, defineConfig, PluginOption, UserConfig} from "vite";
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -84,57 +84,9 @@ function virtualServiceLoader(applicationTarget: string): PluginOption {
     }
 }
 
-function raiiTransformer(): PluginOption {
-    return {
-        name: "raii-transformer",
-        enforce: "post",
-        transform: {
-            filter: {
-                id: /.ts$/,
-            },
-            async handler(code: string, id: string): Promise<null | Rolldown.TransformResult> {
-               if (!code.includes("using ")) {
-                    return null;
-                }
-
-                const jsResult = await transformWithOxc(code, id, {
-                    sourceType: "module"
-                });
-                
-                const {transformAsync} = await import ("@babel/core");
-                const {default: resourceMgmt} = await import("@babel/plugin-proposal-explicit-resource-management");
-                
-                const result = await transformAsync(jsResult.code, {
-                    filename: id,
-                    babelrc: false,
-                    configFile: false,
-                    sourceMaps: true,
-                    inputSourceMap: {
-                        ...jsResult.map,
-                        file: id
-                    },
-                    plugins: [
-                        resourceMgmt
-                    ]
-                });
-
-                if (!result) {
-                    return null;
-                }
-
-                return {
-                    code: result.code,
-                    map: result.map
-                }
-            }
-        }
-    }
-}
-
 function activePlugins(applicationTarget: string): PluginOption[] {
     if (applicationTarget == "worker") {
         return [
-            raiiTransformer(),
             dynamicServiceResolver(applicationTarget)
         ];
     }
@@ -142,7 +94,6 @@ function activePlugins(applicationTarget: string): PluginOption[] {
     return [
         vue(),
         tailwindcss(),
-        raiiTransformer(),
         dynamicServiceResolver(applicationTarget),
         virtualServiceLoader(applicationTarget)
     ];

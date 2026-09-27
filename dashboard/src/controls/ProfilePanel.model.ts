@@ -97,12 +97,13 @@ export class ProfilePanelModel extends UserControl {
     }
 
     public async onCreateBtn(): Promise<void> {
-        using dialog: ProfileDialogModel = this.dialogService.initDialog(ProfileDialogModel, null);
+        const dialog: ProfileDialogModel = this.dialogService.initDialog(ProfileDialogModel, null);
 
         await dialog.openDialog();
         const result: ActionResult<ProfileModel> = await this.runAction(dialog);
 
         await dialog.closeDialog();
+        dialog.destroy();
 
         if (!result.success) {
             console.error(result.error);
@@ -113,12 +114,13 @@ export class ProfilePanelModel extends UserControl {
     }
 
     public async openEdit(profile: ProfileModel): Promise<void> {
-        using dialog: ProfileDialogModel = this.dialogService.initDialog(ProfileDialogModel, profile);
+        const dialog: ProfileDialogModel = this.dialogService.initDialog(ProfileDialogModel, profile);
 
         await dialog.openDialog();
         const result: ActionResult<ProfileModel> = await this.runAction(dialog);
 
         await dialog.closeDialog();
+        dialog.destroy();
 
         if (!result.success) {
             console.error(result.error);

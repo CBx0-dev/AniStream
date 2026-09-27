@@ -75,10 +75,14 @@ export class PrefControlModel extends UserControl {
             return;
         }
 
-        using dialog: ProfileDialogModel = this.dialogService.initDialog(ProfileDialogModel, this.profile);
+        const dialog: ProfileDialogModel = this.dialogService.initDialog(ProfileDialogModel, this.profile);
 
         await dialog.openDialog();
         const result: ActionResult<ProfileModel> = await this.runAction(dialog);
+
+        await dialog.closeDialog();
+        dialog.destroy();
+
         if (!result.success) {
             console.error(result.error);
             return;

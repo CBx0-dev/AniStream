@@ -81,14 +81,18 @@ export class ProfileViewModel extends ViewModel {
 
     public async onProfileBtn(profile: ProfileModel): Promise<void> {
         if (AppEnv.isClientMode) {
-            using dialog: PinDialogModel = this.dialogService.initDialog(PinDialogModel, profile);
+            const dialog: PinDialogModel = this.dialogService.initDialog(PinDialogModel, profile);
             await dialog.openDialog();
 
             const result: ActionResult<void> = await this.runAction(dialog);
 
+            await dialog.closeDialog();
+            dialog.destroy();
+
             if (!result.success) {
                 return;
             }
+
         }
 
         const completeProfile: ProfileModel | null = await this.userService.getProfileByUUID(profile.uuid);
