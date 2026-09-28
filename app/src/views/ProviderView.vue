@@ -21,28 +21,29 @@ const vm: ProviderViewModel = useViewModel(ProviderViewModel);
         </div>
         <div class="absolute bottom-5 left-5">
             <button class="btn btn-lg btn-soft btn-square overflow-clip" @click="vm.onProfileBtn()">
-                <img v-if="vm.profileImage" :src="vm.profileImage" />
+                <img v-if="vm.profileImage" :src="vm.profileImage"/>
             </button>
         </div>
         <div>
             <h1 class="text-3xl text-center">
                 <Text :target="I18n.ProviderView.title"/>
             </h1>
-            <div class="flex justify-center pt-4">
-                <div class="join">
-                    <div class="join-item card bg-base-100 card-border border-base-300 hover:bg-primary/50"
-                         @click="vm.onAniworldBtn">
-                        <div class="card-body">
-                            <img src="/aniworld-dark.svg" alt="Aniworld" class="w-[250px] select-none"/>
-                        </div>
+            <h2 class="text-xl text-center text-base-content/70 mt-2">
+                <Text :target="I18n.ProviderView.subtitle"/>
+            </h2>
+            <div class="grid grid-cols-2 mx-auto gap-4 p-9">
+                <button class="card bg-base-100 card-border border-base-300 duration-300 transition-transform hover:bg-primary/50 hover:-translate-y-1/10"
+                     @click="vm.onAniworldBtn">
+                    <div class="card-body">
+                        <img src="/aniworld-dark.svg" alt="Aniworld" class="w-[250px] select-none"/>
                     </div>
-                    <div class="join-item card bg-base-100 card-border border-base-300 hover:bg-primary/50"
-                         @click="vm.onStoBtn">
-                        <div class="card-body">
-                            <img src="/sto.svg" alt="Sto" class="w-[250px] select-none"/>
-                        </div>
+                </button>
+                <button class="card bg-base-100 card-border border-base-300 duration-300 transition-transform hover:bg-primary/50 hover:-translate-y-1/10"
+                     @click="vm.onStoBtn">
+                    <div class="card-body">
+                        <img src="/sto.svg" alt="Sto" class="w-[250px] select-none"/>
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     </div>
