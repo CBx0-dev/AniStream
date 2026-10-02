@@ -1,5 +1,6 @@
 {
     "$lang": "de",
     "$group": "ProviderView",
-    "title": "Wählen Sie einen Host"
+    "title": "Wählen Sie einen Provider",
+    "subtitle": "Wählen Sie einen Service aus, um mit dem Streamen zu anzufangen"
 }

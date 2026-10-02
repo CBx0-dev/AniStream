@@ -1,5 +1,6 @@
 {
     "$lang": "en",
     "$group": "ProviderView",
-    "title": "Select an host"
+    "title": "Choose a provider",
+    "subtitle": "Select a service to start watching"
 }
