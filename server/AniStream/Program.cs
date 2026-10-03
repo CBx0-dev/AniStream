@@ -56,6 +56,7 @@ public static class Program
         builder.Services.AddControllers()
             .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCasePolicy());
         builder.Services.Configure<MvcOptions>(options => options.ModelMetadataDetailsProviders.Add(new EmptyStringEnabledDisplayMetadataProvider()));
+        builder.Services.AddMemoryCache();
 
 #if TESTING_ENABLED
         builder.Services.AddAuthentication("Test")

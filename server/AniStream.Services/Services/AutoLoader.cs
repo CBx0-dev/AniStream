@@ -43,6 +43,7 @@ public static class AutoLoader
         services.AddScoped<ISeriesSyncService, SeriesSyncServiceImpl>();
         services.AddScoped<IProviderSyncService, ProviderSyncServiceImpl>();
         services.AddScoped<ICatalogSyncService, CatalogSyncServiceImpl>();
+        services.AddScoped<IInformationService, InformationServiceImpl>();
         
         ResourceServiceImpl.AssetsPath = options.AssetsPath;
     }

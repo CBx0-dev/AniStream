@@ -12,6 +12,7 @@ namespace AniStream.API.Controllers;
 [Authorize(Roles = Roles.Dashboard)]
 public sealed class InformationController : ApiControllerBase
 {
+    private readonly IInformationService _informationService;
     private readonly IUserService _userService;
     private readonly IProviderService _providerService;
     private readonly ISeriesService _seriesService;
@@ -22,6 +23,7 @@ public sealed class InformationController : ApiControllerBase
     private readonly IProviderSyncService _providerSyncService;
 
     public InformationController(
+        IInformationService informationService,
         IUserService userService,
         IProviderService providerService,
         ISeriesService seriesService,
@@ -32,6 +34,7 @@ public sealed class InformationController : ApiControllerBase
         IProviderSyncService providerSyncService
     )
     {
+        _informationService = informationService;
         _userService = userService;
         _providerService = providerService;
         _seriesService = seriesService;
@@ -51,6 +54,26 @@ public sealed class InformationController : ApiControllerBase
             MinVersion = Program.MinVersion,
             MaxVersion = Program.MaxVersion
         };
+    }
+
+    [HttpGet("client")]
+    [Authorize(Roles = Roles.Client)]
+    public async Task<IActionResult> GetClientLatestVersion()
+    {
+        string? latestJsonUrl = await _informationService.GetClientUpdateInformation();
+        if (latestJsonUrl is null)
+        {
+            return NotFound("Latest client json file could not be found");
+        }
+
+        return RedirectPermanent(latestJsonUrl);
+    }
+
+    [HttpGet("server")]
+    [Authorize(Roles = Roles.Dashboard + "," + Roles.Client)]
+    public async Task<ActionResult<BackendInformation>> GetBackedInformation()
+    {
+        return await _informationService.GetBackendUpdateInformation();
     }
 
     [HttpGet("stats")]
