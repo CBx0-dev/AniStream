@@ -11,7 +11,9 @@ import * as http from "@utils/http";
 import * as version from "@utils/version";
 import {InvalidOperationError} from "@utils/error";
 
-import {version as APP_VERSION} from "@/../package.json";
+// Injected by Vite
+declare const CLIENT_MIN_VERSION: string;
+declare const CLIENT_MAX_VERSION: string;
 
 export class ApiServiceImpl implements ApiService {
     public static HEADERS: [string, string][] = [["Content-Type", "application/json"]];
@@ -65,11 +67,11 @@ export class ApiServiceImpl implements ApiService {
     }
 
     public async checkApiInformation(url: string): Promise<string | null> {
-        const informationUrl: string = this.buildURL(["api", "information"], url);
+        const informationUrl: string = this.buildURL(["api", "information", "server"], url);
         const information: InformationModel = await http.get(informationUrl, ApiServiceImpl.HEADERS).json<InformationModel>();
 
-        if (!version.isVersionInRange(APP_VERSION, information.min_version, information.max_version)) {
-            return `Client is not compatible with the Server. Required ${information.min_version} >= version <= ${information.max_version}`;
+        if (!version.isVersionInRange(information.current_version, CLIENT_MIN_VERSION, CLIENT_MAX_VERSION)) {
+            return `Client is not compatible with the Server. Required ${CLIENT_MIN_VERSION} >= version <= ${CLIENT_MAX_VERSION}`;
         }
 
         return null;

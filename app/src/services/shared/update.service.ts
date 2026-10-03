@@ -1,4 +1,5 @@
 import {check, Update} from "@tauri-apps/plugin-updater";
+import {core} from "@tauri-apps/api";
 import {ReadableGlobalContext} from "vue-mvvm";
 import {DialogService} from "vue-mvvm/dialog";
 
@@ -10,6 +11,7 @@ import {ServiceDeclaration} from "@services/declaration";
 import {UpdateControlModel} from "@controls/UpdateControl.model";
 
 import * as http from "@utils/http";
+import * as AppEnv from "@AppEnv";
 
 class UpdateServiceImpl implements UpdateService {
     public static readonly CHECK_OFFSET: number = 2_000;
@@ -52,6 +54,16 @@ class UpdateServiceImpl implements UpdateService {
             !await http.runHealthz(settingsService.healthz.value)
         ) {
             return;
+        }
+
+        if (AppEnv.isClientMode) {
+            if (!settingsService.serverUrl.value) {
+                return;
+            }
+
+            await core.invoke("set_updater_url", {
+                url: `${settingsService.serverUrl.value}/information/client`
+            });
         }
 
         const update: Update | null = await check();

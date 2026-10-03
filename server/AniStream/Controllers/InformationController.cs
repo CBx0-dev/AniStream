@@ -45,19 +45,8 @@ public sealed class InformationController : ApiControllerBase
         _providerSyncService = providerSyncService;
     }
 
-    [HttpGet]
-    [AllowAnonymous]
-    public InformationModel GetInformation()
-    {
-        return new InformationModel
-        {
-            MinVersion = Program.MinVersion,
-            MaxVersion = Program.MaxVersion
-        };
-    }
-
     [HttpGet("client")]
-    [Authorize(Roles = Roles.Client)]
+    [AllowAnonymous]
     public async Task<IActionResult> GetClientLatestVersion()
     {
         string? latestJsonUrl = await _informationService.GetClientUpdateInformation();
@@ -70,7 +59,7 @@ public sealed class InformationController : ApiControllerBase
     }
 
     [HttpGet("server")]
-    [Authorize(Roles = Roles.Dashboard + "," + Roles.Client)]
+    [AllowAnonymous]
     public async Task<ActionResult<BackendInformation>> GetBackedInformation()
     {
         return await _informationService.GetBackendUpdateInformation();
