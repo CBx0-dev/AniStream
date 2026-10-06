@@ -52,7 +52,8 @@ public sealed class InformationController : ApiControllerBase
         string? latestJsonUrl = await _informationService.GetClientUpdateInformation();
         if (latestJsonUrl is null)
         {
-            return NotFound("Latest client json file could not be found");
+            // Tauri-Updater expects a 204 response message
+            return NoContent();
         }
 
         return RedirectPermanent(latestJsonUrl);
