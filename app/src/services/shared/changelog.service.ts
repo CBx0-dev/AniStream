@@ -2,12 +2,7 @@ import {ServiceDeclaration} from "@services/declaration";
 import {ChangelogService, ChangelogEntry} from "@contracts/changelog.contract";
 
 import {MarkdownParser} from "@utils/markdown";
-
-// @ts-ignore
-const modules: Record<string, () => Promise<string>> = import.meta.glob("/changelogs/*.md", {
-    query: "?raw",
-    import: "default"
-});
+import {changelogs} from "virtual:changelogs";
 
 class ChangelogServiceImpl implements ChangelogService {
     private parser: MarkdownParser;
@@ -22,7 +17,7 @@ class ChangelogServiceImpl implements ChangelogService {
         if (this.loaded) return;
 
         const entries: ChangelogEntry[] = [];
-        for (const [path, loader] of Object.entries(modules)) {
+        for (const [path, loader] of Object.entries(changelogs)) {
             const content = await loader() as string;
             const versionMatch: RegExpMatchArray | null = path.match(/v(\d+\.\d+\.\d+)\.md$/);
             const version: string = versionMatch ? versionMatch[1] : path;

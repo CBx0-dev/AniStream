@@ -84,6 +84,37 @@ function virtualServiceLoader(applicationTarget: string): PluginOption {
     }
 }
 
+function virtualChangelogLoader(applicationTarget: string): PluginOption {
+    const virtualModuleId: string = 'virtual:changelogs';
+    const resolvedVirtualModuleId: string = '\0' + virtualModuleId;
+
+    return {
+        name: "virtual-changelog-loader",
+        enforce: "pre",
+        resolveId(id: string): string | null {
+            if (id == virtualModuleId) {
+                return resolvedVirtualModuleId;
+            }
+            return null;
+        },
+        load(id: string): string | null {
+            if (id == resolvedVirtualModuleId) {
+                // language=TypeScript
+                return `
+                    const changelogs = import.meta.glob(["/changelogs/${applicationTarget}/*.md"], {
+                        query: "?raw",
+                        import: "default"
+                    });
+
+                    export { changelogs };
+                `;
+            }
+
+            return null;
+        }
+    }
+}
+
 function activePlugins(applicationTarget: string): PluginOption[] {
     if (applicationTarget == "worker") {
         return [
@@ -95,7 +126,8 @@ function activePlugins(applicationTarget: string): PluginOption[] {
         vue(),
         tailwindcss(),
         dynamicServiceResolver(applicationTarget),
-        virtualServiceLoader(applicationTarget)
+        virtualServiceLoader(applicationTarget),
+        virtualChangelogLoader(applicationTarget)
     ];
 }
 
@@ -139,11 +171,11 @@ export default defineConfig(async (env: ConfigEnv): Promise<UserConfig> => {
     let CLIENT_MAX_VERSION: string = "0.0.0";
 
     if (APPLICATION_TARGET == "client" && env.command == "build") {
-        if (process.env.CLIENT_MIN_VERSION) {
-            throw "'CLIENT_MIN_VERSION' must be set in env";
+        if (!process.env.CLIENT_MIN_VERSION) {
+            throw new Error("'CLIENT_MIN_VERSION' must be set in env");
         }
-        if (process.env.CLIENT_MAX_VERSION) {
-            throw "'CLIENT_MAX_VERSION' must be set in env";
+        if (!process.env.CLIENT_MAX_VERSION) {
+            throw new Error("'CLIENT_MAX_VERSION' must be set in env");
         }
 
         CLIENT_MIN_VERSION = process.env.CLIENT_MIN_VERSION;

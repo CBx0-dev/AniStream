@@ -42,6 +42,8 @@ jobs:
         run: |
           cd app
           export APPLICATION_TARGET="${{ matrix.target }}"
+          export CLIENT_MIN_VERSION="0.0.0"
+          export CLIENT_MAX_VERSION="0.0.0"
           npm run build
 
       - name: Build Backend
