@@ -3,10 +3,37 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
+      type:
+        description: "Release type"
+        required: true
+        type: choice
+        options:
+          - standalone
+          - client
+          - server
       version:
         description: "Release version (e.g. 1.2.3)"
         required: true
         type: string
+      client_min_version:
+        description: "Minimum server version (client only)"
+        required: false
+        type: string
+        default: ""
+      client_max_version:
+        description: "Maximum server version (client only)"
+        required: false
+        type: string
+        default: ""
+      push_latest:
+        description: "Also tag and push as latest (server only)"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  packages: write
 
 jobs:
   validate:
@@ -14,71 +41,69 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
+    outputs:
+      owner: ${{ steps.owner.outputs.lower }}
+      tag: ${{ inputs.version }}-${{ inputs.type }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Lowercase repository owner
+        id: owner
+        run: echo "lower=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
 
       - name: Ensure changelog exists
         run: |
-          CHANGELOG="app/changelogs/v${{ github.event.inputs.version }}.md"
+          CHANGELOG="app/changelogs/${{ inputs.type }}/v${{ inputs.version }}.md"
           if [ ! -f "$CHANGELOG" ]; then
             echo "Missing changelog: $CHANGELOG"
             exit 1
           fi
-          echo "Changelog found"
+          echo "Changelog found: $CHANGELOG"
+
+      - name: Validate client versions
+        if: ${{ inputs.type == 'client' }}
+        run: |
+          if [ -z "${{ inputs.client_min_version }}" ] || [ -z "${{ inputs.client_max_version }}" ]; then
+            echo "Error: 'client_min_version' and 'client_max_version' are required when building client"
+            exit 1
+          fi
 
       - name: Install Node.js
+        if: ${{ inputs.type == 'standalone' || inputs.type == 'client' }}
         uses: actions/setup-node@v4
         with:
           node-version: 24
           cache-dependency-path: ./app/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        if: ${{ inputs.type == 'standalone' || inputs.type == 'client' }}
+        run: |
+          cd app
+          npm ci
 
       - name: Run I18n generator
+        if: ${{ inputs.type == 'standalone' || inputs.type == 'client' }}
         run: node app/i18n.gen.cjs
 
       - name: Signing key validation
+        if: ${{ inputs.type == 'standalone' || inputs.type == 'client' }}
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.SIGNING_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
         run: |
           echo "dummy" > to-sign.txt
-          
-          npm run tauri signer sign to-sign.txt
-          
+          cd app
+          npm run tauri signer sign ../to-sign.txt
+          cd ..
           rm to-sign.txt to-sign.txt.sig
 
-      - name: Set application version
-        run: |
-          echo "Setting version to ${{ github.event.inputs.version }}"
-
-          # package.json
-          jq ".version = \"${{ github.event.inputs.version }}\"" app/package.json > app/package.json.tmp
-          mv app/package.json.tmp app/package.json
-
-          # tauri.conf.json (Tauri v2)
-          jq ".version = \"${{ github.event.inputs.version }}\"" app/src-tauri/tauri.conf.json > app/src-tauri/tauri.conf.json.tmp
-          mv app/src-tauri/tauri.conf.json.tmp app/src-tauri/tauri.conf.json
-
-          # Cargo.toml (optional but strongly recommended)
-          sed -i.bak "s/^version = \".*\"/version = \"${{ github.event.inputs.version }}\"/" app/src-tauri/Cargo.toml || true
-          rm -f app/src-tauri/Cargo.toml.bak
-
-          echo "✅ Versions updated"
-
-      - name: Commit version bump
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git commit -am "chore(release): v${{ github.event.inputs.version }}" || echo "No changes to commit"
-          git push
-
-  build:
+  build-desktop:
     name: Build (${{ matrix.platform }})
     needs: validate
+    if: ${{ inputs.type == 'standalone' || inputs.type == 'client' }}
     runs-on: ${{ matrix.platform }}
     permissions:
       contents: write
@@ -110,7 +135,7 @@ jobs:
         id: changelog
         shell: bash
         run: |
-          CHANGELOG=$(cat app/changelogs/v${{ github.event.inputs.version }}.md)
+          CHANGELOG=$(cat app/changelogs/${{ inputs.type }}/v${{ inputs.version }}.md)
           
           {
             echo "content<<EOF"
@@ -123,9 +148,10 @@ jobs:
         with:
           node-version: 24
           cache: npm
+          cache-dependency-path: ./app/package-lock.json
 
       - name: Set up Rust
-        run:
+        run: |
           curl https://sh.rustup.rs -sSf | sh -s -- -y
 
       - name: Add build target
@@ -154,6 +180,29 @@ jobs:
           cd app
           node i18n.gen.cjs
 
+      - name: Set application version
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          cd app
+          node -e '
+            import * as fs from "fs";
+            const v = process.env.VERSION;
+
+            for (const f of ["package.json", "src-tauri/tauri.conf.json"]) {
+              const json = JSON.parse(fs.readFileSync(f, "utf8"));
+              json.version = v;
+              fs.writeFileSync(f, JSON.stringify(json, null, 2) + "\n");
+            }
+
+            // only the first match, i.e. the [package] version
+            const cargo = "src-tauri/Cargo.toml";
+            const toml = fs.readFileSync(cargo, "utf8");
+            fs.writeFileSync(cargo, toml.replace(/^version\s*=\s*".*"$/m, `version = "${v}"`));
+          '
+          echo "Version set to $VERSION"
+
       - name: Build Application
         uses: tauri-apps/tauri-action@v0
         env:
@@ -162,12 +211,74 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.SIGNING_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           CI: 'true'
+          APPLICATION_TARGET: ${{ inputs.type }}
+          CLIENT_MIN_VERSION: ${{ inputs.client_min_version }}
+          CLIENT_MAX_VERSION: ${{ inputs.client_max_version }}
         with:
-          # tauri-action replaces \_\_VERSION\_\_ with the app version
-          tagName: v${{ github.event.inputs.version }}
-          releaseName: "Release v__VERSION__"
+          tagName: ${{ inputs.version }}-${{ inputs.type }}
+          releaseName: "Release v${{ inputs.version }} (${{ inputs.type }})"
           releaseBody: ${{ steps.changelog.outputs.content }}
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
           projectPath: ./app
+
+  build-server:
+    name: Build Server Containers
+    needs: validate
+    if: ${{ inputs.type == 'server' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    strategy:
+      matrix:
+        include:
+          - name: api
+            dockerfile: api.Dockerfile
+          - name: worker
+            dockerfile: worker.Dockerfile
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push ${{ matrix.name }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: true
+          build-args: |
+            VERSION=${{ inputs.version }}
+          tags: |
+            ghcr.io/${{ needs.validate.outputs.owner }}/anistream-${{ matrix.name }}:${{ inputs.version }}
+            ghcr.io/${{ needs.validate.outputs.owner }}/anistream-${{ matrix.name }}:${{ github.sha }}
+            ${{ inputs.push_latest && format('ghcr.io/{0}/anistream-{1}:latest', needs.validate.outputs.owner, matrix.name) || '' }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+
+  release-server:
+    needs: build-server
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ inputs.version }}-server" \
+            --draft --latest=false \
+            --target "$GITHUB_SHA" \
+            --title "Release ${{ inputs.version }}-server" \
+            --notes-file "app/changelogs/server/v${{ inputs.version }}.md"

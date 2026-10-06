@@ -32,8 +32,11 @@ COPY server/AniStream.Worker/AniStream.Worker.csproj     server/AniStream.Worker
 COPY server/ server/
 
 RUN dotnet restore ./AniStream.slnx
+ARG VERSION=0.0.0
 RUN dotnet publish server/AniStream.Worker/AniStream.Worker.csproj \
-    -c Release -o /app/publish /p:UseAppHost=false
+    -c Release -o /app/publish /p:UseAppHost=false \
+    -p:Version=${VERSION} \
+    -p:InformationalVersion=${VERSION}
 
 # Stage 3: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final

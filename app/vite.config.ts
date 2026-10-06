@@ -84,6 +84,37 @@ function virtualServiceLoader(applicationTarget: string): PluginOption {
     }
 }
 
+function virtualChangelogLoader(applicationTarget: string): PluginOption {
+    const virtualModuleId: string = 'virtual:changelogs';
+    const resolvedVirtualModuleId: string = '\0' + virtualModuleId;
+
+    return {
+        name: "virtual-changelog-loader",
+        enforce: "pre",
+        resolveId(id: string): string | null {
+            if (id == virtualModuleId) {
+                return resolvedVirtualModuleId;
+            }
+            return null;
+        },
+        load(id: string): string | null {
+            if (id == resolvedVirtualModuleId) {
+                // language=TypeScript
+                return `
+                    const changelogs = import.meta.glob(["/changelogs/${applicationTarget}/*.md"], {
+                        query: "?raw",
+                        import: "default"
+                    });
+
+                    export { changelogs };
+                `;
+            }
+
+            return null;
+        }
+    }
+}
+
 function activePlugins(applicationTarget: string): PluginOption[] {
     if (applicationTarget == "worker") {
         return [
@@ -95,7 +126,8 @@ function activePlugins(applicationTarget: string): PluginOption[] {
         vue(),
         tailwindcss(),
         dynamicServiceResolver(applicationTarget),
-        virtualServiceLoader(applicationTarget)
+        virtualServiceLoader(applicationTarget),
+        virtualChangelogLoader(applicationTarget)
     ];
 }
 
@@ -134,6 +166,21 @@ function buildEnv(applicationTarget: string): BuildEnvironmentOptions {
 export default defineConfig(async (env: ConfigEnv): Promise<UserConfig> => {
     const APPLICATION_TARGET: string = process.env.APPLICATION_TARGET || "standalone";
     console.log(`ℹ️  Application Target: ${APPLICATION_TARGET}`);
+
+    let CLIENT_MIN_VERSION: string = "0.0.0";
+    let CLIENT_MAX_VERSION: string = "0.0.0";
+
+    if (APPLICATION_TARGET == "client" && env.command == "build") {
+        if (!process.env.CLIENT_MIN_VERSION) {
+            throw new Error("'CLIENT_MIN_VERSION' must be set in env");
+        }
+        if (!process.env.CLIENT_MAX_VERSION) {
+            throw new Error("'CLIENT_MAX_VERSION' must be set in env");
+        }
+
+        CLIENT_MIN_VERSION = process.env.CLIENT_MIN_VERSION;
+        CLIENT_MAX_VERSION = process.env.CLIENT_MAX_VERSION;
+    }
 
     if (env.command == "serve" && APPLICATION_TARGET == "worker") {
         throw "Worker can only be build and not served";
@@ -185,7 +232,9 @@ export default defineConfig(async (env: ConfigEnv): Promise<UserConfig> => {
             },
         },
         define: {
-            APPLICATION_TARGET: JSON.stringify(APPLICATION_TARGET)
+            APPLICATION_TARGET: JSON.stringify(APPLICATION_TARGET),
+            CLIENT_MIN_VERSION: JSON.stringify(CLIENT_MIN_VERSION),
+            CLIENT_MAX_VERSION: JSON.stringify(CLIENT_MAX_VERSION),
         },
         optimizeDeps: {
             exclude: ["better-sqlite3"]

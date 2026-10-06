@@ -23,9 +23,6 @@ namespace AniStream.API;
 
 public static class Program
 {
-    public const string MinVersion = "1.3.0";
-    public const string MaxVersion = "1.3.0";
-    
     public static void Main(string[] args)
     {
         AppConfig.Initialize();
@@ -56,6 +53,7 @@ public static class Program
         builder.Services.AddControllers()
             .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCasePolicy());
         builder.Services.Configure<MvcOptions>(options => options.ModelMetadataDetailsProviders.Add(new EmptyStringEnabledDisplayMetadataProvider()));
+        builder.Services.AddMemoryCache();
 
 #if TESTING_ENABLED
         builder.Services.AddAuthentication("Test")

@@ -12,4 +12,8 @@ declare module "virtual:services" {
     export const services: Record<string, ServiceDeclaration<unknown>>;
 }
 
+declare module "virtual:changelogs" {
+    export const changelogs: Record<string, () => Promise<string>>
+}
+
 declare const APPLICATION_TARGET: "standalone" | "client" | "worker";

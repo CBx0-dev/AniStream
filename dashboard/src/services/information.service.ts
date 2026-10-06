@@ -7,6 +7,7 @@ import type {ServiceDeclaration} from "@services/shared";
 
 import type {AuditModel} from "@models/audit.model";
 import type {StatsModel} from "@models/stats.model";
+import type {BackendUpdateInformation} from "@models/update.model";
 
 class InformationServiceImpl implements InformationService {
     private readonly apiService: ApiService;
@@ -17,6 +18,10 @@ class InformationServiceImpl implements InformationService {
 
     public async getAudits(): Promise<AuditModel[]> {
         return await this.apiService.get<AuditModel[]>(["api", "information", "audits"]);
+    }
+    
+    public async getBackendUpdateInformation(): Promise<BackendUpdateInformation> {
+        return await this.apiService.get<BackendUpdateInformation>(["api", "information", "server"]);
     }
 
     public async getStats(): Promise<StatsModel> {

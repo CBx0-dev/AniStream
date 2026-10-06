@@ -12,6 +12,7 @@ namespace AniStream.API.Controllers;
 [Authorize(Roles = Roles.Dashboard)]
 public sealed class InformationController : ApiControllerBase
 {
+    private readonly IInformationService _informationService;
     private readonly IUserService _userService;
     private readonly IProviderService _providerService;
     private readonly ISeriesService _seriesService;
@@ -22,6 +23,7 @@ public sealed class InformationController : ApiControllerBase
     private readonly IProviderSyncService _providerSyncService;
 
     public InformationController(
+        IInformationService informationService,
         IUserService userService,
         IProviderService providerService,
         ISeriesService seriesService,
@@ -32,6 +34,7 @@ public sealed class InformationController : ApiControllerBase
         IProviderSyncService providerSyncService
     )
     {
+        _informationService = informationService;
         _userService = userService;
         _providerService = providerService;
         _seriesService = seriesService;
@@ -42,15 +45,25 @@ public sealed class InformationController : ApiControllerBase
         _providerSyncService = providerSyncService;
     }
 
-    [HttpGet]
+    [HttpGet("client")]
     [AllowAnonymous]
-    public InformationModel GetInformation()
+    public async Task<IActionResult> GetClientLatestVersion()
     {
-        return new InformationModel
+        string? latestJsonUrl = await _informationService.GetClientUpdateInformation();
+        if (latestJsonUrl is null)
         {
-            MinVersion = Program.MinVersion,
-            MaxVersion = Program.MaxVersion
-        };
+            // Tauri-Updater expects a 204 response message
+            return NoContent();
+        }
+
+        return RedirectPermanent(latestJsonUrl);
+    }
+
+    [HttpGet("server")]
+    [AllowAnonymous]
+    public async Task<ActionResult<BackendInformation>> GetBackedInformation()
+    {
+        return await _informationService.GetBackendUpdateInformation();
     }
 
     [HttpGet("stats")]
