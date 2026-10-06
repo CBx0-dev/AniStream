@@ -187,7 +187,7 @@ jobs:
         run: |
           cd app
           node -e '
-            const fs = require("fs");
+            import * as fs from "fs";
             const v = process.env.VERSION;
 
             for (const f of ["package.json", "src-tauri/tauri.conf.json"]) {
