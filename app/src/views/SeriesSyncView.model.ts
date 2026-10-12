@@ -247,7 +247,7 @@ export class SeriesSyncViewClientModel extends SeriesSyncViewModel {
     private readonly seasonService: SeasonService;
 
     private refreshInterval: NodeJS.Timeout | null = null;
-    
+
     private series: SeriesModel | null = this.ref(null);
     private syncInformation: SyncInformation | null = this.ref(null);
 
@@ -258,7 +258,7 @@ export class SeriesSyncViewClientModel extends SeriesSyncViewModel {
     public isProcessing: boolean = this.computed(() => this.syncInformation?.status === SyncStatus.Processing);
     
     public canSync: boolean = this.computed(() => !this.isQueued && !this.isProcessing);
-    
+
     public constructor() {
         super();
 
@@ -289,7 +289,7 @@ export class SeriesSyncViewClientModel extends SeriesSyncViewModel {
         this.syncInformation = await this.seasonService.getSyncStatus(seriesId);
 
         this.isPreLoading = false;
-        
+
         if (!this.refreshInterval) {
             this.refreshInterval = setInterval(async () => {
                 if (!this.series) {
@@ -297,19 +297,26 @@ export class SeriesSyncViewClientModel extends SeriesSyncViewModel {
                 }
                 this.syncInformation = await this.seasonService.getSyncStatus(this.series.series_id)
             }, 10_000);
-            
-        }
-    }
-    
-    protected async unmounted() {
-        if (this.refreshInterval) {
-            clearInterval(this.refreshInterval);   
-            this.refreshInterval = null;        
+
         }
     }
 
-    public onBackBtn(): void {
-        this.routerService.navigateBack();
+    protected async unmounted() {
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+            this.refreshInterval = null;
+        }
+    }
+
+    public async onBackBtn(): Promise<void> {
+        if (!this.series) {
+            this.routerService.navigateBack();
+            return;
+        }
+
+        await this.routerService.replaceTo(StreamViewModel, {
+            series_id: this.series.series_id
+        });
     }
 
     public async onSyncRequestBtn(): Promise<void> {
