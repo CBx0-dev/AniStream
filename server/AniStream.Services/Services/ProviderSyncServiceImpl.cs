@@ -48,7 +48,12 @@ public sealed class ProviderSyncServiceImpl : IProviderSyncService
             select job;
 
         SyncProviderJobModel? latestJob = await query1.FirstOrDefaultAsync();
-        if (latestJob?.Expires is null || latestJob.Expires.Value < DateTime.UtcNow)
+        if (latestJob is null)
+        {
+            return null;
+        }
+
+        if (latestJob.Status == SyncJobStatus.Completed && (latestJob.Expires is null || latestJob.Expires.Value < DateTime.UtcNow))
         {
             return null;
         }
@@ -69,6 +74,11 @@ public sealed class ProviderSyncServiceImpl : IProviderSyncService
 
     public async Task RequestSync(EpisodeModel episode)
     {
+        if (await IsSyncing(episode))
+        {
+            return;
+        }
+
         await using MetadataDbContext db = await _dbFactory.GetContext();
 
         SyncProviderJobModel job = new SyncProviderJobModel(episode.EpisodeId, SyncJobStatus.Queued, DateTime.UtcNow, null, null, null);
