@@ -147,9 +147,14 @@ export class HLSPlayerModel extends UserControl {
         const percent: number = (event.clientX - rect.left) / rect.width;
         const currentTime: number = percent * this.video.duration;
         this.video.currentTime = currentTime;
-
+        
         this.renderTimes();
-        await this.watchtimeService.updateWatchtimeWithEpisode(this.episodeId, percent, currentTime);
+        
+        await this.watchtimeService.updateWatchtimeWithEpisode(
+            this.episodeId,
+            Math.round(percent * 100),
+            currentTime
+        );
     }
 
     public async onShortcut(event: KeyboardEvent): Promise<void> {
