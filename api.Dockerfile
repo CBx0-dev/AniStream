@@ -28,10 +28,14 @@ COPY --from=dashboard-build /build/dist/ server/AniStream/wwwroot
 
 RUN dotnet restore ./AniStream.slnx
 ARG VERSION=0.0.0
+ARG MIN_CLIENT_VERSION=0.0.0
+ARG MAX_CLIENT_VERSION=0.0.0
 RUN dotnet publish server/AniStream/AniStream.csproj \
     -c Release -o /app/publish /p:UseAppHost=false \
     -p:Version=${VERSION} \
-    -p:InformationalVersion=${VERSION}
+    -p:InformationalVersion=${VERSION} \
+    -p:MinClientVersion=${MIN_CLIENT_VERSION}
+    -p:MaxClientVersion=${MAX_CLIENT_VERSION}
 
 # Stage 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final

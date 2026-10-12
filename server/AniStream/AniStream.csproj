@@ -17,7 +17,6 @@
 
         <ProjectReference Include="../AniStream.Services/AniStream.Services.csproj"/>
         <ProjectReference Include="../AniStream.Shared/AniStream.Shared.csproj"/>
-
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)' == 'Test'">
@@ -27,4 +26,5 @@
     <PropertyGroup Condition="'$(Configuration)' == 'Test'">
         <DefineConstants>$(DefineConstants);TESTING_ENABLED</DefineConstants>
     </PropertyGroup>
+    
 </Project>

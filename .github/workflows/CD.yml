@@ -16,12 +16,12 @@ on:
         required: true
         type: string
       client_min_version:
-        description: "Minimum server version (client only)"
+        description: "Minimum server version (server only)"
         required: false
         type: string
         default: ""
       client_max_version:
-        description: "Maximum server version (client only)"
+        description: "Maximum server version (server only)"
         required: false
         type: string
         default: ""
@@ -259,6 +259,8 @@ jobs:
           push: true
           build-args: |
             VERSION=${{ inputs.version }}
+            MIN_CLIENT_VERSION=${{ inputs.client_min_version }}
+            MAX_CLIENT_VERSION=${{ inputs.client_max_version }}
           tags: |
             ghcr.io/${{ needs.validate.outputs.owner }}/anistream-${{ matrix.name }}:${{ inputs.version }}
             ghcr.io/${{ needs.validate.outputs.owner }}/anistream-${{ matrix.name }}:${{ github.sha }}

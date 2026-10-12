@@ -32,7 +32,9 @@ public sealed class InformationServiceImpl : IInformationService
         {
             CurrentVersion = GetCurrentVersion(),
             LatestVersion = null,
-            ReleaseNotesUrl = null
+            ReleaseNotesUrl = null,
+            MinClientVersion = BuildConfig.MinClientVersion,
+            MaxClientVersion = BuildConfig.MaxClientVersion
         };
 
         try
@@ -54,7 +56,7 @@ public sealed class InformationServiceImpl : IInformationService
 
             GitHubRelease? latestRelease = releases
                 .Where(release => !release.Draft && !release.Prerelease && (release.TagName?.EndsWith("-server") ?? false))
-                .OrderByDescending(r => ExtractSemver(r.TagName!), new SemverComparer())
+                .OrderByDescending(r => ExtractSemver(r.TagName!, "-server"), new SemverComparer())
                 .FirstOrDefault();
 
             if (latestRelease is null)
@@ -62,7 +64,7 @@ public sealed class InformationServiceImpl : IInformationService
                 return info;
             }
 
-            info.LatestVersion = ExtractSemver(latestRelease.TagName!);
+            info.LatestVersion = ExtractSemver(latestRelease.TagName!, "-sever");
             info.ReleaseNotesUrl = latestRelease.HtmlUrl;
             _cache.Set(BackendCacheKey, info, TimeSpan.FromMinutes(10));
             return info;
@@ -98,8 +100,9 @@ public sealed class InformationServiceImpl : IInformationService
             }
 
             GitHubRelease? latestRelease = releases
-                .Where(release => !release.Draft && !release.Prerelease && (release.TagName?.EndsWith("-client") ?? false))
-                .OrderByDescending(r => ExtractSemver(r.TagName!), new SemverComparer())
+                .Where(release => !release.Draft && !release.Prerelease && release.TagName is not null && release.TagName.EndsWith("-client"))
+                .Where(release => new SemverComparer().Compare(ExtractSemver(release.TagName!, "-client"), BuildConfig.MaxClientVersion) <= 0)
+                .OrderByDescending(r => ExtractSemver(r.TagName!, "-client"), new SemverComparer())
                 .FirstOrDefault();
 
             if (latestRelease is null)
@@ -122,7 +125,7 @@ public sealed class InformationServiceImpl : IInformationService
         }
     }
 
-    private static string ExtractSemver(string tag) => tag.Replace("v", "")[.."-server".Length];
+    private static string ExtractSemver(string tag, string suffix) => tag[1..suffix.Length];
 
     private static string GetCurrentVersion()
     {
@@ -131,14 +134,14 @@ public sealed class InformationServiceImpl : IInformationService
         {
             throw new InvalidOperationException("Could not get entry assembly");
         }
-        
+
         Version? version = assembly.GetName().Version;
         if (version is null)
         {
             throw new InvalidOperationException("Could not get assembly version attribute");
         }
-        
+
         return $"{version.Major}.{version.Minor}.{version.Build}";
-        
+
     }
 }

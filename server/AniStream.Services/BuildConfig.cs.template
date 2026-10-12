@@ -1,0 +1,7 @@
+namespace AniStream;
+
+public static class BuildConfig
+{
+    public static readonly string MinClientVersion = "__min_client_version__";
+    public static readonly string MaxClientVersion = "__max_client_version__";
+}
