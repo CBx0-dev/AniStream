@@ -28,12 +28,12 @@ export class ApiServiceImpl implements ApiService {
         this.apiBase = null;
     }
 
-    public async get<Response extends object>(def: PathParameter): Promise<Response> {
+    public async get<Response extends object>(def: PathParameter, cancellationToken: AbortSignal | null = null): Promise<Response> {
         const url: string = this.buildURL(def);
-        return await http.get(url, ApiServiceImpl.HEADERS).json<Response>();
+        return await http.get(url, ApiServiceImpl.HEADERS, cancellationToken).json<Response>();
     }
 
-    public async post<Response extends object, Body extends object | string | null>(def: PathParameter, body: Body): Promise<Response> {
+    public async post<Response extends object, Body extends object | string | null>(def: PathParameter, body: Body, cancellationToken: AbortSignal | null = null): Promise<Response> {
         let data: string | undefined;
 
         if (body == null) {
@@ -45,10 +45,10 @@ export class ApiServiceImpl implements ApiService {
         }
 
         const url: string = this.buildURL(def);
-        return await http.post(url, data, ApiServiceImpl.HEADERS).json<Response>();
+        return await http.post(url, data, ApiServiceImpl.HEADERS, cancellationToken).json<Response>();
     }
 
-    public async put<Response extends object, Body extends object | string>(def: PathParameter, body: Body): Promise<Response> {
+    public async put<Response extends object, Body extends object | string>(def: PathParameter, body: Body, cancellationToken: AbortSignal | null = null): Promise<Response> {
         let data: string;
 
         if (typeof body == "object") {
@@ -58,12 +58,12 @@ export class ApiServiceImpl implements ApiService {
         }
 
         const url: string = this.buildURL(def);
-        return await http.put(url, data, ApiServiceImpl.HEADERS).json<Response>();
+        return await http.put(url, data, ApiServiceImpl.HEADERS, cancellationToken).json<Response>();
     }
 
-    public async delete<Response extends object>(def: PathParameter): Promise<Response> {
+    public async delete<Response extends object>(def: PathParameter, cancellationToken: AbortSignal | null = null): Promise<Response> {
         const url: string = this.buildURL(def);
-        return await http.delete$(url, ApiServiceImpl.HEADERS).json<Response>();
+        return await http.delete$(url, ApiServiceImpl.HEADERS, cancellationToken).json<Response>();
     }
 
     public async checkApiInformation(url: string): Promise<string | null> {

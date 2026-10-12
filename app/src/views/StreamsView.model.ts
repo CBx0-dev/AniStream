@@ -164,10 +164,19 @@ export class StreamsViewModel extends ViewModel {
     }
 
     private async loadNextChunk(): Promise<void> {
-        const chunk: SeriesModel[] = this.selectedGenres.length == 0 && this.searchText.length == 0
-            ? await this.seriesService.getSeriesChunk(this.series.length, this.chunkSize)
-            : await this.seriesService.getFilteredSeriesChunk(this.series.length, this.chunkSize, this.searchText, this.selectedGenres);
-        this.series.push(...chunk);
+        try {
+            const chunk: SeriesModel[] = this.selectedGenres.length == 0 && this.searchText.length == 0
+                ? await this.seriesService.getSeriesChunk(this.series.length, this.chunkSize)
+                : await this.seriesService.getFilteredSeriesChunk(this.series.length, this.chunkSize, this.searchText, this.selectedGenres);
+            this.series.push(...chunk);
+
+        } catch (error) {
+            if (error instanceof Error && error.name == "AbortError") {
+                return;
+            }
+
+            throw error;
+        }
     }
 
     private async onFilterUpdate(): Promise<void> {

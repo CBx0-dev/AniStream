@@ -101,41 +101,46 @@ class HTTPResponse {
     }
 }
 
-export function get(url: string, headers: [string, string][] = []): HTTPResponse {
+export function get(url: string, headers: [string, string][] = [], cancellationToken: AbortSignal | null = null): HTTPResponse {
     return new HTTPResponse(fetch(url, {
         method: "GET",
-        headers: headers
+        headers: headers,
+        signal: cancellationToken
     }));
 }
 
-export function post(url: string, body: RequestInit["body"], headers: [string, string][] = []): HTTPResponse {
+export function post(url: string, body: RequestInit["body"], headers: [string, string][] = [], cancellationToken: AbortSignal | null = null): HTTPResponse {
     return new HTTPResponse(fetch(url, {
         method: "POST",
         body: body,
-        headers: headers
+        headers: headers,
+        signal: cancellationToken
     }));
 }
 
-export function put(url: string, body: RequestInit["body"], headers: [string, string][] = []): HTTPResponse {
+export function put(url: string, body: RequestInit["body"], headers: [string, string][] = [], cancellationToken: AbortSignal | null = null): HTTPResponse {
     return new HTTPResponse(fetch(url, {
         method: "PUT",
         body: body,
-        headers: headers
+        headers: headers,
+        signal: cancellationToken
     }));
 }
 
-export function delete$(url: string, headers: [string, string][] = []): HTTPResponse {
+export function delete$(url: string, headers: [string, string][] = [], cancellationToken: AbortSignal | null = null): HTTPResponse {
     return new HTTPResponse(fetch(url, {
         method: "DELETE",
-        headers: headers
+        headers: headers,
+        signal: cancellationToken
     }));
 }
 
-export async function head(url: string, headers: [string, string][], followRedirect: boolean = true): Promise<Response> {
+export async function head(url: string, headers: [string, string][], followRedirect: boolean = true, cancellationToken: AbortSignal | null = null): Promise<Response> {
     const response: Response = await fetch(url, {
         method: "HEAD",
         headers: headers,
-        redirect: followRedirect ? "follow" : undefined
+        redirect: followRedirect ? "follow" : undefined,
+        signal: cancellationToken
     });
 
     if (!response.ok) {
