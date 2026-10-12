@@ -1,7 +1,7 @@
 import {ServiceKey} from "vue-mvvm";
 
 export type PathParts = Array<string | number>;
-export type QueryTypes = string | number | boolean;
+export type QueryTypes = string | number | boolean | null;
 export type PathParameter = PathParts | RouteBuilder;
 
 export interface RouteBuilder {

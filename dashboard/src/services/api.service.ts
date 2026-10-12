@@ -55,10 +55,14 @@ class ApiServiceImpl implements ApiService {
         }
 
         const base: string = this.buildURL(def.path);
-        const query: string = Object.entries(def.query).map(([key, value]) => Array.isArray(value)
-            ? value.map(value => `${key}=${value}`).join("&")
-            : `${key}=${value}`
-        ).join("&");
+        const query: string = Object.entries(def.query)
+            .filter(([_, value]) => value != null)
+            .map(([key, value]) => Array.isArray(value)
+                ? value
+                    .filter(value => value != null)
+                    .map(value => `${key}=${value}`).join("&")
+                : `${key}=${value}`
+            ).join("&");
 
         return `${base}?${query}`;
     }

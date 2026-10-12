@@ -5,7 +5,7 @@ import {ApiService} from "@contracts/api.service";
 
 import type {ServiceDeclaration} from "@services/shared";
 
-import type {AuditModel} from "@models/audit.model";
+import {type AuditModel, AuditStatus, type Paged} from "@models/audit.model";
 import type {StatsModel} from "@models/stats.model";
 import type {BackendUpdateInformation} from "@models/update.model";
 
@@ -16,10 +16,22 @@ class InformationServiceImpl implements InformationService {
         this.apiService = ctx.getService(ApiService);
     }
 
-    public async getAudits(): Promise<AuditModel[]> {
-        return await this.apiService.get<AuditModel[]>(["api", "information", "audits"]);
+    public async getAudits(page: number, kinds: number, providers: string[], status: AuditStatus | null): Promise<Paged<AuditModel>> {
+        if (page < 1 || Number.isNaN(page)) {
+            throw new Error("Page must be greater than or equal to 1");
+        }
+
+        return await this.apiService.get<Paged<AuditModel>>({
+            path: ["api", "information", "audits"],
+            query: {
+                page,
+                kinds,
+                providers,
+                status
+            }
+        });
     }
-    
+
     public async getBackendUpdateInformation(): Promise<BackendUpdateInformation> {
         return await this.apiService.get<BackendUpdateInformation>(["api", "information", "server"]);
     }

@@ -102,108 +102,186 @@ public sealed class InformationController : ApiControllerBase
     }
 
     [HttpGet("audits")]
-    public async IAsyncEnumerable<AuditModel> GetAudits()
+    public async Task<ActionResult<Paged<AuditModel>>> GetAudits(int page, AuditKind kinds, SyncJobStatus? status, [FromQuery] string[] providers)
     {
+        if (page < 1)
+        {
+            return BadRequest("'page' must be greater equals 1");
+        }
+
         Dictionary<int, Models.SeriesModel?> seriesCache = new Dictionary<int, Models.SeriesModel?>();
         Dictionary<int, Models.SeasonModel?> seasonCache = new Dictionary<int, Models.SeasonModel?>();
         Dictionary<int, Models.EpisodeModel?> episodeCache = new Dictionary<int, Models.EpisodeModel?>();
 
+        List<AuditModel> audits = new List<AuditModel>();
+        int totalRunning = 0;
+        int totalQueued = 0;
+        int totalCompleted = 0;
+        int totalFailed = 0;
+
+        void CountStatus(SyncJobStatus status)
+        {
+            switch (status)
+            {
+                case SyncJobStatus.Queued:
+                    totalQueued++;
+                    return;
+                case SyncJobStatus.Processing:
+                    totalRunning++;
+                    return;
+                case SyncJobStatus.Completed:
+                    totalCompleted++;
+                    return;
+                case SyncJobStatus.Failed:
+                    totalFailed++;
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(status), status, null);
+            }
+        }
 
         foreach (string provider in _providerService.GetProviders())
         {
+            if (providers.Length > 0 && !providers.Contains(provider))
+            {
+                continue;
+            }
+
             _providerService.SetActiveProvider(provider);
 
-            foreach (SyncCatalogJobModel job in await _catalogSyncService.GetSyncJobs())
+            if (kinds.HasFlag(AuditKind.Catalog))
             {
-                yield return new AuditModel
+                foreach (SyncCatalogJobModel job in await _catalogSyncService.GetSyncJobs())
                 {
-                    JobId = job.SyncCatalogJobId,
-                    Kind = AuditKind.Catalog,
-                    JobName = "Syncing catalog",
-                    Provider = provider,
-                    Status = job.Status,
-                    StartedAt = job.Started,
-                    FinishedAt = job.Completed,
-                    Error = job.Error,
-                    Expires = null
-                };
+                    CountStatus(job.Status);
+                    audits.Add(new AuditModel
+                    {
+                        JobId = job.SyncCatalogJobId,
+                        Kind = AuditKind.Catalog,
+                        JobName = "Syncing catalog",
+                        Provider = provider,
+                        Status = job.Status,
+                        StartedAt = job.Started,
+                        FinishedAt = job.Completed,
+                        Error = job.Error,
+                        Expires = null
+                    });
+                }
             }
 
-            foreach (SyncSeriesJobModel job in await _seriesSyncService.GetSyncJobs())
+            if (kinds.HasFlag(AuditKind.Series))
             {
-                if (!seriesCache.TryGetValue(job.SeriesId, out Models.SeriesModel? series))
+                foreach (SyncSeriesJobModel job in await _seriesSyncService.GetSyncJobs())
                 {
-                    series = await _seriesService.GetSeries(job.SeriesId);
-                    seriesCache[job.SeriesId] = series;
-                }
+                    if (!seriesCache.TryGetValue(job.SeriesId, out Models.SeriesModel? series))
+                    {
+                        series = await _seriesService.GetSeries(job.SeriesId);
+                        seriesCache[job.SeriesId] = series;
+                    }
 
-                if (series is null)
-                {
-                    continue;
-                }
+                    if (series is null)
+                    {
+                        continue;
+                    }
 
-                yield return new AuditModel
-                {
-                    JobId = job.SyncSeriesJobId,
-                    Kind = AuditKind.Series,
-                    JobName = $"Syncing series '{series.Title}'",
-                    Provider = provider,
-                    Status = job.Status,
-                    StartedAt = job.Started,
-                    FinishedAt = job.Completed,
-                    Error = job.Error,
-                    Expires = null
-                };
+                    CountStatus(job.Status);
+                    audits.Add(new AuditModel
+                    {
+                        JobId = job.SyncSeriesJobId,
+                        Kind = AuditKind.Series,
+                        JobName = $"Syncing series '{series.Title}'",
+                        Provider = provider,
+                        Status = job.Status,
+                        StartedAt = job.Started,
+                        FinishedAt = job.Completed,
+                        Error = job.Error,
+                        Expires = null
+                    });
+                }
             }
 
-            foreach (SyncProviderJobModel job in await _providerSyncService.GetSyncJobs())
+            if (kinds.HasFlag(AuditKind.Provider))
             {
-                if (!episodeCache.TryGetValue(job.EpisodeId, out Models.EpisodeModel? episode))
+                foreach (SyncProviderJobModel job in await _providerSyncService.GetSyncJobs())
                 {
-                    episode = await _episodeService.GetEpisode(job.EpisodeId);
-                    episodeCache[job.EpisodeId] = episode;
-                }
+                    if (!episodeCache.TryGetValue(job.EpisodeId, out Models.EpisodeModel? episode))
+                    {
+                        episode = await _episodeService.GetEpisode(job.EpisodeId);
+                        episodeCache[job.EpisodeId] = episode;
+                    }
 
-                if (episode is null)
-                {
-                    continue;
-                }
+                    if (episode is null)
+                    {
+                        continue;
+                    }
 
-                if (!seasonCache.TryGetValue(episode.SeasonId, out Models.SeasonModel? season))
-                {
-                    season = await _seasonService.GetSeason(episode.SeasonId);
-                    seasonCache[episode.SeasonId] = season;
-                }
+                    if (!seasonCache.TryGetValue(episode.SeasonId, out Models.SeasonModel? season))
+                    {
+                        season = await _seasonService.GetSeason(episode.SeasonId);
+                        seasonCache[episode.SeasonId] = season;
+                    }
 
-                if (season is null)
-                {
-                    continue;
-                }
+                    if (season is null)
+                    {
+                        continue;
+                    }
 
-                if (seriesCache.TryGetValue(season.SeriesId, out Models.SeriesModel? series))
-                {
-                    series = await _seriesService.GetSeries(season.SeriesId);
-                    seriesCache[season.SeriesId] = series;
-                }
+                    if (seriesCache.TryGetValue(season.SeriesId, out Models.SeriesModel? series))
+                    {
+                        series = await _seriesService.GetSeries(season.SeriesId);
+                        seriesCache[season.SeriesId] = series;
+                    }
 
-                if (series is null)
-                {
-                    continue;
-                }
+                    if (series is null)
+                    {
+                        continue;
+                    }
 
-                yield return new AuditModel
-                {
-                    JobId = job.SyncProviderJobId,
-                    Kind = AuditKind.Provider,
-                    JobName = $"Syncing providers '{series.Title}' S{season.SeasonNumber}E{episode.EpisodeNumber}",
-                    Provider = provider,
-                    Status = job.Status,
-                    StartedAt = job.Started,
-                    FinishedAt = job.Completed,
-                    Error = job.Error,
-                    Expires = job.Expires
-                };
+                    CountStatus(job.Status);
+                    audits.Add(new AuditModel
+                    {
+                        JobId = job.SyncProviderJobId,
+                        Kind = AuditKind.Provider,
+                        JobName = $"Syncing providers '{series.Title}' S{season.SeasonNumber}E{episode.EpisodeNumber}",
+                        Provider = provider,
+                        Status = job.Status,
+                        StartedAt = job.Started,
+                        FinishedAt = job.Completed,
+                        Error = job.Error,
+                        Expires = job.Expires
+                    });
+                }
             }
         }
+
+        audits.Sort((a, b) => a.StartedAt > b.StartedAt
+            ? -1
+            : 1
+        );
+
+        IEnumerable<AuditModel> filterPipeline = audits;
+        if (status is not null)
+        {
+            filterPipeline = filterPipeline.Where(audit => audit.Status == status);
+        }
+
+        List<AuditModel> filtered = filterPipeline.ToList();
+
+        int count = Math.Min(filtered.Count - (page - 1) * 15, 15);
+
+        return Ok(new Paged<AuditModel>
+        {
+            Items = filtered.GetRange((page - 1) * 15, count).ToArray(),
+            Count = count,
+            Start = page,
+            Total = new TotalInformation
+            {
+                Items = filtered.Count,
+                Running = totalRunning,
+                Queued = totalQueued,
+                Completed = totalCompleted,
+                Failed = totalFailed
+            }
+        });
     }
 }

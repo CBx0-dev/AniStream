@@ -2,55 +2,27 @@ import {UserControl} from "vue-mvvm";
 
 import {InformationService} from "@contracts//information.service";
 
-import {AuditKind, type AuditModel, AuditStatus} from "@models/audit.model";
+import {AuditKind, type AuditModel, AuditStatus, type Paged} from "@models/audit.model";
 
 export class AuditPanelModel extends UserControl {
     private readonly informationService: InformationService;
 
-    private items: AuditModel[] = this.ref([]);
-
-    public readonly pageSize: number = 15;
-
-    public search: string = this.ref("");
+    public items: AuditModel[] = this.ref([]);
     public statusFilter: AuditStatus | -1 = this.ref(-1);
     public refreshing: boolean = this.ref(false);
-    public kindFilter: AuditKind | -1 = this.ref(-1);
-
+    public kindFilter: AuditKind = this.ref(AuditKind.All);
     public page: number = this.ref(1);
+    public total: number = this.ref(0);
+    public queued: number = this.ref(0);
+    public running: number = this.ref(0);
+    public completed: number = this.ref(0);
+    public failed: number = this.ref(0);
+    public providers: string[] = this.ref([]);
 
-    public readonly total: number = this.computed(() => this.items.length);
-    public readonly queued: number = this.computed(() => this.items.filter(item => item.status == AuditStatus.Queued).length);
-    public readonly running: number = this.computed(() => this.items.filter(item => item.status == AuditStatus.Processing).length);
-    public readonly completed: number = this.computed(() => this.items.filter(item => item.status == AuditStatus.Completed).length);
-    public readonly failed: number = this.computed(() => this.items.filter(item => item.status == AuditStatus.Failed).length);
-
-    public readonly pageCount: number = this.computed(() => Math.max(1, Math.ceil(this.filtered.length / this.pageSize)));
-    public readonly filtered: AuditModel[] = this.computed<AuditModel[]>(() => {
-        const term: string = this.search.trim().toLowerCase();
-
-        return this.items.filter(item => {
-            if (this.kindFilter != -1 && item.kind != this.kindFilter) {
-                return false;
-            }
-
-            if (this.statusFilter != -1 && item.status != this.statusFilter) {
-                return false;
-            }
-
-            if (term.length > 0) {
-                return item.job_name.toLowerCase().includes(term) || String(item.job_id).includes(term);
-            }
-
-            return true;
-        });
-    });
-    public readonly paged: AuditModel[] = this.computed(() => {
-        const start: number = (this.page - 1) * this.pageSize;
-        return this.filtered.slice(start, start + this.pageSize);
-    });
+    public readonly pageCount: number = this.computed(() => Math.max(1, Math.ceil(this.total / 15)));
     public readonly pagerItems: Array<number | "..."> = this.computed(() => this.calcPaginationRange());
-    public readonly rangeStart: number = this.computed<number>(() => (this.filtered.length == 0 ? 0 : (this.page - 1) * this.pageSize + 1));
-    public readonly rangeEnd: number = this.computed<number>(() => Math.min(this.page * this.pageSize, this.filtered.length));
+    public readonly rangeStart: number = this.computed<number>(() => (this.items.length == 0 ? 1 : (this.page - 1) * 15 + 1));
+    public readonly rangeEnd: number = this.computed<number>(() => (this.page - 1) * 15 + this.items.length);
     public readonly isEmpty: boolean = this.computed(() => this.items.length == 0);
 
     public constructor() {
@@ -58,13 +30,33 @@ export class AuditPanelModel extends UserControl {
 
         this.informationService = this.ctx.getService(InformationService);
 
-        this.watch(() => this.search, () => this.page = 1);
-        this.watch(() => this.kindFilter, () => this.page = 1);
-        this.watch(() => this.statusFilter, () => this.page = 1);
+        this.watch(() => this.kindFilter, async () => {
+            this.page = 1;
+            await this.onRefreshBtn();
+        });
+        this.watch(() => this.providers, async () => {
+            this.page = 1;
+            await this.onRefreshBtn();
+        }, {deep: 1});
+        this.watch(() => this.statusFilter, async () => {
+            this.page = 1;
+            await this.onRefreshBtn();
+        });
+        this.watch(() => this.page, this.onRefreshBtn.bind(this));
     }
 
     protected async mounted(): Promise<void> {
         await this.onRefreshBtn();
+    }
+
+    public toggleProvider(provider: string): void {
+        const idx: number = this.providers.indexOf(provider);
+        if (idx < 0) {
+            this.providers.push(provider);
+            return;
+        }
+
+        this.providers.splice(idx, 1);
     }
 
     public onPageBtn(page: number): void {
@@ -94,8 +86,21 @@ export class AuditPanelModel extends UserControl {
 
         this.refreshing = true;
 
-        const items: AuditModel[] = await this.informationService.getAudits();
-        this.items = items.sort((a, b) => !b.started_at ? -1 : a.started_at > b.started_at ? -1 : 1);
+        const statusFilter: AuditStatus | null = this.statusFilter == -1 ? null : this.statusFilter;
+
+        const page: Paged<AuditModel> = await this.informationService.getAudits(
+            this.page,
+            this.kindFilter,
+            this.providers,
+            statusFilter
+        );
+
+        this.total = page.total.items;
+        this.queued = page.total.queued;
+        this.running = page.total.running;
+        this.completed = page.total.completed;
+        this.failed = page.total.failed;
+        this.items = page.items;
 
         this.refreshing = false;
     }

@@ -1,7 +1,8 @@
 export enum AuditKind {
-    Catalog,
-    Series,
-    Provider
+    Catalog = 1,
+    Series = 2,
+    Provider = 4,
+    All = AuditKind.Catalog | AuditKind.Series | AuditKind.Provider
 }
 
 export enum AuditStatus {
@@ -9,6 +10,19 @@ export enum AuditStatus {
     Processing,
     Completed,
     Failed
+}
+
+export interface Paged<T> {
+    items: T[];
+    start: number;
+    count: number;
+    total: {
+        items: number;
+        running: number;
+        queued: number;
+        completed: number;
+        failed: number;
+    };
 }
 
 export interface AuditModel {

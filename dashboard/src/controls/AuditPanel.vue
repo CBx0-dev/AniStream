@@ -45,19 +45,11 @@ const vm: AuditPanelModel = useUserControl(AuditPanelModel);
         </div>
 
         <div class="flex flex-wrap items-center gap-3 p-4">
-            <label class="input input-sm input-bordered flex items-center gap-2 w-full sm:w-72">
-                <LucideSearch class="size-4 opacity-60"/>
-                <input v-model="vm.search"
-                       type="search"
-                       class="grow"
-                       placeholder="Search..."/>
-            </label>
-
             <div role="tablist" class="tabs tabs-box tabs-sm bg-base-200 p-1">
                 <a role="tab"
                    class="tab"
-                   :class="{'tab-active': vm.kindFilter == -1}"
-                   @click="vm.kindFilter = -1">
+                   :class="{'tab-active': vm.kindFilter == AuditKind.All}"
+                   @click="vm.kindFilter = AuditKind.All">
                     All
                 </a>
                 <a role="tab"
@@ -80,6 +72,21 @@ const vm: AuditPanelModel = useUserControl(AuditPanelModel);
                 </a>
             </div>
 
+            <div role="tablist" class="tabs tabs-box tabs-sm bg-base-200 p-1">
+                <a role="tab"
+                   class="tab"
+                   :class="{'tab-active': vm.providers.includes('sto')}"
+                   @click="vm.toggleProvider('sto')">
+                    S.TO
+                </a>
+                <a role="tab"
+                   class="tab"
+                   :class="{'tab-active': vm.providers.includes('aniworld')}"
+                   @click="vm.toggleProvider('aniworld')">
+                    Aniworld
+                </a>
+            </div>
+
             <select v-model="vm.statusFilter" class="select select-sm select-bordered">
                 <option :value="-1">All statuses</option>
                 <option :value="AuditStatus.Queued">Queued</option>
@@ -89,7 +96,7 @@ const vm: AuditPanelModel = useUserControl(AuditPanelModel);
             </select>
 
             <div class="flex-1"></div>
-            <span class="text-sm text-base-content/50">{{ vm.filtered.length }} shown</span>
+            <span class="text-sm text-base-content/50">{{ vm.items.length }} shown</span>
         </div>
 
         <div class="overflow-x-auto">
@@ -106,18 +113,18 @@ const vm: AuditPanelModel = useUserControl(AuditPanelModel);
                 </tr>
                 </thead>
                 <tbody>
-                <AuditPanelRow v-for="item of vm.paged"
+                <AuditPanelRow v-for="item of vm.items"
                                :key="`${item.kind}-${item.provider}-${item.job_id}-${item.status}`"
                                :model="item"/>
                 <tr v-if="vm.isEmpty">
                     <td colspan="7">
                         <div class="flex flex-col items-center gap-2 py-12 text-base-content/50">
-                            <LucidePackageOpen class="size-8 opacity-40" />
+                            <LucidePackageOpen class="size-8 opacity-40"/>
                             <p>No jobs found</p>
                         </div>
                     </td>
                 </tr>
-                <tr v-else-if="vm.filtered.length == 0">
+                <tr v-else-if="vm.items.length == 0">
                     <td colspan="7">
                         <div class="flex flex-col items-center gap-2 py-12 text-base-content/50">
                             <LucideSearch class="size-8 opacity-40"/>
@@ -129,10 +136,10 @@ const vm: AuditPanelModel = useUserControl(AuditPanelModel);
             </table>
         </div>
 
-        <div v-if="vm.filtered.length > 0"
+        <div v-if="vm.items.length > 0"
              class="flex flex-wrap items-center gap-3 p-4 border-t border-base-300">
             <span class="text-sm text-base-content/50">
-                Showing {{ vm.rangeStart }} - {{ vm.rangeEnd }} of {{ vm.filtered.length }}
+                Showing {{ vm.rangeStart }} - {{ vm.rangeEnd }} of {{ vm.total }}
             </span>
             <div class="flex-1"></div>
             <div class="join">
@@ -149,7 +156,7 @@ const vm: AuditPanelModel = useUserControl(AuditPanelModel);
                 <template v-for="(p, idx) in vm.pagerItems" :key="idx">
                     <button v-if="typeof p == 'string'"
                             class="join-item btn btn-sm pointer-events-none">
-                        <LucideEllipsis />
+                        <LucideEllipsis/>
                     </button>
                     <button v-else
                             class="join-item btn btn-sm"
