@@ -39,6 +39,10 @@
     "other": {
         "syncCatalog": "Automatically sync the catalog on startup"
     },
+    "actions": {
+        "delete": "Delete Profile",
+        "logout": "Logout"
+    },
     "alert": {
         "title": "Delete profile",
         "description": "Are you sure you want to delete your profile? All progress and profile-related data cannot be recovered."

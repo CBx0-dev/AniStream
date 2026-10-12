@@ -8,6 +8,7 @@ import Text from "@controls/Text.vue";
 
 import LucideEdit from "@icons/LucideEdit.vue";
 import LucideTrash from "@icons/LucideTrash.vue";
+import LucideLogOut from "@icons/LucideLogOut.vue";
 
 import * as AppEnv from "@AppEnv";
 
@@ -210,10 +211,14 @@ const vm: PrefControlModel = useUserControl(PrefControlModel);
 
         <div class="divider"></div>
 
-        <section class="grid grid-cols-[minmax(18rem,37rem)] justify-center gap-5">
-            <button class="btn btn-error btn-soft w-fit ml-auto" @click="vm.onProfileDeleteBtn()">
+        <section class="flex justify-end gap-5">
+            <button class="btn btn-error btn-soft w-fit" @click="vm.onProfileDeleteBtn()">
                 <LucideTrash/>
-                Delete Profile
+                <Text :target="I18n.PrefControl.actions.delete"/>
+            </button>
+            <button class="btn btn-error btn-soft w-fit" @click="vm.onProfileLogoutBtn()">
+                <LucideLogOut/>
+                <Text :target="I18n.PrefControl.actions.logout"/>
             </button>
         </section>
     </div>

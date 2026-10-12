@@ -153,4 +153,10 @@ export class PrefControlModel extends UserControl {
 
         await this.routerService.replaceTo(ProfileViewModel);
     }
+
+    public async onProfileLogoutBtn(): Promise<void> {
+        await this.userService.logout();
+        this.settingsService.serverUrl = "";
+        await this.routerService.replaceTo(ProfileViewModel);
+    }
 }

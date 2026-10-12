@@ -39,6 +39,10 @@
     "other": {
         "syncCatalog": "Den Katalog beim Start automatisch synchronisieren"
     },
+    "actions": {
+        "delete": "Profile löschen",
+        "logout": "Abmelden"
+    },
     "alert": {
         "title": "Profile löschen",
         "description": "Wollen Sie wirklich ihr Profile löschen? Ihr Watch-Fortschritt kann nicht wiederhergestellt werden."
