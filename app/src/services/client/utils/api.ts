@@ -11,19 +11,19 @@ export class ApiServiceBase {
         // this.settingsService = ctx.getService(SettingsService);
     }
 
-    protected async get<Response extends object>(def: PathParameter): Promise<Response> {
-        return this.apiService.get<Response>(def);
+    protected async get<Response extends object>(def: PathParameter, cancellationToken: AbortSignal | null = null): Promise<Response> {
+        return this.apiService.get<Response>(def, cancellationToken);
     }
 
-    protected async post<Response extends object, Body extends object | string | null>(def: PathParameter, body: Body): Promise<Response> {
-        return this.apiService.post<Response, Body>(def, body);
+    protected async post<Response extends object, Body extends object | string | null>(def: PathParameter, body: Body, cancellationToken: AbortSignal | null = null): Promise<Response> {
+        return this.apiService.post<Response, Body>(def, body, cancellationToken);
     }
 
-    protected async put<Response extends object, Body extends object | string>(def: PathParameter, body: Body): Promise<Response> {
-        return this.apiService.put<Response, Body>(def, body);
+    protected async put<Response extends object, Body extends object | string>(def: PathParameter, body: Body, cancellationToken: AbortSignal | null = null): Promise<Response> {
+        return this.apiService.put<Response, Body>(def, body, cancellationToken);
     }
 
-    protected async delete<Response extends object>(def: PathParameter): Promise<Response> {
-        return this.apiService.delete<Response>(def);
+    protected async delete<Response extends object>(def: PathParameter, cancellationToken: AbortSignal | null = null): Promise<Response> {
+        return this.apiService.delete<Response>(def, cancellationToken);
     }
 }

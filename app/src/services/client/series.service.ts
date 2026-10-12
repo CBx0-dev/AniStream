@@ -23,12 +23,16 @@ interface SeriesFilterModel {
 }
 
 class SeriesServiceImpl extends ApiServiceBase implements SeriesService {
+    private searchCancellationToken: AbortController | null;
+
     private readonly providerService: ProviderService;
 
     public constructor(ctx: ReadableGlobalContext) {
         super(ctx);
 
         this.providerService = ctx.getService(ProviderService);
+
+        this.searchCancellationToken = null;
     }
 
     public async requiresSync(): Promise<boolean> {
@@ -95,12 +99,19 @@ class SeriesServiceImpl extends ApiServiceBase implements SeriesService {
     public async getFilteredSeriesChunk(offset: number, limit: number, searchText: string, genresIds: number[]): Promise<SeriesModel[]> {
         const provider: DefaultProvider = await this.providerService.getProvider();
 
+        if (this.searchCancellationToken) {
+            this.searchCancellationToken.abort();
+            this.searchCancellationToken = null;
+        }
+
+        this.searchCancellationToken = new AbortController();
+
         const series: SeriesDbModel[] = await this.post<SeriesDbModel[], SeriesFilterModel>(["api", provider.uniqueKey, "series", "chunk"], {
             offset: offset,
             limit: limit,
             genre_ids: genresIds.length > 0 ? genresIds : null,
             search_text: searchText
-        });
+        }, this.searchCancellationToken.signal);
 
         return series.map(series => SeriesModel(
             series.series_id,
