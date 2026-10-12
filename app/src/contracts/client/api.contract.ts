@@ -10,13 +10,13 @@ export interface RouteBuilder {
 }
 
 export interface ApiService {
-    get<Response extends object>(def: PathParameter): Promise<Response>;
+    get<Response extends object>(def: PathParameter, cancellationToken?: AbortSignal | null): Promise<Response>;
 
-    post<Response extends object, Body extends object | string | null>(def: PathParameter, body: Body): Promise<Response>;
+    post<Response extends object, Body extends object | string | null>(def: PathParameter, body: Body, cancellationToken?: AbortSignal | null): Promise<Response>;
 
-    put<Response extends object, Body extends object | string>(def: PathParameter, body: Body): Promise<Response>;
+    put<Response extends object, Body extends object | string>(def: PathParameter, body: Body, cancellationToken?: AbortSignal | null): Promise<Response>;
 
-    delete<Response extends object>(def: PathParameter): Promise<Response>;
+    delete<Response extends object>(def: PathParameter, cancellationToken?: AbortSignal | null): Promise<Response>;
 
     checkApiInformation(url: string): Promise<string | null>;
 }
