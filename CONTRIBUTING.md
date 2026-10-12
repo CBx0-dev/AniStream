@@ -8,6 +8,7 @@ Before you begin, ensure you have the following installed:
 
 - [Node.js](https://nodejs.org/) (Latest LTS recommended)
 - [Rust](https://www.rust-lang.org/tools/install)
+- [C# / .NET 9.0](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 
 ## Getting Started
 
