@@ -12,7 +12,7 @@ function dynamicServiceResolver(applicationTarget: string): PluginOption {
 
     return {
         name: "dynamic-service-resolver",
-        resolveId(source: string): string | null {
+        resolveId(source: string): string | null | undefined {
             if (!source.startsWith("@services/")) {
                 return null;
             }
@@ -106,7 +106,7 @@ function virtualChangelogLoader(applicationTarget: string): PluginOption {
                         import: "default"
                     });
 
-                    export { changelogs };
+                    export {changelogs};
                 `;
             }
 
