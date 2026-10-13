@@ -52,6 +52,6 @@ jobs:
       - name: Deploy to CapRover
         run: |
           caprover deploy \
-            --caproviderUrl "${{ secrets.CAPROVER_URL }}" \
+            --caproverUrl "${{ secrets.CAPROVER_URL }}" \
             --appToken "${{ secrets.CAPROVER_TOKEN }}" \
             --appName "${{ secrets.CAPROVER_APP_NAME }}"
