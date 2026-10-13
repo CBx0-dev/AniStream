@@ -1,5 +1,7 @@
 # AniStream
 
+[Website](https://anistream.cbx0.dev/) &#8211; [Documentation](https://anistream.cbx0.dev/docs)
+
 Desktop stream host for AniWorld.to and S.TO
 
 ![Provider](./README/Provider.png)
