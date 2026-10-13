@@ -54,4 +54,5 @@ jobs:
           caprover deploy \
             --caproverUrl "${{ secrets.CAPROVER_URL }}" \
             --appToken "${{ secrets.CAPROVER_TOKEN }}" \
-            --appName "${{ secrets.CAPROVER_APP_NAME }}"
+            --appName "${{ secrets.CAPROVER_APP_NAME }}" \
+            --imageName ghcr.io/cbx0-dev/anistream-docs:latest
