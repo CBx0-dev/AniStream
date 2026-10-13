@@ -1,0 +1,32 @@
+---
+title: "Upgrading: Docker Compose"
+description: Upgrade the AniStream server stack using Docker Compose.
+---
+
+Follow these steps to update your Docker Compose deployment to the latest AniStream server version.
+
+<Steps>
+  <Step>
+    **Pull Latest Images**:
+    Download the latest API and Worker container images from GitHub Container Registry:
+    ```bash
+    docker compose pull
+    ```
+  </Step>
+  <Step>
+    **Recreate & Restart Containers**:
+    Apply the updated container images with zero downtime:
+    ```bash
+    docker compose up -d
+    ```
+  </Step>
+  <Step>
+    **Inspect Startup Logs**:
+    Confirm that the API and background worker started cleanly:
+    ```bash
+    docker compose logs -f
+    ```
+  </Step>
+</Steps>
+
+When the updated containers start, AniStream inspects and updates the database schema automatically.

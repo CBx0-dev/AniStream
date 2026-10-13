@@ -64,10 +64,10 @@ jobs:
           echo "Changelog found: $CHANGELOG"
 
       - name: Validate client versions
-        if: ${{ inputs.type == 'client' }}
+        if: ${{ inputs.type == 'server' }}
         run: |
           if [ -z "${{ inputs.client_min_version }}" ] || [ -z "${{ inputs.client_max_version }}" ]; then
-            echo "Error: 'client_min_version' and 'client_max_version' are required when building client"
+            echo "Error: 'client_min_version' and 'client_max_version' are required when building server"
             exit 1
           fi
 

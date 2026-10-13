@@ -1,0 +1,47 @@
+---
+title: Release Channels & Versioning
+description: Explanation of release channels, version tags, artifacts, and changelogs.
+---
+
+AniStream publishes separate releases for its standalone app, client app, and server container images so each component can update independently.
+
+---
+
+## Release Channels Matrix
+
+| Channel        | Release Tag Format       | Published Artifacts                                                                                                 |
+|:---------------|:-------------------------|:--------------------------------------------------------------------------------------------------------------------|
+| **Standalone** | `v${version}-standalone` | Windows (`.exe`, `.msi`), Linux (`.deb`, `.rpm`, `.AppImage`), macOS (`.dmg`)                                       |
+| **Client**     | `v${version}-client`     | Windows (`.exe`, `.msi`), Linux (`.deb`, `.rpm`, `.AppImage`), macOS (`.dmg`)                                       |
+| **Server**     | `v${version}-server`     | Docker container images on GitHub Container Registry: `ghcr.io/cbx0/anistream-api`, `ghcr.io/cbx0/anistream-worker` |
+
+---
+
+## Semantic Versioning
+
+All AniStream components follow [Semantic Versioning](https://semver.org/) (`MAJOR.MINOR.PATCH`):
+
+- **Major Version (`X.0.0`)**: Breaking architectural changes or substantial user interface overhauls.
+- **Minor Version (`1.X.0`)**: New streaming providers, enhanced playback controls, or new user management features.
+- **Patch Version (`1.0.X`)**: Bug fixes, stream scraper adjustments, security updates, and translation improvements.
+
+---
+
+## Changelogs
+
+When a new version is released:
+- Standalone and Client apps display the newest changelog directly in the app.
+- Full release notes and release binaries are published on the [AniStream GitHub Releases](https://github.com/cbx0/AniStream/releases) page.
+
+---
+
+## Next Steps
+
+<Cards>
+  <Card icon={<LucidePcCase />} title="Standalone App" href="/docs/standalone/install">
+    Install or update the standalone desktop application.
+  </Card>
+  <Card icon={<LucideCloud />} title="Server Setup Guide" href="/docs/client/setup-intro">
+    Deploy and configure the self-hosted backend stack.
+  </Card>
+</Cards>

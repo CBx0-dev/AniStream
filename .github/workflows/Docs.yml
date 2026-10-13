@@ -1,0 +1,57 @@
+name: Deploy Docs
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - docs/
+      - docs.Dockerfile
+  workflow_dispatch: 
+    
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Node.js
+        if: ${{ inputs.type == 'standalone' || inputs.type == 'client' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install CapRover CLI
+        run: npm install -g caprover
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push ${{ matrix.name }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docs.Dockerfile
+          push: true
+          tags: |
+            ghcr.io/cbx0-dev/anistream-docs:latest
+          cache-from: type=gha,scope=docs
+          cache-to: type=gha,mode=max,scope=docs
+          
+      - name: Deploy to CapRover
+        run: |
+          caprover deploy \
+            --caproviderUrl "${{ secrets.CAPROVER_URL }}" \
+            --appToken "${{ secrets.CAPROVER_TOKEN }}" \
+            --appName "${{ secrets.CAPROVER_APP_NAME }}"

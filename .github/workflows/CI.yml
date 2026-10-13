@@ -95,3 +95,26 @@ jobs:
         run: |
           cd dashboard
           npm run build
+  
+  docs_build:
+    name: Test Docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: 'dashboard/package-lock.json'
+
+      - name: Install dependencies
+        run: |
+          cd dashboard
+          npm ci
+
+      - name: Build Docs
+        run: |
+          cd dashboard
+          npm run build

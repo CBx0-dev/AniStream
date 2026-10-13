@@ -1,0 +1,10 @@
+{
+  "title": "AniStream Documentation",
+  "pages": [
+    "index",
+    "comparison",
+    "standalone",
+    "client",
+    "reference"
+  ]
+}

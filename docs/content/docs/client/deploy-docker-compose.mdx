@@ -1,0 +1,130 @@
+---
+title: "Host Platform: Docker Compose"
+description: Deploy the AniStream API and Worker stack using Docker Compose.
+---
+
+Deploying with **Docker Compose** is the recommended method for running AniStream on home servers, NAS devices, or cloud VPS instances.
+
+## Prerequisites
+
+- [Docker Engine](https://docs.docker.com/engine/install/) (v24.0 or higher)
+- [Docker Compose](https://docs.docker.com/compose/) (v2.20 or higher)
+
+---
+
+## 1. Create Compose Configuration
+
+Create a dedicated directory on your server (e.g., `~/anistream`) and add the following `docker-compose.yml` file:
+
+```yaml title="docker-compose.yml"
+services:
+  api:
+    image: ghcr.io/cbx0-dev/anistream-worker:latest
+    pull_policy: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - assets:/data/assets
+    environment:
+      SIDECAR_PATH: /app/sidecar
+      ASSETS_PATH: /data/assets
+      DATABASE_MIGRATION_PATH: /app/migration
+      DATABASE_DRIVER: ${DATABASE_DRIVER}
+      DATABASE_METADATA_CONNECTION_STRING: ${DATABASE_METADATA_CONNECTION_STRING}
+      DATABASE_PROFILE_CONNECTION_STRING: ${DATABASE_PROFILE_CONNECTION_STRING}
+    restart: unless-stopped
+
+  worker:
+    image: ghcr.io/cbx0-dev/anistream-worker:latest
+    pull_policy: always
+    volumes:
+      - assets:/data/assets
+    environment:
+      SIDECAR_PATH: /app/sidecar
+      ASSETS_PATH: /data/assets
+      DATABASE_MIGRATION_PATH: /app/migration
+      DATABASE_DRIVER: ${DATABASE_DRIVER}
+      DATABASE_METADATA_CONNECTION_STRING: ${DATABASE_METADATA_CONNECTION_STRING}
+      DATABASE_PROFILE_CONNECTION_STRING: ${DATABASE_PROFILE_CONNECTION_STRING}
+    restart: unless-stopped
+
+volumes:
+  assets:
+```
+
+---
+
+## 2. Choose Storage Engine & Configure Environment (`.env`)
+
+In the same directory, create a `.env` file with the template below
+
+```bash title=".env"
+DATABASE_DRIVER=
+DATABASE_METADATA_CONNECTION_STRING=
+DATABASE_PROFILE_CONNECTION_STRING=
+```
+
+AniStream requires a database storage engine to persist user profiles, watch progress, and media metadata.
+Select one of the engines and configure the env file according to it:
+
+<Cards>
+  <Card icon={<DeviconSqlite />} title="Storage Engine Guide: SQLite" href="/docs/client/storage-sqlite">
+    Learn about SQLite architecture, persistent paths, and connection string variables.
+  </Card>
+</Cards>
+
+---
+
+## 3. Start the Stack
+
+<Steps>
+  <Step>
+    **Launch containers in detached mode:**
+    ```bash
+    docker compose up -d
+    ```
+  </Step>
+  <Step>
+    **Verify running state:**
+    ```bash
+    docker compose ps
+    ```
+    You should see both `anistream-api` and `anistream-worker` reported as healthy/running.
+  </Step>
+  <Step>
+    **Inspect logs (optional):**
+    ```bash
+    docker compose logs -f
+    ```
+  </Step>
+</Steps>
+
+---
+
+## 4. Reverse Proxy & Domain Setup
+
+<Callout type="warn">
+    It is **required** to setup an SSL certificate so that the updater of the clients accept the update-manifests.
+    
+    Using no SSL certificate is possible, but will break the functionality of the client updater
+</Callout>
+
+If you plan to access your server over the internet, configure a reverse proxy such as Caddy or Nginx with an SSL certificate:
+
+```nginx title="Caddyfile"
+anistream.yourdomain.com {
+    reverse_proxy localhost:8080
+}
+```
+
+---
+
+## Next Step: Setup Outro & Connect Clients
+
+Now that your server is running, proceed to the Outro to access the web dashboard and connect your desktop clients.
+
+<Cards>
+  <Card title="Connect Client" href="/docs/client/setup-outro">
+    Log in to the web dashboard, configure administrator credentials, and connect desktop clients.
+  </Card>
+</Cards>

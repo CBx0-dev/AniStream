@@ -1,0 +1,22 @@
+/*
+ * This file was generated with the UNOFFICIAL Iconify CLI v1.3.0
+ * 
+ * Icon: lucide:refresh-cw
+ * Collection: Lucide
+ * License: ISC (ISC)
+ * Version: N/A
+ * Author: Lucide Contributors (https://github.com/lucide-icons/lucide)
+ * Downloaded: 2026-10-13T10:22:41.088Z
+ */
+
+export function LucideRefreshCw() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+            <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+                <path d="M3 12a9 9 0 0 1 9-9a9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                <path d="M21 3v5h-5m5 4a9 9 0 0 1-9 9a9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                <path d="M8 16H3v5"/>
+            </g>
+        </svg>
+    );
+}

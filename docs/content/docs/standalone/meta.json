@@ -1,0 +1,8 @@
+{
+  "title": "Standalone",
+  "collapsible": false,
+  "pages": [
+    "install",
+    "upgrade"
+  ]
+}

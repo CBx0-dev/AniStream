@@ -1,0 +1,127 @@
+---
+title: Installation
+description: Download and install the standalone, local-only AniStream desktop application.
+---
+
+The **Standalone** build of AniStream runs locally on your computer with zero server setup or backend configuration required. All media catalogs, watch progress, and settings are saved directly to your local drive.
+
+<Callout type="info">
+    Your local database files and assets will require at least **1 GB** of storage volume and will increase by time
+</Callout>
+
+
+---
+
+## 1. Download Installers
+
+Download the latest standalone package for your operating system from the [AniStream GitHub Releases](https://github.com/cbx0/AniStream/releases) page (look for tags ending in `-standalone`, e.g., `v1.3.0-standalone`).
+
+<Tabs items={['Windows', 'Linux', 'macOS']}>
+  <Tab value="Windows">
+    ### Windows Installation [!toc]
+
+    **Available Packages:**
+    - `AniStream_${version}_x64-setup.exe` (Standard installer)
+    - `AniStream_${version}_x64_en-US.msi` (MSI Package)
+
+    <Steps>
+      <Step>
+        Download the `.exe` or `.msi` setup file.
+      </Step>
+      <Step>
+        Run the installer and follow the setup prompts.
+      </Step>
+      <Step>
+        Launch **AniStream** from your Start Menu or Desktop shortcut.
+      </Step>
+    </Steps>
+
+    <Callout type="info">
+      If Windows SmartScreen displays a blue protection warning on first launch, click **More info** and select **Run anyway**.
+    </Callout>
+  </Tab>
+
+  <Tab value="Linux">
+    ### Linux Installation [!toc]
+
+    **Available Packages:**
+    - `.deb` (Debian, Ubuntu, Linux Mint, Pop!_OS)
+    - `.rpm` (Fedora, RHEL, openSUSE)
+    - `.AppImage` (Universal portable binary)
+
+    <Steps>
+      <Step>
+        **Debian / Ubuntu (.deb):**
+        ```bash
+        sudo dpkg -i anistream_${version}_amd64.deb
+        # or
+        sudo apt install ./anistream_${version}_amd64.deb
+        ```
+      </Step>
+      <Step>
+        **Fedora / RHEL (.rpm):**
+        ```bash
+        sudo dnf install ./anistream-${version}-1.x86_64.rpm
+        ```
+      </Step>
+      <Step>
+        **AppImage (Universal):**
+        ```bash
+        chmod +x AniStream_${version}_amd64.AppImage
+        ./AniStream_${version}_amd64.AppImage
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab value="macOS">
+    ### macOS Installation [!toc]
+
+    **Available Packages:**
+    - `AniStream_${version}_x64.dmg` (Intel Macs)
+    - `AniStream_${version}_aarch64.dmg` (Apple Silicon M1/M2/M3/M4 Macs)
+
+    <Steps>
+      <Step>
+        Download the `.dmg` matching your processor architecture.
+      </Step>
+      <Step>
+        Open the `.dmg` disk image and drag **AniStream.app** into your `/Applications` folder.
+      </Step>
+      <Step>
+        **Gatekeeper Bypass (First Launch)**:
+
+        If macOS displays a warning that the app cannot be opened because it is from an unidentified developer, open **Terminal** and run:
+        ```bash
+        xattr -cr /Applications/AniStream.app
+        ```
+        After running this command, launch AniStream normally from Launchpad or Finder.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+---
+
+## 2. Local Data & Storage
+
+Your watch progress, watchlists, and cached catalogs are stored locally on your device:
+
+| Operating System | Data Storage Directory |
+| :--- | :--- |
+| **Windows** | `%APPDATA%\dev.cbx0.anistream\` |
+| **Linux** | `~/.local/share/dev.cbx0.anistream/` |
+| **macOS** | `~/Library/Application Support/dev.cbx0.anistream/` |
+
+---
+
+## Next Steps
+
+<Cards>
+  <Card title="Upgrading Standalone" href="/docs/standalone/upgrade">
+    Learn how in-app automatic updates and manual upgrades work.
+  </Card>
+  <Card title="Data Backup & Restore" href="/docs/reference/data-locations">
+    Learn how to back up and restore your watch history and settings.
+  </Card>
+</Cards>

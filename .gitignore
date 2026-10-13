@@ -28,3 +28,16 @@ obj
 tmp
 
 app/src/utils/i18n.ts
+
+# Documentation & Next.js build
+.source
+coverage
+.next
+out
+build
+*.tsbuildinfo
+*.pem
+.pnp
+.pnp.js
+.vercel
+next-env.d.ts

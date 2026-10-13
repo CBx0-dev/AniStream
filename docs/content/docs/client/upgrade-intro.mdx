@@ -1,0 +1,41 @@
+---
+title: "Server Upgrade: Introduction"
+description: Overview of the upgrade process, safety recommendations, and host platforms.
+---
+
+Upgrading your self-hosted **AniStream Server Stack** delivers the latest streaming scrapers, performance enhancements, and new features while preserving all user accounts, watch history, and playlists.
+
+<Callout type="warn">
+    **Downgrading:** Downgrading your Data, once an update was applied to your Database is not possible.
+</Callout>
+
+---
+
+## Upgrade Workflow
+
+Upgrades follow a structured 4-step sequence:
+
+
+<Steps>
+    <Step>
+        Choose running Host Platform (Docker / CapRover)
+    </Step>
+    <Step>
+        Perform update of the host
+    </Step>
+</Steps>
+
+---
+
+## Choose Your Host Platform
+
+Select your hosting platform to follow its upgrade instructions:
+
+<Cards>
+  <Card icon={<DeviconDocker />} title="Docker Compose" href="/docs/client/upgrade-docker-compose">
+    Pull updated container images and restart the Compose stack.
+  </Card>
+  <Card icon={<CapRover />} title="CapRover" href="/docs/client/upgrade-caprover">
+    Update container image tags in the CapRover dashboard.
+  </Card>
+</Cards>

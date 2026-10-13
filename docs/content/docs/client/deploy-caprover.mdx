@@ -1,0 +1,121 @@
+---
+title: "Host Platform: CapRover"
+description: Deploy AniStream on CapRover using the provided one-click template.
+---
+
+[CapRover](https://caprover.com/) is an open-source PaaS that simplifies container management, automated Let's Encrypt SSL certificates, and web reverse proxy routing.
+
+AniStream includes a native CapRover One-Click App template definition.
+
+---
+
+## 1. Deployment Steps
+
+<Steps>
+    <Step>
+        Open CapRover Dashboard navigate to **Apps** &rarr; and click "Create A New App"
+        and then "One-Click Apps/Databases
+    </Step>
+    <Step>
+        Search for `>> TEMPLATE &lt;&lt;` and select it
+    </Step>
+    <Step>
+        Copy the template and paste it into the input field
+        
+        ```yaml title="CapRover Template"
+        captainVersion: 4
+        services:
+          $$cap_appname:
+            image: 'ghcr.io/cbx0-dev/anistream-api:latest'
+            volumes:
+              - $$cap_appname-assets:/data/assets
+            restart: unless-stopped
+            environment:
+              SIDECAR_PATH: /app/sidecar
+              ASSETS_PATH: /data/assets
+              DATABASE_MIGRATION_PATH: /app/migration
+              DATABASE_DRIVER: $$cap_database_driver
+              DATABASE_METADATA_CONNECTION_STRING: $$cap_metadata_connection_string
+              DATABASE_PROFILE_CONNECTION_STRING: $$cap_profile_connection_string
+            caproverExtra:
+              containerHttpPort: '8080'
+        
+          $$cap_appname-worker:
+            depends_on:
+              - $$cap_appname
+            image: 'ghcr.io/cbx0-dev/anistream-worker:latest'
+            volumes:
+              - $$cap_appname-assets:/data/assets
+            restart: unless-stopped
+            environment:
+              SIDECAR_PATH: /app/sidecar
+              ASSETS_PATH: /data/assets
+              DATABASE_MIGRATION_PATH: /app/migration
+              DATABASE_DRIVER: $$cap_database_driver
+              DATABASE_METADATA_CONNECTION_STRING: $$cap_metadata_connection_string
+              DATABASE_PROFILE_CONNECTION_STRING: $$cap_profile_connection_string
+            caproverExtra:
+              notExposeAsWebApp: 'true'
+        
+        caproverOneClickApp:
+          variables:
+            - id: $$cap_database_driver
+              label: Database driver
+              validRegex: /.{1,}/
+            - id: $$cap_metadata_connection_string
+              label: Metadata database connection string
+              validRegex: /.{1,}/
+            - id: $$cap_profile_connection_string
+              label: Profile database connection string
+              validRegex: /.{1,}/
+          instructions:
+            start: >-
+              Deploys AniStream (API + worker) from GHCR images.
+            end: >
+              AniStream API is deployed as $$cap_appname-api.
+          displayName: AniStream
+          isOfficial: false
+          description: AniStream API + background worker, sharing a persistent assets volume.
+        ```
+    </Step>
+    <Step>
+        Set your base app name (e.g. `anistream`).
+    </Step>
+    <Step>
+        AniStream requires a database storage engine to persist user profiles, watch progress, and media metadata.
+        
+        Select one of the engines and insert the given configuration fields into the CapRover input mask.
+
+        <Cards>
+            <Card icon={<DeviconSqlite />} title="Storage Engine Guide: SQLite" href="/docs/client/storage-sqlite">
+                Learn about SQLite architecture, persistent paths, and connection string variables.
+            </Card>
+        </Cards>
+        
+    </Step>
+    <Step>
+        Click "Deploy" and wait for CapRover to pull container images and start both the API and
+        background worker services.
+    </Step>
+    <Step>
+        Once deployed, navigate to the `anistream` app in CapRover, open "HTTP Settings", and click "Enable HTTPS" and optional enforce HTTPS.
+
+        <Callout type="warn">
+            It is **required** to setup an SSL certificate so that the updater of the clients accept the update-manifests.
+
+            Using no SSL certificate is possible, but will break the functionality of the client updater
+        </Callout>
+    </Step>
+</Steps>
+
+---
+
+## Next Step: Setup Outro & Connect Clients
+
+Now that your CapRover app is running, proceed to the Outro to access the web dashboard and connect your desktop clients.
+
+<Cards>
+    <Card title="Connect Client" href="/docs/client/setup-outro">
+        Log in to the web dashboard, configure administrator credentials, and connect desktop clients.
+    </Card>
+</Cards>

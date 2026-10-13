@@ -1,0 +1,67 @@
+---
+title: "Server Setup: Introduction"
+description: Overview of the self-hosted AniStream server stack and deployment workflow.
+---
+
+Self-hosting the **AniStream Server Stack** allows you to run a centralized media backend on your home server, NAS, or cloud VPS.
+
+With a self-hosted server, you get:
+
+
+<Cards>
+    <Card icon={<LucideRefreshCw/>} title="Centralized Synchronization">
+        Watch history, bookmarks, and series progress sync across all your
+        devices.
+    </Card>
+
+    <Card icon={<LucideUsers/>} title="Multi-User Profiles">
+        Create separate accounts for family members or friends, each with their
+        own isolated watchlist.
+    </Card>
+
+    <Card icon={<LucideRadar/>} title="24/7 Background Scraping">
+        The background worker continuously keeps anime and series catalogs up
+        to date, even while no one's watching.
+    </Card>
+
+    <Card icon={<LucideLayoutDashboard/>} title="Integrated Web Dashboard">
+        Manage users, monitor scraper jobs.
+    </Card>
+</Cards>
+
+---
+
+## Setup Workflow
+
+Setting up your server follows a modular 4-step process:
+
+
+<Steps>
+    <Step>
+        Choose Host Platform (Docker / CapRover)
+    </Step>
+    <Step>
+        Choose & Configure Storage
+    </Step>
+    <Step>
+        Launch Server Stack
+    </Step>
+    <Step>
+        Connect Clients
+    </Step>
+</Steps>
+
+---
+
+## Choose Your Host Platform
+
+Select the hosting environment you want to use for deploying the AniStream API and Worker services:
+
+<Cards>
+    <Card icon={<DeviconDocker/>} title="Docker Compose" href="/docs/client/deploy-docker-compose">
+        Recommended for most servers and home labs. Deploy in seconds using prebuilt multi-arch container images.
+    </Card>
+    <Card icon={<CapRover/>} title="CapRover" href="/docs/client/deploy-caprover">
+        One-click PaaS template deployment with automated Let's Encrypt SSL and container routing.
+    </Card>
+</Cards>

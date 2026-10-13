@@ -1,0 +1,114 @@
+---
+title: "Server Setup: Outro"
+description: Complete post-installation setup, secure your administrator account, configure client permissions, and connect desktop clients.
+---
+
+Congratulations! Your AniStream Server stack is up and running. Follow the sequential steps below to complete initial configuration, secure your server, and connect your desktop clients.
+
+---
+
+## Post-Installation Setup
+
+<Steps>
+    <Step>
+        ### Access Dashboard
+
+        Open your web browser and navigate to your server's address:
+        - **Local Network**: `http://&lt;your-server-ip>:8080` (e.g., `http://192.168.1.50:8080`)
+        - **Domain / Reverse Proxy**: `https://anistream.yourdomain.com`
+    </Step>
+
+    <Step>
+        ### Login Using Initial Root Account
+
+        Log in using the default administrative credentials automatically provisioned on first startup:
+
+        - **Username**: `root`
+        - **Password**: `000000`
+
+        <Callout type="warn">
+            The initial root account uses a well-known default password. You should replace it with a dedicated
+            administrator account before exposing your server.
+        </Callout>
+    </Step>
+
+    <Step>
+        ### Create New Root Account with Another Password
+
+        To secure your server, create a new personal administrator account:
+
+        1. Navigate to the **User profiles** section in the dashboard.
+        2. Click **New profile** (`+`).
+        3. Enter your desired administrator name and customize avatar, theme, and language.
+        4. Enter a secure 6-character password.
+        5. Enable **Dashboard access** to grant administrative privileges.
+        6. Click **Save changes**.
+    </Step>
+
+    <Step>
+        ### Test the New Root Account
+
+        Verify that your new administrator account is working properly before removing the default credentials:
+
+        1. Log out of the web dashboard.
+        2. Sign in using your newly created administrator profile and password.
+        3. Confirm that you have full access to dashboard settings and profile management.
+    </Step>
+
+    <Step>
+        ### Disable or Delete the Old Root Account
+
+        Once confirmed, remove or restrict the initial default root account:
+
+        - In the **User profiles** list, locate the default `root` account.
+        - Click the **Delete** (trash icon) button to permanently remove it, or click **Edit** and disable **Dashboard
+        access**.
+    </Step>
+
+    <Step>
+        ### Add a Second Account or Edit Existing to Grant Client Access
+
+        Configure user profiles for streaming via desktop client apps:
+
+        - **Add a new profile**: Click **New profile**, set a name and a 6-character password, and toggle **Client
+        access** ON.
+        - **Edit an existing profile**: Click **Edit** on any profile and ensure **Client access** is enabled.
+        - Keep **Dashboard access** toggled OFF for regular household users to restrict administrative access.
+        - Click **Save changes**.
+    </Step>
+
+    <Step>
+        ### Start Initial Metadata Sync
+
+        In the dashboard, click **Start Sync** to start the initial syncing of the metadata.
+
+        <Callout type="info">
+            The initial sync takes some time and will download a minimum of 1 GB of content. You can proceed with
+            connecting your client apps while the app is syncing in the background.
+        </Callout>
+    </Step>
+
+    <Step>
+        ### Connect with Client
+
+        Install the AniStream Client application on your devices and link it to your server:
+
+        1. Launch the **AniStream Client** app on your computer.
+        2. Enter your server URL (e.g., `https://anistream.yourdomain.com` or `http://192.168.1.50:8080`).
+        3. Select your user profile from the list.
+        4. Enter your 6-character password to log in and start streaming!
+    </Step>
+</Steps>
+
+---
+
+## Next Steps
+
+<Cards>
+    <Card icon={<LucidePcCase/>} title="Desktop Client App Guide" href="/docs/client/install-client">
+        Detailed installation and configuration instructions for the desktop client application.
+    </Card>
+    <Card icon={<LucideCloud/>} title="Server Upgrade Guide" href="/docs/client/upgrade-intro">
+        Learn how to safely upgrade your server stack and manage database migrations in the future.
+    </Card>
+</Cards>

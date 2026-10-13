@@ -1,0 +1,83 @@
+---
+title: Desktop Client Setup
+description: Install the AniStream Client desktop app and connect it to your self-hosted server.
+---
+
+The **AniStream Client** desktop application connects to your self-hosted AniStream server stack to stream media, sync watch history, and manage multi-user profiles.
+
+---
+
+## 1. Download Client Installers
+
+Download the latest client release for your operating system from the [AniStream Releases](https://github.com/cbx0/AniStream/releases) page (look for tags ending in `-client`, e.g., `v1.3.0-client`).
+
+<Tabs items={['Windows', 'Linux', 'macOS']}>
+    <Tab value="Windows">
+        ### Windows Installation [!toc]
+        - `AniStream_${version}_x64-setup.exe` (NSIS Installer)
+        - `AniStream_${version}_x64_en-US.msi` (MSI Package)
+
+        Run the setup executable and follow the standard installation wizard.
+    </Tab>
+
+    <Tab value="Linux">
+        ### Linux Installation [!toc]
+        - **Debian / Ubuntu**: `sudo dpkg -i anistream_${version}_amd64.deb`
+        - **Fedora / RHEL**: `sudo dnf install ./anistream-${version}-1.x86_64.rpm`
+        - **AppImage (Universal)**:
+        ```bash
+        chmod +x AniStream_${version}_amd64.AppImage
+        ./AniStream_${version}_amd64.AppImage
+        ```
+    </Tab>
+
+    <Tab value="macOS">
+        ### macOS Installation [!toc]
+        - `AniStream_${version}_x64.dmg` (Intel Macs)
+        - `AniStream_${version}_aarch64.dmg` (Apple Silicon Macs)
+
+        Open the `.dmg` and drag **AniStream.app** to your `/Applications` folder. If blocked by Gatekeeper:
+        ```bash
+        xattr -cr /Applications/AniStream.app
+        ```
+    </Tab>
+</Tabs>
+
+---
+
+## 2. Connecting to Your Server
+
+When you launch AniStream Client for the first time, connect it to your backend:
+
+<Steps>
+    <Step>
+        **Enter Server URL**:
+        - **Local network**: `http://192.168.1.50:8080` (or `http://localhost:8080` if running on the same PC).
+        - **Remote domain**: `https://anistream.yourdomain.com`.
+    </Step>
+    <Step>
+        **Select Profile**:
+        Select your username from the listed server accounts.
+      
+        <Callout type="info">
+            If you see no Content, then it mostly means that no Profile has Client access rights configured in your dashboard
+        </Callout>
+    </Step>
+    <Step>
+        **Enter Password**:
+        Enter your profile password and click **Log In**.
+    </Step>
+</Steps>
+
+---
+
+## Next Steps
+
+<Cards>
+    <Card title="Server Setup Guide" href="/docs/client/setup-intro">
+        Deploy or reconfigure your self-hosted server backend.
+    </Card>
+    <Card title="Upgrading Server" href="/docs/client/upgrade-intro">
+        Learn how to upgrade your server stack and apply schema migrations.
+    </Card>
+</Cards>

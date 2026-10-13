@@ -1,0 +1,96 @@
+---
+title: Welcome to AniStream
+---
+
+
+**AniStream** is a lightweight, high-performance desktop application and media manager designed for streaming anime and series from providers such as **AniWorld.to** and **S.TO**. Built with [Tauri](https://tauri.app/) and [Vue 3](https://vuejs.org/), AniStream delivers an ad-free viewing experience, local and remote catalog caching, and flexible deployment options.
+
+<Card title="Choose Your Setup" href="/docs/comparison">
+    Compare Standalone and Client/Server modes to determine the best setup for your needs.
+</Card>
+
+---
+
+<Cards>
+  <Card icon={<LucidePcCase />} title="Standalone Desktop App" href="/docs/standalone/install">
+    Zero-configuration desktop client. Operates completely offline/locally with embedded scrapers and local database storage.
+  </Card>
+  <Card icon={<LucideCloud />} title="Self-Hosted Server Stack" href="/docs/client/setup-intro">
+    Centralized backend server with multi-user profiles, 24/7 background catalog synchronization, and cross-device sync.
+  </Card>
+</Cards>
+
+---
+
+## Why AniStream
+
+<Cards>
+    <Card
+        icon={<LucidePlayCircle />}
+        title="Ad-Free Direct Streaming"
+    >
+        Clean HLS and MP4 playback, no ads, no popups, no redirects. Just the
+        player and your video.
+    </Card>
+
+    <Card icon={<LucideShield />} title="Built-in Provider Catalogs">
+        Native support for **AniWorld.to** (Anime) and **S.TO** (TV Series) and more,
+        browsable right inside the app.
+    </Card>
+
+    <Card icon={<LucideHistory />} title="Watch History & Progress">
+        Series are bookmarked automatically, episode progress is tracked as you
+        watch, and playback resumes exactly where you left off across sessions.
+    </Card>
+
+    <Card icon={<LucideLanguages />} title="English & German, Fully Localized">
+        The entire UI is translated, not bolted on; switch languages without
+        losing your place.
+    </Card>
+
+    <Card
+        icon={<LucideWorkflow />}
+        title="Flexible Deployment"
+        href="/docs/comparison">
+        Run it fully local as a **Standalone** app, or point a thin **Client**
+        at your own self-hosted server. Two separate builds, same experience
+        
+        [See the comparison](/docs/comparison)
+    </Card>
+</Cards>
+
+### Runs Natively, Everywhere
+
+<Cards className={"grid-cols-3"}>
+    <Card icon={<DeviconWindows11 />} title="Windows">
+        `.exe` and `.msi` installers
+    </Card>
+    <Card icon={<DeviconLinux />} title="Linux">
+        `.deb`, `.rpm`, and `.AppImage`
+    </Card>
+    <Card icon={<DeviconApple />} title="macOS">
+        `.dmg` installer
+    </Card>
+</Cards>
+
+### Supported Providers
+
+<Cards>
+    <div className="block rounded-xl border bg-fd-card p-4 text-fd-card-foreground transition-colors @max-lg:col-span-full">
+        <Aniworld />
+    </div>
+    <div className="block rounded-xl border bg-fd-card p-4 text-fd-card-foreground transition-colors @max-lg:col-span-full">
+        <Sto />
+    </div>
+</Cards>
+
+---
+
+<Cards>
+  <Card icon={<LucidePcCase />} title="Install Standalone App" href="/docs/standalone/install">
+    Download and launch the standalone desktop client for your operating system.
+  </Card>
+  <Card icon={<LucideCloud />} title="Deploy Server Stack" href="/docs/client/setup-intro">
+    Follow the step-by-step server deployment guide for Docker or CapRover.
+  </Card>
+</Cards>

@@ -1,0 +1,31 @@
+---
+title: "Upgrading: CapRover"
+description: Upgrade the AniStream server stack on CapRover.
+---
+
+Updating your AniStream deployment on CapRover is managed through the CapRover web interface.
+
+<Steps>
+    <Step>
+        **Open CapRover Dashboard**: Navigate to **Apps** in your CapRover admin portal.
+    </Step>
+    <Step>
+        **Update API Service**:
+        - Select your API app (e.g. `anistream`).
+        - Navigate to **Deployment** &rarr; **Image Name / Tag**.
+        - If using `:latest`, click **Save & Update** to pull the latest image. If using a specific version tag (e.g.
+        `v1.3.0`), update the tag and click **Save & Update**.
+    </Step>
+    <Step>
+        **Update Worker Service**:
+        - Select your worker app (e.g. `anistream-worker`).
+        - Under **Deployment**, click **Save & Update** (or update the version tag).
+    </Step>
+    <Step>
+        **Confirm Running State**:
+        - Check the **App Logs** tab to confirm that both services started successfully.
+    </Step>
+</Steps>
+
+CapRover mounts your persistent assets volume to the new container instances, and database migrations apply automatically on launch.
+

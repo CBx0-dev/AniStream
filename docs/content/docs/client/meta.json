@@ -1,0 +1,18 @@
+{
+  "title": "Client & Server",
+  "collapsible": false,
+  "pages": [
+    "---Setup Guide---",
+    "setup-intro",
+    "deploy-docker-compose",
+    "deploy-caprover",
+    "storage-sqlite",
+    "setup-outro",
+    "---Upgrade Guide---",
+    "upgrade-intro",
+    "upgrade-docker-compose",
+    "upgrade-caprover",
+    "---Desktop App---",
+    "install-client"
+  ]
+}

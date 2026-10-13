@@ -1,0 +1,53 @@
+---
+title: "SQLite Storage"
+description: SQLite architecture, configuration settings, and automatic schema migrations.
+---
+
+SQLite provides basic read/write performance, requires no external database server processes, and keeps all
+data organized in clean, portable files.
+
+<Callout type="info">
+    It is not recommended to use SQLite when you expect many users to access your service simultaneously.
+</Callout>
+
+### Database Files
+
+SQLite uses multiple databases files:
+
+1. **`profiles.db`**:
+- Stores user accounts, authentication tokens, and profile preferences (e.g. language and themes).
+- Manages permission flags (e.g. client access, dashboard admin).
+- Initializes a default `root` account on first run.
+
+2. **`{provider}/metadata.db`** (e.g. `aniworld/metadata.db`):
+- Stores media metadata: series titles, covers, season lists, and episode stream links.
+- Stores your watch history, resume timestamps, and custom user playlists.
+- Manages background scraper sync queues.
+
+---
+
+## Configuration Variables
+
+When configuring your server environment, the following database settings are used:
+
+| Variable                              | Description                                         | Default Value                              |
+|:--------------------------------------|:----------------------------------------------------|:-------------------------------------------|
+| `DATABASE_DRIVER`                     | Database storage engine                             | `sqlite`                                   |
+| `DATABASE_PROFILE_CONNECTION_STRING`  | Path to profiles database                           | `Data Source=/data/assets/profiles.db`     |
+| `DATABASE_METADATA_CONNECTION_STRING` | Pattern for provider databases (`{0}` = provider)   | `Data Source=/data/assets/{0}/metadata.db` |
+
+You never need to manually execute SQL scripts or create database tables.
+
+## Next Step: Return to Your Host Deployment Guide
+
+After selecting and configuring your storage settings, return to your host platform guide to start the services:
+
+<Cards>
+    <Card icon={<DeviconDocker/>} title="Resume Docker Compose Guide"
+          href="/docs/client/deploy-docker-compose">
+        Return to Docker Compose setup and launch containers with `docker compose up -d`.
+    </Card>
+    <Card icon={<CapRover/>} title="Resume CapRover Guide" href="/docs/client/deploy-caprover">
+        Return to CapRover setup and complete one-click template deployment.
+    </Card>
+</Cards>
