@@ -36,7 +36,7 @@ const vm: ClientSetupControlModel = useUserControl(ClientSetupControlModel);
                 </div>
                 <p class="text-xs text-base-content/60">
                     <Text :target="I18n.ClientSetupControl.setupGuide.pre"/>
-                    <a href="https://github.com/CBx0-dev/AniStream" target="_blank" class="link link-primary">
+                    <a href="https://anistream.cbx0.dev/docs/client/setup-intro" target="_blank" class="link link-primary">
                         <Text :target="I18n.ClientSetupControl.setupGuide.link"/>
                     </a>
                     <Text :target="I18n.ClientSetupControl.setupGuide.post"/>
