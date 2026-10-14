@@ -279,6 +279,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          printf "\n\nMin Client version: %s \nMax Client version: %s \n\n" "${{ inputs.client_min_version }}" "${{ inputs.client_max_version }}" >> app/changelogs/server/v${{ inputs.version }}.md
+          
           gh release create "${{ inputs.version }}-server" \
             --draft --latest=false \
             --target "$GITHUB_SHA" \
