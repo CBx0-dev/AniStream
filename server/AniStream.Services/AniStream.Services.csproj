@@ -27,14 +27,12 @@
         </ReadLinesFromFile>
 
         <PropertyGroup>
-            <MinClientVersion Condition="'$(MinClientVersion)' == ''">0.0.0</MinClientVersion>
-            <MaxClientVersion Condition="'$(MaxClientVersion)' == ''">0.0.0</MaxClientVersion>
+            <RequiredClientVersion Condition="'$(RequiredClientVersion)' == ''">0.0.0</RequiredClientVersion>
         </PropertyGroup>
 
         <PropertyGroup>
             <_GeneratedBuildValues>@(_BuildTemplateLines, '%0A')</_GeneratedBuildValues>
-            <_GeneratedBuildValues>$(_GeneratedBuildValues.Replace('__min_client_version__', '$(MinClientVersion)'))</_GeneratedBuildValues>
-            <_GeneratedBuildValues>$(_GeneratedBuildValues.Replace('__max_client_version__', '$(MaxClientVersion)'))</_GeneratedBuildValues>
+            <_GeneratedBuildValues>$(_GeneratedBuildValues.Replace('__required_client_version__', '$(RequiredClientVersion)'))</_GeneratedBuildValues>
         </PropertyGroup>
 
         <WriteLinesToFile File="$(IntermediateOutputPath)/BuildConfig.g.cs" Lines="$(_GeneratedBuildValues)" Overwrite="true"/>

@@ -2,6 +2,7 @@ import {ServiceDeclaration} from "@services/declaration";
 import {ChangelogService, ChangelogEntry} from "@contracts/changelog.contract";
 
 import {MarkdownParser} from "@utils/markdown";
+import * as version from "@utils/version";
 import {changelogs} from "virtual:changelogs";
 
 class ChangelogServiceImpl implements ChangelogService {
@@ -29,9 +30,9 @@ class ChangelogServiceImpl implements ChangelogService {
             });
         }
 
-        this.changelogs = entries.sort((a, b) => {
-            return b.version.localeCompare(a.version, undefined, {numeric: true, sensitivity: 'base'});
-        });
+        this.changelogs = entries.sort((a, b) =>
+            version.compare(b.version, a.version)
+        );
 
         this.loaded = true;
     }

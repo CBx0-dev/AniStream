@@ -69,8 +69,8 @@ export class ApiServiceImpl implements ApiService {
         const informationUrl: string = this.buildURL(["api", "information", "server"], url);
         const information: InformationModel = await http.get(informationUrl, ApiServiceImpl.HEADERS).json<InformationModel>();
 
-        if (!version.isVersionInRange(APP_VERSION, information.min_client_version, information.max_client_version)) {
-            return `Client is not compatible with the Server. Required ${information.min_client_version} >= version <= ${information.max_client_version}`;
+        if (!version.satisfies(APP_VERSION, information.required_client_version)) {
+            return `Client is not compatible with the Server. Required ${information.required_client_version}`;
         }
 
         return null;

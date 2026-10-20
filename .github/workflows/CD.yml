@@ -15,13 +15,8 @@ on:
         description: "Release version (e.g. 1.2.3)"
         required: true
         type: string
-      client_min_version:
-        description: "Minimum server version (server only)"
-        required: false
-        type: string
-        default: ""
-      client_max_version:
-        description: "Maximum server version (server only)"
+      client_version:
+        description: "Required client version range (server only)"
         required: false
         type: string
         default: ""
@@ -63,11 +58,11 @@ jobs:
           fi
           echo "Changelog found: $CHANGELOG"
 
-      - name: Validate client versions
+      - name: Validate client version
         if: ${{ inputs.type == 'server' }}
         run: |
-          if [ -z "${{ inputs.client_min_version }}" ] || [ -z "${{ inputs.client_max_version }}" ]; then
-            echo "Error: 'client_min_version' and 'client_max_version' are required when building server"
+          if [ -z "${{ inputs.client_version }}" ]; then
+            echo "Error: 'client_version' is required when building server"
             exit 1
           fi
 
@@ -212,8 +207,6 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           CI: 'true'
           APPLICATION_TARGET: ${{ inputs.type }}
-          CLIENT_MIN_VERSION: ${{ inputs.client_min_version }}
-          CLIENT_MAX_VERSION: ${{ inputs.client_max_version }}
         with:
           tagName: ${{ inputs.version }}-${{ inputs.type }}
           releaseName: "Release v${{ inputs.version }} (${{ inputs.type }})"
@@ -259,8 +252,7 @@ jobs:
           push: true
           build-args: |
             VERSION=${{ inputs.version }}
-            MIN_CLIENT_VERSION=${{ inputs.client_min_version }}
-            MAX_CLIENT_VERSION=${{ inputs.client_max_version }}
+            REQUIRED_CLIENT_VERSION=${{ inputs.client_version }}
           tags: |
             ghcr.io/${{ needs.validate.outputs.owner }}/anistream-${{ matrix.name }}:${{ inputs.version }}
             ghcr.io/${{ needs.validate.outputs.owner }}/anistream-${{ matrix.name }}:${{ github.sha }}
@@ -279,7 +271,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          printf "\n\nMin Client version: %s \nMax Client version: %s \n\n" "${{ inputs.client_min_version }}" "${{ inputs.client_max_version }}" >> app/changelogs/server/v${{ inputs.version }}.md
+          printf "\n\nRequired Client version: %s \n\n" "${{ inputs.client_version }}" >> app/changelogs/server/v${{ inputs.version }}.md
           
           gh release create "${{ inputs.version }}-server" \
             --draft --latest=false \

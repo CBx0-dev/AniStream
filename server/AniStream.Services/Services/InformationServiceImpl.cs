@@ -33,8 +33,7 @@ public sealed class InformationServiceImpl : IInformationService
             CurrentVersion = GetCurrentVersion(),
             LatestVersion = null,
             ReleaseNotesUrl = null,
-            MinClientVersion = BuildConfig.MinClientVersion,
-            MaxClientVersion = BuildConfig.MaxClientVersion
+            RequiredClientVersion = BuildConfig.RequiredClientVersion
         };
 
         try
@@ -101,7 +100,6 @@ public sealed class InformationServiceImpl : IInformationService
 
             GitHubRelease? latestRelease = releases
                 .Where(release => !release.Draft && !release.Prerelease && release.TagName is not null && release.TagName.EndsWith("-client"))
-                .Where(release => new SemverComparer().Compare(ExtractSemver(release.TagName!, "-client"), BuildConfig.MaxClientVersion) <= 0)
                 .OrderByDescending(r => ExtractSemver(r.TagName!, "-client"), new SemverComparer())
                 .FirstOrDefault();
 
