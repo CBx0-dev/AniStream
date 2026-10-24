@@ -5,6 +5,7 @@ import {BuildEnvironmentOptions, ConfigEnv, defineConfig, PluginOption, UserConf
 import vue from "@vitejs/plugin-vue";
 import tailwindcss from "@tailwindcss/vite";
 
+const __dirname: string = import.meta.dirname;
 const host: string = process.env.TAURI_DEV_HOST;
 
 function dynamicServiceResolver(applicationTarget: string): PluginOption {
