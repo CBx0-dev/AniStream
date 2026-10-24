@@ -2,7 +2,7 @@ use serde::Serialize;
 use serde_json::json;
 use tauri::{Manager, Runtime, Url, Webview};
 use tauri_plugin_http::reqwest::{
-    header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE},
+    header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE, USER_AGENT},
     Client,
 };
 use tauri_plugin_updater::UpdaterExt;
@@ -10,6 +10,7 @@ use tauri_plugin_updater::UpdaterExt;
 const REPORT_TOKEN: Option<&'static str> = option_env!("REPORT_TOKEN");
 
 async fn send_github_issue(title: String, message: String) -> Result<String, String> {
+    println!("Preparing error report");
     let token = REPORT_TOKEN.ok_or("REPORT_TOKEN is not set")?;
     let url = "https://api.github.com/repos/CBx0-dev/AniStream/issues";
 
@@ -19,25 +20,31 @@ async fn send_github_issue(title: String, message: String) -> Result<String, Str
         "labels": ["bug", "needs triage"]
     });
 
+    println!("- Init client");
     let client = Client::new();
 
+    println!("- Sending request");
     let response = client
         .post(url)
         .header(CONTENT_TYPE, "application/json")
         .header(ACCEPT, "application/vnd.github+json")
         .header(AUTHORIZATION, format!("Bearer {}", token))
+        .header(USER_AGENT, "anonymous/0.0")
         .body(json_body.to_string())
         .send()
         .await
         .map_err(|e| e.to_string())?;
 
+
+    println!("- Waiting response");
     let status = response.status();
     let body = response.text().await.map_err(|e| e.to_string())?;
 
     if !status.is_success() {
+        println!("GitHub API error ({}): {}", status, body);
         return Err(format!("GitHub API error ({}): {}", status, body));
     }
-
+    println!("Request was successfully send");
     Ok(body)
 }
 
