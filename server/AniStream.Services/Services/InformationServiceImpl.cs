@@ -115,7 +115,7 @@ public sealed class InformationServiceImpl : IInformationService
             }
 
             _cache.Set(ClientCacheKey, latestAsset.Url);
-            return latestAsset.Url;
+            return latestAsset.BrowserDownloadUrl;
         }
         catch
         {
